@@ -1,0 +1,3 @@
+[submodule "submodules/AdventureTracker-PebbleWatchFace"]
+	path = submodules/AdventureTracker-PebbleWatchFace
+	url = https://github.com/nicholasjackson/AdventureTracker-PebbleWatchFace.git
