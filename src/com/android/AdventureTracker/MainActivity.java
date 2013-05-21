@@ -6,10 +6,12 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.internal.r;
 import com.google.android.gms.location.ActivityRecognitionClient;
 
 import java.util.List;
@@ -60,9 +62,15 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
         }
     }
 
+    private void updateActivityType(String type) {
+        TextView view = (TextView)this.findViewById(R.id.activityType);
+        view.setText("Activity Type: " + type);
+    }
+
     @Override
     public void onConnected(Bundle connectionHint) {
         Intent intent = new Intent(getApplicationContext(), ActivityRecognitionIntentService.class);
+
         PendingIntent callbackIntent = PendingIntent.getService(getApplicationContext(), 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         mActivityRecognitionClient.requestActivityUpdates(30000, callbackIntent);
