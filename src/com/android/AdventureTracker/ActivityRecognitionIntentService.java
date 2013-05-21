@@ -2,9 +2,12 @@ package com.android.AdventureTracker;
 
 import android.app.IntentService;
 import android.content.Intent;
+import com.getpebble.android.kit.PebbleKit;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 
+
+import java.util.UUID;
 
 import static com.google.android.gms.location.DetectedActivity.ON_BICYCLE;
 
@@ -17,6 +20,8 @@ import static com.google.android.gms.location.DetectedActivity.ON_BICYCLE;
  */
 public class ActivityRecognitionIntentService extends IntentService {
 
+    static final UUID WATCH_UUID = UUID.fromString("5dd35873-3bb6-44d6-8255-0e61bc3b97f5");
+
     public ActivityRecognitionIntentService(String name) {
         super(name);
     }
@@ -25,11 +30,28 @@ public class ActivityRecognitionIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
-            if(result.getMostProbableActivity().getType() == DetectedActivity.ON_BICYCLE) {
 
-                //TODO: start pebble watch face
+            // start the watch face
+            showPebbleWatchFace();
+
+            switch(result.getMostProbableActivity().getType()) {
+
+                case DetectedActivity.ON_BICYCLE:
+                    //TODO: start pebble watch face
+                    break;
+                case DetectedActivity.TILTING:
+                    break;
+                default:
+                    //TODO: stop pebble watch face
 
             }
+
         }
+    }
+
+    private void showPebbleWatchFace() {
+
+        PebbleKit.startAppOnPebble(getApplicationContext(),WATCH_UUID);
+
     }
 }

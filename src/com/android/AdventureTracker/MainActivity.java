@@ -34,7 +34,7 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 
     private void initActivityRecognitionClient() {
         // Connect to the ActivityRecognitionService
-        mActivityRecognitionClient = new ActivityRecognitionClient(this, this, this);
+        mActivityRecognitionClient = new ActivityRecognitionClient(getApplicationContext(), this, this);
         mActivityRecognitionClient.connect();
     }
 
@@ -62,8 +62,8 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        Intent intent = new Intent(this, ActivityRecognitionIntentService.class);
-        PendingIntent callbackIntent = PendingIntent.getService(this, 0, intent,
+        Intent intent = new Intent(getApplicationContext(), ActivityRecognitionIntentService.class);
+        PendingIntent callbackIntent = PendingIntent.getService(getApplicationContext(), 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         mActivityRecognitionClient.requestActivityUpdates(30000, callbackIntent);
     }
