@@ -29,26 +29,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb1c107a-0cb6-4f80-927f-961c8561cda4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/values/ids.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/submodules/AdventureTracker-PebbleWatchFace" afterPath="$PROJECT_DIR$/submodules/AdventureTracker-PebbleWatchFace" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/LocationUpdateIntentService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AdventureTracker-AndroidApp.iml" afterPath="$PROJECT_DIR$/AdventureTracker-AndroidApp.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/main.xml" afterPath="$PROJECT_DIR$/res/layout/main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="AdventureTracker-AndroidApp.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369169745075" ignored="false" />
     <file path="/MainActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369170407387" ignored="false" />
-    <file path="/ActivityRecognitionIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369171421086" ignored="false" />
-    <file path="/AndroidManifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369167387316" ignored="false" />
+    <file path="/ActivityRecognitionIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369202500099" ignored="false" />
+    <file path="/AndroidManifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369200071328" ignored="false" />
     <file path="/ids.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369170185320" ignored="false" />
     <file path="/a.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369169094250" ignored="false" />
     <file path="/R.java.d" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369169632340" ignored="false" />
+    <file path="/LocationUpdateIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369200007684" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,23 +94,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
-      <breakpoint url="file://$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java" line="30" class="com.android.AdventureTracker.ActivityRecognitionIntentService" package="com.android.AdventureTracker">
-        <option name="ENABLED" value="true" />
-        <option name="LOG_ENABLED" value="false" />
-        <option name="LOG_EXPRESSION_ENABLED" value="false" />
-        <option name="REMOVE_AFTER_HIT" value="false" />
-        <option name="SUSPEND_POLICY" value="SuspendAll" />
-        <option name="SUSPEND" value="true" />
-        <option name="COUNT_FILTER_ENABLED" value="false" />
-        <option name="COUNT_FILTER" value="0" />
-        <option name="CONDITION_ENABLED" value="true" />
-        <option name="CLASS_FILTERS_ENABLED" value="false" />
-        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
-        <option name="CONDITION" value="" />
-        <option name="LOG_MESSAGE" value="" />
-      </breakpoint>
-    </line_breakpoints>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
@@ -129,7 +108,7 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="71" column="100" selection-start="2904" selection-end="2904" vertical-scroll-proportion="0.0">
+            <state line="18" column="43" selection-start="638" selection-end="746" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -138,7 +117,18 @@
       <file leaf-file-name="ActivityRecognitionIntentService.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="53" column="28" selection-start="1624" selection-end="1624" vertical-scroll-proportion="0.86609685">
+            <state line="72" column="32" selection-start="2474" selection-end="2474" vertical-scroll-proportion="-1.6183432">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LocationUpdateIntentService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/LocationUpdateIntentService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="25" column="10" selection-start="693" selection-end="693" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -162,15 +152,6 @@
           </provider>
           <provider editor-type-id="text-editor">
             <state line="11" column="0" selection-start="479" selection-end="479" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -215,7 +196,7 @@
       <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="30" selection-start="499" selection-end="499" vertical-scroll-proportion="0.0">
+            <state line="6" column="93" selection-start="363" selection-end="363" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -239,11 +220,12 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/res/layout/main.xml" />
         <option value="$PROJECT_DIR$/gen/R.java.d" />
         <option value="$PROJECT_DIR$/res/values/ids.xml" />
         <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java" />
+        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/LocationUpdateIntentService.java" />
         <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java" />
       </list>
     </option>
@@ -658,7 +640,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1366" height="768" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.67164177" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2128788" sideWeight="0.67164177" order="2" side_tool="false" content_ui="tabs" />
@@ -667,7 +649,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -756,13 +738,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/getpebble/android/kit/util/PebbleDictionary.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="13" selection-start="625" selection-end="625" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/getpebble/android/kit/util/PebbleTuple.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="12" selection-start="235" selection-end="235" vertical-scroll-proportion="0.0">
@@ -817,13 +792,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="30" selection-start="499" selection-end="499" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/gen/com/android/AdventureTracker/BuildConfig.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5" column="19" selection-start="138" selection-end="138" vertical-scroll-proportion="0.0">
@@ -855,16 +823,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="93" selection-start="363" selection-end="363" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="71" column="100" selection-start="2904" selection-end="2904" vertical-scroll-proportion="0.0">
+        <state line="18" column="43" selection-start="638" selection-end="746" vertical-scroll-proportion="0.0">
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/LocationUpdateIntentService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="10" selection-start="693" selection-end="693" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="53" column="28" selection-start="1624" selection-end="1624" vertical-scroll-proportion="0.86609685">
+        <state line="72" column="32" selection-start="2474" selection-end="2474" vertical-scroll-proportion="-1.6183432">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
