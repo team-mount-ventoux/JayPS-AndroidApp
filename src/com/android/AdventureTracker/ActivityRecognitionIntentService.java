@@ -27,8 +27,6 @@ import static com.google.android.gms.location.DetectedActivity.ON_BICYCLE;
 public class ActivityRecognitionIntentService extends IntentService {
 
     private static boolean _watchShown;
-    private static boolean _gpsRunning;
-    private static LocationClient _locationClient;
 
     public ActivityRecognitionIntentService() {
         super("ActivityRecognitionIntentService");
@@ -42,7 +40,7 @@ public class ActivityRecognitionIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
-
+            //GPSUtils.getInstance(getApplicationContext()).startGPS();
             Log.d("ActivityIntent","Handle Intent");
 
             switch(result.getMostProbableActivity().getType()) {
@@ -50,11 +48,15 @@ public class ActivityRecognitionIntentService extends IntentService {
                 case DetectedActivity.ON_BICYCLE:
                     //TODO: start pebble watch face
                     // start the watch face
+                    Log.d("ActivityIntent","ON_BICYCLE");
                     showPebbleWatchFace();
                     GPSUtils.getInstance(getApplicationContext()).startGPS();
                     break;
                 case DetectedActivity.TILTING:
+                    Log.d("ActivityIntent","TILTING");
                     break;
+                case DetectedActivity.STILL:
+                    Log.d("ActivityIntent","STILL");
                 default:
                     hidePebbleWatchFace();
                     GPSUtils.getInstance(getApplicationContext()).stopGps();

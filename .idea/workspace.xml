@@ -3,9 +3,7 @@
   <component name="AndroidDesignerProfile">
     <option name="fullProfile">
       <profile>
-        <option name="device" value="2.7in QVGA" />
-        <option name="deviceConfiguration" value="Portrait" />
-        <option name="targetHashString" value="android-17" />
+        <option name="device" value="[None]" />
         <option name="theme" value="Theme" />
       </profile>
     </option>
@@ -29,27 +27,700 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb1c107a-0cb6-4f80-927f-961c8561cda4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/Constants.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/GPSUtils.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/android/AdventureTracker/LocationUpdateIntentService.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AdventureTracker-AndroidApp.iml" afterPath="$PROJECT_DIR$/AdventureTracker-AndroidApp.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/AdventureTracker/Constants.java" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/Constants.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/AdventureTracker/GPSUtils.java" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/GPSUtils.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/google_play_services.xml" afterPath="$PROJECT_DIR$/.idea/libraries/google_play_services.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="AdventureTracker-AndroidApp.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369240358467" ignored="false" />
+    <file path="/Dummy.txt" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369255470178" ignored="false" />
     <file path="/MainActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369170407387" ignored="false" />
-    <file path="/ActivityRecognitionIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369240265076" ignored="false" />
+    <file path="/ActivityRecognitionIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256700553" ignored="false" />
     <file path="/AndroidManifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369200071328" ignored="false" />
     <file path="/ids.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369170185320" ignored="false" />
     <file path="/a.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369169094250" ignored="false" />
     <file path="/R.java.d" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369169632340" ignored="false" />
     <file path="/LocationUpdateIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369200007684" ignored="false" />
-    <file path="/GPSUtils.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369241158910" ignored="false" />
+    <file path="/GPSUtils.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369258210415" ignored="false" />
     <file path="/Constants.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369240063656" ignored="false" />
+    <file path="/fragment.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369255580406" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/dialog_custom_title.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/dialog_custom_title_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/dialog_title.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/dialog_title_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/dialog_title_icons.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/dialog_title_icons_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/expandable_list_content.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/expanded_menu_layout.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/fragment_bread_crumb_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/fragment_bread_crumbs.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/global_actions_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/global_actions_silent_mode.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/grant_credentials_permission.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/heavy_weight_switcher.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/icon_menu_item_layout.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/input_method.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/input_method_extract_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/input_method_switch_dialog_title.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/js_prompt.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyboard_key_preview.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyboard_popup_keyboard.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_account_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_add_widget.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_emergency_carrier_area.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_emergency_carrier_area_empty.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_face_unlock_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_glow_pad_container.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_glow_pad_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_message_area.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_message_area_large.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_multi_user_avatar.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_multi_user_selector.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_multi_user_selector_widget.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_password_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_pattern_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_pin_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_screen_glogin_unlock.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_screen_lock.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_screen_password_landscape.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_screen_password_portrait.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_screen_sim_pin_landscape.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_screen_sim_pin_portrait.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_screen_sim_puk_landscape.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_screen_sim_puk_portrait.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_screen_tab_unlock.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_screen_tab_unlock_land.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_screen_unlock_landscape.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_screen_unlock_portrait.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_selector_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_sim_pin_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_sim_puk_pin_account_navigation.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_sim_puk_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_status_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_transport_control_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/keyguard_widget_remove_drop_target.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/launch_warning.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/list_content.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/list_content_simple.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/list_gestures_overlay.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/list_menu_item_checkbox.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/list_menu_item_icon.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/list_menu_item_layout.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/list_menu_item_radio.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/locale_picker_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/media_controller.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/media_route_chooser_layout.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/media_route_list_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/media_route_list_item_checkable.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/media_route_list_item_collapse_group.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/media_route_list_item_section_header.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/media_route_list_item_top_header.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/menu_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/accelerate_decelerate_interpolator.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/notification_action.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171045" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/accelerate_interpolator.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/notification_action_list.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/activity_close_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/notification_action_tombstone.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/activity_close_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/notification_intruder_content.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/activity_open_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/notification_template_base.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/activity_open_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/notification_template_big_base.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/anticipate_interpolator.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/notification_template_big_picture.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/anticipate_overshoot_interpolator.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/notification_template_big_text.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/app_starting_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/notification_template_inbox.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/bounce_interpolator.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/notification_template_part_chronometer.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/cycle_interpolator.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/notification_template_part_time.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/decelerate_interpolator.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/number_picker.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/dialog_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/number_picker_with_selector_wheel.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/dialog_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/overlay_display_window.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/dock_bottom_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/permissions_account_and_authtokentype.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/dock_bottom_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/permissions_package_list_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/dock_left_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/popup_menu_item_layout.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/dock_left_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/power_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/dock_right_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/dock_right_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_category.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/dock_top_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_category_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/dock_top_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_child.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/fade_in.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_child_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/fade_out.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_dialog_edittext.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/fast_fade_in.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_header_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/fast_fade_out.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171046" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/grow_fade_in.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_information.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/grow_fade_in_center.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_information_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/grow_fade_in_from_bottom.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_list_content.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/input_method_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_list_content_single.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/input_method_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_list_fragment.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/input_method_extract_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_widget_checkbox.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/input_method_extract_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_widget_seekbar.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/input_method_fancy_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preference_widget_switch.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/input_method_fancy_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/preferences.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/keyguard_action_assist_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/progress_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/keyguard_action_assist_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/progress_dialog_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/keyguard_security_animate_in.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/recent_apps_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/keyguard_security_animate_out.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/recent_apps_icon.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/keyguard_security_fade_in.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/remote_views_adapter_default_loading_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/keyguard_security_fade_out.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/resolve_list_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/linear_interpolator.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/resolver_grid.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/lock_screen_behind_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/safe_mode.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/lock_screen_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/screen.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/lock_screen_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/screen_action_bar.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/lock_screen_wallpaper_behind_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/screen_action_bar_overlay.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/options_panel_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/screen_custom_title.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/options_panel_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/screen_progress.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/overshoot_interpolator.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/screen_simple.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/push_down_in.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/screen_simple_overlay_action_mode.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171047" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/push_down_in_no_alpha.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/screen_title.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/push_down_out.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/screen_title_icons.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/push_down_out_no_alpha.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/search_bar.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/push_up_in.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/search_dropdown_item_1line.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/push_up_out.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/search_dropdown_item_icons_2line.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/recent_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/search_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/recent_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/seekbar_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/recents_fade_in.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/select_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/recents_fade_out.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/select_dialog_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_0_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/select_dialog_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_0_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/select_dialog_item_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_0_frame.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/select_dialog_multichoice.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_180_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/select_dialog_multichoice_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_180_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/select_dialog_singlechoice.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_180_frame.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/select_dialog_singlechoice_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_finish_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_dropdown_hint.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_finish_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_dropdown_item_1line.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_finish_frame.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_dropdown_item_2line.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_minus_90_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_expandable_list_item_1.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_minus_90_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_expandable_list_item_2.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_minus_90_frame.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_gallery_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_plus_90_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_list_item_1.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_plus_90_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_list_item_2.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_plus_90_frame.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_list_item_2_single_choice.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_start_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_list_item_activated_1.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171048" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_start_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_list_item_activated_2.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_rotate_start_frame.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_list_item_checked.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_user_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_list_item_multiple_choice.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/screen_user_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_list_item_single_choice.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/search_bar_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_selectable_list_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/search_bar_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_spinner_dropdown_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/shrink_fade_out.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/simple_spinner_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/shrink_fade_out_center.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/sms_short_code_confirmation_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/shrink_fade_out_from_bottom.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/ssl_certificate.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/slide_in_child_bottom.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/status_bar_latest_event_content.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/slide_in_left.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/tab_content.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/slide_in_right.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/tab_indicator.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/slide_in_up.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/tab_indicator_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/slide_out_down.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/test_list_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/slide_out_left.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/text_drag_thumbnail.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/slide_out_right.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/text_edit_action_popup_text.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/slow_fade_in.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/text_edit_no_paste_window.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/submenu_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/text_edit_paste_window.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/submenu_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/text_edit_side_no_paste_window.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/task_close_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/text_edit_side_paste_window.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/task_close_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/text_edit_suggestion_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/task_open_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/text_edit_suggestions_window.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/task_open_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/textview_hint.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/toast_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/time_picker.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/toast_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171049" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/time_picker_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/translucent_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/time_picker_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/translucent_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/transient_notification.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/wallpaper_close_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/twelve_key_entry.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/wallpaper_close_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/two_line_list_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/wallpaper_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/typing_filter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/wallpaper_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/usb_storage_activity.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/wallpaper_intra_close_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/volume_adjust.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/wallpaper_intra_close_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/volume_adjust_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/wallpaper_intra_open_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/web_runtime.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/wallpaper_intra_open_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/web_text_view_dropdown.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/wallpaper_open_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/webview_find.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/wallpaper_open_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/webview_select_singlechoice.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim/window_move_from_decor.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/wifi_p2p_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim-land/task_close_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/wifi_p2p_dialog_row.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim-land/task_close_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/zoom_browser_accessory_buttons.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim-land/task_open_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/zoom_container.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/anim-land/task_open_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/zoom_controls.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/zoom_magnify.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/animator/fade_in.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/animator/fade_out.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/animator/fragment_close_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/animator/fragment_close_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/animator/fragment_fade_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/animator/fragment_fade_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/animator/fragment_open_enter.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/animator/fragment_open_exit.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171050" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_dark_disable_only.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_dark_focused.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_dark_nodisable.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_disable_only_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_disable_only_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_focused_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_light_disable_only.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_light_nodisable.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_nodisable_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/primary_text_nodisable_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/search_url_text.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/search_url_text_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/secondary_text_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/secondary_text_dark_nodisable.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/secondary_text_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/secondary_text_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/secondary_text_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/secondary_text_light_nodisable.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/secondary_text_nodisable_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/secondary_text_nodisable_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/secondary_text_nofocus.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/tab_indicator_text.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/tab_indicator_text_v4.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/tertiary_text_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/tertiary_text_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/tertiary_text_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/tertiary_text_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/color/widget_edittext_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171051" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/menu/webview_copy.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/action_bar_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/menu/webview_find.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/action_bar_divider.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/activated_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/activated_background_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/activated_background_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/activated_background_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/activity_picker_bg.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/app_icon_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/background_cache_hint_selector_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/background_cache_hint_selector_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/background_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/background_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/box.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_browser_zoom_fit_page.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_browser_zoom_page_overview.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_cab_done_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_cab_done_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_check.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_check_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_check_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_circle.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_close.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_default.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_default_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_default_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_default_small.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_default_transparent.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_dropdown.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_global_search.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_group_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_group_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_keyboard_key.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_keyboard_key_fulltrans.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_keyboard_key_ics.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_keyboard_key_trans.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_minus.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_plus.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_radio.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_radio_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_radio_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_search_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_search_dialog_voice.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_square_overlay.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_star.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_star_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171052" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_star_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_toggle.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_toggle_bg.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_toggle_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_toggle_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_zoom_down.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_zoom_page.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/btn_zoom_up.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/button_inset.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/dark_header_dither.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/edit_query_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/edit_text.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/edit_text_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/edit_text_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/editbox_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/expander_group.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/expander_group_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/expander_group_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/fastscroll_thumb_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/fastscroll_track_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/fastscroll_track_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/gallery_item_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/gallery_thumb.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/grid_selector_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_action_assist_generic.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_btn_round_more.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_btn_square_browser_zoom_fit_page.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_btn_square_browser_zoom_page_overview.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_clear.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_clear_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_lockscreen_camera.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_lockscreen_handle.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_lockscreen_outerring.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_lockscreen_silent.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_lockscreen_soundon.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_lockscreen_unlock.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_lockscreen_unlock_phantom.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_maps_indicator_current_position_anim.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_media_route_connecting_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_media_route_connecting_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_media_route_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_media_route_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_menu_moreoverflow_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_menu_moreoverflow_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ic_popup_sync.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/indicator_check_mark_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171053" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/indicator_check_mark_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/item_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/item_background_activated_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/item_background_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/item_background_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_bar_left_answer.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_bar_left_generic.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_bar_left_unlock.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_bar_right_decline.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_bar_right_generic.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_bar_right_sound_off.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_bar_right_sound_on.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_left_answer.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_left_generic.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_left_unlock.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_right_decline.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_right_generic.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_right_sound_off.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/jog_tab_right_sound_on.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/keyboard_key_feedback.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/keyguard_expand_challenge_handle.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/light_header_dither.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_highlight.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_highlight_active.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_highlight_inactive.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_selected_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_selected_background_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_selector_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_selector_background_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_selector_background_transition.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_selector_background_transition_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_selector_background_transition_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_selector_background_transition_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_selector_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/list_selector_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/load_average_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/lockscreen_emergency_button.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/lockscreen_forgot_password_button.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/lockscreen_password_field_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/media_button_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/menu_selector.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/menuitem_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/menuitem_background_solid.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/menuitem_checkbox.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/minitab_lt.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/notification_bg.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/notification_bg_low.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/notify_panel_notification_icon_bg_tile.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171054" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/numberpicker_down_btn.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/arrays.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/numberpicker_input.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/attrs.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/numberpicker_up_btn.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/attrs_manifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/panel_picture_frame_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/bools.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_horizontal.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/colors.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_horizontal_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/config.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_horizontal_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/dimens.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_indeterminate_horizontal.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_indeterminate_horizontal_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/donottranslate-maps.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_large.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/donottranslate-names.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_large_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/donottranslate.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_large_white.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/ids.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_medium.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/integers.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_medium_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/public.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_medium_white.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_small.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/styles.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/styles_device_defaults.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_small_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171055" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/symbols.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_small_titlebar.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/themes.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/progress_small_white.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values/themes_device_defaults.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/quickcontact_badge_overlay_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/quickcontact_badge_overlay_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-af/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-af/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_full.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_full_empty.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-am/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_full_empty_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-am/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_full_empty_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_full_filled.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-ar/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_full_filled_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-ar/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_full_filled_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_full_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_full_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-be/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-be/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_small.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-bg/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_small_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-bg/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/ratingbar_small_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/screen_background_selector_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-ca/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/screen_background_selector_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-ca/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/scrubber_control_selector_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/scrubber_progress_horizontal_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-cs/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/scrubber_progress_horizontal_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-cs/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/search_dropdown_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/search_dropdown_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-da/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/search_spinner.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-da/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/seek_thumb.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/settings_header.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-de/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/silent_mode_indicator.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-de/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/spinner_ab_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171056" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/spinner_ab_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/spinner_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/spinner_background_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/spinner_background_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-el/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/spinner_dropdown_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-el/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/stat_sys_battery.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/stat_sys_battery_charge.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/stat_sys_download.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/stat_sys_download_done_static.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/stat_sys_upload.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/status_bar_item_app_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/status_bar_item_background.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/submenu_arrow.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/switch_inner_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/switch_inner_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/switch_track_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/switch_track_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/tab_bottom_left.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/tab_bottom_left_v4.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/tab_bottom_right.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/tab_bottom_right_v4.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/tab_indicator.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/tab_indicator_ab_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/tab_indicator_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/tab_indicator_v4.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/textfield_search.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/textfield_search_empty.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/textfield_searchview_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-es/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/textfield_searchview_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-es/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/textfield_searchview_right_holo_dark.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/textfield_searchview_right_holo_light.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/drawable/title_bar.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-et/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-et/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-fa/donottranslate-cldr.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/values-fa/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/apns.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/autotext.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/eri.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/kg_password_kbd_numeric.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/password_kbd_extension.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/password_kbd_numeric.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/password_kbd_popup_template.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/password_kbd_qwerty.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/password_kbd_qwerty_shifted.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/password_kbd_symbols.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/password_kbd_symbols_shift.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/power_profile.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171057" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/preferred_time_zones.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/sms_short_codes.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/storage_list.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml/time_zones_by_country.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml-en/autotext.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml-land/password_kbd_qwerty.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml-land/password_kbd_qwerty_shifted.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml-mdpi/password_kbd_qwerty.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/xml-mdpi/password_kbd_qwerty_shifted.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/action_bar_home.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/action_bar_title_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/action_menu_item_layout.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/action_menu_layout.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/action_mode_bar.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/action_mode_close_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/activity_chooser_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/activity_chooser_view_list_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/activity_list.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/activity_list_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/activity_list_item_2.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/adaptive_notification_wrapper.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/alert_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/alert_dialog_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/alert_dialog_progress.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/alert_dialog_progress_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/always_use_checkbox.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/am_compat_mode_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/app_permission_item.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/app_permission_item_money.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/app_permission_item_old.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/app_perms_summary.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/auto_complete_list.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/breadcrumbs_in_fragment.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/browser_link_context_header.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/calendar_view.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/character_picker.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/character_picker_button.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/choose_account.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/choose_account_row.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/choose_account_type.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/choose_type_and_account.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/date_picker.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/date_picker_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/date_picker_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/default_navigation.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +735,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -101,6 +771,7 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
@@ -123,7 +794,7 @@
       <file leaf-file-name="ActivityRecognitionIntentService.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="44" column="35" selection-start="1356" selection-end="1356" vertical-scroll-proportion="0.13043478">
+            <state line="58" column="52" selection-start="2035" selection-end="2035" vertical-scroll-proportion="0.67701864">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -134,7 +805,16 @@
       <file leaf-file-name="GPSUtils.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/GPSUtils.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="55" column="15" selection-start="1773" selection-end="1773" vertical-scroll-proportion="0.0">
+            <state line="91" column="73" selection-start="3207" selection-end="3207" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="adventuretracker.c" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/submodules/AdventureTracker-PebbleWatchFace/adventuretracker/src/adventuretracker.c">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="16" column="2" selection-start="503" selection-end="562" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -143,7 +823,7 @@
       <file leaf-file-name="Constants.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/Constants.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="1" selection-start="386" selection-end="386" vertical-scroll-proportion="0.0">
+            <state line="15" column="34" selection-start="406" selection-end="419" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -160,13 +840,13 @@
       </file>
       <file leaf-file-name="main.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
+          <provider selected="true" editor-type-id="android-designer">
+            <state />
+          </provider>
           <provider editor-type-id="text-editor">
             <state line="11" column="0" selection-start="479" selection-end="479" vertical-scroll-proportion="0.0">
               <folding />
             </state>
-          </provider>
-          <provider selected="true" editor-type-id="android-designer">
-            <state />
           </provider>
         </entry>
       </file>
@@ -204,8 +884,8 @@
         <option value="$PROJECT_DIR$/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/LocationUpdateIntentService.java" />
         <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/Constants.java" />
-        <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java" />
         <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/GPSUtils.java" />
+        <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java" />
       </list>
     </option>
   </component>
@@ -228,7 +908,7 @@
     <ConfirmationsSetting value="0" id="Remove" />
   </component>
   <component name="ProjectReloadState">
-    <option name="STATE" value="2" />
+    <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
@@ -243,6 +923,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -250,10 +932,6 @@
               <option name="myItemId" value="AdventureTracker-AndroidApp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -261,12 +939,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="External Libraries" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ExternalLibrariesNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="&lt; Android 4.2.2 Platform &gt;" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.NamedLibraryElementNode" />
+              <option name="myItemId" value="AdventureTracker-AndroidApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -276,6 +950,62 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="AdventureTracker-AndroidApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="submodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdventureTracker-PebbleWatchFace" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdventureTracker-AndroidApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdventureTracker-AndroidApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="submodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdventureTracker-PebbleWatchFace" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="adventuretracker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdventureTracker-AndroidApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdventureTracker-AndroidApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="submodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdventureTracker-PebbleWatchFace" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="adventuretracker" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -401,12 +1131,10 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
@@ -414,17 +1142,17 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="options.lastSelected" value="preferences.sourceCode.XML" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="/Applications/android/sdk/extras/google/google_play_services/libproject/google-play-services_lib/libs/google-play-services.jar!/" />
+    <property name="last_opened_file_path" value="/Applications/Android/android-sdk-macosx/extras/google/google_play_services/libproject/google-play-services_lib/libs/google-play-services.jar!/" />
     <property name="AndroidLayoutSelectedEditor" value="android-designer" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="MemberChooser.showClasses" value="true" />
     <property name="FullScreen" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="RunManager" selected="Android Application.AdventureTracker-AndroidApp">
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
@@ -459,6 +1187,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -485,19 +1226,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -628,14 +1356,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="22" width="1900" height="970" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39882353" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39882353" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -727,13 +1455,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="93" selection-start="363" selection-end="363" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="72" column="32" selection-start="2474" selection-end="2474" vertical-scroll-proportion="0.0">
@@ -751,13 +1472,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state line="11" column="0" selection-start="479" selection-end="479" vertical-scroll-proportion="0.0">
           <folding />
         </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
@@ -803,25 +1524,18 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
       <provider editor-type-id="text-editor">
         <state line="11" column="0" selection-start="479" selection-end="479" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="6" column="93" selection-start="363" selection-end="363" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/Constants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="1" selection-start="386" selection-end="386" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -833,16 +1547,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/submodules/AdventureTracker-PebbleWatchFace/adventuretracker/src/adventuretracker.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="2" selection-start="503" selection-end="562" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/Constants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="15" column="34" selection-start="406" selection-end="419" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/GPSUtils.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="55" column="15" selection-start="1773" selection-end="1773" vertical-scroll-proportion="0.0">
+        <state line="91" column="73" selection-start="3207" selection-end="3207" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="44" column="35" selection-start="1356" selection-end="1356" vertical-scroll-proportion="0.13043478">
+        <state line="58" column="52" selection-start="2035" selection-end="2035" vertical-scroll-proportion="0.67701864">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -878,6 +1606,7 @@
       </state>
       <state key="GlobalLibrariesConfigurable.UI">
         <settings>
+          <last-edited>jquery-1.9.1</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -889,7 +1618,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>Go sdk go1.1 darwin/amd64</last-edited>
+          <last-edited>1.7</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -906,7 +1635,6 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>

@@ -27,6 +27,7 @@ public class GPSUtils implements GooglePlayServicesClient.ConnectionCallbacks, G
     private LocationClient _locationClient;
     private Context _context;
     private boolean _gpsRunning;
+    private int _updates = 0;
 
     public GPSUtils(Context context) {
         Log.d("ActivityIntent","INIT GPS");
@@ -43,9 +44,9 @@ public class GPSUtils implements GooglePlayServicesClient.ConnectionCallbacks, G
     public void stopGps() {
         //To change body of created methods use File | Settings | File Templates.
         if(_gpsRunning) {
+            Log.d("ActivityIntent","STOP GPS");
             _locationClient.unregisterConnectionCallbacks(this);
             _locationClient.disconnect();
-            Log.d("ActivityIntent","STOP GPS");
             _gpsRunning = false;
         }
     }
@@ -55,6 +56,7 @@ public class GPSUtils implements GooglePlayServicesClient.ConnectionCallbacks, G
             return;
 
         Log.d("ActivityIntent","START GPS");
+        _updates = 0;
         _locationClient = new LocationClient(_context,this,this);
         _locationClient.connect();
         _gpsRunning = true;
@@ -62,10 +64,10 @@ public class GPSUtils implements GooglePlayServicesClient.ConnectionCallbacks, G
 
     @Override
     public void onConnected(Bundle connectionHint) {
-
         Log.d("ActivityIntent","GPS CONNECTED");
         LocationRequest request = LocationRequest.create();
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        request.setFastestInterval(500);
         _locationClient.requestLocationUpdates(request, this);
     }
 
@@ -82,9 +84,11 @@ public class GPSUtils implements GooglePlayServicesClient.ConnectionCallbacks, G
     @Override
     public void onLocationChanged(Location location) {
         Log.d("ActivityIntent", "Got Speed: " + location.getSpeed());
-
+        _updates++;
         PebbleDictionary dic = new PebbleDictionary();
         dic.addString(Constants.SPEED_TEXT,String.valueOf(location.getSpeed()));
+        dic.addString(Constants.DISTANCE_TEXT,String.valueOf(_updates));
+        dic.addString(Constants.AVGSPEED_TEXT,String.valueOf(location.getTime()));
         PebbleKit.sendDataToPebble(_context, Constants.WATCH_UUID, dic);
     }
 
