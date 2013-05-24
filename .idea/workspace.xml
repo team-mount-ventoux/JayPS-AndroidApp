@@ -3,7 +3,9 @@
   <component name="AndroidDesignerProfile">
     <option name="fullProfile">
       <profile>
-        <option name="device" value="[None]" />
+        <option name="device" value="2.7in QVGA" />
+        <option name="deviceConfiguration" value="Portrait" />
+        <option name="targetHashString" value="android-17" />
         <option name="theme" value="Theme" />
       </profile>
     </option>
@@ -27,20 +29,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb1c107a-0cb6-4f80-927f-961c8561cda4" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/GPSService.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/android/AdventureTracker/GPSUtils.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AdventureTracker-AndroidApp.iml" afterPath="$PROJECT_DIR$/AdventureTracker-AndroidApp.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/AdventureTracker/Constants.java" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/Constants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/AdventureTracker/GPSUtils.java" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/GPSUtils.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java" afterPath="$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/google_play_services.xml" afterPath="$PROJECT_DIR$/.idea/libraries/google_play_services.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/main.xml" afterPath="$PROJECT_DIR$/res/layout/main.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="AdventureTracker-AndroidApp.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369255470178" ignored="false" />
-    <file path="/MainActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369170407387" ignored="false" />
-    <file path="/ActivityRecognitionIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256700553" ignored="false" />
-    <file path="/AndroidManifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369200071328" ignored="false" />
+    <file path="/Dummy.txt" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369311212425" ignored="false" />
+    <file path="/MainActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369315083845" ignored="false" />
+    <file path="/ActivityRecognitionIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369314640621" ignored="false" />
+    <file path="/AndroidManifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369313024379" ignored="false" />
     <file path="/ids.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369170185320" ignored="false" />
     <file path="/a.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369169094250" ignored="false" />
     <file path="/R.java.d" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369169632340" ignored="false" />
@@ -721,6 +726,7 @@
     <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/date_picker_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
     <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/date_picker_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
     <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/default_navigation.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
+    <file path="/GPSService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369321536977" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -735,6 +741,8 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -771,8 +779,6 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -785,7 +791,7 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="43" selection-start="638" selection-end="746" vertical-scroll-proportion="0.0">
+            <state line="131" column="39" selection-start="4908" selection-end="4908" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -794,7 +800,7 @@
       <file leaf-file-name="ActivityRecognitionIntentService.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="52" selection-start="2035" selection-end="2035" vertical-scroll-proportion="0.67701864">
+            <state line="52" column="132" selection-start="1718" selection-end="1718" vertical-scroll-proportion="0.5971074">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -802,11 +808,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GPSUtils.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/GPSUtils.java">
+      <file leaf-file-name="GPSService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/GPSService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="91" column="73" selection-start="3207" selection-end="3207" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="44" column="142" selection-start="1587" selection-end="1587" vertical-scroll-proportion="0.0">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -832,19 +840,7 @@
       <file leaf-file-name="ids.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/res/values/ids.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="9" selection-start="161" selection-end="161" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
-          <provider selected="true" editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider editor-type-id="text-editor">
-            <state line="11" column="0" selection-start="479" selection-end="479" vertical-scroll-proportion="0.0">
+            <state line="3" column="9" selection-start="161" selection-end="161" vertical-scroll-proportion="-1.8">
               <folding />
             </state>
           </provider>
@@ -853,7 +849,7 @@
       <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="93" selection-start="363" selection-end="363" vertical-scroll-proportion="0.0">
+            <state line="17" column="38" selection-start="859" selection-end="859" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -877,14 +873,15 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/res/layout/main.xml" />
         <option value="$PROJECT_DIR$/gen/R.java.d" />
         <option value="$PROJECT_DIR$/res/values/ids.xml" />
-        <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java" />
-        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/LocationUpdateIntentService.java" />
         <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/Constants.java" />
+        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java" />
+        <option value="$PROJECT_DIR$/res/layout/main.xml" />
         <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/GPSUtils.java" />
+        <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/GPSService.java" />
         <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java" />
       </list>
     </option>
@@ -924,7 +921,6 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -939,7 +935,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
+              <option name="myItemId" value="PebbleCyclingComputer-AndroidApp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -949,73 +945,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="submodules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-PebbleWatchFace" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="submodules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-PebbleWatchFace" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adventuretracker" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="submodules" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-PebbleWatchFace" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="adventuretracker" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
+              <option name="myItemId" value="PebbleCyclingComputer-AndroidApp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1026,10 +956,6 @@
               <option name="myItemId" value="com" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
@@ -1037,33 +963,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="kit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="util" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
+              <option name="myItemId" value="PebbleCyclingComputer-AndroidApp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1085,7 +985,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
+              <option name="myItemId" value="PebbleCyclingComputer-AndroidApp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1099,7 +999,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
+              <option name="myItemId" value="PebbleCyclingComputer-AndroidApp" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -1111,30 +1011,13 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker-AndroidApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="gen" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="AdventureTracker" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
@@ -1142,17 +1025,17 @@
     <property name="MemberChooser.sorted" value="false" />
     <property name="options.lastSelected" value="preferences.sourceCode.XML" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="/Applications/Android/android-sdk-macosx/extras/google/google_play_services/libproject/google-play-services_lib/libs/google-play-services.jar!/" />
+    <property name="last_opened_file_path" value="/Applications/android/sdk/extras/google/google_play_services/libproject/google-play-services_lib/libs/google-play-services.jar!/" />
     <property name="AndroidLayoutSelectedEditor" value="android-designer" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="FullScreen" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
+    <property name="FullScreen" value="false" />
     <property name="GoToClass.includeLibraries" value="false" />
-    <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
+    <property name="options.splitter.details.proportions" value="0.2" />
   </component>
   <component name="RunManager" selected="Android Application.AdventureTracker-AndroidApp">
     <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
@@ -1187,19 +1070,6 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
-      <method />
-    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -1226,6 +1096,19 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -1358,12 +1241,14 @@
     <frame x="10" y="22" width="1900" height="970" extended-state="0" />
     <editor active="false" />
     <layout>
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32901832" sideWeight="0.6023529" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21251349" sideWeight="0.6023529" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39882353" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39764705" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1377,13 +1262,11 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973032" sideWeight="0.6011765" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24973032" sideWeight="0.6023529" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.67164177" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298122" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2128788" sideWeight="0.67164177" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1455,15 +1338,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="32" selection-start="2474" selection-end="2474" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/res/values/ids.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="3" column="9" selection-start="161" selection-end="161" vertical-scroll-proportion="0.0">
@@ -1490,9 +1364,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/getpebble/android/kit/util/PebbleTuple.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="11" column="12" selection-start="235" selection-end="235" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="11" column="12" selection-start="235" selection-end="235" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/getpebble/android/kit/PebbleKit.java">
@@ -1504,45 +1376,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/getpebble/android/kit/Constants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="60" selection-start="2400" selection-end="2449" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="62" column="60" selection-start="2400" selection-end="2449" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/ids.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="9" selection-start="161" selection-end="161" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider editor-type-id="text-editor">
-        <state line="11" column="0" selection-start="479" selection-end="479" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="93" selection-start="363" selection-end="363" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="43" selection-start="638" selection-end="746" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1561,16 +1400,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/GPSUtils.java">
+    <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
+      <provider selected="true" editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider editor-type-id="text-editor">
+        <state line="11" column="0" selection-start="444" selection-end="444" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/ids.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="91" column="73" selection-start="3207" selection-end="3207" vertical-scroll-proportion="0.0">
+        <state line="3" column="9" selection-start="161" selection-end="161" vertical-scroll-proportion="-1.8">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/GPSService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="44" column="142" selection-start="1587" selection-end="1587" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="38" selection-start="859" selection-end="859" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="131" column="39" selection-start="4908" selection-end="4908" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="52" selection-start="2035" selection-end="2035" vertical-scroll-proportion="0.67701864">
+        <state line="52" column="132" selection-start="1718" selection-end="1718" vertical-scroll-proportion="0.5971074">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1618,7 +1490,7 @@
       </state>
       <state key="JdkListConfigurable.UI">
         <settings>
-          <last-edited>1.7</last-edited>
+          <last-edited>Android 4.2.2 Platform</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

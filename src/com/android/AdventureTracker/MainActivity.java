@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
-import android.content.Intent;
+import android.content.*;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,12 +13,15 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.internal.r;
 import com.google.android.gms.location.ActivityRecognitionClient;
+import com.google.android.gms.location.DetectedActivity;
 
 import java.util.List;
 
 public class MainActivity extends Activity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 
     private ActivityRecognitionClient mActivityRecognitionClient;
+    private ResponseReceiver receiver;
+    private boolean _gpsRunning = false;
 
     /**
      * Called when the activity is first created.
@@ -38,6 +41,14 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
         // Connect to the ActivityRecognitionService
         mActivityRecognitionClient = new ActivityRecognitionClient(getApplicationContext(), this, this);
         mActivityRecognitionClient.connect();
+        registerIntentReceiver();
+    }
+
+    private void registerIntentReceiver() {
+        IntentFilter filter = new IntentFilter(ResponseReceiver.ACTION_RESP);
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        receiver = new ResponseReceiver();
+        registerReceiver(receiver, filter);
     }
 
     private void checkRunkeeperRunning() {
@@ -67,6 +78,21 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
         view.setText("Activity Type: " + type);
     }
 
+    private void startGPSService() {
+        if(_gpsRunning)
+           return;
+
+        startService(new Intent(getApplicationContext(),GPSService.class));
+        _gpsRunning = true;
+    }
+
+    private void stopGPSService() {
+        if(!_gpsRunning)
+            return;
+        stopService(new Intent(getApplicationContext(),GPSService.class));
+        _gpsRunning = false;
+    }
+
     @Override
     public void onConnected(Bundle connectionHint) {
         Intent intent = new Intent(getApplicationContext(), ActivityRecognitionIntentService.class);
@@ -84,5 +110,23 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public class ResponseReceiver extends BroadcastReceiver {
+        public static final String ACTION_RESP =
+                "com.mamlambo.intent.action.MESSAGE_PROCESSED";
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            TextView result = (TextView) findViewById(R.id.activityType);
+            int activity = intent.getIntExtra("ACTIVITY_CHANGED", 0);
+            result.setText("Activity Type: " + activity);
+
+            if(activity == DetectedActivity.ON_BICYCLE)
+                startGPSService();
+            else
+                stopGPSService();
+
+        }
     }
 }

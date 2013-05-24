@@ -40,7 +40,8 @@ public class ActivityRecognitionIntentService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
-            //GPSUtils.getInstance(getApplicationContext()).startGPS();
+            //sendReply(DetectedActivity.ON_BICYCLE);
+
             Log.d("ActivityIntent","Handle Intent");
 
             switch(result.getMostProbableActivity().getType()) {
@@ -49,8 +50,7 @@ public class ActivityRecognitionIntentService extends IntentService {
                     //TODO: start pebble watch face
                     // start the watch face
                     Log.d("ActivityIntent","ON_BICYCLE");
-                    showPebbleWatchFace();
-                    GPSUtils.getInstance(getApplicationContext()).startGPS();
+                    sendReply(result.getMostProbableActivity().getType());
                     break;
                 case DetectedActivity.TILTING:
                     Log.d("ActivityIntent","TILTING");
@@ -58,22 +58,18 @@ public class ActivityRecognitionIntentService extends IntentService {
                 case DetectedActivity.STILL:
                     Log.d("ActivityIntent","STILL");
                 default:
-                    hidePebbleWatchFace();
-                    GPSUtils.getInstance(getApplicationContext()).stopGps();
+                    sendReply(result.getMostProbableActivity().getType());
             }
 
         }
     }
 
-    private void hidePebbleWatchFace() {
-        PebbleKit.closeAppOnPebble(getApplicationContext(),Constants.WATCH_UUID);
-        _watchShown = false;
+    private void sendReply(int type) {
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(MainActivity.ResponseReceiver.ACTION_RESP);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        broadcastIntent.putExtra("ACTIVITY_CHANGED", type);
+        sendBroadcast(broadcastIntent);
     }
 
-    private void showPebbleWatchFace() {
-        if(!_watchShown) {
-            PebbleKit.startAppOnPebble(getApplicationContext(),Constants.WATCH_UUID);
-            _watchShown = true;
-        }
-    }
 }

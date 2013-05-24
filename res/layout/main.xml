@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent"
-              android:id="@id/activityType">
+        >
     <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -13,6 +13,6 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="Activity Type"
-            android:layout_gravity="center_vertical|left"/>
+            android:layout_gravity="center_vertical|left" android:id="@id/activityType"/>
 </LinearLayout>
 
