@@ -14,6 +14,8 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
 
+import java.text.DecimalFormat;
+
 /**
  * Created with IntelliJ IDEA.
  * User: njackson
@@ -25,6 +27,11 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
     private int _updates;
     private LocationClient _locationClient;
+    private double _totalSpeed;
+    private double _speed;
+    private double _averageSpeed;
+    private double _distance;
+    private Location _prevLocation;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -46,6 +53,10 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         Log.d("ActivityIntent","Started GPS Service");
         PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
         _updates = 0;
+        _speed = 0;
+        _distance = 0;
+        _averageSpeed = 0;
+        _prevLocation = null;
         _locationClient = new LocationClient(getApplicationContext(),this,this);
         _locationClient.connect();
     }
@@ -78,11 +89,33 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
     @Override
     public void onLocationChanged(Location location) {
         Log.d("ActivityIntent", "Got Speed: " + location.getSpeed());
-        _updates++;
+
+        DecimalFormat df = new DecimalFormat("#.##");
+        _speed = location.getSpeed() * 2.23693629;
+
+        if(_speed < 1) {
+            _speed = 0;
+        }else {
+            _updates++;
+            _totalSpeed += _speed;
+        }
+
+        if(_totalSpeed / _updates > 1)
+            _averageSpeed = (_totalSpeed / _updates);
+
+        if(_prevLocation != null)
+            _distance += (_prevLocation.distanceTo(location) * 0.000621371192);
+
+        updatePebble(df);
+
+        _prevLocation = location;
+    }
+
+    private void updatePebble(DecimalFormat df) {
         PebbleDictionary dic = new PebbleDictionary();
-        dic.addString(Constants.SPEED_TEXT,String.valueOf(location.getSpeed()));
-        dic.addString(Constants.DISTANCE_TEXT,String.valueOf(_updates));
-        dic.addString(Constants.AVGSPEED_TEXT,String.valueOf(location.getTime()));
+        dic.addString(Constants.SPEED_TEXT,df.format(_speed));
+        dic.addString(Constants.DISTANCE_TEXT,String.valueOf(_distance));
+        dic.addString(Constants.AVGSPEED_TEXT,String.valueOf(df.format(_averageSpeed)));
         PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
     }
 }

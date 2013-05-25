@@ -6,8 +6,11 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.*;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -22,6 +25,7 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
     private ActivityRecognitionClient mActivityRecognitionClient;
     private ResponseReceiver receiver;
     private boolean _gpsRunning = false;
+    private boolean _activityRecognition = false;
 
     /**
      * Called when the activity is first created.
@@ -32,16 +36,51 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 
         checkGooglePlayServices();
         checkRunkeeperRunning();
-        initActivityRecognitionClient();
-
+        registerIntentReceiver();
         setContentView(R.layout.main);
+
+        final ToggleButton _autoStart = (ToggleButton)findViewById(R.id.autoStartButton);
+        final Button _startButton = (Button)findViewById(R.id.startButton);
+
+        _autoStart.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                _activityRecognition = !_activityRecognition;
+                if (_activityRecognition) {
+                    initActivityRecognitionClient();
+                    _startButton.setVisibility(0);
+                }else {
+                    stopActivityRecogntionClient();
+                    _startButton.setVisibility(1);
+                }
+            }
+        });
+
+        _startButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                _gpsRunning = !_gpsRunning;
+                if (_gpsRunning)
+                    startGPSService();
+                else
+                    stopGPSService();
+            }
+        });
+
+    }
+
+    private void stopActivityRecogntionClient() {
+        mActivityRecognitionClient.disconnect();
     }
 
     private void initActivityRecognitionClient() {
         // Connect to the ActivityRecognitionService
         mActivityRecognitionClient = new ActivityRecognitionClient(getApplicationContext(), this, this);
         mActivityRecognitionClient.connect();
-        registerIntentReceiver();
     }
 
     private void registerIntentReceiver() {
@@ -114,7 +153,7 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
 
     public class ResponseReceiver extends BroadcastReceiver {
         public static final String ACTION_RESP =
-                "com.mamlambo.intent.action.MESSAGE_PROCESSED";
+                "com.njackson.intent.action.MESSAGE_PROCESSED";
         @Override
         public void onReceive(Context context, Intent intent) {
 
