@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AdventureTracker-AndroidApp.iml" filepath="$PROJECT_DIR$/AdventureTracker-AndroidApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PebbleCyclingComputer-AndroidApp.iml" filepath="$PROJECT_DIR$/PebbleCyclingComputer-AndroidApp.iml" />
     </modules>
   </component>
 </project>
