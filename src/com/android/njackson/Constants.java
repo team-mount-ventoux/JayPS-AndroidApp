@@ -12,8 +12,9 @@ import java.util.UUID;
 
 public class Constants {
     static final UUID WATCH_UUID = java.util.UUID.fromString("5dd35873-3bb6-44d6-8255-0e61bc3b97f5");
-    static final int SPEED_TEXT = 0;
-    static final int DISTANCE_TEXT = 1;
-    static final int AVGSPEED_TEXT = 2;
+    static final int NOT_USED = 0x00;
+    static final int SPEED_TEXT = 0x01;
+    static final int DISTANCE_TEXT = 0x02;
+    static final int AVGSPEED_TEXT = 0x03;
 }
 

@@ -168,28 +168,8 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
         if(checkServiceRunning())
            return;
 
-
-        int n=0;
-        // test pebble bluetooth
-       Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-
-                    Random r = new Random();
-
-                    DecimalFormat df = new DecimalFormat("#.##");
-                    PebbleDictionary dic = new PebbleDictionary();
-                    //dic.
-                    dic.addString(Constants.SPEED_TEXT,df.format((r.nextDouble() * (30-10))));
-                    dic.addString(Constants.DISTANCE_TEXT,df.format((r.nextDouble() * (30-10))));
-                    dic.addString(Constants.AVGSPEED_TEXT,df.format((r.nextDouble() * (30-10))));
-
-                    if(PebbleKit.isWatchConnected(getApplicationContext()))
-                        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
-                }
-            }, 2000);
-        //registerGPSServiceIntentReceiver();
-        //startService(new Intent(getApplicationContext(),GPSService.class));
+        registerGPSServiceIntentReceiver();
+        startService(new Intent(getApplicationContext(),GPSService.class));
     }
 
     private void stopGPSService() {
@@ -246,7 +226,7 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
             double distance = intent.getDoubleExtra("DISTANCE", 0);
             double avgspeed = intent.getDoubleExtra("AVGSPEED", 0);
 
-            DecimalFormat df = new DecimalFormat("#.##");
+            DecimalFormat df = new DecimalFormat("#.#");
             PebbleDictionary dic = new PebbleDictionary();
             dic.addString(Constants.SPEED_TEXT,df.format(speed));
             dic.addString(Constants.DISTANCE_TEXT,df.format(distance));
