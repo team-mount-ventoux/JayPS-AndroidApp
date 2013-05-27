@@ -54,7 +54,7 @@ public class ActivityRecognitionIntentService extends IntentService {
 
     private void sendReply(int type) {
         Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(MainActivity.ResponseReceiver.ACTION_RESP);
+        broadcastIntent.setAction(MainActivity.ActivityRecognitionReceiver.ACTION_RESP);
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         broadcastIntent.putExtra("ACTIVITY_CHANGED", type);
         sendBroadcast(broadcastIntent);

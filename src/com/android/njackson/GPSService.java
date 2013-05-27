@@ -90,7 +90,6 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
     public void onLocationChanged(Location location) {
         Log.d("ActivityIntent", "Got Speed: " + location.getSpeed());
 
-        DecimalFormat df = new DecimalFormat("#.##");
         _speed = location.getSpeed() * 2.23693629;
 
         if(_speed < 1) {
@@ -106,16 +105,19 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         if(_prevLocation != null)
             _distance += (_prevLocation.distanceTo(location) * 0.000621371192);
 
-        updatePebble(df);
+        updatePebble();
 
         _prevLocation = location;
     }
 
-    private void updatePebble(DecimalFormat df) {
-        PebbleDictionary dic = new PebbleDictionary();
-        dic.addString(Constants.SPEED_TEXT,df.format(_speed));
-        dic.addString(Constants.DISTANCE_TEXT,String.valueOf(_distance));
-        dic.addString(Constants.AVGSPEED_TEXT,String.valueOf(df.format(_averageSpeed)));
-        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+    private void updatePebble() {
+
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        broadcastIntent.putExtra("SPEED", _speed);
+        broadcastIntent.putExtra("DISTANCE", _distance);
+        broadcastIntent.putExtra("AVGSPEED", _averageSpeed);
+        sendBroadcast(broadcastIntent);
     }
 }
