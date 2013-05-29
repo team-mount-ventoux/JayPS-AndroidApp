@@ -2,6 +2,7 @@ package com.android.njackson;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import com.google.android.gms.location.LocationListener;
 import android.os.Bundle;
@@ -31,6 +32,11 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
     private double _speed;
     private double _averageSpeed;
     private double _distance;
+
+    private double _prevspeed = -1;
+    private double _prevaverageSpeed = -1;
+    private double _prevdistance = -1;
+
     private Location _prevLocation;
 
     @Override
@@ -43,22 +49,35 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
     @Override
     public void onDestroy (){
-        Log.d("ActivityIntent","Stopped GPS Service");
+        Log.d("MainActivity","Stopped GPS Service");
+
+        // save the state
+        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putFloat("GPS_SPEED",(float)_speed);
+        editor.putFloat("GPS_DISTANCE",(float)_distance);
+        editor.putFloat("GPS_AVGSPEED",(float)_averageSpeed);
+        editor.putFloat("GPS_UPDATES",(float)_updates);
+        editor.commit();
+
         PebbleKit.closeAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
         _locationClient.removeLocationUpdates(this);
         _locationClient.disconnect();
     }
 
     private void handleCommand(Intent intent) {
-        Log.d("ActivityIntent","Started GPS Service");
-        PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
-        _updates = 0;
-        _speed = 0;
-        _distance = 0;
-        _averageSpeed = 0;
+        Log.d("MainActivity","Started GPS Service");
+        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+        _speed = settings.getFloat("GPS_SPEED",0);
+        _distance = settings.getFloat("GPS_DISTANCE",0);
+        _averageSpeed = settings.getFloat("GPS_AVGSPEED",0);
+        _updates = (int)settings.getFloat("GPS_UPDATES",0);
+
         _prevLocation = null;
         _locationClient = new LocationClient(getApplicationContext(),this,this);
         _locationClient.connect();
+
+        PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
     }
 
     @Override
@@ -68,7 +87,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
     @Override
     public void onConnected(Bundle connectionHint) {
-        Log.d("ActivityIntent","GPS CONNECTED");
+        Log.d("MainActivity","GPS CONNECTED");
         LocationRequest request = LocationRequest.create();
         request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         request.setInterval(500);
@@ -88,7 +107,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d("ActivityIntent", "Got Speed: " + location.getSpeed());
+        Log.d("MainActivity", "Got Speed: " + location.getSpeed());
 
         _speed = location.getSpeed() * 2.23693629;
 
@@ -105,6 +124,10 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         if(_prevLocation != null)
             _distance += (_prevLocation.distanceTo(location) * 0.000621371192);
 
+        if (_distance < 0)
+            _distance = 0.0;
+
+
         updatePebble();
 
         _prevLocation = location;
@@ -112,12 +135,20 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
     private void updatePebble() {
 
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
-        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-        broadcastIntent.putExtra("SPEED", _speed);
-        broadcastIntent.putExtra("DISTANCE", _distance);
-        broadcastIntent.putExtra("AVGSPEED", _averageSpeed);
-        sendBroadcast(broadcastIntent);
+        if(_speed != _prevspeed || _averageSpeed != _prevaverageSpeed || _distance != _prevdistance) {
+
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
+            broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+            broadcastIntent.putExtra("SPEED", _speed);
+            broadcastIntent.putExtra("DISTANCE", _distance);
+            broadcastIntent.putExtra("AVGSPEED", _averageSpeed);
+            sendBroadcast(broadcastIntent);
+
+            _prevaverageSpeed = _averageSpeed;
+            _prevdistance = _distance;
+            _prevspeed = _speed;
+
+        }
     }
 }

@@ -16,5 +16,6 @@ public class Constants {
     static final int SPEED_TEXT = 0x01;
     static final int DISTANCE_TEXT = 0x02;
     static final int AVGSPEED_TEXT = 0x03;
+    static final String PREFS_NAME = "PebbleBikePrefs";
 }
 

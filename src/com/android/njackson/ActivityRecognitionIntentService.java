@@ -18,10 +18,12 @@ public class ActivityRecognitionIntentService extends IntentService {
 
     public ActivityRecognitionIntentService() {
         super("ActivityRecognitionIntentService");
+        Log.d("MainActivity","Start");
     }
 
     public ActivityRecognitionIntentService(String name) {
         super(name);
+        Log.d("MainActivity","Start");
     }
 
     @Override
@@ -30,7 +32,7 @@ public class ActivityRecognitionIntentService extends IntentService {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
             //sendReply(DetectedActivity.ON_BICYCLE);
 
-            Log.d("ActivityIntent","Handle Intent");
+            Log.d("MainActivity","Handle Intent");
 
             switch(result.getMostProbableActivity().getType()) {
 

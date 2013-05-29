@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.*;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -30,6 +31,14 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
     private ActivityRecognitionReceiver _activityRecognitionReceiver;
     private GPSServiceReceiver _gpsServiceReceiver;
     private boolean _activityRecognition = false;
+    PendingIntent _callbackIntent;
+    private RequestType _requestType;
+
+
+    enum RequestType {
+        START,
+        STOP
+    }
 
     /**
      * Called when the activity is first created.
@@ -42,6 +51,11 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
         checkRunkeeperRunning();
         setContentView(R.layout.main);
 
+        Intent intent = new Intent(getApplicationContext(), ActivityRecognitionIntentService.class);
+
+        _callbackIntent = PendingIntent.getService(getApplicationContext(), 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
         final ToggleButton _autoStart = (ToggleButton)findViewById(R.id.autoStartButton);
         final Button _startButton = (Button)findViewById(R.id.startButton);
 
@@ -50,14 +64,21 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                _activityRecognition = !_activityRecognition;
-                if (_activityRecognition) {
+                if (!_activityRecognition) {
                     initActivityRecognitionClient();
-                    _startButton.setVisibility(0);
+                    _startButton.setVisibility(View.GONE);
                 }else {
                     stopActivityRecogntionClient();
-                    _startButton.setVisibility(1);
+                    _startButton.setVisibility(View.VISIBLE);
                 }
+
+                _activityRecognition = !_activityRecognition;
+
+                SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
+                editor.commit();
+
             }
         });
 
@@ -77,28 +98,56 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
             }
         });
 
+        SetupButtons();
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        SetupButtons();
+    }
+
+    private void SetupButtons() {
         Button _startButton = (Button)findViewById(R.id.startButton);
+        ToggleButton _autoStart = (ToggleButton)findViewById(R.id.autoStartButton);
+
         if (checkServiceRunning()) {
             _startButton.setText("Stop");
         }
         else{
             _startButton.setText("Start");
         }
+
+        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+
+        _activityRecognition = settings.getBoolean("ACTIVITY_RECOGNITION",false);
+
+        if (_activityRecognition) {
+            _startButton.setVisibility(View.GONE);
+        }else {
+            _startButton.setVisibility(View.VISIBLE);
+        }
+
+        _autoStart.setChecked(_activityRecognition);
+
+        if(_activityRecognition && (_mActivityRecognitionClient == null))
+            initActivityRecognitionClient();
+
     }
 
     private void stopActivityRecogntionClient() {
         removeActivityRecognitionIntentReceiver();
-        _mActivityRecognitionClient.disconnect();
+        if(_mActivityRecognitionClient == null)
+            _mActivityRecognitionClient = new ActivityRecognitionClient(getApplicationContext(), this, this);
+        _requestType = RequestType.STOP;
+        _mActivityRecognitionClient.connect();
     }
 
     private void initActivityRecognitionClient() {
         // Connect to the ActivityRecognitionService
         registerActivityRecognitionIntentReceiver();
+        _requestType = RequestType.START;
         _mActivityRecognitionClient = new ActivityRecognitionClient(getApplicationContext(), this, this);
         _mActivityRecognitionClient.connect();
     }
@@ -111,18 +160,35 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
     }
 
     private void removeActivityRecognitionIntentReceiver() {
-        unregisterReceiver(_gpsServiceReceiver);
+        if(_activityRecognitionReceiver != null)
+            unregisterReceiver(_activityRecognitionReceiver);
+    }
+
+    private void startGPSService() {
+        if(checkServiceRunning())
+            return;
+
+        registerGPSServiceIntentReceiver();
+        startService(new Intent(getApplicationContext(), GPSService.class));
+    }
+
+    private void stopGPSService() {
+        if(!checkServiceRunning())
+            return;
+        removeGPSServiceIntentReceiver();
+        stopService(new Intent(getApplicationContext(), GPSService.class));
     }
 
     private void registerGPSServiceIntentReceiver() {
-        IntentFilter filter = new IntentFilter(ActivityRecognitionReceiver.ACTION_RESP);
+        IntentFilter filter = new IntentFilter(GPSServiceReceiver.ACTION_RESP);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         _gpsServiceReceiver = new GPSServiceReceiver();
         registerReceiver(_gpsServiceReceiver, filter);
     }
 
     private void removeGPSServiceIntentReceiver() {
-        unregisterReceiver(_gpsServiceReceiver);
+        if(_gpsServiceReceiver != null)
+            unregisterReceiver(_gpsServiceReceiver);
     }
 
     private void checkRunkeeperRunning() {
@@ -164,33 +230,19 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
         view.setText("Activity Type: " + type);
     }
 
-    private void startGPSService() {
-        if(checkServiceRunning())
-           return;
-
-        registerGPSServiceIntentReceiver();
-        startService(new Intent(getApplicationContext(),GPSService.class));
-    }
-
-    private void stopGPSService() {
-        if(!checkServiceRunning())
-            return;
-        removeGPSServiceIntentReceiver();
-        stopService(new Intent(getApplicationContext(),GPSService.class));
-    }
-
     @Override
     public void onConnected(Bundle connectionHint) {
-        Intent intent = new Intent(getApplicationContext(), ActivityRecognitionIntentService.class);
-
-        PendingIntent callbackIntent = PendingIntent.getService(getApplicationContext(), 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        _mActivityRecognitionClient.requestActivityUpdates(30000, callbackIntent);
+        if(_requestType == RequestType.START) {
+            Log.d("MainActivity","Start Recognition");
+            _mActivityRecognitionClient.requestActivityUpdates(30000, _callbackIntent);
+        } else {
+            Log.d("MainActivity","Stop Recognition");
+            _mActivityRecognitionClient.removeActivityUpdates(_callbackIntent);
+        }
     }
 
     @Override
     public void onDisconnected() {
-        //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -222,18 +274,19 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            double speed = intent.getDoubleExtra("SPEED", 0);
-            double distance = intent.getDoubleExtra("DISTANCE", 0);
-            double avgspeed = intent.getDoubleExtra("AVGSPEED", 0);
+            double speed = intent.getDoubleExtra("SPEED", 99);
+            double distance = intent.getDoubleExtra("DISTANCE", 99);
+            double avgspeed = intent.getDoubleExtra("AVGSPEED", 99);
+
+            Log.d("MainActivity","Sending Data:" + speed + " dist: " + distance + " avgspeed"  + avgspeed);
 
             DecimalFormat df = new DecimalFormat("#.#");
             PebbleDictionary dic = new PebbleDictionary();
             dic.addString(Constants.SPEED_TEXT,df.format(speed));
             dic.addString(Constants.DISTANCE_TEXT,df.format(distance));
             dic.addString(Constants.AVGSPEED_TEXT,df.format(avgspeed));
+            PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
 
-            if(PebbleKit.isWatchConnected(getApplicationContext()))
-                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
         }
     }
 }
