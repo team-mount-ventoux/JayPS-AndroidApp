@@ -15,6 +15,8 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
 
+import fr.jayps.android.MyLocation;
+
 import java.text.DecimalFormat;
 
 /**
@@ -28,7 +30,6 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
     private int _updates;
     private LocationClient _locationClient;
-    private double _totalSpeed;
     private double _speed;
     private double _averageSpeed;
     private double _distance;
@@ -37,13 +38,16 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
     private double _prevaverageSpeed = -1;
     private double _prevdistance = -1;
 
-    private Location _prevLocation;
+    private MyLocation _myLocation;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleCommand(intent);
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
+        
+        _myLocation = new MyLocation(getApplicationContext());
+        
         return START_STICKY;
     }
 
@@ -73,7 +77,6 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         _averageSpeed = settings.getFloat("GPS_AVGSPEED",0);
         _updates = (int)settings.getFloat("GPS_UPDATES",0);
 
-        _prevLocation = null;
         _locationClient = new LocationClient(getApplicationContext(),this,this);
         _locationClient.connect();
 
@@ -107,30 +110,28 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d("MainActivity", "Got Speed: " + location.getSpeed());
+        _myLocation.onLocationChanged(location);
+        
+        Log.d("MainActivity", "Got Speed: " + _myLocation.getSpeed());
 
-        _speed = location.getSpeed() * 2.23693629;
+        _speed = _myLocation.getSpeed() * 2.23693629;
 
         if(_speed < 1) {
             _speed = 0;
-        }else {
+        } else {
             _updates++;
-            _totalSpeed += _speed;
         }
 
-        if(_totalSpeed / _updates > 1)
-            _averageSpeed = (_totalSpeed / _updates);
-
-        if(_prevLocation != null)
-            _distance += (_prevLocation.distanceTo(location) * 0.000621371192);
-
-        if (_distance < 0)
-            _distance = 0.0;
-
+        _averageSpeed = _myLocation.getAverageSpeed() * 2.23693629;
+        _distance = _myLocation.getDistance() * 0.000621371192;
+        
+        // available:
+        //_myLocation.getElapsedTime() // in ms
+        //_myLocation.getAltitude() // in m
+        //_myLocation.getGoodAltitude() // in m
 
         updatePebble();
 
-        _prevLocation = location;
     }
 
     private void updatePebble() {
