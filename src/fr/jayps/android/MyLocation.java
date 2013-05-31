@@ -102,12 +102,11 @@ public class MyLocation {
         if (firstLocation == null) {
             // 1st location
             firstLocation = lastLocation = location;
-        } else {
-            // not the 1st location
-            deltaTime = location.getTime() - lastLocation.getTime();
         }
+
+        deltaTime = location.getTime() - lastLocation.getTime();
     
-        if (deltaTime < 1000) {
+        if ((lastGoodLocation != null) && ((location.getTime() - lastGoodLocation.getTime()) < 1000)) {
             // less than 1000ms, skip this location
             return;
         }
@@ -148,6 +147,10 @@ public class MyLocation {
                   (localAverageSpeed > _minSpeedToComputeStats)
             ) {
 
+                if (lastGoodAscentLocation == null) {
+                    lastGoodAscentLocation = location;
+                }
+
                 if (lastGoodAscentLocation != null && (
                     ((Math.abs(location.getAltitude() - lastGoodAscentLocation.getAltitude()) >= _minAltitudeChangeLevel1) && (location.getAccuracy() <= _minAccuracyForAltitudeChangeLevel1))
                         ||
@@ -177,11 +180,6 @@ public class MyLocation {
                 Logger(location.getTime()/1000+ " deltaDistance:" + deltaDistance + " deltaTime:" + deltaTime + " deltaAscent:" + deltaAscent + " _ascent:" + _ascent);
                 Logger("_distance: " + _distance + " _averageSpeed: " + _averageSpeed + " _elapsedTime:" + _elapsedTime);
 
-                lastGoodLocation = location;
-                if (lastGoodAscentLocation == null) {
-                    lastGoodAscentLocation = location;
-                }
-
                 // additional conditions to compute statistics
                 if (
                       (_distance == 0) // 1st location
@@ -198,6 +196,7 @@ public class MyLocation {
                 
             } // additional conditions to compute statistics
             
+            lastGoodLocation = location;
             
         } // if (location.getAccuracy() <= _minAccuracy) {
         
