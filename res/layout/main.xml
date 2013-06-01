@@ -14,30 +14,48 @@
             android:textStyle="bold"
             android:layout_gravity="center" android:id="@id/MAIN_TITLE"/>
     <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ACTIVITY_TYPE_TEXT"
             android:layout_gravity="center_vertical|left" android:id="@id/MAIN_ACTIVITY_TYPE"
+            android:layout_marginTop="10dp"
             android:layout_below="@id/MAIN_TITLE"/>
 
     <TextView
             android:layout_width="94dp"
             android:layout_height="wrap_content"
             android:text="@string/AUTO_START_TEXT"
-            android:id="@id/MAIN_AUTO_START_TEXT" android:layout_below="@id/MAIN_ACTIVITY_TYPE"/>
+            android:id="@id/MAIN_AUTO_START_TEXT" android:layout_below="@id/MAIN_ACTIVITY_TYPE"
+            android:layout_marginTop="20dp" android:layout_marginBottom="12dp"/>
 
     <ToggleButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@id/MAIN_AUTO_START_BUTTON"
-            android:singleLine="false" android:layout_below="@id/MAIN_AUTO_START_TEXT"/>
+            android:singleLine="false" android:layout_toRightOf="@id/MAIN_AUTO_START_TEXT"
+            android:layout_alignBaseline="@id/MAIN_AUTO_START_TEXT"/>
+
+    <TextView
+            android:layout_width="94dp"
+            android:layout_height="wrap_content"
+            android:text="@string/UNITS_TEXT"
+            android:id="@id/MAIN_UNITS_TEXT" android:layout_below="@id/MAIN_AUTO_START_TEXT"
+            android:layout_marginTop="20dp" android:layout_marginBottom="12dp"/>
+
+    <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@id/MAIN_UNITS_BUTTON"
+            android:singleLine="false"
+            android:layout_alignBaseline="@id/MAIN_UNITS_TEXT" android:layout_toRightOf="@id/MAIN_UNITS_TEXT"
+            android:textOn="@string/UNITS_TEXT_IMPERIAL" android:textOff="@string/UNITS_TEXT_METRIC"/>
 
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/START_BUTTON_START"
             android:id="@id/MAIN_START_BUTTON"
-            android:layout_below="@id/MAIN_AUTO_START_BUTTON"/>
+            android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
 

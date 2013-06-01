@@ -32,7 +32,8 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
     private boolean _activityRecognition = false;
     PendingIntent _callbackIntent;
     private RequestType _requestType;
-
+    private PebbleKit.PebbleDataReceiver _pebbleDataHandler = null;
+    private int _units = Constants.IMPERIAL;
 
     enum RequestType {
         START,
@@ -60,6 +61,7 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
 
         final ToggleButton _autoStart = (ToggleButton)findViewById(R.id.MAIN_AUTO_START_BUTTON);
         final Button _startButton = (Button)findViewById(R.id.MAIN_START_BUTTON);
+        final ToggleButton _unitsButton = (ToggleButton)findViewById(R.id.MAIN_UNITS_BUTTON);
 
         _autoStart.setOnClickListener(new View.OnClickListener() {
 
@@ -84,6 +86,24 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
             }
         });
 
+        _unitsButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                _units = (_units == Constants.IMPERIAL) ? Constants.METRIC : Constants.IMPERIAL;
+
+                SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putInt("UNITS_OF_MEASURE",_units);
+                editor.commit();
+
+                PebbleDictionary dic = new PebbleDictionary();
+                dic.addInt32(Constants.MEASUREMENT_UNITS,_units);
+                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+
+            }
+        });
+
         _startButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -100,6 +120,31 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
             }
         });
 
+        _pebbleDataHandler = new PebbleKit.PebbleDataReceiver(Constants.WATCH_UUID) {
+            @Override
+            public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
+                int newState = data.getUnsignedInteger(Constants.STATE_CHANGED).intValue();
+                int state = newState;
+                Log.d("MainActivity","Got Data from Pebble: "  + state);
+                PebbleKit.sendAckToPebble(context, transactionId);
+
+                switch(state) {
+                    case Constants.STOP_PRESS:
+                        stopGPSService();
+                        break;
+                    case Constants.PLAY_PRESS:
+                        startGPSService();
+                        break;
+                    case Constants.REFRESH_PRESS:
+                        break;
+                }
+
+                SetupButtons();
+
+            }
+        };
+        PebbleKit.registerReceivedDataHandler(this, _pebbleDataHandler);
+
         SetupButtons();
 
     }
@@ -111,8 +156,9 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
     }
 
     private void SetupButtons() {
-        Button _startButton = (Button)findViewById(R.id.MAIN_AUTO_START_BUTTON);
+        Button _startButton = (Button)findViewById(R.id.MAIN_START_BUTTON);
         ToggleButton _autoStart = (ToggleButton)findViewById(R.id.MAIN_AUTO_START_BUTTON);
+        ToggleButton _unitsButton = (ToggleButton)findViewById(R.id.MAIN_UNITS_BUTTON);
 
         if (checkServiceRunning()) {
             _startButton.setText("Stop");
@@ -136,6 +182,12 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
         if(_activityRecognition && (_mActivityRecognitionClient == null))
             initActivityRecognitionClient();
 
+        _units = settings.getInt("UNITS_OF_MEASURE",Constants.IMPERIAL);
+        _unitsButton.setChecked(_units == Constants.METRIC);
+
+        PebbleDictionary dic = new PebbleDictionary();
+        dic.addInt32(Constants.MEASUREMENT_UNITS,_units);
+        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
     }
 
     private void stopActivityRecogntionClient() {
@@ -287,6 +339,13 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
             dic.addString(Constants.SPEED_TEXT,df.format(speed));
             dic.addString(Constants.DISTANCE_TEXT,df.format(distance));
             dic.addString(Constants.AVGSPEED_TEXT,df.format(avgspeed));
+
+            if(checkServiceRunning()) {
+                dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
+            } else {
+                dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
+            }
+
             PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
 
         }
