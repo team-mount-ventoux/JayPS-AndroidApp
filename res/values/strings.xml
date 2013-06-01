@@ -2,4 +2,5 @@
 <resources>
     <string name="app_name">Pebble Bike</string>
     <string name="MAIN_TITLE">Pebble Cycle Computer v1.2</string>
+    <string name="ACTIVITY_TYPE_TEXT">Activity Type</string><string name="AUTO_START_TEXT">Auto Start</string><string name="START_BUTTON_START">Start</string>
 </resources>

@@ -1,18 +1,18 @@
 package com.android.njackson;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.*;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.android.gms.common.ConnectionResult;
@@ -23,9 +23,8 @@ import com.google.android.gms.location.DetectedActivity;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.Random;
 
-public class MainActivity extends Activity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+public class MainActivity extends SherlockActivity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
 
     private ActivityRecognitionClient _mActivityRecognitionClient;
     private ActivityRecognitionReceiver _activityRecognitionReceiver;
@@ -47,6 +46,9 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final ActionBar ab = getSupportActionBar();
+        //setTheme(ActionBar.LI);
+
         checkGooglePlayServices();
         checkRunkeeperRunning();
         setContentView(R.layout.main);
@@ -56,8 +58,8 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
         _callbackIntent = PendingIntent.getService(getApplicationContext(), 0, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-        final ToggleButton _autoStart = (ToggleButton)findViewById(R.id.autoStartButton);
-        final Button _startButton = (Button)findViewById(R.id.startButton);
+        final ToggleButton _autoStart = (ToggleButton)findViewById(R.id.MAIN_AUTO_START_BUTTON);
+        final Button _startButton = (Button)findViewById(R.id.MAIN_START_BUTTON);
 
         _autoStart.setOnClickListener(new View.OnClickListener() {
 
@@ -109,8 +111,8 @@ public class MainActivity extends Activity implements GooglePlayServicesClient.C
     }
 
     private void SetupButtons() {
-        Button _startButton = (Button)findViewById(R.id.startButton);
-        ToggleButton _autoStart = (ToggleButton)findViewById(R.id.autoStartButton);
+        Button _startButton = (Button)findViewById(R.id.MAIN_AUTO_START_BUTTON);
+        ToggleButton _autoStart = (ToggleButton)findViewById(R.id.MAIN_AUTO_START_BUTTON);
 
         if (checkServiceRunning()) {
             _startButton.setText("Stop");

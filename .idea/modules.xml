@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PebbleCyclingComputer-AndroidApp.iml" filepath="$PROJECT_DIR$/PebbleCyclingComputer-AndroidApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/actionbarsherlock.iml" filepath="$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/actionbarsherlock.iml" />
     </modules>
   </component>
 </project>
