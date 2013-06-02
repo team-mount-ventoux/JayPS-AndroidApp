@@ -29,5 +29,10 @@ public class Constants {
 
     static final int METRIC = 0x0;
     static final int IMPERIAL = 0x1;
+
+    static final double MS_TO_KPH = 3.6;
+    static final double MS_TO_MPH = 2.23693629;
+    static final double M_TO_KM = 0.001;
+    static final double M_TO_MILES = 0.000621371192;
 }
 

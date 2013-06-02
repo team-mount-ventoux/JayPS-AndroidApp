@@ -40,14 +40,18 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
     private MyLocation _myLocation;
 
+    private double _speedConversion = 0.0;
+    private double _distanceConversion = 0.0;
+
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
+        _myLocation = new MyLocation(getApplicationContext());
         handleCommand(intent);
+
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
-        
-        _myLocation = new MyLocation(getApplicationContext());
-        
         return START_STICKY;
     }
 
@@ -58,10 +62,10 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         // save the state
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putFloat("GPS_SPEED",(float)_speed);
+        editor.putFloat("GPS_SPEED", (float) _speed);
         editor.putFloat("GPS_DISTANCE",(float)_distance);
         editor.putFloat("GPS_AVGSPEED",(float)_averageSpeed);
-        editor.putFloat("GPS_UPDATES",(float)_updates);
+        editor.putInt("GPS_UPDATES", _updates);
         editor.commit();
 
         PebbleKit.closeAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
@@ -71,16 +75,31 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
     private void handleCommand(Intent intent) {
         Log.d("MainActivity","Started GPS Service");
+
+        // set the units to be used
+        setConversionUnits(intent);
+
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
-        _speed = settings.getFloat("GPS_SPEED",0);
-        _distance = settings.getFloat("GPS_DISTANCE",0);
-        _averageSpeed = settings.getFloat("GPS_AVGSPEED",0);
-        _updates = (int)settings.getFloat("GPS_UPDATES",0);
+        _speed = (double)settings.getFloat("GPS_SPEED",0);
+        _distance = (double)settings.getFloat("GPS_DISTANCE",0);
+        _averageSpeed = (double)settings.getFloat("GPS_AVGSPEED",0);
+        _updates = settings.getInt("GPS_UPDATES",0);
 
         _locationClient = new LocationClient(getApplicationContext(),this,this);
         _locationClient.connect();
 
         PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+    }
+
+    private void setConversionUnits(Intent intent) {
+        int units = intent.getIntExtra("UNITS",1);
+        if(units == Constants.IMPERIAL) {
+            _speedConversion = Constants.MS_TO_MPH;
+            _distanceConversion = Constants.M_TO_MILES;
+        } else {
+            _speedConversion = Constants.MS_TO_KPH;
+            _distanceConversion = Constants.M_TO_KM;
+        }
     }
 
     @Override
@@ -114,7 +133,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         
         Log.d("MainActivity", "Got Speed: " + _myLocation.getSpeed());
 
-        _speed = _myLocation.getSpeed() * 2.23693629;
+        _speed = _myLocation.getSpeed() * _speedConversion;
 
         if(_speed < 1) {
             _speed = 0;
@@ -122,8 +141,8 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
             _updates++;
         }
 
-        _averageSpeed = _myLocation.getAverageSpeed() * 2.23693629;
-        _distance = _myLocation.getDistance() * 0.000621371192;
+        _averageSpeed = _myLocation.getAverageSpeed() * _speedConversion;
+        _distance = _myLocation.getDistance() * _distanceConversion;
         
         // available:
         //_myLocation.getElapsedTime() // in ms

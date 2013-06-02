@@ -29,14 +29,12 @@
   <component name="ChangeListManager">
     <list default="true" id="bb1c107a-0cb6-4f80-927f-961c8561cda4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/njackson/Constants.java" afterPath="$PROJECT_DIR$/src/com/android/njackson/Constants.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/njackson/MainActivity.java" afterPath="$PROJECT_DIR$/src/com/android/njackson/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/ids.xml" afterPath="$PROJECT_DIR$/res/values/ids.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/main.xml" afterPath="$PROJECT_DIR$/res/layout/main.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/strings.xml" afterPath="$PROJECT_DIR$/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/njackson/GPSService.java" afterPath="$PROJECT_DIR$/src/com/android/njackson/GPSService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="AdventureTracker-AndroidApp.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370079855823" ignored="false" />
+    <file path="/Dummy.txt" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370117566699" ignored="false" />
     <file path="/MainActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370115762066" ignored="false" />
     <file path="/ActivityRecognitionIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369774821208" ignored="false" />
     <file path="/AndroidManifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370082020507" ignored="false" />
@@ -45,7 +43,7 @@
     <file path="/R.java.d" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369169632340" ignored="false" />
     <file path="/LocationUpdateIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369200007684" ignored="false" />
     <file path="/GPSUtils.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369258210415" ignored="false" />
-    <file path="/Constants.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370113282475" ignored="false" />
+    <file path="/Constants.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370186318157" ignored="false" />
     <file path="/fragment.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370081478637" ignored="false" />
     <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/dialog_custom_title.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
     <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/dialog_custom_title_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171044" ignored="false" />
@@ -720,7 +718,7 @@
     <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/date_picker_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
     <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/date_picker_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
     <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/default_navigation.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
-    <file path="/GPSService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369858058581" ignored="false" />
+    <file path="/GPSService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370186436866" ignored="false" />
     <file path="/main.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370113575394" ignored="false" />
     <file path="$APPLICATION_HOME_DIR$/plugins/android/lib/android.jar!/org/jetbrains/android/android.xsd" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369511881639" ignored="false" />
     <file path="/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369513170489" ignored="false" />
@@ -741,6 +739,7 @@
   </component>
   <component name="DebuggerManager">
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -777,7 +776,6 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -787,24 +785,6 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Activity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/app/Activity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="5008" column="0" selection-start="211197" selection-end="211197" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Intent.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/content/Intent.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="4145" column="0" selection-start="187406" selection-end="187406" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
@@ -820,7 +800,7 @@
             <state />
           </provider>
           <provider editor-type-id="text-editor">
-            <state line="27" column="48" selection-start="1230" selection-end="1230" vertical-scroll-proportion="-11.6">
+            <state line="27" column="48" selection-start="1230" selection-end="1230" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -829,7 +809,7 @@
       <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/android/njackson/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="190" column="34" selection-start="6968" selection-end="6968" vertical-scroll-proportion="0.48765433">
+            <state line="191" column="66" selection-start="6969" selection-end="6969" vertical-scroll-proportion="0.34671533">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -840,7 +820,7 @@
       <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="56" selection-start="156" selection-end="156" vertical-scroll-proportion="-1.8">
+            <state line="3" column="56" selection-start="156" selection-end="156" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -858,7 +838,7 @@
       <file leaf-file-name="Constants.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/android/njackson/Constants.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="18" column="38" selection-start="530" selection-end="547" vertical-scroll-proportion="0.0">
+            <state line="35" column="10" selection-start="1027" selection-end="1027" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -867,7 +847,7 @@
       <file leaf-file-name="GPSService.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/android/njackson/GPSService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="85" column="151" selection-start="3027" selection-end="3027" vertical-scroll-proportion="0.0">
+            <state line="78" column="12" selection-start="2576" selection-end="2576" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -913,14 +893,14 @@
         <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/GPSService.java" />
         <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java" />
         <option value="$PROJECT_DIR$/src/com/android/njackson/ActivityRecognitionIntentService.java" />
-        <option value="$PROJECT_DIR$/src/com/android/njackson/GPSService.java" />
         <option value="$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/android/support/v4/app/Watson.java" />
         <option value="$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/src/com/android/njackson/Constants.java" />
         <option value="$PROJECT_DIR$/res/layout/main.xml" />
         <option value="$PROJECT_DIR$/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/src/com/android/njackson/MainActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/android/njackson/Constants.java" />
+        <option value="$PROJECT_DIR$/src/com/android/njackson/GPSService.java" />
       </list>
     </option>
   </component>
@@ -959,7 +939,6 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1102,21 +1081,22 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GenerateAntBuildDialog.generateIdeaHomeProperty" value="false" />
     <property name="project.structure.last.edited" value="Modules" />
-    <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
+    <property name="OverrideImplement.combined" value="true" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="GenerateAntBuildDialog.generateSingleFile" value="false" />
-    <property name="MemberChooser.sorted" value="false" />
-    <property name="recentsLimit" value="5" />
     <property name="ExportedApkPath" value="$PROJECT_DIR$/PebbleCyclingComputer-AndroidApp.apk" />
+    <property name="recentsLimit" value="5" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="GenerateAntBuildDialog.generateSingleFile" value="false" />
     <property name="ExportedModule" value="PebbleCyclingComputer-AndroidApp" />
-    <property name="GenerateAntBuildDialog.inclineRuntiemClasspath" value="false" />
     <property name="last_opened_file_path" value="/Applications/Android/android-sdk-macosx/extras/android/support/v4/android-support-v4.jar!/" />
+    <property name="GenerateAntBuildDialog.inclineRuntiemClasspath" value="false" />
     <property name="GenerateAntBuildDialog.outputFileNameProperty" value="pebblecyclingcomputer" />
     <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -1174,6 +1154,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -1200,19 +1193,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -1362,17 +1342,16 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="22" width="1900" height="970" extended-state="0" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19255663" sideWeight="0.60470587" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20496224" sideWeight="0.60470587" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18176915" sideWeight="0.60470587" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39529413" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39529413" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3943662" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1386,12 +1365,13 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20981662" sideWeight="0.60470587" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20981662" sideWeight="0.60470587" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298122" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -1491,9 +1471,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/android/support/v4/app/Watson.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="33" selection-start="365" selection-end="365" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="8" column="33" selection-start="365" selection-end="365" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/com/actionbarsherlock/ActionBarSherlock.java">
@@ -1505,42 +1483,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsListPopupWindow.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="60" selection-start="593" selection-end="593" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="18" column="60" selection-start="593" selection-end="593" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="6" column="0" selection-start="281" selection-end="281" vertical-scroll-proportion="0.18518518">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/content/Intent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4145" column="0" selection-start="187406" selection-end="187406" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="56" selection-start="649" selection-end="649" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/fr/jayps/android/MyLocation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="13" selection-start="161" selection-end="161" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/android/njackson/GPSService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="85" column="151" selection-start="3027" selection-end="3027" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1552,9 +1500,37 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="3" column="56" selection-start="156" selection-end="156" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/fr/jayps/android/MyLocation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="13" selection-start="161" selection-end="161" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/app/Activity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5008" column="0" selection-start="211197" selection-end="211197" vertical-scroll-proportion="0.0">
+        <state line="5008" column="0" selection-start="211197" selection-end="211197" vertical-scroll-proportion="0.018203884">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/content/Intent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="4145" column="0" selection-start="187406" selection-end="187406" vertical-scroll-proportion="0.018203884">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="12" column="56" selection-start="649" selection-end="649" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1564,28 +1540,28 @@
         <state />
       </provider>
       <provider editor-type-id="text-editor">
-        <state line="27" column="48" selection-start="1230" selection-end="1230" vertical-scroll-proportion="-11.6">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="56" selection-start="156" selection-end="156" vertical-scroll-proportion="-1.8">
+        <state line="27" column="48" selection-start="1230" selection-end="1230" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/android/njackson/Constants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="38" selection-start="530" selection-end="547" vertical-scroll-proportion="0.0">
+        <state line="35" column="10" selection-start="1027" selection-end="1027" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/android/njackson/GPSService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="78" column="12" selection-start="2576" selection-end="2576" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/android/njackson/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="190" column="34" selection-start="6968" selection-end="6968" vertical-scroll-proportion="0.48765433">
+        <state line="191" column="66" selection-start="6969" selection-end="6969" vertical-scroll-proportion="0.34671533">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
