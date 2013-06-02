@@ -24,18 +24,20 @@
     </option>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="MainA" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="ERROR" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb1c107a-0cb6-4f80-927f-961c8561cda4" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/njackson/Constants.java" afterPath="$PROJECT_DIR$/src/com/android/njackson/Constants.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/njackson/GPSService.java" afterPath="$PROJECT_DIR$/src/com/android/njackson/GPSService.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/android/njackson/MainActivity.java" afterPath="$PROJECT_DIR$/src/com/android/njackson/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PebbleCyclingComputer-AndroidApp.iml" afterPath="$PROJECT_DIR$/PebbleCyclingComputer-AndroidApp.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="AdventureTracker-AndroidApp.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370117566699" ignored="false" />
-    <file path="/MainActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370115762066" ignored="false" />
+    <file path="/MainActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370190549309" ignored="false" />
     <file path="/ActivityRecognitionIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369774821208" ignored="false" />
     <file path="/AndroidManifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370082020507" ignored="false" />
     <file path="/ids.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369170185320" ignored="false" />
@@ -718,12 +720,13 @@
     <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/date_picker_dialog.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
     <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/date_picker_holo.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
     <file path="/Applications/Android/android-sdk-macosx/platforms/android-17/data/res/layout/default_navigation.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369256171058" ignored="false" />
-    <file path="/GPSService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370186436866" ignored="false" />
+    <file path="/GPSService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370190720070" ignored="false" />
     <file path="/main.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370113575394" ignored="false" />
     <file path="$APPLICATION_HOME_DIR$/plugins/android/lib/android.jar!/org/jetbrains/android/android.xsd" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369511881639" ignored="false" />
     <file path="/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369513170489" ignored="false" />
     <file path="/a.dummy" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369577639226" ignored="false" />
     <file path="$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/res/values/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370080037826" ignored="false" />
+    <file path="$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/project.properties" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370188904130" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -806,10 +809,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/android/njackson/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="191" column="66" selection-start="6969" selection-end="6969" vertical-scroll-proportion="0.34671533">
+            <state line="100" column="29" selection-start="3882" selection-end="3882" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -838,26 +841,19 @@
       <file leaf-file-name="Constants.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/android/njackson/Constants.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="35" column="10" selection-start="1027" selection-end="1027" vertical-scroll-proportion="0.0">
+            <state line="29" column="33" selection-start="847" selection-end="847" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GPSService.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="GPSService.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/android/njackson/GPSService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="78" column="12" selection-start="2576" selection-end="2576" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MyLocation.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/fr/jayps/android/MyLocation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="13" selection-start="161" selection-end="161" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="88" column="25" selection-start="3002" selection-end="3002" vertical-scroll-proportion="0.48765433">
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -898,8 +894,8 @@
         <option value="$PROJECT_DIR$/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/res/layout/main.xml" />
         <option value="$PROJECT_DIR$/res/values/strings.xml" />
-        <option value="$PROJECT_DIR$/src/com/android/njackson/MainActivity.java" />
         <option value="$PROJECT_DIR$/src/com/android/njackson/Constants.java" />
+        <option value="$PROJECT_DIR$/src/com/android/njackson/MainActivity.java" />
         <option value="$PROJECT_DIR$/src/com/android/njackson/GPSService.java" />
       </list>
     </option>
@@ -967,7 +963,37 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="submodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdvancedLocation" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PebbleCyclingComputer-AndroidApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PebbleBike-AndroidApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="submodules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="AdvancedLocation" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="android" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -982,10 +1008,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1351,7 +1373,7 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18176915" sideWeight="0.60470587" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39529413" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39529413" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3943662" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1365,7 +1387,7 @@
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20981662" sideWeight="0.60470587" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20981662" sideWeight="0.60470587" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298122" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -1507,13 +1529,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/fr/jayps/android/MyLocation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="13" selection-start="161" selection-end="161" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/app/Activity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="5008" column="0" selection-start="211197" selection-end="211197" vertical-scroll-proportion="0.018203884">
@@ -1547,21 +1562,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/android/njackson/Constants.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="10" selection-start="1027" selection-end="1027" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/android/njackson/GPSService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="78" column="12" selection-start="2576" selection-end="2576" vertical-scroll-proportion="0.0">
+        <state line="29" column="33" selection-start="847" selection-end="847" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/android/njackson/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="191" column="66" selection-start="6969" selection-end="6969" vertical-scroll-proportion="0.34671533">
+        <state line="100" column="29" selection-start="3882" selection-end="3882" vertical-scroll-proportion="0.0">
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/android/njackson/GPSService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="88" column="25" selection-start="3002" selection-end="3002" vertical-scroll-proportion="0.48765433">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1626,6 +1643,7 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
+                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>

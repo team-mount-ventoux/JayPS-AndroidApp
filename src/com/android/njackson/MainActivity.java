@@ -221,9 +221,12 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
     private void startGPSService() {
         if(checkServiceRunning())
             return;
+        //set the units
+        Intent intent = new Intent(getApplicationContext(), GPSService.class);
+        intent.putExtra("UNITS",_units);
 
         registerGPSServiceIntentReceiver();
-        startService(new Intent(getApplicationContext(), GPSService.class));
+        startService(intent);
     }
 
     private void stopGPSService() {

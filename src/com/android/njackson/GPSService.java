@@ -9,15 +9,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import com.getpebble.android.kit.PebbleKit;
-import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
 
 import fr.jayps.android.AdvancedLocation;
-
-import java.text.DecimalFormat;
 
 /**
  * Created with IntelliJ IDEA.
@@ -84,8 +81,12 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         _speed = (double)settings.getFloat("GPS_SPEED",0);
         _distance = (double)settings.getFloat("GPS_DISTANCE",0);
         _averageSpeed = (double)settings.getFloat("GPS_AVGSPEED",0);
-        _updates = settings.getInt("GPS_UPDATES",0);
 
+        try {
+        _updates = settings.getInt("GPS_UPDATES",0);
+        }catch (ClassCastException e) {
+            _updates = 0;
+        }
         _locationClient = new LocationClient(getApplicationContext(),this,this);
         _locationClient.connect();
 
