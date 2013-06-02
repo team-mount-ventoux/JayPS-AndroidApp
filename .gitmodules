@@ -1,3 +1,6 @@
 [submodule "submodules/ActionBarSherlock"]
 	path = submodules/ActionBarSherlock
 	url = https://github.com/JakeWharton/ActionBarSherlock.git
+[submodule "submodules/AdvancedLocation"]
+	path = submodules/AdvancedLocation
+	url = https://github.com/jay3/AdvancedLocation.git
