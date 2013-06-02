@@ -15,7 +15,7 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationRequest;
 
-import fr.jayps.android.MyLocation;
+import fr.jayps.android.AdvancedLocation;
 
 import java.text.DecimalFormat;
 
@@ -38,7 +38,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
     private double _prevaverageSpeed = -1;
     private double _prevdistance = -1;
 
-    private MyLocation _myLocation;
+    private AdvancedLocation _myLocation;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -46,7 +46,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
         
-        _myLocation = new MyLocation(getApplicationContext());
+        _myLocation = new AdvancedLocation(getApplicationContext());
         
         return START_STICKY;
     }
