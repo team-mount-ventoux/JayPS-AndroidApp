@@ -1,4 +1,4 @@
-package com.android.njackson;
+package com.njackson;
 
 import android.app.IntentService;
 import android.content.Intent;

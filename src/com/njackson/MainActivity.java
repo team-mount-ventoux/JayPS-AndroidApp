@@ -1,9 +1,10 @@
-package com.android.njackson;
+package com.njackson;
 
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.*;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -61,6 +62,7 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
 
         final ToggleButton _autoStart = (ToggleButton)findViewById(R.id.MAIN_AUTO_START_BUTTON);
         final Button _startButton = (Button)findViewById(R.id.MAIN_START_BUTTON);
+        final Button _watchfaceButton = (Button)findViewById(R.id.MAIN_INSTALL_WATCHFACE_BUTTON);
         final ToggleButton _unitsButton = (ToggleButton)findViewById(R.id.MAIN_UNITS_BUTTON);
 
         _autoStart.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +100,7 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
                 editor.commit();
 
                 PebbleDictionary dic = new PebbleDictionary();
-                dic.addInt32(Constants.MEASUREMENT_UNITS,_units);
+                dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
                 PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
 
             }
@@ -117,6 +119,16 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
                     stopGPSService();
                     _startButton.setText("Start");
                 }
+            }
+        });
+
+
+        _watchfaceButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("http://www.demo.gs/pebblebike.pbw");
+                startActivity(new Intent(Intent.ACTION_VIEW, uri));
             }
         });
 
@@ -282,9 +294,26 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
 
     }
 
-    private void updateActivityType(String type) {
-        TextView view = (TextView)this.findViewById(R.id.activityType);
-        view.setText("Activity Type: " + type);
+    private void updateActivityType(int type) {
+        TextView view = (TextView)this.findViewById(R.id.MAIN_ACTIVITY_TYPE);
+
+        String activityType = "";
+        switch(type) {
+            case DetectedActivity.ON_BICYCLE:
+                activityType = "Bicycle";
+                break;
+            case DetectedActivity.STILL:
+                activityType = "Still";
+                break;
+            case DetectedActivity.IN_VEHICLE:
+                activityType = "In Vehicle";
+                break;
+            case DetectedActivity.ON_FOOT:
+                activityType = "On Foot";
+                break;
+        }
+
+        view.setText("Activity Type: " + activityType);
     }
 
     @Override
@@ -313,9 +342,8 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            TextView result = (TextView) findViewById(R.id.activityType);
             int activity = intent.getIntExtra("ACTIVITY_CHANGED", 0);
-            result.setText("Activity Type: " + activity);
+            updateActivityType(activity);
 
             if(activity == DetectedActivity.ON_BICYCLE)
                 startGPSService();
