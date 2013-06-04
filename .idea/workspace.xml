@@ -28,13 +28,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb1c107a-0cb6-4f80-927f-961c8561cda4" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/android/njackson/ActivityRecognitionIntentService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/android/njackson/Constants.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/android/njackson/GPSService.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/com/android/njackson/MainActivity.java" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/ids.xml" afterPath="$PROJECT_DIR$/res/values/ids.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/main.xml" afterPath="$PROJECT_DIR$/res/layout/main.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/strings.xml" afterPath="$PROJECT_DIR$/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -43,7 +37,7 @@
     <file path="/Dummy.txt" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370295566866" ignored="false" />
     <file path="/MainActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370294394956" ignored="false" />
     <file path="/ActivityRecognitionIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369774821208" ignored="false" />
-    <file path="/AndroidManifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370082020507" ignored="false" />
+    <file path="/AndroidManifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370328574696" ignored="false" />
     <file path="/ids.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369170185320" ignored="false" />
     <file path="/a.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369578170301" ignored="false" />
     <file path="/R.java.d" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369169632340" ignored="false" />
@@ -792,10 +786,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="2" column="33" selection-start="140" selection-end="140" vertical-scroll-proportion="0.0">
+            <state line="11" column="54" selection-start="620" selection-end="620" vertical-scroll-proportion="0.33950618">
               <folding />
             </state>
           </provider>
@@ -813,10 +807,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/njackson/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="129" column="44" selection-start="4835" selection-end="4835" vertical-scroll-proportion="0.70987654">
+            <state line="129" column="44" selection-start="4835" selection-end="4835" vertical-scroll-proportion="0.0">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -827,7 +821,7 @@
       <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="17" selection-start="481" selection-end="481" vertical-scroll-proportion="0.0">
+            <state line="1" column="29" selection-start="50" selection-end="50" vertical-scroll-proportion="-0.6">
               <folding />
             </state>
           </provider>
@@ -874,13 +868,13 @@
         <option value="$PROJECT_DIR$/src/com/android/njackson/Constants.java" />
         <option value="$PROJECT_DIR$/src/com/android/njackson/GPSService.java" />
         <option value="$PROJECT_DIR$/res/layout/main.xml" />
-        <option value="$PROJECT_DIR$/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/src/com/android/njackson/MainActivity.java" />
         <option value="$PROJECT_DIR$/src/com/njackson/GPSService.java" />
         <option value="$PROJECT_DIR$/src/com/njackson/Constants.java" />
         <option value="$PROJECT_DIR$/src/com/njackson/ActivityRecognitionIntentService.java" />
-        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/src/com/njackson/MainActivity.java" />
+        <option value="$PROJECT_DIR$/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
       </list>
     </option>
   </component>
@@ -1092,7 +1086,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="GenerateAntBuildDialog.generateIdeaHomeProperty" value="false" />
-    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.last.edited" value="Project" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="options.splitter.main.proportions" value="0.3" />
@@ -1348,14 +1342,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="22" width="1900" height="970" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18176915" sideWeight="0.60470587" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39529413" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39529413" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39529413" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1522,13 +1516,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="17" selection-start="481" selection-end="481" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/njackson/ActivityRecognitionIntentService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="1" column="16" selection-start="22" selection-end="22" vertical-scroll-proportion="0.0">
@@ -1550,13 +1537,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="33" selection-start="140" selection-end="140" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
       <provider editor-type-id="text-editor">
         <state line="27" column="48" selection-start="1230" selection-end="1230" vertical-scroll-proportion="0.0">
@@ -1569,10 +1549,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/njackson/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="129" column="44" selection-start="4835" selection-end="4835" vertical-scroll-proportion="0.70987654">
+        <state line="129" column="44" selection-start="4835" selection-end="4835" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="29" selection-start="50" selection-end="50" vertical-scroll-proportion="-0.6">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="54" selection-start="620" selection-end="620" vertical-scroll-proportion="0.33950618">
+          <folding />
         </state>
       </provider>
     </entry>
