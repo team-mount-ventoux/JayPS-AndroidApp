@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Pebble Bike</string>
-    <string name="MAIN_TITLE">Pebble Cycle Computer v1.1</string>
+    <string name="MAIN_TITLE">Pebble Cycle Computer v1.1.1</string>
     <string name="ACTIVITY_TYPE_TEXT">Activity Type</string><string name="AUTO_START_TEXT">Auto Start</string><string name="START_BUTTON_START">Start</string><string name="UNITS_TEXT">Units</string><string name="UNITS_TEXT_IMPERIAL">Miles</string><string name="UNITS_TEXT_METRIC">Kilometers</string>
 </resources>

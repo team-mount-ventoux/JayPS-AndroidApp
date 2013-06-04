@@ -99,9 +99,11 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
                 editor.putInt("UNITS_OF_MEASURE",_units);
                 editor.commit();
 
-                PebbleDictionary dic = new PebbleDictionary();
-                dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
-                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+                setPebbleUnits();
+
+                if(checkServiceRunning()) {
+                    GPSService.setConversionUnits(_units);
+                } // reset GPS with new units
 
             }
         });
@@ -161,6 +163,12 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
 
     }
 
+    private void setPebbleUnits() {
+        PebbleDictionary dic = new PebbleDictionary();
+        dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
+        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -195,11 +203,9 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
             initActivityRecognitionClient();
 
         _units = settings.getInt("UNITS_OF_MEASURE",Constants.IMPERIAL);
-        _unitsButton.setChecked(_units == Constants.METRIC);
+        _unitsButton.setChecked(_units == Constants.IMPERIAL);
 
-        PebbleDictionary dic = new PebbleDictionary();
-        dic.addInt32(Constants.MEASUREMENT_UNITS,_units);
-        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+        setPebbleUnits();
     }
 
     private void stopActivityRecogntionClient() {
@@ -239,6 +245,7 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
 
         registerGPSServiceIntentReceiver();
         startService(intent);
+        setPebbleUnits();
     }
 
     private void stopGPSService() {
@@ -370,6 +377,7 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
             dic.addString(Constants.SPEED_TEXT,df.format(speed));
             dic.addString(Constants.DISTANCE_TEXT,df.format(distance));
             dic.addString(Constants.AVGSPEED_TEXT,df.format(avgspeed));
+            dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
 
             if(checkServiceRunning()) {
                 dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);

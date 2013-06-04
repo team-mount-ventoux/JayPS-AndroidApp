@@ -37,9 +37,8 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
     private AdvancedLocation _myLocation;
 
-    private double _speedConversion = 0.0;
-    private double _distanceConversion = 0.0;
-
+    private static double _speedConversion = 0.0;
+    private static double _distanceConversion = 0.0;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -75,7 +74,8 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         Log.d("MainActivity","Started GPS Service");
 
         // set the units to be used
-        setConversionUnits(intent);
+        int units = intent.getIntExtra("UNITS",1);
+        setConversionUnits(units);
 
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         _speed = (double)settings.getFloat("GPS_SPEED",0);
@@ -93,8 +93,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
     }
 
-    private void setConversionUnits(Intent intent) {
-        int units = intent.getIntExtra("UNITS",1);
+    public static void setConversionUnits(int units) {
         if(units == Constants.IMPERIAL) {
             _speedConversion = Constants.MS_TO_MPH;
             _distanceConversion = Constants.M_TO_MILES;
