@@ -5,6 +5,7 @@
       <profile>
         <option name="device" value="Nexus 4" />
         <option name="deviceConfiguration" value="Portrait" />
+        <option name="localeLanguage" value="en" />
         <option name="targetHashString" value="android-17" />
         <option name="theme" value="Theme.Sherlock.Light" />
       </profile>
@@ -24,22 +25,159 @@
     </option>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="JayPS-" />
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="main" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb1c107a-0cb6-4f80-927f-961c8561cda4" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/njackson/HomeActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/njackson/MapActivity.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/njackson/MapFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/njackson/SherlockMapFragment.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/home.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/layout/map.xml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/AndroidManifest.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/README.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/build.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/libs/google-play-services.jar.properties" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/proguard-project.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/project.properties" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/color/common_signin_btn_text_dark.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/color/common_signin_btn_text_light.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_disabled_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_disabled_focus_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_disabled_focus_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_disabled_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_focus_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_focus_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_normal_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_normal_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_pressed_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_icon_pressed_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_disabled_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_disabled_focus_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_disabled_focus_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_disabled_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_focus_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_focus_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_normal_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_normal_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_pressed_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-hdpi/common_signin_btn_text_pressed_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_disabled_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_disabled_focus_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_disabled_focus_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_disabled_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_focus_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_focus_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_normal_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_normal_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_pressed_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_icon_pressed_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_disabled_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_disabled_focus_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_disabled_focus_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_disabled_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_focus_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_focus_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_normal_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_normal_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_pressed_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-mdpi/common_signin_btn_text_pressed_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_disabled_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_disabled_focus_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_disabled_focus_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_disabled_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_focus_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_focus_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_normal_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_normal_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_pressed_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_icon_pressed_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_disabled_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_disabled_focus_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_disabled_focus_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_disabled_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_focus_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_focus_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_normal_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_normal_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_pressed_dark.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable-xhdpi/common_signin_btn_text_pressed_light.9.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable/common_signin_btn_icon_dark.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable/common_signin_btn_icon_light.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable/common_signin_btn_text_dark.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/drawable/common_signin_btn_text_light.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-af/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-am/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-ar/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-be/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-bg/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-ca/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-cs/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-da/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-de/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-el/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-en-rGB/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-es-rUS/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-es/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-et/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-fa/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-fi/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-fr/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-hi/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-hr/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-hu/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-in/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-it/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-iw/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-ja/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-ko/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-lt/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-lv/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-ms/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-nb/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-nl/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-pl/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-pt-rBR/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-pt-rPT/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-pt/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-ro/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-ru/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-sk/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-sl/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-sr/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-sv/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-sw/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-th/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-tl/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-tr/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-uk/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-vi/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-zh-rCN/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-zh-rTW/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values-zu/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values/colors.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values/maps_attrs.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/res/values/strings.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/google-play-services_lib/src/android/UnusedStub.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/njackson/ActivityRecognitionIntentService.java" afterPath="$PROJECT_DIR$/src/com/njackson/ActivityRecognitionIntentService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidManifest.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/njackson/GPSService.java" afterPath="$PROJECT_DIR$/src/com/njackson/GPSService.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/njackson/MainActivity.java" afterPath="$PROJECT_DIR$/src/com/njackson/MainActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PebbleCyclingComputer-AndroidApp.iml" afterPath="$PROJECT_DIR$/PebbleCyclingComputer-AndroidApp.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/ids.xml" afterPath="$PROJECT_DIR$/res/values/ids.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/layout/main.xml" afterPath="$PROJECT_DIR$/res/layout/main.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/project.properties" afterPath="$PROJECT_DIR$/project.properties" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/strings.xml" afterPath="$PROJECT_DIR$/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="AdventureTracker-AndroidApp.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370295566866" ignored="false" />
-    <file path="/MainActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370377833238" ignored="false" />
+    <file path="/Dummy.txt" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370558432793" ignored="false" />
+    <file path="/MainActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370559153669" ignored="false" />
     <file path="/ActivityRecognitionIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369774821208" ignored="false" />
-    <file path="/AndroidManifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370328574696" ignored="false" />
+    <file path="/AndroidManifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370467865045" ignored="false" />
     <file path="/ids.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369170185320" ignored="false" />
     <file path="/a.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369578170301" ignored="false" />
     <file path="/R.java.d" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369169632340" ignored="false" />
@@ -723,10 +861,13 @@
     <file path="/GPSService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370377843919" ignored="false" />
     <file path="/main.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370113575394" ignored="false" />
     <file path="$APPLICATION_HOME_DIR$/plugins/android/lib/android.jar!/org/jetbrains/android/android.xsd" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369511881639" ignored="false" />
-    <file path="/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369513170489" ignored="false" />
+    <file path="/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370464662603" ignored="false" />
     <file path="/a.dummy" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369577639226" ignored="false" />
     <file path="$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/res/values/strings.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370080037826" ignored="false" />
-    <file path="$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/project.properties" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370188904130" ignored="false" />
+    <file path="/HomeActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370559985287" ignored="false" />
+    <file path="/MapActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370467125139" ignored="false" />
+    <file path="/map.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370469217925" ignored="false" />
+    <file path="/MapFragment.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370472668466" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -741,7 +882,6 @@
     <disable_hints />
   </component>
   <component name="DebuggerManager">
-    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_any default_suspend_policy="SuspendAll" default_condition_enabled="true">
       <breakpoint>
         <option name="NOTIFY_CAUGHT" value="true" />
@@ -778,7 +918,69 @@
         <option name="LOG_MESSAGE" value="" />
       </breakpoint>
     </breakpoint_any>
-    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true" />
+    <line_breakpoints default_suspend_policy="SuspendAll" default_condition_enabled="true">
+      <breakpoint url="file://$PROJECT_DIR$/src/com/njackson/MainActivity.java" line="418" class="com.njackson.MainActivity.TabListener" package="com.njackson">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/com/njackson/MainActivity.java" line="417" class="com.njackson.MainActivity.TabListener" package="com.njackson">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/com/njackson/HomeActivity.java" line="66" class="com.njackson.HomeActivity" package="com.njackson">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+      <breakpoint url="file://$PROJECT_DIR$/src/com/njackson/HomeActivity.java" line="59" class="com.njackson.HomeActivity" package="com.njackson">
+        <option name="ENABLED" value="true" />
+        <option name="LOG_ENABLED" value="false" />
+        <option name="LOG_EXPRESSION_ENABLED" value="false" />
+        <option name="REMOVE_AFTER_HIT" value="false" />
+        <option name="SUSPEND_POLICY" value="SuspendAll" />
+        <option name="SUSPEND" value="true" />
+        <option name="COUNT_FILTER_ENABLED" value="false" />
+        <option name="COUNT_FILTER" value="0" />
+        <option name="CONDITION_ENABLED" value="true" />
+        <option name="CLASS_FILTERS_ENABLED" value="false" />
+        <option name="INSTANCE_FILTERS_ENABLED" value="false" />
+        <option name="CONDITION" value="" />
+        <option name="LOG_MESSAGE" value="" />
+      </breakpoint>
+    </line_breakpoints>
+    <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <breakpoint_rules />
     <ui_properties />
   </component>
@@ -788,84 +990,82 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="23" column="122" selection-start="1080" selection-end="1080" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="main.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
-          <provider editor-type-id="text-editor">
-            <state line="27" column="48" selection-start="1230" selection-end="1230" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-          <provider selected="true" editor-type-id="android-designer">
-            <state />
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/njackson/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="103" column="17" selection-start="3956" selection-end="3956" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#3462#4112#0" expanded="true" />
-                <element signature="e#4101#4102#0" expanded="true" />
-                <element signature="e#4156#4606#0" expanded="true" />
-                <element signature="e#4595#4596#0" expanded="true" />
-                <element signature="e#4655#4914#0" expanded="true" />
-                <element signature="e#4903#4904#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AdvancedLocation.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/submodules/AdvancedLocation/src/fr/jayps/android/AdvancedLocation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="265" column="19" selection-start="10375" selection-end="10381" vertical-scroll-proportion="0.0">
+            <state line="418" column="0" selection-start="16088" selection-end="16088" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GPSService.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/njackson/GPSService.java">
+      <file leaf-file-name="Fragment.class" pinned="false" current="false" current-in-tab="false">
+        <entry file="jar:///Applications/Android/android-sdk-macosx/extras/android/support/v4/android-support-v4.jar!/android/support/v4/app/Fragment.class">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="95" column="10" selection-start="3275" selection-end="3275" vertical-scroll-proportion="0.0">
+            <state line="60" column="50" selection-start="2134" selection-end="2134" vertical-scroll-proportion="-5.84">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Constants.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/njackson/Constants.java">
+      <file leaf-file-name="Bundle.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/os/Bundle.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="64" selection-start="414" selection-end="414" vertical-scroll-proportion="0.0">
+            <state line="181" column="0" selection-start="5351" selection-end="5351" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="strings.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
+      <file leaf-file-name="ContextWrapper.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/content/ContextWrapper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="58" selection-start="158" selection-end="158" vertical-scroll-proportion="0.100446425">
+            <state line="121" column="0" selection-start="3394" selection-end="3394" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="PebbleKit.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/getpebble/android/kit/PebbleKit.java">
+      <file leaf-file-name="ActivityRecognitionIntentService.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/njackson/ActivityRecognitionIntentService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="364" column="43" selection-start="15284" selection-end="15284" vertical-scroll-proportion="0.0">
+            <state line="58" column="8" selection-start="1838" selection-end="1838" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MapFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/njackson/MapFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="38" selection-start="547" selection-end="547" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="HomeActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/njackson/HomeActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="62" column="36" selection-start="1911" selection-end="1911" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="SherlockFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="0" selection-start="587" selection-end="587" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="4" column="36" selection-start="211" selection-end="211" vertical-scroll-proportion="0.09670782">
               <folding />
             </state>
           </provider>
@@ -894,22 +1094,22 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/ActivityRecognitionIntentService.java" />
-        <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/GPSService.java" />
-        <option value="$PROJECT_DIR$/src/com/android/AdventureTracker/MainActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/android/njackson/ActivityRecognitionIntentService.java" />
-        <option value="$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/android/support/v4/app/Watson.java" />
-        <option value="$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/src/com/android/njackson/Constants.java" />
         <option value="$PROJECT_DIR$/src/com/android/njackson/GPSService.java" />
-        <option value="$PROJECT_DIR$/res/layout/main.xml" />
         <option value="$PROJECT_DIR$/src/com/android/njackson/MainActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/njackson/ActivityRecognitionIntentService.java" />
-        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/src/com/njackson/Constants.java" />
-        <option value="$PROJECT_DIR$/src/com/njackson/MainActivity.java" />
+        <option value="$PROJECT_DIR$/res/layout/home.xml" />
+        <option value="$PROJECT_DIR$/res/layout/main.xml" />
+        <option value="$PROJECT_DIR$/src/com/njackson/MapActivity.java" />
+        <option value="$PROJECT_DIR$/res/values/ids.xml" />
+        <option value="$PROJECT_DIR$/res/layout/map.xml" />
         <option value="$PROJECT_DIR$/src/com/njackson/GPSService.java" />
+        <option value="$PROJECT_DIR$/src/com/njackson/SherlockMapFragment.java" />
+        <option value="$PROJECT_DIR$/src/com/njackson/MapFragment.java" />
         <option value="$PROJECT_DIR$/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/src/com/njackson/ActivityRecognitionIntentService.java" />
+        <option value="$PROJECT_DIR$/src/com/njackson/MainActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/njackson/HomeActivity.java" />
+        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
       </list>
     </option>
   </component>
@@ -947,8 +1147,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -1008,20 +1206,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="android" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PebbleCyclingComputer-AndroidApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PebbleBike-AndroidApp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1115,23 +1299,45 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PebbleCyclingComputer-AndroidApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="google-play-services_lib" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PebbleCyclingComputer-AndroidApp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="actionbarsherlock" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="GenerateAntBuildDialog.generateIdeaHomeProperty" value="false" />
-    <property name="project.structure.last.edited" value="Project" />
-    <property name="OverrideImplement.combined" value="true" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
+    <property name="OverrideImplement.combined" value="true" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="GenerateAntBuildDialog.generateSingleFile" value="false" />
-    <property name="MemberChooser.sorted" value="false" />
-    <property name="recentsLimit" value="5" />
     <property name="ExportedApkPath" value="$PROJECT_DIR$/PebbleCyclingComputer-AndroidApp.apk" />
+    <property name="recentsLimit" value="5" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="GenerateAntBuildDialog.generateSingleFile" value="false" />
     <property name="ExportedModule" value="PebbleCyclingComputer-AndroidApp" />
+    <property name="last_opened_file_path" value="/Applications/Android/android-sdk-macosx/extras/google/google_play_services/libproject/google-play-services_lib/libs/google-play-services.jar!/" />
     <property name="GenerateAntBuildDialog.inclineRuntiemClasspath" value="false" />
-    <property name="last_opened_file_path" value="/Applications/Android/android-sdk-macosx/extras/android/support/v4/android-support-v4.jar!/" />
     <property name="GenerateAntBuildDialog.outputFileNameProperty" value="pebblecyclingcomputer" />
     <property name="GenerateAntBuildDialog.enableUiFormCompile" value="true" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
@@ -1142,7 +1348,7 @@
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="options.lastSelected" value="preferences.keymap" />
-    <property name="AndroidLayoutSelectedEditor" value="android-designer" />
+    <property name="AndroidLayoutSelectedEditor" value="text-editor" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="GenerateAntBuildDialog.forceTargetJdk" value="true" />
     <property name="MemberChooser.copyJavadoc" value="false" />
@@ -1189,6 +1395,19 @@
       <option name="PORT" value="5005" />
       <method />
     </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="" />
@@ -1215,19 +1434,6 @@
       <envs />
       <properties />
       <listeners />
-      <method />
-    </configuration>
-    <configuration default="true" type="Applet" factoryName="Applet">
-      <module name="" />
-      <option name="MAIN_CLASS_NAME" />
-      <option name="HTML_FILE_NAME" />
-      <option name="HTML_USED" value="false" />
-      <option name="WIDTH" value="400" />
-      <option name="HEIGHT" value="300" />
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <option name="VM_PARAMETERS" />
-      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-      <option name="ALTERNATIVE_JRE_PATH" />
       <method />
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -1377,16 +1583,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="22" width="1900" height="970" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
-      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19255663" sideWeight="0.60470587" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20496224" sideWeight="0.60470587" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18176915" sideWeight="0.60470587" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39529413" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39529413" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39529413" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1396,15 +1600,17 @@
       <window_info id="CDI" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32705882" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24973032" sideWeight="0.60470587" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24946004" sideWeight="0.60470587" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20981662" sideWeight="0.60470587" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20927724" sideWeight="0.60470587" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19168466" sideWeight="0.60470587" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298122" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20410368" sideWeight="0.60470587" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1490,123 +1696,120 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/content/Intent.java">
+    <entry file="file://$PROJECT_DIR$/res/values/ids.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4145" column="0" selection-start="187406" selection-end="187406" vertical-scroll-proportion="0.0">
+        <state line="10" column="4" selection-start="485" selection-end="485" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/android/support/v4/app/Watson.java">
+    <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/widget/TextView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="33" selection-start="365" selection-end="365" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/com/actionbarsherlock/ActionBarSherlock.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/com/actionbarsherlock/internal/widget/IcsListPopupWindow.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="60" selection-start="593" selection-end="593" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="281" selection-end="281" vertical-scroll-proportion="0.18518518">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/getpebble/android/kit/PebbleKit.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="364" column="43" selection-start="15284" selection-end="15284" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/app/Activity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5008" column="0" selection-start="211197" selection-end="211197" vertical-scroll-proportion="0.018203884">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/content/Intent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4145" column="0" selection-start="187406" selection-end="187406" vertical-scroll-proportion="0.018203884">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/njackson/ActivityRecognitionIntentService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="1" column="16" selection-start="22" selection-end="22" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
-      <provider editor-type-id="text-editor">
-        <state line="27" column="48" selection-start="1230" selection-end="1230" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/njackson/Constants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="64" selection-start="414" selection-end="414" vertical-scroll-proportion="0.0">
+        <state line="1294" column="0" selection-start="49559" selection-end="49559" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/njackson/GPSService.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="95" column="10" selection-start="3275" selection-end="3275" vertical-scroll-proportion="0.0">
+        <state line="158" column="0" selection-start="5227" selection-end="5227" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/njackson/SherlockMapFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="4" selection-start="946" selection-end="946" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="32" column="10" selection-start="1130" selection-end="1130" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/home.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="341" vertical-scroll-proportion="-0.0">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/njackson/MapFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="38" selection-start="547" selection-end="547" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/njackson/ActivityRecognitionIntentService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="58" column="8" selection-start="1838" selection-end="1838" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/content/ContextWrapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="121" column="0" selection-start="3394" selection-end="3394" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="0" selection-start="587" selection-end="587" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Applications/Android/android-sdk-macosx/sources/android-17/android/os/Bundle.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="181" column="0" selection-start="5351" selection-end="5351" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Applications/Android/android-sdk-macosx/extras/android/support/v4/android-support-v4.jar!/android/support/v4/app/Fragment.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="60" column="50" selection-start="2134" selection-end="2134" vertical-scroll-proportion="-5.84">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Applications/Android/android-sdk-macosx/extras/android/support/v4/android-support-v4.jar!/android/support/v4/app/BackStackRecord.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="131" column="8" selection-start="5950" selection-end="5950" vertical-scroll-proportion="0.72602737">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/njackson/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="17" selection-start="3956" selection-end="3956" vertical-scroll-proportion="0.0">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3462#4112#0" expanded="true" />
-            <element signature="e#4101#4102#0" expanded="true" />
-            <element signature="e#4156#4606#0" expanded="true" />
-            <element signature="e#4595#4596#0" expanded="true" />
-            <element signature="e#4655#4914#0" expanded="true" />
-            <element signature="e#4903#4904#0" expanded="true" />
-          </folding>
+        <state line="418" column="0" selection-start="16088" selection-end="16088" vertical-scroll-proportion="0.0">
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/submodules/AdvancedLocation/src/fr/jayps/android/AdvancedLocation.java">
+    <entry file="file://$PROJECT_DIR$/src/com/njackson/HomeActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="265" column="19" selection-start="10375" selection-end="10381" vertical-scroll-proportion="0.0">
+        <state line="62" column="36" selection-start="1911" selection-end="1911" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="23" column="122" selection-start="1080" selection-end="1080" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="58" selection-start="158" selection-end="158" vertical-scroll-proportion="0.100446425">
+        <state line="4" column="36" selection-start="211" selection-end="211" vertical-scroll-proportion="0.09670782">
           <folding />
         </state>
       </provider>
@@ -1669,7 +1872,6 @@
             <option name="proportions">
               <list>
                 <option value="0.2" />
-                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
@@ -1677,7 +1879,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>android-support-v4</last-edited>
+          <last-edited>src</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

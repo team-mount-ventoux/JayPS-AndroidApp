@@ -157,7 +157,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
     private void updatePebble() {
 
         if(_speed != _prevspeed || _averageSpeed != _prevaverageSpeed || _distance != _prevdistance) {
-
+            /*
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
             broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -165,7 +165,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
             broadcastIntent.putExtra("DISTANCE", _distance);
             broadcastIntent.putExtra("AVGSPEED", _averageSpeed);
             sendBroadcast(broadcastIntent);
-
+            */
             _prevaverageSpeed = _averageSpeed;
             _prevdistance = _distance;
             _prevspeed = _speed;

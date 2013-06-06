@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <item name="activityType" type="id"/><item name="MAIN_TITLE" type="id"/><item name="MAIN_ACTIVITY_TYPE" type="id"/><item name="MAIN_AUTO_START_TEXT" type="id"/><item name="MAIN_AUTO_START_BUTTON" type="id"/><item name="MAIN_START_BUTTON" type="id"/><item name="MAIN_UNITS_TEXT" type="id"/><item name="MAIN_UNITS_BUTTON" type="id"/><item name="MAIN_INSTALL_WATCHFACE_BUTTON" type="id"/>
+    <item name="activityType" type="id"/>
+    <item name="MAIN_TITLE" type="id"/>
+    <item name="MAIN_ACTIVITY_TYPE" type="id"/>
+    <item name="MAIN_AUTO_START_TEXT" type="id"/>
+    <item name="MAIN_AUTO_START_BUTTON" type="id"/>
+    <item name="MAIN_START_BUTTON" type="id"/>
+    <item name="MAIN_UNITS_TEXT" type="id"/>
+    <item name="MAIN_UNITS_BUTTON" type="id"/>
+    <item name="MAIN_INSTALL_WATCHFACE_BUTTON" type="id"/>
 </resources>

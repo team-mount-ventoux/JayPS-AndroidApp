@@ -6,14 +6,13 @@ import android.app.PendingIntent;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.android.gms.common.ConnectionResult;
@@ -23,18 +22,81 @@ import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
 
 import java.text.DecimalFormat;
-import java.util.List;
+import java.util.Calendar;
+import java.util.Date;
 
-public class MainActivity extends SherlockActivity implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener {
+public class MainActivity extends SherlockFragmentActivity  implements  GooglePlayServicesClient.ConnectionCallbacks,
+        GooglePlayServicesClient.OnConnectionFailedListener, HomeActivity.OnButtonPressListener {
 
     private ActivityRecognitionClient _mActivityRecognitionClient;
-    private ActivityRecognitionReceiver _activityRecognitionReceiver;
-    private GPSServiceReceiver _gpsServiceReceiver;
-    private boolean _activityRecognition = false;
+
+    private static boolean _activityRecognition = false;
     PendingIntent _callbackIntent;
     private RequestType _requestType;
     private PebbleKit.PebbleDataReceiver _pebbleDataHandler = null;
-    private int _units = Constants.IMPERIAL;
+    private static int _units = Constants.IMPERIAL;
+
+    private Date _lastCycling;
+
+    private ActivityRecognitionReceiver _activityRecognitionReceiver;
+    private GPSServiceReceiver _gpsServiceReceiver;
+
+    // Listener for the fragment button press
+    @Override
+    public void onPressed(int sender, boolean value) {
+        //To change body of implemented methods use File | Settings | File Templates.
+        switch(sender) {
+            case R.id.MAIN_AUTO_START_BUTTON:
+                autoStartButtonClick(value);
+                break;
+            case R.id.MAIN_START_BUTTON:
+                startButtonClick(value);
+                break;
+            case R.id.MAIN_UNITS_BUTTON:
+                unitsButtonClick(value);
+                break;
+            case R.id.MAIN_INSTALL_WATCHFACE_BUTTON:
+                sendWatchFaceToPebble();
+                break;
+        }
+    }
+
+    private void autoStartButtonClick(boolean value) {
+        _activityRecognition = value;
+        if(value) {
+            initActivityRecognitionClient();
+        }else {
+            stopActivityRecogntionClient();
+        }
+        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
+        editor.commit();
+    }
+
+    private void startButtonClick(boolean value) {
+        if(value) {
+            startGPSService();
+        } else {
+            stopGPSService();
+        }
+    }
+
+    private void unitsButtonClick(boolean value) {
+        if(value) {
+            _units = Constants.IMPERIAL;
+        } else {
+            _units = Constants.METRIC;
+        }
+        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("UNITS_OF_MEASURE",_units);
+        editor.commit();
+        setPebbleUnits();
+        if(checkServiceRunning()) {
+            GPSService.setConversionUnits(_units);
+        }
+    }
 
     enum RequestType {
         START,
@@ -47,92 +109,20 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.main);
 
-        final ActionBar ab = getSupportActionBar();
-        //setTheme(ActionBar.LI);
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        actionBar.setDisplayHomeAsUpEnabled(false);
 
         checkGooglePlayServices();
         checkRunkeeperRunning();
-        setContentView(R.layout.main);
+
 
         Intent intent = new Intent(getApplicationContext(), ActivityRecognitionIntentService.class);
 
-        _callbackIntent = PendingIntent.getService(getApplicationContext(), 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        final ToggleButton _autoStart = (ToggleButton)findViewById(R.id.MAIN_AUTO_START_BUTTON);
-        final Button _startButton = (Button)findViewById(R.id.MAIN_START_BUTTON);
-        final Button _watchfaceButton = (Button)findViewById(R.id.MAIN_INSTALL_WATCHFACE_BUTTON);
-        final ToggleButton _unitsButton = (ToggleButton)findViewById(R.id.MAIN_UNITS_BUTTON);
-
-        _autoStart.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                if (!_activityRecognition) {
-                    initActivityRecognitionClient();
-                    _startButton.setVisibility(View.GONE);
-                }else {
-                    stopActivityRecogntionClient();
-                    _startButton.setVisibility(View.VISIBLE);
-                }
-
-                _activityRecognition = !_activityRecognition;
-
-                SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
-                editor.commit();
-
-            }
-        });
-
-        _unitsButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                _units = (_units == Constants.IMPERIAL) ? Constants.METRIC : Constants.IMPERIAL;
-
-                SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putInt("UNITS_OF_MEASURE",_units);
-                editor.commit();
-
-                setPebbleUnits();
-
-                if(checkServiceRunning()) {
-                    GPSService.setConversionUnits(_units);
-                } // reset GPS with new units
-
-            }
-        });
-
-        _startButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                if (!checkServiceRunning()) {
-                    startGPSService();
-                    _startButton.setText("Stop");
-                }
-                else{
-                    stopGPSService();
-                    _startButton.setText("Start");
-                }
-            }
-        });
-
-
-        _watchfaceButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Uri uri = Uri.parse("http://www.demo.gs/pebblebike.pbw");
-                startActivity(new Intent(Intent.ACTION_VIEW, uri));
-            }
-        });
+        _callbackIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         _pebbleDataHandler = new PebbleKit.PebbleDataReceiver(Constants.WATCH_UUID) {
             @Override
@@ -153,59 +143,35 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
                         break;
                 }
 
-                SetupButtons();
+                //SetupButtons();
 
             }
         };
         PebbleKit.registerReceivedDataHandler(this, _pebbleDataHandler);
 
-        SetupButtons();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
+        bundle.putInt("UNITS_OF_MEASURE",_units);
+        actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<HomeActivity>(this,"home",HomeActivity.class,bundle)));
+        //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,null)));
 
+    }
+
+    private void sendWatchFaceToPebble(){
+        Uri uri = Uri.parse("http://www.demo.gs/pebblebike.pbw");
+        Intent startupIntent = new Intent();
+        startupIntent.setAction(Intent.ACTION_VIEW);
+        startupIntent.setType("application/octet-stream");
+        startupIntent.setData(uri);
+        ComponentName distantActivity = new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity");
+        startupIntent.setComponent(distantActivity);
+        startActivity(startupIntent);
     }
 
     private void setPebbleUnits() {
         PebbleDictionary dic = new PebbleDictionary();
         dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
         PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        SetupButtons();
-    }
-
-    private void SetupButtons() {
-        Button _startButton = (Button)findViewById(R.id.MAIN_START_BUTTON);
-        ToggleButton _autoStart = (ToggleButton)findViewById(R.id.MAIN_AUTO_START_BUTTON);
-        ToggleButton _unitsButton = (ToggleButton)findViewById(R.id.MAIN_UNITS_BUTTON);
-
-        if (checkServiceRunning()) {
-            _startButton.setText("Stop");
-        }
-        else{
-            _startButton.setText("Start");
-        }
-
-        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
-
-        _activityRecognition = settings.getBoolean("ACTIVITY_RECOGNITION",false);
-
-        if (_activityRecognition) {
-            _startButton.setVisibility(View.GONE);
-        }else {
-            _startButton.setVisibility(View.VISIBLE);
-        }
-
-        _autoStart.setChecked(_activityRecognition);
-
-        if(_activityRecognition && (_mActivityRecognitionClient == null))
-            initActivityRecognitionClient();
-
-        _units = settings.getInt("UNITS_OF_MEASURE",Constants.IMPERIAL);
-        _unitsButton.setChecked(_units == Constants.IMPERIAL);
-
-        setPebbleUnits();
     }
 
     private void stopActivityRecogntionClient() {
@@ -246,6 +212,7 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
         registerGPSServiceIntentReceiver();
         startService(intent);
         setPebbleUnits();
+        sendServiceState();
     }
 
     private void stopGPSService() {
@@ -253,6 +220,7 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
             return;
         removeGPSServiceIntentReceiver();
         stopService(new Intent(getApplicationContext(), GPSService.class));
+        sendServiceState();
     }
 
     private void registerGPSServiceIntentReceiver() {
@@ -267,15 +235,21 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
             unregisterReceiver(_gpsServiceReceiver);
     }
 
+
     private void checkRunkeeperRunning() {
+
+        return;
+        /*
         //check to see if run keeper is running
         ActivityManager activityManager = (ActivityManager) this.getSystemService( ACTIVITY_SERVICE );
         List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager.getRunningAppProcesses();
         for(int i = 0; i < procInfos.size(); i++){
+            Log.d("MainActivity - Running: ",procInfos.get(i).processName);
             if(procInfos.get(i).processName.equals("com.android.browser")) { //TODO: add runkeeper uri
                 Toast.makeText(getApplicationContext(), "Runkeeper is running", Toast.LENGTH_LONG).show();
             }
         }
+        */
     }
 
     private void checkGooglePlayServices() {
@@ -302,7 +276,6 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
     }
 
     private void updateActivityType(int type) {
-        TextView view = (TextView)this.findViewById(R.id.MAIN_ACTIVITY_TYPE);
 
         String activityType = "";
         switch(type) {
@@ -320,13 +293,25 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
                 break;
         }
 
-        view.setText("Activity Type: " + activityType);
+        HomeActivity activity = (HomeActivity)(getSupportFragmentManager().findFragmentByTag("home"));
+        if(activity != null)
+            activity.SetActivityText(activityType);
+    }
+
+    private void sendServiceState() {
+        PebbleDictionary dic = new PebbleDictionary();
+        if(checkServiceRunning()) {
+            dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
+        } else {
+            dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
+        }
+        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
         if(_requestType == RequestType.START) {
-            Log.d("MainActivity","Start Recognition");
+            Log.d("MainActivity", "Start Recognition");
             _mActivityRecognitionClient.requestActivityUpdates(30000, _callbackIntent);
         } else {
             Log.d("MainActivity","Stop Recognition");
@@ -352,10 +337,20 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
             int activity = intent.getIntExtra("ACTIVITY_CHANGED", 0);
             updateActivityType(activity);
 
-            if(activity == DetectedActivity.ON_BICYCLE)
+            if(activity == DetectedActivity.ON_BICYCLE) {
                 startGPSService();
-            else
-                stopGPSService();
+                _lastCycling = new Date();
+            } else {
+
+                // check to see if we have been inactive for 2 minutes
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(new Date());
+                cal.add(Calendar.MINUTE, -2);
+                if(_lastCycling == null || _lastCycling.before(cal.getTime())) {
+                    stopGPSService();
+                    _lastCycling = null;
+                }
+            }
 
         }
     }
@@ -370,7 +365,7 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
             double distance = intent.getDoubleExtra("DISTANCE", 99);
             double avgspeed = intent.getDoubleExtra("AVGSPEED", 99);
 
-            Log.d("MainActivity","Sending Data:" + speed + " dist: " + distance + " avgspeed"  + avgspeed);
+            Log.d("MainActivity", "Sending Data:" + speed + " dist: " + distance + " avgspeed" + avgspeed);
 
             DecimalFormat df = new DecimalFormat("#.#");
             PebbleDictionary dic = new PebbleDictionary();
@@ -389,4 +384,54 @@ public class MainActivity extends SherlockActivity implements GooglePlayServices
 
         }
     }
+
+    public static class TabListener<T extends SherlockFragment> implements ActionBar.TabListener {
+        private final SherlockFragmentActivity mActivity;
+        private final String mTag;
+        private final Class<T> mClass;
+        private final Bundle mArgs;
+        private android.support.v4.app.Fragment mFragment;
+
+        public TabListener(SherlockFragmentActivity activity, String tag, Class<T> clz) {
+            this(activity, tag, clz, null);
+        }
+
+        public TabListener(SherlockFragmentActivity activity, String tag, Class<T> clz, Bundle args) {
+            mActivity = activity;
+            mTag = tag;
+            mClass = clz;
+            mArgs = args;
+
+            // Check to see if we already have a fragment for this tab, probably
+            // from a previously saved state.  If so, deactivate it, because our
+            // initial state is that a tab isn't shown.
+            mFragment = mActivity.getSupportFragmentManager().findFragmentByTag(mTag);
+            if (mFragment != null && !mFragment.isDetached()) {
+                FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
+                ft.detach(mFragment);
+                ft.commit();
+            }
+        }
+
+        public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+            if (mFragment == null) {
+                mFragment = Fragment.instantiate(mActivity, mClass.getName(), mArgs);
+                ft.add(android.R.id.content, mFragment, mTag);
+            } else {
+                ft.attach(mFragment);
+            }
+
+        }
+
+        public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            if (mFragment != null) {
+                ft.detach(mFragment);
+            }
+        }
+
+        public void onTabReselected(ActionBar.Tab tab, FragmentTransaction ft) {
+            //Do nothing
+        }
+    }
+
 }
