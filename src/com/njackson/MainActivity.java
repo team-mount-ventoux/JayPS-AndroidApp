@@ -135,11 +135,14 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 switch(state) {
                     case Constants.STOP_PRESS:
                         stopGPSService();
+                        SetStartButtonText("Start");
                         break;
                     case Constants.PLAY_PRESS:
                         startGPSService();
+                        SetStartButtonText("Stop");
                         break;
                     case Constants.REFRESH_PRESS:
+                        ResetSavedGPSStats();
                         break;
                 }
 
@@ -155,6 +158,16 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<HomeActivity>(this,"home",HomeActivity.class,bundle)));
         //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,null)));
 
+    }
+
+    private void ResetSavedGPSStats() {
+        GPSService.resetGPSStats();
+    }
+
+    private void SetStartButtonText(String text) {
+        HomeActivity activity = (HomeActivity)(getSupportFragmentManager().findFragmentByTag("home"));
+        if(activity != null)
+            activity.SetStartText(text);
     }
 
     private void sendWatchFaceToPebble(){
@@ -338,15 +351,17 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             updateActivityType(activity);
 
             if(activity == DetectedActivity.ON_BICYCLE) {
+                Log.d("MainActivity","AutoStart");
                 startGPSService();
                 _lastCycling = new Date();
             } else {
-
+                Log.d("MainActivity","Waiting for stop");
                 // check to see if we have been inactive for 2 minutes
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date());
                 cal.add(Calendar.MINUTE, -2);
                 if(_lastCycling == null || _lastCycling.before(cal.getTime())) {
+                    Log.d("MainActivity","AutoStop");
                     stopGPSService();
                     _lastCycling = null;
                 }
@@ -361,9 +376,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            double speed = intent.getDoubleExtra("SPEED", 99);
-            double distance = intent.getDoubleExtra("DISTANCE", 99);
-            double avgspeed = intent.getDoubleExtra("AVGSPEED", 99);
+            double speed = intent.getFloatExtra("SPEED", 99);
+            double distance = intent.getFloatExtra("DISTANCE", 99);
+            double avgspeed = intent.getFloatExtra("AVGSPEED", 99);
 
             Log.d("MainActivity", "Sending Data:" + speed + " dist: " + distance + " avgspeed" + avgspeed);
 
@@ -416,6 +431,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
             if (mFragment == null) {
                 mFragment = Fragment.instantiate(mActivity, mClass.getName(), mArgs);
+                //mFragment.setArguments(mArgs);
                 ft.add(android.R.id.content, mFragment, mTag);
             } else {
                 ft.attach(mFragment);

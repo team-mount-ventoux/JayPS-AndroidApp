@@ -58,11 +58,11 @@ public class HomeActivity extends SherlockFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         _view = (RelativeLayout)inflater.inflate(R.layout.home, container, false);
 
@@ -117,6 +117,11 @@ public class HomeActivity extends SherlockFragment {
             }
         });
 
+        Bundle args = getArguments();
+        boolean activityRecognition = args.getBoolean("ACTIVITY_RECOGNITION",false);
+        int units = args.getInt("UNITS_OF_MEASURE",0);
+        SetupButtons(activityRecognition,units);
+
         return _view;
     }
 
@@ -141,6 +146,11 @@ public class HomeActivity extends SherlockFragment {
     public void SetActivityText(String activity) {
         TextView textView = (TextView)_view.findViewById(R.id.MAIN_ACTIVITY_TYPE);
         textView.setText("Activity: " + activity);
+    }
+
+    public void SetStartText(String text) {
+        Button button = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
+        button.setText(text);
     }
 
 }

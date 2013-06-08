@@ -27,41 +27,38 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
     private int _updates;
     private LocationClient _locationClient;
-    private double _speed;
-    private double _averageSpeed;
-    private double _distance;
+    private float _speed;
+    private float _averageSpeed;
+    private float _distance;
 
-    private double _prevspeed = -1;
-    private double _prevaverageSpeed = -1;
-    private double _prevdistance = -1;
+    private float _prevspeed = -1;
+    private float _prevaverageSpeed = -1;
+    private float _prevdistance = -1;
 
     private AdvancedLocation _myLocation;
 
-    private static double _speedConversion = 0.0;
-    private static double _distanceConversion = 0.0;
+    private static float _speedConversion = 0.0f;
+    private static float _distanceConversion = 0.0f;
+    private static GPSService _this;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleCommand(intent);
-
+        _this = this;
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
-        
-        _myLocation = new AdvancedLocation(getApplicationContext());
-        
         return START_STICKY;
     }
 
     @Override
     public void onDestroy (){
         Log.d("MainActivity","Stopped GPS Service");
-
         // save the state
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putFloat("GPS_SPEED", (float) _speed);
-        editor.putFloat("GPS_DISTANCE",(float)_distance);
-        editor.putFloat("GPS_AVGSPEED",(float)_averageSpeed);
+        editor.putFloat("GPS_SPEED", _speed / _speedConversion);
+        editor.putFloat("GPS_DISTANCE",_distance / _distanceConversion);
+        editor.putFloat("GPS_AVGSPEED",_averageSpeed / _speedConversion);
         editor.putInt("GPS_UPDATES", _updates);
         editor.commit();
 
@@ -78,15 +75,18 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         setConversionUnits(units);
 
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
-        _speed = (double)settings.getFloat("GPS_SPEED",0);
-        _distance = (double)settings.getFloat("GPS_DISTANCE",0);
-        _averageSpeed = (double)settings.getFloat("GPS_AVGSPEED",0);
+        _speed = settings.getFloat("GPS_SPEED",0);
+        _distance = settings.getFloat("GPS_DISTANCE",0);
+        _averageSpeed = settings.getFloat("GPS_AVGSPEED",0);
 
         try {
         _updates = settings.getInt("GPS_UPDATES",0);
         }catch (ClassCastException e) {
             _updates = 0;
         }
+
+        _myLocation = new AdvancedLocation(getApplicationContext(),_distance,_averageSpeed);
+
         _locationClient = new LocationClient(getApplicationContext(),this,this);
         _locationClient.connect();
 
@@ -95,12 +95,25 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
     public static void setConversionUnits(int units) {
         if(units == Constants.IMPERIAL) {
-            _speedConversion = Constants.MS_TO_MPH;
-            _distanceConversion = Constants.M_TO_MILES;
+            _speedConversion = (float)Constants.MS_TO_MPH;
+            _distanceConversion = (float)Constants.M_TO_MILES;
         } else {
-            _speedConversion = Constants.MS_TO_KPH;
-            _distanceConversion = Constants.M_TO_KM;
+            _speedConversion = (float)Constants.MS_TO_KPH;
+            _distanceConversion = (float)Constants.M_TO_KM;
         }
+    }
+
+    public static void resetGPSStats(){
+        if(_this == null)
+            return;
+        SharedPreferences settings = _this.getSharedPreferences(Constants.PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putFloat("GPS_SPEED", 0.0f);
+        editor.putFloat("GPS_DISTANCE",0.0f);
+        editor.putFloat("GPS_AVGSPEED",0.0f);
+        editor.putInt("GPS_UPDATES", 0);
+        editor.commit();
+        _this._myLocation = new AdvancedLocation(_this.getApplicationContext());
     }
 
     @Override
@@ -132,7 +145,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
     public void onLocationChanged(Location location) {
         _myLocation.onLocationChanged(location);
         
-        Log.d("MainActivity", "Got Speed: " + _myLocation.getSpeed());
+        Log.d("MainActivity", "Got Speed: " + _myLocation.getSpeed() + " Accuracy: " + _myLocation.getAccuracy());
 
         _speed = _myLocation.getSpeed() * _speedConversion;
 
@@ -150,14 +163,15 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         //_myLocation.getAltitude() // in m
         //_myLocation.getGoodAltitude() // in m
 
-        updatePebble();
+        if(_myLocation.getAccuracy() < 15.0)
+            updatePebble();
 
     }
 
     private void updatePebble() {
 
         if(_speed != _prevspeed || _averageSpeed != _prevaverageSpeed || _distance != _prevdistance) {
-            /*
+
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
             broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -165,7 +179,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
             broadcastIntent.putExtra("DISTANCE", _distance);
             broadcastIntent.putExtra("AVGSPEED", _averageSpeed);
             sendBroadcast(broadcastIntent);
-            */
+
             _prevaverageSpeed = _averageSpeed;
             _prevdistance = _distance;
             _prevspeed = _speed;
