@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PebbleCyclingComputer-AndroidApp.iml" filepath="$PROJECT_DIR$/PebbleCyclingComputer-AndroidApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/actionbarsherlock.iml" filepath="$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/actionbarsherlock.iml" />
+      <module fileurl="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/actionbarsherlock.iml" filepath="$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/actionbarsherlock.iml" />
+      <module fileurl="file:///Applications/Android/android-sdk-macosx/extras/google/google_play_services/libproject/google-play-services_lib/google-play-services_lib.iml" filepath="/Applications/Android/android-sdk-macosx/extras/google/google_play_services/libproject/google-play-services_lib/google-play-services_lib.iml" />
       <module fileurl="file:///Applications/Android/android-sdk-macosx/extras/google/google_play_services/libproject/google-play-services_lib/google-play-services_lib.iml" filepath="/Applications/Android/android-sdk-macosx/extras/google/google_play_services/libproject/google-play-services_lib/google-play-services_lib.iml" />
     </modules>
   </component>

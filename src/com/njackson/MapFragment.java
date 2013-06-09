@@ -15,7 +15,7 @@ public class MapFragment extends com.njackson.SherlockMapFragment {
         View root = super.onCreateView(inflater, container, savedInstanceState);
         _map = getMap();
         _map.setMyLocationEnabled(true);
-        _map.se
+        //_map.se
 
         return root;
     }

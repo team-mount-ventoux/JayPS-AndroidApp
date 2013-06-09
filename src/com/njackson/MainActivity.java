@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -153,6 +154,11 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         };
         PebbleKit.registerReceivedDataHandler(this, _pebbleDataHandler);
 
+        //setup the defaults
+        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+        _activityRecognition = settings.getBoolean("ACTIVITY_RECOGNITION",false);
+        _units = settings.getInt("UNITS_OF_MEASURE",0);
+
         Bundle bundle = new Bundle();
         bundle.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
         bundle.putInt("UNITS_OF_MEASURE",_units);
@@ -164,9 +170,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     @Override
     public void onResume() {
         super.onResume();
-
-
-
     }
 
     private void ResetSavedGPSStats() {

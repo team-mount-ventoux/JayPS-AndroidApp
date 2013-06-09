@@ -77,6 +77,7 @@ public class HomeActivity extends SherlockFragment {
             public void onClick(View v) {
 
                 _callback.onPressed(R.id.MAIN_AUTO_START_BUTTON,_autoStart.isChecked());
+                getArguments().putBoolean("ACTIVITY_RECOGNITION",_autoStart.isChecked());
                 if(_autoStart.isChecked())
                     _startButton.setVisibility(View.GONE);
                 else
@@ -88,7 +89,7 @@ public class HomeActivity extends SherlockFragment {
 
             @Override
             public void onClick(View v) {
-
+                getArguments().putInt("UNITS_OF_MEASURE",(_autoStart.isChecked()) ? Constants.IMPERIAL : Constants.METRIC);
                 _callback.onPressed(R.id.MAIN_UNITS_BUTTON,_unitsButton.isChecked());
 
             }
