@@ -3,4 +3,4 @@
 	url = https://github.com/JakeWharton/ActionBarSherlock.git
 [submodule "submodules/AdvancedLocation"]
 	path = submodules/AdvancedLocation
-	url = https://nicholasjackson@github.com/jay3/AdvancedLocation.git
+	url = https://nicholasjackson@github.com/nicholasjackson/AdvancedLocation.git
