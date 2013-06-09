@@ -25,20 +25,23 @@
     </option>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="mainact" />
+    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="map" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="ERROR" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bb1c107a-0cb6-4f80-927f-961c8561cda4" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/submodules/AdvancedLocation" afterPath="$PROJECT_DIR$/submodules/AdvancedLocation" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitmodules" afterPath="$PROJECT_DIR$/.gitmodules" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/AndroidManifest.xml" afterPath="$PROJECT_DIR$/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/njackson/GPSService.java" afterPath="$PROJECT_DIR$/src/com/njackson/GPSService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/njackson/HomeActivity.java" afterPath="$PROJECT_DIR$/src/com/njackson/HomeActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/njackson/MainActivity.java" afterPath="$PROJECT_DIR$/src/com/njackson/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/res/values/strings.xml" afterPath="$PROJECT_DIR$/res/values/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/njackson/MapActivity.java" afterPath="$PROJECT_DIR$/src/com/njackson/MapActivity.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/njackson/MapFragment.java" afterPath="$PROJECT_DIR$/src/com/njackson/MapFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="AdventureTracker-AndroidApp.iws" />
     <ignored path=".idea/workspace.xml" />
     <file path="/Dummy.txt" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370558432793" ignored="false" />
-    <file path="/MainActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370723815951" ignored="false" />
+    <file path="/MainActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370791775769" ignored="false" />
     <file path="/ActivityRecognitionIntentService.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369774821208" ignored="false" />
     <file path="/AndroidManifest.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370467865045" ignored="false" />
     <file path="/ids.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1369170185320" ignored="false" />
@@ -730,8 +733,8 @@
     <file path="/HomeActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370723296657" ignored="false" />
     <file path="/MapActivity.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370467125139" ignored="false" />
     <file path="/map.xml" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370469217925" ignored="false" />
-    <file path="/MapFragment.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370472668466" ignored="false" />
-    <file path="/AdvancedLocation.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370722412078" ignored="false" />
+    <file path="/MapFragment.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370795688369" ignored="false" />
+    <file path="/AdvancedLocation.java" changelist="bb1c107a-0cb6-4f80-927f-961c8561cda4" time="1370725011178" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -793,28 +796,49 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="SherlockMapFragment.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/njackson/SherlockMapFragment.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="22" column="13" selection-start="797" selection-end="797" vertical-scroll-proportion="0.0">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/njackson/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="163" column="35" selection-start="6050" selection-end="6050" vertical-scroll-proportion="0.0">
+            <state line="438" column="16" selection-start="16744" selection-end="16744" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MapFragment.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="MapFragment.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/njackson/MapFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="38" selection-start="547" selection-end="547" vertical-scroll-proportion="0.0">
+            <state line="17" column="15" selection-start="596" selection-end="596" vertical-scroll-proportion="0.40123457">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="strings.xml" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="map.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/res/layout/map.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="6" column="41" selection-start="308" selection-end="320" vertical-scroll-proportion="-1.7307693">
+              <folding />
+            </state>
+          </provider>
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="strings.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="3" column="58" selection-start="158" selection-end="158" vertical-scroll-proportion="0.10273973">
+            <state line="4" column="85" selection-start="228" selection-end="228" vertical-scroll-proportion="-2.4">
               <folding />
             </state>
           </provider>
@@ -823,34 +847,16 @@
       <file leaf-file-name="HomeActivity.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/njackson/HomeActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="150" column="28" selection-start="5031" selection-end="5043" vertical-scroll-proportion="0.0">
+            <state line="66" column="0" selection-start="2078" selection-end="2078" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SherlockFragment.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragment.java">
+      <file leaf-file-name="MapActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/njackson/MapActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="14" column="43" selection-start="630" selection-end="630" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Fragment.class" pinned="false" current="false" current-in-tab="false">
-        <entry file="jar:///Applications/Android/android-sdk-macosx/extras/android/support/v4/android-support-v4.jar!/android/support/v4/app/Fragment.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="13" selection-start="165" selection-end="165" vertical-scroll-proportion="25.2">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="GPSService.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/njackson/GPSService.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="114" column="80" selection-start="4146" selection-end="4146" vertical-scroll-proportion="0.0">
+            <state line="24" column="78" selection-start="759" selection-end="759" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -859,16 +865,7 @@
       <file leaf-file-name="AdvancedLocation.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/submodules/AdvancedLocation/src/fr/jayps/android/AdvancedLocation.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="72" column="0" selection-start="2744" selection-end="2744" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file:///Applications/Android/android-sdk-macosx/extras/google/google_play_services/libproject/google-play-services_lib/AndroidManifest.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+            <state line="65" column="92" selection-start="2497" selection-end="2497" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -877,7 +874,7 @@
       <file leaf-file-name="AndroidManifest.xml" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="42" column="19" selection-start="1945" selection-end="1945" vertical-scroll-proportion="0.0">
+            <state line="23" column="78" selection-start="1227" selection-end="1227" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -909,19 +906,19 @@
         <option value="$PROJECT_DIR$/src/com/njackson/Constants.java" />
         <option value="$PROJECT_DIR$/res/layout/home.xml" />
         <option value="$PROJECT_DIR$/res/layout/main.xml" />
-        <option value="$PROJECT_DIR$/src/com/njackson/MapActivity.java" />
         <option value="$PROJECT_DIR$/res/values/ids.xml" />
         <option value="$PROJECT_DIR$/res/layout/map.xml" />
         <option value="$PROJECT_DIR$/src/com/njackson/SherlockMapFragment.java" />
-        <option value="$PROJECT_DIR$/src/com/njackson/MapFragment.java" />
         <option value="$PROJECT_DIR$/src/com/njackson/ActivityRecognitionIntentService.java" />
         <option value="$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/com/actionbarsherlock/app/SherlockFragment.java" />
-        <option value="$PROJECT_DIR$/submodules/AdvancedLocation/src/fr/jayps/android/AdvancedLocation.java" />
-        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/src/com/njackson/HomeActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/njackson/MainActivity.java" />
         <option value="$PROJECT_DIR$/src/com/njackson/GPSService.java" />
         <option value="$PROJECT_DIR$/res/values/strings.xml" />
+        <option value="$PROJECT_DIR$/submodules/AdvancedLocation/src/fr/jayps/android/AdvancedLocation.java" />
+        <option value="$PROJECT_DIR$/src/com/njackson/MainActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/njackson/MapActivity.java" />
+        <option value="$PROJECT_DIR$/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/src/com/njackson/MapFragment.java" />
       </list>
     </option>
   </component>
@@ -1385,14 +1382,15 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="10" y="22" width="1900" height="970" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32941177" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18176915" sideWeight="0.60470587" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39529413" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39529413" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="IDEtalk Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39529413" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -1413,7 +1411,6 @@
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3298122" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20410368" sideWeight="0.60470587" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32954547" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -1498,40 +1495,6 @@
     </buildFile>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/res/layout/main.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="32" column="10" selection-start="1130" selection-end="1130" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/layout/home.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="341" vertical-scroll-proportion="-0.0">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/njackson/ActivityRecognitionIntentService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="8" selection-start="1838" selection-end="1838" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Applications/Android/android-sdk-macosx/extras/android/support/v4/android-support-v4.jar!/android/support/v4/app/BackStackRecord.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="131" column="8" selection-start="5950" selection-end="5950" vertical-scroll-proportion="0.72602737">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Applications/Android/android-sdk-macosx/extras/android/support/v4/android-support-v4.jar!/android/support/v4/app/Fragment.class">
       <provider selected="true" editor-type-id="text-editor">
         <state line="6" column="13" selection-start="165" selection-end="165" vertical-scroll-proportion="25.2">
@@ -1560,37 +1523,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/submodules/AdvancedLocation/src/fr/jayps/android/AdvancedLocation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="0" selection-start="2744" selection-end="2744" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///Applications/Android/android-sdk-macosx/extras/google/google_play_services/libproject/google-play-services_lib/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/njackson/MapFragment.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="38" selection-start="547" selection-end="547" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/njackson/HomeActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="150" column="28" selection-start="5031" selection-end="5043" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/njackson/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="163" column="35" selection-start="6050" selection-end="6050" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
@@ -1602,16 +1537,75 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="19" selection-start="1945" selection-end="1945" vertical-scroll-proportion="0.0">
+        <state line="4" column="85" selection-start="228" selection-end="228" vertical-scroll-proportion="-2.4">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/res/values/strings.xml">
+    <entry file="file://$PROJECT_DIR$/submodules/AdvancedLocation/src/fr/jayps/android/AdvancedLocation.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="3" column="58" selection-start="158" selection-end="158" vertical-scroll-proportion="0.10273973">
+        <state line="65" column="92" selection-start="2497" selection-end="2497" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/submodules/ActionBarSherlock/actionbarsherlock/src/com/actionbarsherlock/internal/app/ActionBarWrapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="364" column="0" selection-start="10268" selection-end="10268" vertical-scroll-proportion="0.33261338">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/njackson/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="438" column="16" selection-start="16744" selection-end="16744" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/njackson/HomeActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="66" column="0" selection-start="2078" selection-end="2078" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/njackson/SherlockMapFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="13" selection-start="797" selection-end="797" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/res/layout/map.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="41" selection-start="308" selection-end="320" vertical-scroll-proportion="-1.7307693">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="23" column="78" selection-start="1227" selection-end="1227" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/njackson/MapActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="78" selection-start="759" selection-end="759" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/njackson/MapFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="15" selection-start="596" selection-end="596" vertical-scroll-proportion="0.40123457">
           <folding />
         </state>
       </provider>

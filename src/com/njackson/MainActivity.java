@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -156,7 +157,15 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         bundle.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
         bundle.putInt("UNITS_OF_MEASURE",_units);
         actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<HomeActivity>(this,"home",HomeActivity.class,bundle)));
-        //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,null)));
+        actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,null)));
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
 
     }
 
@@ -171,6 +180,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     }
 
     private void sendWatchFaceToPebble(){
+        try {
         Uri uri = Uri.parse("http://www.demo.gs/pebblebike.pbw");
         Intent startupIntent = new Intent();
         startupIntent.setAction(Intent.ACTION_VIEW);
@@ -179,6 +189,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         ComponentName distantActivity = new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity");
         startupIntent.setComponent(distantActivity);
         startActivity(startupIntent);
+        }catch (ActivityNotFoundException ae) {
+            Toast.makeText(getApplicationContext(),"Unable to install watchface, do you have the latest pebble app installed?",10);
+        }
     }
 
     private void setPebbleUnits() {
