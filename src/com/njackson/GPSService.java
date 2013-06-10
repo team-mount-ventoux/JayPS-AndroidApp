@@ -59,7 +59,6 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         SharedPreferences.Editor editor = settings.edit();
         editor.putFloat("GPS_SPEED", _speed / _speedConversion);
         editor.putFloat("GPS_DISTANCE",_distance / _distanceConversion);
-        editor.putFloat("GPS_AVGSPEED",_averageSpeed / _speedConversion);
         editor.putLong("GPS_ELAPSEDTIME",_elapsedTime);
         editor.putInt("GPS_UPDATES", _updates);
         editor.commit();
@@ -79,7 +78,6 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         _speed = settings.getFloat("GPS_SPEED",0);
         _distance = settings.getFloat("GPS_DISTANCE",0);
-        _averageSpeed = settings.getFloat("GPS_AVGSPEED",0);
         _elapsedTime =  settings.getLong("GPS_ELAPSEDTIME",0);
 
         try {
@@ -90,7 +88,6 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
 
         _myLocation = new AdvancedLocation(getApplicationContext());
         _myLocation.debugLevel = 1;
-        _myLocation.setAverageSpeed(_averageSpeed);
         _myLocation.setElapsedTime(_elapsedTime);
         _myLocation.setDistance(_distance);
 
