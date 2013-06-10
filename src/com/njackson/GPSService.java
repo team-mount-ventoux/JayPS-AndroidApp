@@ -30,6 +30,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
     private float _speed;
     private float _averageSpeed;
     private float _distance;
+    private long _elapsedTime;
 
     private float _prevspeed = -1;
     private float _prevaverageSpeed = -1;
@@ -58,7 +59,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         SharedPreferences.Editor editor = settings.edit();
         editor.putFloat("GPS_SPEED", _speed / _speedConversion);
         editor.putFloat("GPS_DISTANCE",_distance / _distanceConversion);
-        editor.putFloat("GPS_AVGSPEED",_averageSpeed / _speedConversion);
+        editor.putLong("GPS_ELAPSEDTIME",_elapsedTime);
         editor.putInt("GPS_UPDATES", _updates);
         editor.commit();
 
@@ -77,7 +78,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         _speed = settings.getFloat("GPS_SPEED",0);
         _distance = settings.getFloat("GPS_DISTANCE",0);
-        _averageSpeed = settings.getFloat("GPS_AVGSPEED",0);
+        _elapsedTime =  settings.getLong("GPS_ELAPSEDTIME",0);
 
         try {
         _updates = settings.getInt("GPS_UPDATES",0);
@@ -85,7 +86,10 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
             _updates = 0;
         }
 
-        _myLocation = new AdvancedLocation(getApplicationContext(),_distance,_averageSpeed);
+        _myLocation = new AdvancedLocation(getApplicationContext());
+        _myLocation.debugLevel = 1;
+        _myLocation.setElapsedTime(_elapsedTime);
+        _myLocation.setDistance(_distance);
 
         _locationClient = new LocationClient(getApplicationContext(),this,this);
         _locationClient.connect();
@@ -111,9 +115,11 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         editor.putFloat("GPS_SPEED", 0.0f);
         editor.putFloat("GPS_DISTANCE",0.0f);
         editor.putFloat("GPS_AVGSPEED",0.0f);
+        editor.putLong("GPS_ELAPSEDTIME",0);
         editor.putInt("GPS_UPDATES", 0);
         editor.commit();
         _this._myLocation = new AdvancedLocation(_this.getApplicationContext());
+        _this._myLocation.debugLevel = 1;
     }
 
     @Override
@@ -156,6 +162,7 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         }
 
         _averageSpeed = _myLocation.getAverageSpeed() * _speedConversion;
+        _elapsedTime = _myLocation.getElapsedTime();
         _distance = _myLocation.getDistance() * _distanceConversion;
         
         // available:
