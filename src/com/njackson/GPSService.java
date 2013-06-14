@@ -35,6 +35,8 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
     private float _prevspeed = -1;
     private float _prevaverageSpeed = -1;
     private float _prevdistance = -1;
+    private double _currentLat;
+    private double _currentLon;
 
     private AdvancedLocation _myLocation;
 
@@ -164,7 +166,10 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         _averageSpeed = _myLocation.getAverageSpeed() * _speedConversion;
         _elapsedTime = _myLocation.getElapsedTime();
         _distance = _myLocation.getDistance() * _distanceConversion;
-        
+
+        _currentLat = location.getLatitude();
+        _currentLon = location.getLongitude();
+
         // available:
         //_myLocation.getElapsedTime() // in ms
         //_myLocation.getAltitude() // in m
@@ -185,6 +190,8 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
             broadcastIntent.putExtra("SPEED", _speed);
             broadcastIntent.putExtra("DISTANCE", _distance);
             broadcastIntent.putExtra("AVGSPEED", _averageSpeed);
+            broadcastIntent.putExtra("LAT",_currentLat );
+            broadcastIntent.putExtra("LON",_currentLon );
             sendBroadcast(broadcastIntent);
 
             _prevaverageSpeed = _averageSpeed;
