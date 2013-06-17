@@ -41,6 +41,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private ActivityRecognitionReceiver _activityRecognitionReceiver;
     private GPSServiceReceiver _gpsServiceReceiver;
     private boolean _googlePlayInstalled;
+    private Fragment _mapFragment;
 
 
     enum RequestType {
@@ -125,8 +126,12 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         Bundle bundle = new Bundle();
         bundle.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
         bundle.putInt("UNITS_OF_MEASURE",_units);
+
+        //instantiate the map fragment and store for future use
+        _mapFragment = Fragment.instantiate(this, "map", bundle);
+
         actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<HomeActivity>(this, "home", HomeActivity.class, bundle)));
-        actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,null)));
+        actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,_mapFragment,null)));
 
         setupPebbleButtonHandler();
 
@@ -422,6 +427,11 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
         public TabListener(SherlockFragmentActivity activity, String tag, Class<T> clz) {
             this(activity, tag, clz, null);
+        }
+
+        public TabListener(SherlockFragmentActivity activity, String tag, Class<T> clz,android.support.v4.app.Fragment fragment, Bundle args) {
+            this(activity, tag, clz, args);
+            mFragment = fragment;
         }
 
         public TabListener(SherlockFragmentActivity activity, String tag, Class<T> clz, Bundle args) {
