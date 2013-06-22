@@ -1,5 +1,7 @@
 package com.njackson;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -48,6 +50,9 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleCommand(intent);
         _this = this;
+        
+        makeServiceForeground("Pebble Bike", "GPS started");
+        
         // We want this service to continue running until it is explicitly
         // stopped, so return sticky.
         return START_STICKY;
@@ -65,6 +70,8 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         editor.putInt("GPS_UPDATES", _updates);
         editor.commit();
 
+        removeServiceForeground();
+        
         PebbleKit.closeAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
         _locationClient.removeLocationUpdates(this);
         _locationClient.disconnect();
@@ -199,5 +206,26 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
             _prevspeed = _speed;
 
         }
+    }
+    private void makeServiceForeground(String titre, String texte) {
+        //http://stackoverflow.com/questions/3687200/implement-startforeground-method-in-android
+        final int myID = 1000;
+
+        //The intent to launch when the user clicks the expanded notification
+        Intent i = new Intent(this, MainActivity.class);
+
+        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendIntent = PendingIntent.getActivity(this, 0, i, 0);
+
+        // The following code is deprecated since API 11 (Android 3.x). Notification.Builder could be used instead, but without Android 2.x compatibility 
+        Notification notification = new Notification(R.drawable.ic_launcher, "Pebble Bike", System.currentTimeMillis());
+        notification.setLatestEventInfo(this, titre, texte, pendIntent);
+
+        notification.flags |= Notification.FLAG_NO_CLEAR;
+
+        startForeground(myID, notification);
+    }
+    private void removeServiceForeground() {
+        stopForeground(true);
     }
 }
