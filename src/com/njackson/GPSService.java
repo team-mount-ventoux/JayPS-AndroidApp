@@ -3,18 +3,18 @@ package com.njackson;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
-import com.google.android.gms.location.LocationListener;
+import android.location.LocationListener;
+import android.location.LocationManager;
+
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import com.getpebble.android.kit.PebbleKit;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.location.LocationClient;
-import com.google.android.gms.location.LocationRequest;
+
 
 import fr.jayps.android.AdvancedLocation;
 
@@ -25,10 +25,9 @@ import fr.jayps.android.AdvancedLocation;
  * Time: 13:30
  * To change this template use File | Settings | File Templates.
  */
-public class GPSService extends Service implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener, LocationListener {
+public class GPSService extends Service {
 
     private int _updates;
-    private LocationClient _locationClient;
     private float _speed;
     private float _averageSpeed;
     private float _distance;
@@ -57,10 +56,18 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         // stopped, so return sticky.
         return START_STICKY;
     }
+    
+    @Override
+    public void onCreate() {
+        _locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, onLocationChange);
+
+        super.onCreate();
+    }
 
     @Override
     public void onDestroy (){
-        Log.d("MainActivity","Stopped GPS Service");
+        Log.d("GPSService","Stopped GPS Service");
         // save the state
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         SharedPreferences.Editor editor = settings.edit();
@@ -73,12 +80,12 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         removeServiceForeground();
         
         PebbleKit.closeAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
-        _locationClient.removeLocationUpdates(this);
-        _locationClient.disconnect();
+
+        _locationMgr.removeUpdates(onLocationChange);
     }
 
     private void handleCommand(Intent intent) {
-        Log.d("MainActivity","Started GPS Service");
+        Log.d("GPSService","Started GPS Service");
 
         // set the units to be used
         int units = intent.getIntExtra("UNITS",1);
@@ -99,9 +106,6 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
         _myLocation.debugLevel = 1;
         _myLocation.setElapsedTime(_elapsedTime);
         _myLocation.setDistance(_distance);
-
-        _locationClient = new LocationClient(getApplicationContext(),this,this);
-        _locationClient.connect();
 
         PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
     }
@@ -135,57 +139,53 @@ public class GPSService extends Service implements GooglePlayServicesClient.Conn
     public IBinder onBind(Intent intent) {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
+    
+    private LocationManager _locationMgr = null;
+    private LocationListener onLocationChange = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            _myLocation.onLocationChanged(location);
+            
+            Log.d("GPSService", "Got Speed: " + _myLocation.getSpeed() + " Accuracy: " + _myLocation.getAccuracy());
 
-    @Override
-    public void onConnected(Bundle connectionHint) {
-        Log.d("MainActivity","GPS CONNECTED");
-        LocationRequest request = LocationRequest.create();
-        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        request.setInterval(500);
-        //request.setFastestInterval(500);
-        _locationClient.requestLocationUpdates(request, this);
-    }
+            _speed = _myLocation.getSpeed() * _speedConversion;
 
-    @Override
-    public void onDisconnected() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+            if(_speed < 1) {
+                _speed = 0;
+            } else {
+                _updates++;
+            }
 
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+            _averageSpeed = _myLocation.getAverageSpeed() * _speedConversion;
+            _elapsedTime = _myLocation.getElapsedTime();
+            _distance = _myLocation.getDistance() * _distanceConversion;
 
-    @Override
-    public void onLocationChanged(Location location) {
-        _myLocation.onLocationChanged(location);
-        
-        Log.d("MainActivity", "Got Speed: " + _myLocation.getSpeed() + " Accuracy: " + _myLocation.getAccuracy());
+            _currentLat = location.getLatitude();
+            _currentLon = location.getLongitude();
 
-        _speed = _myLocation.getSpeed() * _speedConversion;
-
-        if(_speed < 1) {
-            _speed = 0;
-        } else {
-            _updates++;
+            //if(_myLocation.getAccuracy() < 15.0) // not really needed, something similar is done in AdvancedLocation
+            updatePebble();
+    
         }
 
-        _averageSpeed = _myLocation.getAverageSpeed() * _speedConversion;
-        _elapsedTime = _myLocation.getElapsedTime();
-        _distance = _myLocation.getDistance() * _distanceConversion;
+        @Override
+        public void onProviderDisabled(String arg0) {
+            // TODO Auto-generated method stub
+            
+        }
 
-        _currentLat = location.getLatitude();
-        _currentLon = location.getLongitude();
+        @Override
+        public void onProviderEnabled(String arg0) {
+            // TODO Auto-generated method stub
+            
+        }
 
-        // available:
-        //_myLocation.getElapsedTime() // in ms
-        //_myLocation.getAltitude() // in m
-        //_myLocation.getGoodAltitude() // in m
-
-        if(_myLocation.getAccuracy() < 15.0)
-            updatePebble();
-
-    }
+        @Override
+        public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
+            // TODO Auto-generated method stub
+            
+        }        
+    };
 
     private void updatePebble() {
 
