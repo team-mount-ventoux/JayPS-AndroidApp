@@ -386,7 +386,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 "com.njackson.intent.action.UPDATE_PEBBLE";
         @Override
         public void onReceive(Context context, Intent intent) {
-
+/*
             double speed = intent.getFloatExtra("SPEED", 99);
             double distance = intent.getFloatExtra("DISTANCE", 99);
             double avgspeed = intent.getFloatExtra("AVGSPEED", 99);
@@ -407,7 +407,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             }
 
             PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
-
+*/
             // do we need to update the map
             double lat =  intent.getDoubleExtra("LAT",0);
             double lon = intent.getDoubleExtra("LON",0);

@@ -17,7 +17,12 @@ public class Constants {
     static final int DISTANCE_TEXT = 0x02;
     static final int AVGSPEED_TEXT = 0x03;
     static final int MEASUREMENT_UNITS = 0x04;
-
+    static final int ALTITUDE_TEXT = 0x05;
+    static final int ASCENT_TEXT = 0x06; 
+    static final int ASCENTRATE_TEXT = 0x07;
+    static final int SLOPE_TEXT = 0x08;
+    static final int ACCURACY_TEXT = 0x09;
+    
     static final String PREFS_NAME = "PebbleBikePrefs";
 
     static final int PLAY_PRESS =0x0;
