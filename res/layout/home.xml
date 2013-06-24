@@ -64,4 +64,12 @@
             android:layout_below="@id/MAIN_UNITS_TEXT" android:layout_alignLeft="@id/MAIN_UNITS_BUTTON"
             android:layout_marginTop="5dp"/>
 
+    <fragment
+            android:id="@+id/mapcontent"
+            android:name="com.njackson.MapFragment"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:tag="tag_fragment_map" android:layout_above="@id/MAIN_START_BUTTON"
+            android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

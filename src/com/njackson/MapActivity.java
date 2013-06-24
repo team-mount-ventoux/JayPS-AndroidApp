@@ -2,6 +2,7 @@ package com.njackson;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +27,14 @@ public class MapActivity extends SherlockFragment{
     }
 
     public void setLocation(LatLng location) {
+        try {
+
         MapFragment map = (MapFragment)getFragmentManager().findFragmentById(R.id.fragment_map);
-        map.setLocation(location);
+        if(map != null)
+            map.setLocation(location);
+        }catch(NullPointerException ex) {
+            Log.d("MainActivity","Map does not exist");
+        }
     }
 
     @Override

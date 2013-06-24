@@ -8,5 +8,5 @@
     <item name="MAIN_START_BUTTON" type="id"/>
     <item name="MAIN_UNITS_TEXT" type="id"/>
     <item name="MAIN_UNITS_BUTTON" type="id"/>
-    <item name="MAIN_INSTALL_WATCHFACE_BUTTON" type="id"/>
+    <item name="MAIN_INSTALL_WATCHFACE_BUTTON" type="id"/><item name="mapcontent" type="id"/>
 </resources>

@@ -5,7 +5,9 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.*;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -22,6 +24,13 @@ import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -41,8 +50,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private ActivityRecognitionReceiver _activityRecognitionReceiver;
     private GPSServiceReceiver _gpsServiceReceiver;
     private boolean _googlePlayInstalled;
-    private Fragment _mapFragment;
-
 
     enum RequestType {
         START,
@@ -127,11 +134,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         bundle.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
         bundle.putInt("UNITS_OF_MEASURE",_units);
 
-        //instantiate the map fragment and store for future use
-        _mapFragment = Fragment.instantiate(this, "map", bundle);
-
         actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<HomeActivity>(this, "home", HomeActivity.class, bundle)));
-        actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,_mapFragment,null)));
+        //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<MapActivity>(this, "map", MapActivity.class, bundle)));
 
         setupPebbleButtonHandler();
 
@@ -352,6 +356,72 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
+    public void saveMapTile(LatLng location) {
+        //;
+        try
+        {
+            String urlString = String.format("http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=16&size=400x400&sensor=false&key=AIzaSyDnwAQuwn8MV9HT1SY6Py8S3HrKiJyq7g4",location.latitude,location.longitude);
+
+            URL url = new URL(urlString);
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoOutput(true);
+            urlConnection.connect();
+
+            File SDCardRoot = android.os.Environment.getExternalStorageDirectory().getAbsoluteFile();
+            String filename="downloadedFile.png";
+            Log.i("Local filename:",filename);
+            File file = new File(SDCardRoot,filename);
+            file.createNewFile();
+            FileOutputStream fileOutput = new FileOutputStream(file);
+            InputStream inputStream = urlConnection.getInputStream();
+            int totalSize = urlConnection.getContentLength();
+            int downloadedSize = 0;
+            byte[] buffer = new byte[1024];
+            int bufferLength = 0;
+            while ( (bufferLength = inputStream.read(buffer)) > 0 )
+            {
+                fileOutput.write(buffer, 0, bufferLength);
+                downloadedSize += bufferLength;
+                Log.i("Progress:","downloadedSize:"+downloadedSize+"totalSize:"+ totalSize) ;
+            }
+            fileOutput.close();
+        }
+        catch (MalformedURLException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private class AsyncTaskEx extends AsyncTask<LatLng, Void, Void> {
+
+        /** The system calls this to perform work in a worker thread and
+         * delivers it the parameters given to AsyncTask.execute() */
+        @Override
+        protected Void doInBackground(LatLng... locations) {
+            saveMapTile(locations[0]);//call your method here it will run in background
+            return null;
+        }
+
+        /** The system calls this to perform work in the UI thread and delivers
+         * the result from doInBackground() */
+        @Override
+        protected void onPostExecute(Void result) {
+            //Write some code you want to execute on UI after doInBackground() completes
+            return ;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //Write some code you want to execute on UI before doInBackground() starts
+            return ;
+        }
+    }
+
     public class ActivityRecognitionReceiver extends BroadcastReceiver {
         public static final String ACTION_RESP =
                 "com.njackson.intent.action.MESSAGE_PROCESSED";
@@ -411,9 +481,17 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             // do we need to update the map
             double lat =  intent.getDoubleExtra("LAT",0);
             double lon = intent.getDoubleExtra("LON",0);
-            MapActivity activity = (MapActivity)getSupportFragmentManager().findFragmentByTag("map");
-            if(activity != null)
-                activity.setLocation(new LatLng(lat,lon));
+            LatLng location = new LatLng(lat,lon);
+            new AsyncTaskEx().execute(location);
+
+            HomeActivity activity = (HomeActivity)getSupportFragmentManager().findFragmentByTag("home");
+            if(activity != null) {
+                try {
+                    activity.setLocation(location);
+                }catch (IOException io) {
+                    Log.d("MainActivity",io.toString());
+                }
+            }
 
         }
     }
