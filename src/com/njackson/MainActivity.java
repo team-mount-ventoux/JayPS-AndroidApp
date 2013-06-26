@@ -4,10 +4,10 @@ import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.*;
+import android.graphics.*;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -24,14 +24,12 @@ import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -50,6 +48,11 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private ActivityRecognitionReceiver _activityRecognitionReceiver;
     private GPSServiceReceiver _gpsServiceReceiver;
     private boolean _googlePlayInstalled;
+
+    private boolean _sending = false;
+    private byte[] _data;
+    private int _progress=0;
+    private int _chunksize=100;
 
     enum RequestType {
         START,
@@ -90,7 +93,15 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     }
 
     private void startButtonClick(boolean value) {
+
+
+
         if(value) {
+            try {
+                SendImageToPebble();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
             startGPSService();
         } else {
             stopGPSService();
@@ -198,6 +209,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                     case Constants.REFRESH_PRESS:
                         ResetSavedGPSStats();
                         break;
+                    case Constants.ACK:
+                        SendNextDataBundle();
+                        break;
                 }
 
                 //SetupButtons();
@@ -206,6 +220,58 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         };
 
         PebbleKit.registerReceivedDataHandler(this, _pebbleDataHandler);
+    }
+
+    private void SendImageToPebble() throws FileNotFoundException {
+
+        String path =  android.os.Environment.getExternalStorageDirectory().getAbsoluteFile() + "/downloadedFile.png";
+        Bitmap orig = BitmapFactory.decodeFile(path);
+        Bitmap croppedBmp = Bitmap.createBitmap(orig, 0, 0, 120, 120);
+
+        ColorMatrix bwMatrix =new ColorMatrix();
+        bwMatrix.setSaturation(0);
+        final ColorMatrixColorFilter colorFilter= new ColorMatrixColorFilter(bwMatrix);
+        Bitmap rBitmap = croppedBmp.copy(Bitmap.Config.ARGB_8888, true);
+        Paint paint=new Paint();
+        paint.setColorFilter(colorFilter);
+        Canvas myCanvas =new Canvas(rBitmap);
+        myCanvas.drawBitmap(rBitmap, 0, 0, paint);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+        rBitmap.compress(Bitmap.CompressFormat.PNG, 85, stream);
+
+        _data = stream.toByteArray();
+        _progress = 0;
+        _sending = true;
+        SendNextDataBundle();
+
+    }
+
+    private void SendNextDataBundle() {
+
+        int size = 0;
+        byte[] buffer;
+
+        if(_progress * _chunksize < _data.length) {
+            size = (_data.length - _progress < _chunksize) ? (_data.length - _progress) : 80;
+
+            buffer = new byte[size+1];
+            int r=1;
+            for(int n=_chunksize * _progress;n < size + _progress * _chunksize;n++) {
+                buffer[r] = _data[n];
+                r++;
+            }
+        }else {
+            buffer = new byte[1];
+            buffer[0] = Byte.MAX_VALUE;
+        }
+
+        _progress ++;
+
+        PebbleDictionary dic = new PebbleDictionary();
+        dic.addBytes(Constants.PEBBLEBIKE_DATA_KEY,buffer);
+        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+
     }
 
     private void ResetSavedGPSStats() {
@@ -465,6 +531,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
             DecimalFormat df = new DecimalFormat("#.#");
             PebbleDictionary dic = new PebbleDictionary();
+            /*
             dic.addString(Constants.SPEED_TEXT,df.format(speed));
             dic.addString(Constants.DISTANCE_TEXT,df.format(distance));
             dic.addString(Constants.AVGSPEED_TEXT,df.format(avgspeed));
@@ -475,14 +542,17 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             } else {
                 dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
             }
+            */
+            //byte data[] = new byte[78];
+            //dic.addBytes(Constants.PEBBLEBIKE_DATA_KEY,data);
+            //PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
 
-            PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
 
             // do we need to update the map
             double lat =  intent.getDoubleExtra("LAT",0);
             double lon = intent.getDoubleExtra("LON",0);
             LatLng location = new LatLng(lat,lon);
-            new AsyncTaskEx().execute(location);
+            //new AsyncTaskEx().execute(location);
 
             HomeActivity activity = (HomeActivity)getSupportFragmentManager().findFragmentByTag("home");
             if(activity != null) {
