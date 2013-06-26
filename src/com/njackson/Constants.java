@@ -18,11 +18,15 @@ public class Constants {
     static final int AVGSPEED_TEXT = 0x03;
     static final int MEASUREMENT_UNITS = 0x04;
 
+    static final int PEBBLEBIKE_DATA_KEY = 0xFEFF;
+
     static final String PREFS_NAME = "PebbleBikePrefs";
 
     static final int PLAY_PRESS =0x0;
     static final int STOP_PRESS = 0x1;
     static final int REFRESH_PRESS = 0x2;
+
+    static final int ACK = 0x07;
 
     static final int STATE_START = 0x1;
     static final int STATE_STOP = 0x2;
