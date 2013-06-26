@@ -29,6 +29,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -52,7 +53,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private boolean _sending = false;
     private byte[] _data;
     private int _progress=0;
-    private int _chunksize=100;
+    private int _chunksize=80;
+    private double _distanceSinceDraw = 99;
 
     enum RequestType {
         START,
@@ -226,8 +228,54 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
         String path =  android.os.Environment.getExternalStorageDirectory().getAbsoluteFile() + "/downloadedFile.png";
         Bitmap orig = BitmapFactory.decodeFile(path);
-        Bitmap croppedBmp = Bitmap.createBitmap(orig, 0, 0, 120, 120);
 
+
+
+        int x = (orig.getWidth() - 128) / 2;
+        int y = (orig.getWidth() - 128) / 2;
+        Bitmap crop = Bitmap.createBitmap(orig,x,y,128,128);
+
+
+        Bitmap croppedBmp = Bitmap.createBitmap(128, 128, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(croppedBmp);
+        ColorMatrix ma = new ColorMatrix();
+        ma.setSaturation(0);
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(ma));
+        canvas.drawBitmap(crop, 0, 0, paint);
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        byte[] array = new byte[(128*128)/8];
+
+        int pos = 0;
+        int bitPos = 0;
+        for(int r=0; r<128; r++) {
+            for(int c=0; c < 128; c++){
+                int pixel = croppedBmp.getPixel(c, r);
+                int lowestByte = pixel & 0xff;
+
+                int b = ((lowestByte <  128) ? 0 : 1);
+                if(b == 1)
+                    array[pos] = (byte) (array[pos] | (1 << bitPos));
+                else
+                    array[pos] = (byte) (array[pos] & ~(1 << bitPos));
+
+                bitPos++;
+                if(bitPos > 7) {
+                    bitPos =0;
+                    pos++;
+                }
+            }
+        }
+
+        //BitmapConvertor convertor = new BitmapConvertor(getApplicationContext());
+        //convertor.convertBitmap(croppedBmp,"temp.png");
+
+        //Bitmap temp = BitmapFactory.decodeFile(android.os.Environment.getExternalStorageDirectory().getAbsoluteFile() + "/temp.png");
+
+        //byte[] data = convertor.convertBitmapGetBytes(croppedBmp);
+
+        /*
         ColorMatrix bwMatrix =new ColorMatrix();
         bwMatrix.setSaturation(0);
         final ColorMatrixColorFilter colorFilter= new ColorMatrixColorFilter(bwMatrix);
@@ -236,11 +284,12 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         paint.setColorFilter(colorFilter);
         Canvas myCanvas =new Canvas(rBitmap);
         myCanvas.drawBitmap(rBitmap, 0, 0, paint);
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        */
+        //ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-        rBitmap.compress(Bitmap.CompressFormat.PNG, 85, stream);
+        //temp.compress(Bitmap.CompressFormat.PNG, 85, stream);
 
-        _data = stream.toByteArray();
+        _data = array;
         _progress = 0;
         _sending = true;
         SendNextDataBundle();
@@ -253,7 +302,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         byte[] buffer;
 
         if(_progress * _chunksize < _data.length) {
-            size = (_data.length - _progress < _chunksize) ? (_data.length - _progress) : 80;
+            size = ((_data.length - (_progress * _chunksize)) < _chunksize) ? (_data.length - (_progress * _chunksize)) : _chunksize;
+
+            Log.d("MainActivity","Sending Data:" + _progress + " len:" + _data.length + " " + (_progress * _chunksize) + " to " + (_progress * _chunksize + size));
 
             buffer = new byte[size+1];
             buffer[0] = (byte)_progress;
@@ -265,6 +316,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }else {
             buffer = new byte[1];
             buffer[0] = Byte.MAX_VALUE;
+            Log.d("MainActivity","Send Data Complete");
         }
 
         _progress ++;
@@ -427,7 +479,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         //;
         try
         {
-            String urlString = String.format("http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=16&size=400x400&sensor=false&key=AIzaSyDnwAQuwn8MV9HT1SY6Py8S3HrKiJyq7g4",location.latitude,location.longitude);
+            String urlString = String.format("http://maps.googleapis.com/maps/api/staticmap?center=%f,%f",location.latitude,location.longitude);
+            urlString += "&zoom=16&size=400x400&sensor=false&key=AIzaSyDnwAQuwn8MV9HT1SY6Py8S3HrKiJyq7g4&style=featureType:all|saturation:%20-100|gamma:%200.50&style=feature:road%7Celement:geometry%7Ccolor:0x000000%7Cweight:1%7Cvisibility:on";
 
             URL url = new URL(urlString);
             HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
@@ -471,6 +524,11 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         @Override
         protected Void doInBackground(LatLng... locations) {
             saveMapTile(locations[0]);//call your method here it will run in background
+            try {
+                SendImageToPebble();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
             return null;
         }
 
@@ -553,7 +611,11 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             double lat =  intent.getDoubleExtra("LAT",0);
             double lon = intent.getDoubleExtra("LON",0);
             LatLng location = new LatLng(lat,lon);
-            //new AsyncTaskEx().execute(location);
+
+            if(distance - _distanceSinceDraw > 0.2) {
+                new AsyncTaskEx().execute(location);
+                _distanceSinceDraw = distance;
+            }
 
             HomeActivity activity = (HomeActivity)getSupportFragmentManager().findFragmentByTag("home");
             if(activity != null) {

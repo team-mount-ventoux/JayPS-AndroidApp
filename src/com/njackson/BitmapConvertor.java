@@ -56,6 +56,21 @@ public class BitmapConvertor{
     	
     }
 
+    public byte[] convertBitmapGetBytes(Bitmap inputBitmap) {
+
+        mWidth = inputBitmap.getWidth();
+        mHeight = inputBitmap.getHeight();
+        mDataWidth=((mWidth+31)/32)*4*8;
+        mDataArray = new byte[(mDataWidth * mHeight)];
+        mRawBitmapData = new byte[(mDataWidth * mHeight) / 8];
+
+        convertArgbToGrayscale(inputBitmap, mWidth, mHeight);
+        createRawMonochromeData();
+
+        return mRawBitmapData;
+
+    }
+
 	
 
 	private void convertArgbToGrayscale(Bitmap bmpOriginal, int width, int height){
