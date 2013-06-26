@@ -256,6 +256,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             size = (_data.length - _progress < _chunksize) ? (_data.length - _progress) : 80;
 
             buffer = new byte[size+1];
+            buffer[0] = (byte)_progress;
             int r=1;
             for(int n=_chunksize * _progress;n < size + _progress * _chunksize;n++) {
                 buffer[r] = _data[n];
