@@ -128,10 +128,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         bundle.putInt("UNITS_OF_MEASURE",_units);
 
         //instantiate the map fragment and store for future use
-        _mapFragment = Fragment.instantiate(this, "map", bundle);
+        //_mapFragment = Fragment.instantiate(this, "map", bundle);
 
         actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<HomeActivity>(this, "home", HomeActivity.class, bundle)));
-        actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,_mapFragment,null)));
+        //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,_mapFragment,null)));
 
         setupPebbleButtonHandler();
 
@@ -386,7 +386,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 "com.njackson.intent.action.UPDATE_PEBBLE";
         @Override
         public void onReceive(Context context, Intent intent) {
-/*
+
             double speed = intent.getFloatExtra("SPEED", 99);
             double distance = intent.getFloatExtra("DISTANCE", 99);
             double avgspeed = intent.getFloatExtra("AVGSPEED", 99);
@@ -406,8 +406,20 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
             }
 
+            dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", intent.getIntExtra("ALTITUDE", 99)));
+            dic.addString(Constants.ASCENT_TEXT,     String.format("%d", intent.getIntExtra("ASCENT", 99)));
+            dic.addString(Constants.ASCENTRATE_TEXT, String.format("%d", intent.getIntExtra("ASCENTRATE", 99))); // in m/h
+            dic.addString(Constants.SLOPE_TEXT,      String.format("%d", intent.getIntExtra("SLOPE", 99))); // 100%
+            dic.addString(Constants.ACCURACY_TEXT,   String.format("%d", intent.getIntExtra("ACCURACY", 99)));
+            
+            Log.d("GPSService:Pebble","Sending Pebble ALTITUDE_TEXT: "      + String.format("%d", intent.getIntExtra("ALTITUDE", 99)));
+            Log.d("GPSService:Pebble","Sending Pebble ASCENT_TEXT: "        + String.format("%d", intent.getIntExtra("ASCENT", 99)));
+            Log.d("GPSService:Pebble","Sending Pebble ASCENTRATE_TEXT: "    + String.format("%d", intent.getIntExtra("ASCENTRATE", 99))); // in m/h
+            Log.d("GPSService:Pebble","Sending Pebble SLOPE_TEXT: "         + String.format("%d", intent.getIntExtra("SLOPE", 99))); // 100%
+            Log.d("GPSService:Pebble","Sending Pebble ACCURACY_TEXT: "      + String.format("%d", intent.getIntExtra("ACCURACY", 99)));
+
             PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
-*/
+
             // do we need to update the map
             double lat =  intent.getDoubleExtra("LAT",0);
             double lon = intent.getDoubleExtra("LON",0);

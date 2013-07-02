@@ -1,8 +1,5 @@
 package com.njackson;
 
-import static com.getpebble.android.kit.Constants.MSG_DATA;
-
-import java.text.DecimalFormat;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -17,7 +14,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import com.getpebble.android.kit.PebbleKit;
-import com.getpebble.android.kit.util.PebbleDictionary;
 
 import fr.jayps.android.AdvancedLocation;
 
@@ -202,34 +198,16 @@ public class GPSService extends Service {
             broadcastIntent.putExtra("AVGSPEED", _averageSpeed);
             broadcastIntent.putExtra("LAT",_currentLat );
             broadcastIntent.putExtra("LON",_currentLon );
+            broadcastIntent.putExtra("ALTITUDE",   (int) _myLocation.getAltitude());
+            broadcastIntent.putExtra("ASCENT",     (int) _myLocation.getAscent()); // 
+            broadcastIntent.putExtra("ASCENTRATE", (int) (3600f * _myLocation.getAscentRate())); // in m/h
+            broadcastIntent.putExtra("SLOPE",      (int) (100f * _myLocation.getSlope())); // 100%
+            broadcastIntent.putExtra("ACCURACY",   (int) _myLocation.getAccuracy());            
             sendBroadcast(broadcastIntent);
 
             _prevaverageSpeed = _averageSpeed;
             _prevdistance = _distance;
             _prevspeed = _speed;
-
-            Log.d("GPSService:Pebble","Sending Data: _speed:" + _speed + " _distance: " + _distance + " _averageSpeed:"  + _averageSpeed);
-            
-            DecimalFormat df = new DecimalFormat("#.#");
-            PebbleDictionary dic = new PebbleDictionary();
-            dic.addString(Constants.SPEED_TEXT,df.format(_speed));
-            dic.addString(Constants.DISTANCE_TEXT,df.format(_distance));
-            dic.addString(Constants.AVGSPEED_TEXT,df.format(_averageSpeed));
-            //dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
-            
-            dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) _myLocation.getAltitude()));
-            dic.addString(Constants.ASCENT_TEXT,     String.format("%d", (int) _myLocation.getAscent())); // 
-            dic.addString(Constants.ASCENTRATE_TEXT, String.format("%d", (int) (3600f * _myLocation.getAscentRate()))); // in m/h
-            dic.addString(Constants.SLOPE_TEXT,      String.format("%d", (int) (100f * _myLocation.getSlope()))); // 100%
-            dic.addString(Constants.ACCURACY_TEXT,   String.format("%d", (int) _myLocation.getAccuracy()));
-            
-            Log.d("GPSService:Pebble","Sending Pebble ALTITUDE_TEXT: "      + String.format("%d", (int) _myLocation.getAltitude()));
-            Log.d("GPSService:Pebble","Sending Pebble ASCENT_TEXT: "        + String.format("%d", (int) _myLocation.getAscent())); // 
-            Log.d("GPSService:Pebble","Sending Pebble ASCENTRATE_TEXT: "    + String.format("%d", (int) (3600f * _myLocation.getAscentRate()))); // in m/h
-            Log.d("GPSService:Pebble","Sending Pebble SLOPE_TEXT: "         + String.format("%d", (int) (100f * _myLocation.getSlope())));
-            Log.d("GPSService:Pebble","Sending Pebble ACCURACY_TEXT: "  + String.format("%d", (int) _myLocation.getAccuracy()));
-            Log.d("GPSService:Pebble", dic.toJsonString());
-            PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);            
         }
     }
     private void makeServiceForeground(String titre, String texte) {
