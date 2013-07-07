@@ -199,7 +199,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             startupIntent.setComponent(distantActivity);
             startActivity(startupIntent);
         }catch (ActivityNotFoundException ae) {
-            Toast.makeText(getApplicationContext(),"Unable to install watchface, do you have the latest pebble app installed?",10);
+            Toast.makeText(getApplicationContext(),"Unable to install watchface, do you have the latest pebble app installed?",Toast.LENGTH_LONG).show();
         }
     }
 
@@ -298,10 +298,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         if(checkServiceRunning())
             return;
 
-        if(!_googlePlayInstalled) {
-            Toast.makeText(getApplicationContext(),"Please install google play services",10);
-            return;
-        }
+        //if(!_googlePlayInstalled) {
+        //    Toast.makeText(getApplicationContext(),"Please install google play services",10);
+        //    return;
+        //}
 
         Intent intent = new Intent(getApplicationContext(), GPSService.class);
 
