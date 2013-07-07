@@ -37,6 +37,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private RequestType _requestType;
     private static int _units = Constants.IMPERIAL;
 
+    private static float _speedConversion = 0.0f;
+    private static float _distanceConversion = 0.0f;
+    private static float _altitudeConversion = 0.0f;
+    
     private Date _lastCycling;
 
     private ActivityRecognitionReceiver _activityRecognitionReceiver;
@@ -90,21 +94,30 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             stopGPSService();
         }
     }
-
-    private void unitsButtonClick(boolean value) {
-        if(value) {
-            _units = Constants.IMPERIAL;
+    public static void setConversionUnits(int units) {
+        _units = units;
+        
+        if(units == Constants.IMPERIAL) {
+            _speedConversion = (float)Constants.MS_TO_MPH;
+            _distanceConversion = (float)Constants.M_TO_MILES;
+            _altitudeConversion = (float)Constants.M_TO_FEET;
         } else {
-            _units = Constants.METRIC;
+            _speedConversion = (float)Constants.MS_TO_KPH;
+            _distanceConversion = (float)Constants.M_TO_KM;
+            _altitudeConversion = (float)Constants.M_TO_M;
+        }
+    }
+    private void unitsButtonClick(boolean value) {
+        if (value) {
+            setConversionUnits(Constants.IMPERIAL);
+        } else {
+            setConversionUnits(Constants.METRIC);
         }
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("UNITS_OF_MEASURE",_units);
         editor.commit();
-        setPebbleUnits();
-        if(checkServiceRunning()) {
-            GPSService.setConversionUnits(_units);
-        }
+        resendLastDataToPebble();
     }
 
     @Override
@@ -122,7 +135,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         //setup the defaults
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         _activityRecognition = settings.getBoolean("ACTIVITY_RECOGNITION",false);
-        _units = settings.getInt("UNITS_OF_MEASURE",0);
+        setConversionUnits(settings.getInt("UNITS_OF_MEASURE",0));
 
         Bundle bundle = new Bundle();
         bundle.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
@@ -190,12 +203,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }
     }
 
-    private void setPebbleUnits() {
-        PebbleDictionary dic = new PebbleDictionary();
-        dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
-        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
-    }
-
     private void sendServiceState() {
         PebbleDictionary dic = new PebbleDictionary();
         if(checkServiceRunning()) {
@@ -204,6 +211,49 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
         }
         PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+    }
+    
+    private Intent _lastIntent = null;
+    private void resendLastDataToPebble() {
+        sendDataToPebble(_lastIntent);
+    }
+    public void sendDataToPebble(Intent intent) {
+        Log.d("PebbleBike:MainActivity","sendDataToPebble()");
+        
+        PebbleDictionary dic = new PebbleDictionary();
+        
+        if (intent != null) {
+            _lastIntent = intent;
+
+            DecimalFormat df = new DecimalFormat("#.#");
+            
+            dic.addString(Constants.SPEED_TEXT,      df.format(intent.getFloatExtra("SPEED", 99) * _speedConversion)); // km/h or mph
+            dic.addString(Constants.DISTANCE_TEXT,   df.format(Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * _distanceConversion) / 10)); // km or miles
+            dic.addString(Constants.AVGSPEED_TEXT,   df.format(intent.getFloatExtra("AVGSPEED", 99) * _speedConversion)); // km/h or mph
+            dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
+            dic.addString(Constants.ASCENT_TEXT,     String.format("%d", (int) (intent.getDoubleExtra("ASCENT", 99) * _altitudeConversion))); // m of ft
+            dic.addString(Constants.ASCENTRATE_TEXT, String.format("%d", (int) (intent.getFloatExtra("ASCENTRATE", 99) * _altitudeConversion))); // m/h or ft/h
+            dic.addString(Constants.SLOPE_TEXT,      String.format("%d", (int) intent.getFloatExtra("SLOPE", 99))); // %
+            dic.addString(Constants.ACCURACY_TEXT,   String.format("%d", (int) intent.getFloatExtra("ACCURACY", 99))); // m
+            
+            Log.d("PebbleBike:MainActivity", "Sending speed:" + dic.getString(Constants.SPEED_TEXT) + " dist: " + dic.getString(Constants.DISTANCE_TEXT) + " avgspeed:" + dic.getString(Constants.AVGSPEED_TEXT));
+            Log.d("PebbleBike:MainActivity", "Sending ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT));
+            Log.d("PebbleBike:MainActivity", "Sending ASCENT: "     + dic.getString(Constants.ASCENT_TEXT));
+            Log.d("PebbleBike:MainActivity", "Sending ASCENTRATE: " + dic.getString(Constants.ASCENTRATE_TEXT));
+            Log.d("PebbleBike:MainActivity", "Sending SLOPE: "      + dic.getString(Constants.SLOPE_TEXT));
+            Log.d("PebbleBike:MainActivity", "Sending ACCURACY: "   + dic.getString(Constants.ACCURACY_TEXT));
+        }
+        dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
+        Log.d("PebbleBike:MainActivity", "Sending MEASUREMENT_UNITS: "   + dic.getInteger(Constants.MEASUREMENT_UNITS));
+        
+        if (checkServiceRunning()) {
+            dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
+        } else {
+            dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
+        }
+        Log.d("PebbleBike:MainActivity", "Sending STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED));
+
+        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);        
     }
 
     private void ResetSavedGPSStats() {
@@ -253,14 +303,13 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             return;
         }
 
-        //set the units
         Intent intent = new Intent(getApplicationContext(), GPSService.class);
-        intent.putExtra("UNITS",_units);
 
         registerGPSServiceIntentReceiver();
         startService(intent);
-        setPebbleUnits();
-        sendServiceState();
+        
+        PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+        resendLastDataToPebble();
     }
 
     private void stopGPSService() {
@@ -388,39 +437,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 "com.njackson.intent.action.UPDATE_PEBBLE";
         @Override
         public void onReceive(Context context, Intent intent) {
-
-            double speed = intent.getFloatExtra("SPEED", 99);
-            double distance = intent.getFloatExtra("DISTANCE", 99);
-            double avgspeed = intent.getFloatExtra("AVGSPEED", 99);
-
-            Log.d("MainActivity", "Sending Data:" + speed + " dist: " + distance + " avgspeed" + avgspeed);
-
-            DecimalFormat df = new DecimalFormat("#.#");
-            PebbleDictionary dic = new PebbleDictionary();
-            dic.addString(Constants.SPEED_TEXT,df.format(speed));
-            dic.addString(Constants.DISTANCE_TEXT,df.format(distance));
-            dic.addString(Constants.AVGSPEED_TEXT,df.format(avgspeed));
-            dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
-
-            if(checkServiceRunning()) {
-                dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
-            } else {
-                dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
-            }
-
-            dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", intent.getIntExtra("ALTITUDE", 99)));
-            dic.addString(Constants.ASCENT_TEXT,     String.format("%d", intent.getIntExtra("ASCENT", 99)));
-            dic.addString(Constants.ASCENTRATE_TEXT, String.format("%d", intent.getIntExtra("ASCENTRATE", 99))); // in m/h
-            dic.addString(Constants.SLOPE_TEXT,      String.format("%d", intent.getIntExtra("SLOPE", 99))); // 100%
-            dic.addString(Constants.ACCURACY_TEXT,   String.format("%d", intent.getIntExtra("ACCURACY", 99)));
-            
-            Log.d("GPSService:Pebble","Sending Pebble ALTITUDE_TEXT: "      + String.format("%d", intent.getIntExtra("ALTITUDE", 99)));
-            Log.d("GPSService:Pebble","Sending Pebble ASCENT_TEXT: "        + String.format("%d", intent.getIntExtra("ASCENT", 99)));
-            Log.d("GPSService:Pebble","Sending Pebble ASCENTRATE_TEXT: "    + String.format("%d", intent.getIntExtra("ASCENTRATE", 99))); // in m/h
-            Log.d("GPSService:Pebble","Sending Pebble SLOPE_TEXT: "         + String.format("%d", intent.getIntExtra("SLOPE", 99))); // 100%
-            Log.d("GPSService:Pebble","Sending Pebble ACCURACY_TEXT: "      + String.format("%d", intent.getIntExtra("ACCURACY", 99)));
-
-            PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+           
+            sendDataToPebble(intent);
 
             // do we need to update the map
             double lat =  intent.getDoubleExtra("LAT",0);

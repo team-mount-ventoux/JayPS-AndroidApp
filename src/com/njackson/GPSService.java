@@ -35,14 +35,12 @@ public class GPSService extends Service {
     private float _prevspeed = -1;
     private float _prevaverageSpeed = -1;
     private float _prevdistance = -1;
+    private double _prevaltitude = -1;
     private double _currentLat;
     private double _currentLon;
 
     private AdvancedLocation _myLocation;
 
-    private static float _speedConversion = 0.0f;
-    private static float _distanceConversion = 0.0f;
-    private static float _altitudeConversion = 0.0f;
     private static GPSService _this;
 
     @Override
@@ -71,25 +69,21 @@ public class GPSService extends Service {
         // save the state
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         SharedPreferences.Editor editor = settings.edit();
-        editor.putFloat("GPS_SPEED", _speed / _speedConversion);
-        editor.putFloat("GPS_DISTANCE",_distance / _distanceConversion);
+        editor.putFloat("GPS_SPEED", _speed);
+        editor.putFloat("GPS_DISTANCE",_distance);
         editor.putLong("GPS_ELAPSEDTIME",_elapsedTime);
         editor.putInt("GPS_UPDATES", _updates);
         editor.commit();
 
         removeServiceForeground();
         
-        PebbleKit.closeAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+        //PebbleKit.closeAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
 
         _locationMgr.removeUpdates(onLocationChange);
     }
 
     private void handleCommand(Intent intent) {
         Log.d("GPSService","Started GPS Service");
-
-        // set the units to be used
-        int units = intent.getIntExtra("UNITS",1);
-        setConversionUnits(units);
 
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         _speed = settings.getFloat("GPS_SPEED",0);
@@ -107,19 +101,7 @@ public class GPSService extends Service {
         _myLocation.setElapsedTime(_elapsedTime);
         _myLocation.setDistance(_distance);
 
-        PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
-    }
-
-    public static void setConversionUnits(int units) {
-        if(units == Constants.IMPERIAL) {
-            _speedConversion = (float)Constants.MS_TO_MPH;
-            _distanceConversion = (float)Constants.M_TO_MILES;
-            _altitudeConversion = (float)Constants.M_TO_FEET;
-        } else {
-            _speedConversion = (float)Constants.MS_TO_KPH;
-            _distanceConversion = (float)Constants.M_TO_KM;
-            _altitudeConversion = (float)Constants.M_TO_M;
-        }
+        //PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
     }
 
     public static void resetGPSStats(){
@@ -150,7 +132,7 @@ public class GPSService extends Service {
             
             Log.d("GPSService", "Got Speed: " + _myLocation.getSpeed() + " Accuracy: " + _myLocation.getAccuracy());
 
-            _speed = _myLocation.getSpeed() * _speedConversion;
+            _speed = _myLocation.getSpeed();
 
             if(_speed < 1) {
                 _speed = 0;
@@ -158,15 +140,36 @@ public class GPSService extends Service {
                 _updates++;
             }
 
-            _averageSpeed = _myLocation.getAverageSpeed() * _speedConversion;
+            _averageSpeed = _myLocation.getAverageSpeed();
             _elapsedTime = _myLocation.getElapsedTime();
-            _distance = _myLocation.getDistance() * _distanceConversion;
+            _distance = _myLocation.getDistance();
 
             _currentLat = location.getLatitude();
             _currentLon = location.getLongitude();
 
             //if(_myLocation.getAccuracy() < 15.0) // not really needed, something similar is done in AdvancedLocation
-            updatePebble();
+            if (_speed != _prevspeed || _averageSpeed != _prevaverageSpeed || _distance != _prevdistance || _prevaltitude != _myLocation.getAltitude()) {
+
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
+                broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+                broadcastIntent.putExtra("SPEED", _speed);
+                broadcastIntent.putExtra("DISTANCE", _distance);
+                broadcastIntent.putExtra("AVGSPEED", _averageSpeed);
+                broadcastIntent.putExtra("LAT",_currentLat );
+                broadcastIntent.putExtra("LON",_currentLon );
+                broadcastIntent.putExtra("ALTITUDE",   _myLocation.getAltitude()); // m
+                broadcastIntent.putExtra("ASCENT",     _myLocation.getAscent()); // m
+                broadcastIntent.putExtra("ASCENTRATE", (3600f * _myLocation.getAscentRate())); // in m/h
+                broadcastIntent.putExtra("SLOPE",      (100f * _myLocation.getSlope())); // in %
+                broadcastIntent.putExtra("ACCURACY",   _myLocation.getAccuracy()); // m
+                sendBroadcast(broadcastIntent);
+
+                _prevaverageSpeed = _averageSpeed;
+                _prevdistance = _distance;
+                _prevspeed = _speed;
+                _prevaltitude = _myLocation.getAltitude();
+            }
     
         }
 
@@ -189,30 +192,6 @@ public class GPSService extends Service {
         }        
     };
 
-    private void updatePebble() {
-
-        if(_speed != _prevspeed || _averageSpeed != _prevaverageSpeed || _distance != _prevdistance) {
-
-            Intent broadcastIntent = new Intent();
-            broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
-            broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-            broadcastIntent.putExtra("SPEED", _speed);
-            broadcastIntent.putExtra("DISTANCE", _distance);
-            broadcastIntent.putExtra("AVGSPEED", _averageSpeed);
-            broadcastIntent.putExtra("LAT",_currentLat );
-            broadcastIntent.putExtra("LON",_currentLon );
-            broadcastIntent.putExtra("ALTITUDE",   (int) (_myLocation.getAltitude() * _altitudeConversion)); // m or ft
-            broadcastIntent.putExtra("ASCENT",     (int) (_myLocation.getAscent() * _altitudeConversion)); // m or ft
-            broadcastIntent.putExtra("ASCENTRATE", (int) (3600f * _myLocation.getAscentRate() * _altitudeConversion)); // in m/h or ft/h
-            broadcastIntent.putExtra("SLOPE",      (int) (100f * _myLocation.getSlope())); // in %
-            broadcastIntent.putExtra("ACCURACY",   (int) _myLocation.getAccuracy()); // m
-            sendBroadcast(broadcastIntent);
-
-            _prevaverageSpeed = _averageSpeed;
-            _prevdistance = _distance;
-            _prevspeed = _speed;
-        }
-    }
     private void makeServiceForeground(String titre, String texte) {
         //http://stackoverflow.com/questions/3687200/implement-startforeground-method-in-android
         final int myID = 1000;
