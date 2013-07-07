@@ -190,7 +190,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
     private void sendWatchFaceToPebble(){
         try {
-            Uri uri = Uri.parse("http://labs.jayps.fr/pebblebike/pebblebike-1.2.0-beta1.pbw");
+            Uri uri = Uri.parse("http://labs.jayps.fr/pebblebike/pebblebike-1.2.0-beta2.pbw");
             Intent startupIntent = new Intent();
             startupIntent.setAction(Intent.ACTION_VIEW);
             startupIntent.setType("application/octet-stream");
