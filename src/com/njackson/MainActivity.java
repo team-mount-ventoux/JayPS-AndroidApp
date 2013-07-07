@@ -14,6 +14,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.getpebble.android.kit.PebbleKit;
+import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -133,13 +134,45 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<HomeActivity>(this, "home", HomeActivity.class, bundle)));
         //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,_mapFragment,null)));
 
-        setupPebbleButtonHandler();
-
+        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("state")) {
+            Log.d("MainActivity", "onCreate() state:" + getIntent().getExtras().getInt("state"));
+            
+            changeState(getIntent().getExtras().getInt("state"));
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    // This is called for activities that set launchMode to "singleTop" in their package, or if a client used the FLAG_ACTIVITY_SINGLE_TOP flag when calling startActivity(Intent).
+    // In either case, when the activity is re-launched while at the top of the activity stack instead of a new instance of the activity being started, onNewIntent() will be called 
+    // on the existing instance with the Intent that was used to re-launch it.
+    // An activity will always be paused before receiving a new intent, so you can count on onResume() being called after this method. 
+    protected void onNewIntent (Intent intent) {
+        if (intent.getExtras() != null && intent.getExtras().containsKey("state")) {
+            Log.d("MainActivity", "onNewIntent() state:" + intent.getExtras().getInt("state"));
+            
+            changeState(intent.getExtras().getInt("state"));
+        }
+    }
+    
+    private void changeState(int state) {
+        Log.d("MainActivity", "changeState(" + state + ")");
+        switch (state) {
+            case Constants.STOP_PRESS:
+                stopGPSService();
+                SetStartButtonText("Start");
+                break;
+            case Constants.PLAY_PRESS:
+                startGPSService();
+                SetStartButtonText("Stop");
+                break;
+            case Constants.REFRESH_PRESS:
+                ResetSavedGPSStats();
+                break;
+        }        
     }
 
     private void sendWatchFaceToPebble(){
@@ -171,37 +204,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
         }
         PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
-    }
-
-    private void setupPebbleButtonHandler() {
-        PebbleKit.PebbleDataReceiver _pebbleDataHandler = new PebbleKit.PebbleDataReceiver(Constants.WATCH_UUID) {
-            @Override
-            public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
-                int newState = data.getUnsignedInteger(Constants.STATE_CHANGED).intValue();
-                int state = newState;
-                Log.d("MainActivity", "Got Data from Pebble: " + state);
-                PebbleKit.sendAckToPebble(context, transactionId);
-
-                switch (state) {
-                    case Constants.STOP_PRESS:
-                        stopGPSService();
-                        SetStartButtonText("Start");
-                        break;
-                    case Constants.PLAY_PRESS:
-                        startGPSService();
-                        SetStartButtonText("Stop");
-                        break;
-                    case Constants.REFRESH_PRESS:
-                        ResetSavedGPSStats();
-                        break;
-                }
-
-                //SetupButtons();
-
-            }
-        };
-
-        PebbleKit.registerReceivedDataHandler(this, _pebbleDataHandler);
     }
 
     private void ResetSavedGPSStats() {
