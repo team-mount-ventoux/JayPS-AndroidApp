@@ -42,6 +42,7 @@ public class GPSService extends Service {
 
     private static float _speedConversion = 0.0f;
     private static float _distanceConversion = 0.0f;
+    private static float _altitudeConversion = 0.0f;
     private static GPSService _this;
 
     @Override
@@ -113,9 +114,11 @@ public class GPSService extends Service {
         if(units == Constants.IMPERIAL) {
             _speedConversion = (float)Constants.MS_TO_MPH;
             _distanceConversion = (float)Constants.M_TO_MILES;
+            _altitudeConversion = (float)Constants.M_TO_FEET;
         } else {
             _speedConversion = (float)Constants.MS_TO_KPH;
             _distanceConversion = (float)Constants.M_TO_KM;
+            _altitudeConversion = (float)Constants.M_TO_M;
         }
     }
 
@@ -198,11 +201,11 @@ public class GPSService extends Service {
             broadcastIntent.putExtra("AVGSPEED", _averageSpeed);
             broadcastIntent.putExtra("LAT",_currentLat );
             broadcastIntent.putExtra("LON",_currentLon );
-            broadcastIntent.putExtra("ALTITUDE",   (int) _myLocation.getAltitude());
-            broadcastIntent.putExtra("ASCENT",     (int) _myLocation.getAscent()); // 
-            broadcastIntent.putExtra("ASCENTRATE", (int) (3600f * _myLocation.getAscentRate())); // in m/h
-            broadcastIntent.putExtra("SLOPE",      (int) (100f * _myLocation.getSlope())); // 100%
-            broadcastIntent.putExtra("ACCURACY",   (int) _myLocation.getAccuracy());            
+            broadcastIntent.putExtra("ALTITUDE",   (int) (_myLocation.getAltitude() * _altitudeConversion)); // m or ft
+            broadcastIntent.putExtra("ASCENT",     (int) (_myLocation.getAscent() * _altitudeConversion)); // m or ft
+            broadcastIntent.putExtra("ASCENTRATE", (int) (3600f * _myLocation.getAscentRate() * _altitudeConversion)); // in m/h or ft/h
+            broadcastIntent.putExtra("SLOPE",      (int) (100f * _myLocation.getSlope())); // in %
+            broadcastIntent.putExtra("ACCURACY",   (int) _myLocation.getAccuracy()); // m
             sendBroadcast(broadcastIntent);
 
             _prevaverageSpeed = _averageSpeed;

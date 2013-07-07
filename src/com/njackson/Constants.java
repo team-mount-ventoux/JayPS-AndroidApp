@@ -39,5 +39,7 @@ public class Constants {
     static final double MS_TO_MPH = 2.23693629;
     static final double M_TO_KM = 0.001;
     static final double M_TO_MILES = 0.000621371192;
+    static final double M_TO_M = 1;
+    static final double M_TO_FEET = 3.2808399;
 }
 
