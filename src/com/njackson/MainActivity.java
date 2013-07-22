@@ -26,6 +26,7 @@ import com.google.android.gms.maps.model.LatLng;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends SherlockFragmentActivity  implements  GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener, HomeActivity.OnButtonPressListener {
@@ -225,11 +226,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         if (intent != null) {
             _lastIntent = intent;
 
-            DecimalFormat df = new DecimalFormat("#.#");
-            
-            dic.addString(Constants.SPEED_TEXT,      df.format(intent.getFloatExtra("SPEED", 99) * _speedConversion)); // km/h or mph
-            dic.addString(Constants.DISTANCE_TEXT,   df.format(Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * _distanceConversion) / 10)); // km or miles
-            dic.addString(Constants.AVGSPEED_TEXT,   df.format(intent.getFloatExtra("AVGSPEED", 99) * _speedConversion)); // km/h or mph
+            // force Locale.US to force dot as a decimal separator
+            dic.addString(Constants.SPEED_TEXT,      String.format(Locale.US, "%.1f", intent.getFloatExtra("SPEED", 99) * _speedConversion)); // km/h or mph
+            dic.addString(Constants.DISTANCE_TEXT,   String.format(Locale.US, "%.1f", Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * _distanceConversion) / 10)); // km or miles
+            dic.addString(Constants.AVGSPEED_TEXT,   String.format(Locale.US, "%.1f", intent.getFloatExtra("AVGSPEED", 99) * _speedConversion)); // km/h or mph
             dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
             dic.addString(Constants.ASCENT_TEXT,     String.format("%d", (int) (intent.getDoubleExtra("ASCENT", 99) * _altitudeConversion))); // m of ft
             dic.addString(Constants.ASCENTRATE_TEXT, String.format("%d", (int) (intent.getFloatExtra("ASCENTRATE", 99) * _altitudeConversion))); // m/h or ft/h
