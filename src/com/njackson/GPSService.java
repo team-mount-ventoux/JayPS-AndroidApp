@@ -30,7 +30,6 @@ public class GPSService extends Service {
     private float _speed;
     private float _averageSpeed;
     private float _distance;
-    private long _elapsedTime;
 
     private float _prevspeed = -1;
     private float _prevaverageSpeed = -1;
@@ -71,7 +70,8 @@ public class GPSService extends Service {
         SharedPreferences.Editor editor = settings.edit();
         editor.putFloat("GPS_SPEED", _speed);
         editor.putFloat("GPS_DISTANCE",_distance);
-        editor.putLong("GPS_ELAPSEDTIME",_elapsedTime);
+        editor.putLong("GPS_ELAPSEDTIME", _myLocation.getElapsedTime());
+        editor.putFloat("GPS_ASCENT", (float) _myLocation.getAscent());
         editor.putInt("GPS_UPDATES", _updates);
         editor.commit();
 
@@ -88,18 +88,18 @@ public class GPSService extends Service {
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         _speed = settings.getFloat("GPS_SPEED",0);
         _distance = settings.getFloat("GPS_DISTANCE",0);
-        _elapsedTime =  settings.getLong("GPS_ELAPSEDTIME",0);
 
         try {
-        _updates = settings.getInt("GPS_UPDATES",0);
+            _updates = settings.getInt("GPS_UPDATES",0);
         }catch (ClassCastException e) {
             _updates = 0;
         }
 
         _myLocation = new AdvancedLocation(getApplicationContext());
         _myLocation.debugLevel = 1;
-        _myLocation.setElapsedTime(_elapsedTime);
+        _myLocation.setElapsedTime(settings.getLong("GPS_ELAPSEDTIME", 0));
         _myLocation.setDistance(_distance);
+        _myLocation.setAscent(settings.getFloat("GPS_ASCENT", 0));
 
         //PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
     }
@@ -113,6 +113,7 @@ public class GPSService extends Service {
         editor.putFloat("GPS_DISTANCE",0.0f);
         editor.putFloat("GPS_AVGSPEED",0.0f);
         editor.putLong("GPS_ELAPSEDTIME",0);
+        editor.putLong("GPS_ASCENT",0);
         editor.putInt("GPS_UPDATES", 0);
         editor.commit();
         _this._myLocation = new AdvancedLocation(_this.getApplicationContext());
@@ -141,7 +142,6 @@ public class GPSService extends Service {
             }
 
             _averageSpeed = _myLocation.getAverageSpeed();
-            _elapsedTime = _myLocation.getElapsedTime();
             _distance = _myLocation.getDistance();
 
             _currentLat = location.getLatitude();
