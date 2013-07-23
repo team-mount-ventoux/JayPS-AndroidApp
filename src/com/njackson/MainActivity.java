@@ -227,21 +227,37 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             _lastIntent = intent;
 
             // force Locale.US to force dot as a decimal separator
-            dic.addString(Constants.SPEED_TEXT,      String.format(Locale.US, "%.1f", intent.getFloatExtra("SPEED", 99) * _speedConversion)); // km/h or mph
-            dic.addString(Constants.DISTANCE_TEXT,   String.format(Locale.US, "%.1f", Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * _distanceConversion) / 10)); // km or miles
-            dic.addString(Constants.AVGSPEED_TEXT,   String.format(Locale.US, "%.1f", intent.getFloatExtra("AVGSPEED", 99) * _speedConversion)); // km/h or mph
-            dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
-            dic.addString(Constants.ASCENT_TEXT,     String.format("%d", (int) (intent.getDoubleExtra("ASCENT", 99) * _altitudeConversion))); // m of ft
-            dic.addString(Constants.ASCENTRATE_TEXT, String.format("%d", (int) (intent.getFloatExtra("ASCENTRATE", 99) * _altitudeConversion))); // m/h or ft/h
-            dic.addString(Constants.SLOPE_TEXT,      String.format("%d", (int) intent.getFloatExtra("SLOPE", 99))); // %
-            dic.addString(Constants.ACCURACY_TEXT,   String.format("%d", (int) intent.getFloatExtra("ACCURACY", 99))); // m
+            if (intent.hasExtra("SPEED")) {
+                dic.addString(Constants.SPEED_TEXT,      String.format(Locale.US, "%.1f", intent.getFloatExtra("SPEED", 99) * _speedConversion)); // km/h or mph
+            }
+            if (intent.hasExtra("DISTANCE")) {
+                dic.addString(Constants.DISTANCE_TEXT,   String.format(Locale.US, "%.1f", Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * _distanceConversion) / 10)); // km or miles
+            }
+            if (intent.hasExtra("AVGSPEED")) {
+                dic.addString(Constants.AVGSPEED_TEXT,   String.format(Locale.US, "%.1f", intent.getFloatExtra("AVGSPEED", 99) * _speedConversion)); // km/h or mph
+            }
+            if (intent.hasExtra("ALTITUDE")) {
+                dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
+                Log.d("PebbleBike:MainActivity", "Sending ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT));
+            }
+            if (intent.hasExtra("ASCENT")) {
+                dic.addString(Constants.ASCENT_TEXT,     String.format("%d", (int) (intent.getDoubleExtra("ASCENT", 99) * _altitudeConversion))); // m of ft
+                Log.d("PebbleBike:MainActivity", "Sending ASCENT: "     + dic.getString(Constants.ASCENT_TEXT));
+            }
+            if (intent.hasExtra("ASCENTRATE")) {
+                dic.addString(Constants.ASCENTRATE_TEXT, String.format("%d", (int) (intent.getFloatExtra("ASCENTRATE", 99) * _altitudeConversion))); // m/h or ft/h
+                Log.d("PebbleBike:MainActivity", "Sending ASCENTRATE: " + dic.getString(Constants.ASCENTRATE_TEXT));
+            }
+            if (intent.hasExtra("SLOPE")) {
+                dic.addString(Constants.SLOPE_TEXT,      String.format("%d", (int) intent.getFloatExtra("SLOPE", 99))); // %
+                Log.d("PebbleBike:MainActivity", "Sending SLOPE: "      + dic.getString(Constants.SLOPE_TEXT));
+            }
+            if (intent.hasExtra("ACCURACY")) {
+                dic.addString(Constants.ACCURACY_TEXT,   String.format("%d", (int) intent.getFloatExtra("ACCURACY", 99))); // m
+                Log.d("PebbleBike:MainActivity", "Sending ACCURACY: "   + dic.getString(Constants.ACCURACY_TEXT));
+            }
             
             Log.d("PebbleBike:MainActivity", "Sending speed:" + dic.getString(Constants.SPEED_TEXT) + " dist: " + dic.getString(Constants.DISTANCE_TEXT) + " avgspeed:" + dic.getString(Constants.AVGSPEED_TEXT));
-            Log.d("PebbleBike:MainActivity", "Sending ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT));
-            Log.d("PebbleBike:MainActivity", "Sending ASCENT: "     + dic.getString(Constants.ASCENT_TEXT));
-            Log.d("PebbleBike:MainActivity", "Sending ASCENTRATE: " + dic.getString(Constants.ASCENTRATE_TEXT));
-            Log.d("PebbleBike:MainActivity", "Sending SLOPE: "      + dic.getString(Constants.SLOPE_TEXT));
-            Log.d("PebbleBike:MainActivity", "Sending ACCURACY: "   + dic.getString(Constants.ACCURACY_TEXT));
         }
         dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
         Log.d("PebbleBike:MainActivity", "Sending MEASUREMENT_UNITS: "   + dic.getInteger(Constants.MEASUREMENT_UNITS));

@@ -102,6 +102,15 @@ public class GPSService extends Service {
         _myLocation.setAscent(settings.getFloat("GPS_ASCENT", 0));
 
         //PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+        
+        
+        // send the saved values directly to update pebble
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
+        broadcastIntent.putExtra("DISTANCE", _myLocation.getDistance());
+        broadcastIntent.putExtra("AVGSPEED", _myLocation.getAverageSpeed());
+        broadcastIntent.putExtra("ASCENT",   _myLocation.getAscent());
+        sendBroadcast(broadcastIntent);        
     }
 
     public static void resetGPSStats(){
