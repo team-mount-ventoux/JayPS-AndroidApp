@@ -35,6 +35,7 @@ public class GPSService extends Service {
     private float _prevaverageSpeed = -1;
     private float _prevdistance = -1;
     private double _prevaltitude = -1;
+    private long _prevtime = -1;
     private double _currentLat;
     private double _currentLon;
 
@@ -140,7 +141,7 @@ public class GPSService extends Service {
         public void onLocationChanged(Location location) {
             _myLocation.onLocationChanged(location);
             
-            Log.d("GPSService", "Got Speed: " + _myLocation.getSpeed() + " Accuracy: " + _myLocation.getAccuracy());
+            Log.d("GPSService", "onLocationChanged: " + _myLocation.getTime() + " Accuracy: " + _myLocation.getAccuracy());
 
             _speed = _myLocation.getSpeed();
 
@@ -178,8 +179,19 @@ public class GPSService extends Service {
                 _prevdistance = _distance;
                 _prevspeed = _speed;
                 _prevaltitude = _myLocation.getAltitude();
+                _prevtime = _myLocation.getTime();
+            } else if (_prevtime + 5000 < _myLocation.getTime()) {
+                Log.d("GPSService", "New GPS data without move");
+                
+                Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
+                broadcastIntent.putExtra("SPEED", _speed);
+                broadcastIntent.putExtra("ALTITUDE",   _myLocation.getAltitude()); // m
+                broadcastIntent.putExtra("ACCURACY",   _myLocation.getAccuracy()); // m
+                sendBroadcast(broadcastIntent);
+                
+                _prevtime = _myLocation.getTime();
             }
-    
         }
 
         @Override
