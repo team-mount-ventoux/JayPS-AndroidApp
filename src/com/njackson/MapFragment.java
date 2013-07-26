@@ -1,6 +1,5 @@
 package com.njackson;
 
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,7 +19,7 @@ public class MapFragment extends com.njackson.SherlockMapFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = super.onCreateView(inflater, container, savedInstanceState);
         _map = getMap();
-        //_map.setMyLocationEnabled(true);
+        _map.setMyLocationEnabled(true);
         return root;
     }
 
