@@ -5,9 +5,7 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.*;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -16,6 +14,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.getpebble.android.kit.PebbleKit;
+import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -24,16 +23,10 @@ import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends SherlockFragmentActivity  implements  GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener, HomeActivity.OnButtonPressListener {
@@ -45,11 +38,17 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private RequestType _requestType;
     private static int _units = Constants.IMPERIAL;
 
+    private static float _speedConversion = 0.0f;
+    private static float _distanceConversion = 0.0f;
+    private static float _altitudeConversion = 0.0f;
+    
     private Date _lastCycling;
 
     private ActivityRecognitionReceiver _activityRecognitionReceiver;
     private GPSServiceReceiver _gpsServiceReceiver;
     private boolean _googlePlayInstalled;
+    private Fragment _mapFragment;
+
 
     enum RequestType {
         START,
@@ -96,21 +95,30 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             stopGPSService();
         }
     }
-
-    private void unitsButtonClick(boolean value) {
-        if(value) {
-            _units = Constants.IMPERIAL;
+    public static void setConversionUnits(int units) {
+        _units = units;
+        
+        if(units == Constants.IMPERIAL) {
+            _speedConversion = (float)Constants.MS_TO_MPH;
+            _distanceConversion = (float)Constants.M_TO_MILES;
+            _altitudeConversion = (float)Constants.M_TO_FEET;
         } else {
-            _units = Constants.METRIC;
+            _speedConversion = (float)Constants.MS_TO_KPH;
+            _distanceConversion = (float)Constants.M_TO_KM;
+            _altitudeConversion = (float)Constants.M_TO_M;
+        }
+    }
+    private void unitsButtonClick(boolean value) {
+        if (value) {
+            setConversionUnits(Constants.IMPERIAL);
+        } else {
+            setConversionUnits(Constants.METRIC);
         }
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putInt("UNITS_OF_MEASURE",_units);
         editor.commit();
-        setPebbleUnits();
-        if(checkServiceRunning()) {
-            GPSService.setConversionUnits(_units);
-        }
+        resendLastDataToPebble();
     }
 
     @Override
@@ -128,17 +136,23 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         //setup the defaults
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         _activityRecognition = settings.getBoolean("ACTIVITY_RECOGNITION",false);
-        _units = settings.getInt("UNITS_OF_MEASURE",0);
+        setConversionUnits(settings.getInt("UNITS_OF_MEASURE",0));
 
         Bundle bundle = new Bundle();
         bundle.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
         bundle.putInt("UNITS_OF_MEASURE",_units);
 
+        //instantiate the map fragment and store for future use
+        //_mapFragment = Fragment.instantiate(this, "map", bundle);
+
         actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<HomeActivity>(this, "home", HomeActivity.class, bundle)));
-        //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<MapActivity>(this, "map", MapActivity.class, bundle)));
+        //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,_mapFragment,null)));
 
-        setupPebbleButtonHandler();
-
+        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("state")) {
+            Log.d("MainActivity", "onCreate() state:" + getIntent().getExtras().getInt("state"));
+            
+            changeState(getIntent().getExtras().getInt("state"));
+        }
     }
 
     @Override
@@ -146,9 +160,38 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         super.onResume();
     }
 
+    // This is called for activities that set launchMode to "singleTop" in their package, or if a client used the FLAG_ACTIVITY_SINGLE_TOP flag when calling startActivity(Intent).
+    // In either case, when the activity is re-launched while at the top of the activity stack instead of a new instance of the activity being started, onNewIntent() will be called 
+    // on the existing instance with the Intent that was used to re-launch it.
+    // An activity will always be paused before receiving a new intent, so you can count on onResume() being called after this method. 
+    protected void onNewIntent (Intent intent) {
+        if (intent.getExtras() != null && intent.getExtras().containsKey("state")) {
+            Log.d("MainActivity", "onNewIntent() state:" + intent.getExtras().getInt("state"));
+            
+            changeState(intent.getExtras().getInt("state"));
+        }
+    }
+    
+    private void changeState(int state) {
+        Log.d("MainActivity", "changeState(" + state + ")");
+        switch (state) {
+            case Constants.STOP_PRESS:
+                stopGPSService();
+                SetStartButtonText("Start");
+                break;
+            case Constants.PLAY_PRESS:
+                startGPSService();
+                SetStartButtonText("Stop");
+                break;
+            case Constants.REFRESH_PRESS:
+                ResetSavedGPSStats();
+                break;
+        }        
+    }
+
     private void sendWatchFaceToPebble(){
         try {
-            Uri uri = Uri.parse("http://www.demo.gs/pebblebike.pbw");
+            Uri uri = Uri.parse("http://labs.jayps.fr/pebblebike/pebblebike-1.2.0.pbw?and");
             Intent startupIntent = new Intent();
             startupIntent.setAction(Intent.ACTION_VIEW);
             startupIntent.setType("application/octet-stream");
@@ -157,14 +200,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             startupIntent.setComponent(distantActivity);
             startActivity(startupIntent);
         }catch (ActivityNotFoundException ae) {
-            Toast.makeText(getApplicationContext(),"Unable to install watchface, do you have the latest pebble app installed?",10);
+            Toast.makeText(getApplicationContext(),"Unable to install watchface, do you have the latest pebble app installed?",Toast.LENGTH_LONG).show();
         }
-    }
-
-    private void setPebbleUnits() {
-        PebbleDictionary dic = new PebbleDictionary();
-        dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
-        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
     }
 
     private void sendServiceState() {
@@ -176,36 +213,63 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }
         PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
     }
+    
+    private Intent _lastIntent = null;
+    private void resendLastDataToPebble() {
+        sendDataToPebble(_lastIntent);
+    }
+    public void sendDataToPebble(Intent intent) {
+        Log.d("PebbleBike:MainActivity","sendDataToPebble()");
+        
+        PebbleDictionary dic = new PebbleDictionary();
+        
+        if (intent != null) {
+            _lastIntent = intent;
 
-    private void setupPebbleButtonHandler() {
-        PebbleKit.PebbleDataReceiver _pebbleDataHandler = new PebbleKit.PebbleDataReceiver(Constants.WATCH_UUID) {
-            @Override
-            public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
-                int newState = data.getUnsignedInteger(Constants.STATE_CHANGED).intValue();
-                int state = newState;
-                Log.d("MainActivity", "Got Data from Pebble: " + state);
-                PebbleKit.sendAckToPebble(context, transactionId);
-
-                switch (state) {
-                    case Constants.STOP_PRESS:
-                        stopGPSService();
-                        SetStartButtonText("Start");
-                        break;
-                    case Constants.PLAY_PRESS:
-                        startGPSService();
-                        SetStartButtonText("Stop");
-                        break;
-                    case Constants.REFRESH_PRESS:
-                        ResetSavedGPSStats();
-                        break;
-                }
-
-                //SetupButtons();
-
+            // force Locale.US to force dot as a decimal separator
+            if (intent.hasExtra("SPEED")) {
+                dic.addString(Constants.SPEED_TEXT,      String.format(Locale.US, "%.1f", intent.getFloatExtra("SPEED", 99) * _speedConversion)); // km/h or mph
             }
-        };
+            if (intent.hasExtra("DISTANCE")) {
+                dic.addString(Constants.DISTANCE_TEXT,   String.format(Locale.US, "%.1f", Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * _distanceConversion) / 10)); // km or miles
+            }
+            if (intent.hasExtra("AVGSPEED")) {
+                dic.addString(Constants.AVGSPEED_TEXT,   String.format(Locale.US, "%.1f", intent.getFloatExtra("AVGSPEED", 99) * _speedConversion)); // km/h or mph
+            }
+            if (intent.hasExtra("ALTITUDE")) {
+                dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
+                Log.d("PebbleBike:MainActivity", "Sending ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT));
+            }
+            if (intent.hasExtra("ASCENT")) {
+                dic.addString(Constants.ASCENT_TEXT,     String.format("%d", (int) (intent.getDoubleExtra("ASCENT", 99) * _altitudeConversion))); // m of ft
+                Log.d("PebbleBike:MainActivity", "Sending ASCENT: "     + dic.getString(Constants.ASCENT_TEXT));
+            }
+            if (intent.hasExtra("ASCENTRATE")) {
+                dic.addString(Constants.ASCENTRATE_TEXT, String.format("%d", (int) (intent.getFloatExtra("ASCENTRATE", 99) * _altitudeConversion))); // m/h or ft/h
+                Log.d("PebbleBike:MainActivity", "Sending ASCENTRATE: " + dic.getString(Constants.ASCENTRATE_TEXT));
+            }
+            if (intent.hasExtra("SLOPE")) {
+                dic.addString(Constants.SLOPE_TEXT,      String.format("%d", (int) intent.getFloatExtra("SLOPE", 99))); // %
+                Log.d("PebbleBike:MainActivity", "Sending SLOPE: "      + dic.getString(Constants.SLOPE_TEXT));
+            }
+            if (intent.hasExtra("ACCURACY")) {
+                dic.addString(Constants.ACCURACY_TEXT,   String.format("%d", (int) intent.getFloatExtra("ACCURACY", 99))); // m
+                Log.d("PebbleBike:MainActivity", "Sending ACCURACY: "   + dic.getString(Constants.ACCURACY_TEXT));
+            }
+            
+            Log.d("PebbleBike:MainActivity", "Sending speed:" + dic.getString(Constants.SPEED_TEXT) + " dist: " + dic.getString(Constants.DISTANCE_TEXT) + " avgspeed:" + dic.getString(Constants.AVGSPEED_TEXT));
+        }
+        dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
+        Log.d("PebbleBike:MainActivity", "Sending MEASUREMENT_UNITS: "   + dic.getInteger(Constants.MEASUREMENT_UNITS));
+        
+        if (checkServiceRunning()) {
+            dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
+        } else {
+            dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
+        }
+        Log.d("PebbleBike:MainActivity", "Sending STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED));
 
-        PebbleKit.registerReceivedDataHandler(this, _pebbleDataHandler);
+        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);        
     }
 
     private void ResetSavedGPSStats() {
@@ -250,19 +314,18 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         if(checkServiceRunning())
             return;
 
-        if(!_googlePlayInstalled) {
-            Toast.makeText(getApplicationContext(),"Please install google play services",10);
-            return;
-        }
+        //if(!_googlePlayInstalled) {
+        //    Toast.makeText(getApplicationContext(),"Please install google play services",10);
+        //    return;
+        //}
 
-        //set the units
         Intent intent = new Intent(getApplicationContext(), GPSService.class);
-        intent.putExtra("UNITS",_units);
 
         registerGPSServiceIntentReceiver();
         startService(intent);
-        setPebbleUnits();
-        sendServiceState();
+        
+        PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+        resendLastDataToPebble();
     }
 
     private void stopGPSService() {
@@ -356,72 +419,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public void saveMapTile(LatLng location) {
-        //;
-        try
-        {
-            String urlString = String.format("http://maps.googleapis.com/maps/api/staticmap?center=%f,%f&zoom=16&size=400x400&sensor=false&key=AIzaSyDnwAQuwn8MV9HT1SY6Py8S3HrKiJyq7g4",location.latitude,location.longitude);
-
-            URL url = new URL(urlString);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestMethod("GET");
-            urlConnection.setDoOutput(true);
-            urlConnection.connect();
-
-            File SDCardRoot = android.os.Environment.getExternalStorageDirectory().getAbsoluteFile();
-            String filename="downloadedFile.png";
-            Log.i("Local filename:",filename);
-            File file = new File(SDCardRoot,filename);
-            file.createNewFile();
-            FileOutputStream fileOutput = new FileOutputStream(file);
-            InputStream inputStream = urlConnection.getInputStream();
-            int totalSize = urlConnection.getContentLength();
-            int downloadedSize = 0;
-            byte[] buffer = new byte[1024];
-            int bufferLength = 0;
-            while ( (bufferLength = inputStream.read(buffer)) > 0 )
-            {
-                fileOutput.write(buffer, 0, bufferLength);
-                downloadedSize += bufferLength;
-                Log.i("Progress:","downloadedSize:"+downloadedSize+"totalSize:"+ totalSize) ;
-            }
-            fileOutput.close();
-        }
-        catch (MalformedURLException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private class AsyncTaskEx extends AsyncTask<LatLng, Void, Void> {
-
-        /** The system calls this to perform work in a worker thread and
-         * delivers it the parameters given to AsyncTask.execute() */
-        @Override
-        protected Void doInBackground(LatLng... locations) {
-            saveMapTile(locations[0]);//call your method here it will run in background
-            return null;
-        }
-
-        /** The system calls this to perform work in the UI thread and delivers
-         * the result from doInBackground() */
-        @Override
-        protected void onPostExecute(Void result) {
-            //Write some code you want to execute on UI after doInBackground() completes
-            return ;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            //Write some code you want to execute on UI before doInBackground() starts
-            return ;
-        }
-    }
-
     public class ActivityRecognitionReceiver extends BroadcastReceiver {
         public static final String ACTION_RESP =
                 "com.njackson.intent.action.MESSAGE_PROCESSED";
@@ -456,42 +453,15 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 "com.njackson.intent.action.UPDATE_PEBBLE";
         @Override
         public void onReceive(Context context, Intent intent) {
-
-            double speed = intent.getFloatExtra("SPEED", 99);
-            double distance = intent.getFloatExtra("DISTANCE", 99);
-            double avgspeed = intent.getFloatExtra("AVGSPEED", 99);
-
-            Log.d("MainActivity", "Sending Data:" + speed + " dist: " + distance + " avgspeed" + avgspeed);
-
-            DecimalFormat df = new DecimalFormat("#.#");
-            PebbleDictionary dic = new PebbleDictionary();
-            dic.addString(Constants.SPEED_TEXT,df.format(speed));
-            dic.addString(Constants.DISTANCE_TEXT,df.format(distance));
-            dic.addString(Constants.AVGSPEED_TEXT,df.format(avgspeed));
-            dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
-
-            if(checkServiceRunning()) {
-                dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
-            } else {
-                dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
-            }
-
-            PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+           
+            sendDataToPebble(intent);
 
             // do we need to update the map
             double lat =  intent.getDoubleExtra("LAT",0);
             double lon = intent.getDoubleExtra("LON",0);
-            LatLng location = new LatLng(lat,lon);
-            new AsyncTaskEx().execute(location);
-
-            HomeActivity activity = (HomeActivity)getSupportFragmentManager().findFragmentByTag("home");
-            if(activity != null) {
-                try {
-                    activity.setLocation(location);
-                }catch (IOException io) {
-                    Log.d("MainActivity",io.toString());
-                }
-            }
+            MapActivity activity = (MapActivity)getSupportFragmentManager().findFragmentByTag("map");
+            if(activity != null)
+                activity.setLocation(new LatLng(lat,lon));
 
         }
     }
