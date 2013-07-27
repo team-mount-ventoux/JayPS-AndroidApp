@@ -5,12 +5,8 @@ import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.*;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,12 +23,7 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
-import com.google.android.gms.maps.model.LatLng;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -161,13 +152,6 @@ public class HomeActivity extends SherlockFragment {
     public void SetStartText(String text) {
         Button button = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
         button.setText(text);
-    }
-
-    public void setLocation(LatLng location) throws IOException {
-        MapFragment map = (MapFragment)getFragmentManager().findFragmentById(R.id.mapcontent);
-        if(map != null) {
-            map.setLocation(location);
-        }
     }
 
 }
