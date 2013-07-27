@@ -1,5 +1,11 @@
 package com.njackson;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -13,6 +19,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.getpebble.android.kit.PebbleKit;
 
 import fr.jayps.android.AdvancedLocation;
@@ -40,6 +48,7 @@ public class GPSService extends Service {
     private double _currentLon;
 
     private AdvancedLocation _myLocation;
+    private LiveTracking _liveTracking;
 
     private static GPSService _this;
 
@@ -85,6 +94,8 @@ public class GPSService extends Service {
 
     private void handleCommand(Intent intent) {
         Log.d("GPSService","Started GPS Service");
+        
+        _liveTracking = new LiveTracking(getApplicationContext());
 
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         _speed = settings.getFloat("GPS_SPEED",0.0f);
@@ -193,6 +204,26 @@ public class GPSService extends Service {
                 
                 _prevtime = _myLocation.getTime();
             }
+            
+            _liveTracking.addPoint(location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getTime(), location.getAccuracy());
+            String friends = _liveTracking.getFriends(); 
+            if (friends != "") {
+                Toast.makeText(getApplicationContext(), friends, Toast.LENGTH_LONG).show();
+                final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
+
+                final Map data = new HashMap();
+                data.put("title", "Friends");
+                data.put("body", friends);
+                final JSONObject jsonData = new JSONObject(data);
+                final String notificationData = new JSONArray().put(jsonData).toString();
+
+                i.putExtra("messageType", "PEBBLE_ALERT");
+                i.putExtra("sender", "PebbleBike");
+                i.putExtra("notificationData", notificationData);
+
+                sendBroadcast(i);
+            }
+            
         }
 
         @Override
