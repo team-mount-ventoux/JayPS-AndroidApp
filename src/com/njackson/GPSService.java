@@ -87,8 +87,8 @@ public class GPSService extends Service {
         Log.d("GPSService","Started GPS Service");
 
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
-        _speed = settings.getFloat("GPS_SPEED",0);
-        _distance = settings.getFloat("GPS_DISTANCE",0);
+        _speed = settings.getFloat("GPS_SPEED",0.0f);
+        _distance = settings.getFloat("GPS_DISTANCE",0.0f);
 
         try {
             _updates = settings.getInt("GPS_UPDATES",0);
@@ -100,7 +100,7 @@ public class GPSService extends Service {
         _myLocation.debugLevel = 1;
         _myLocation.setElapsedTime(settings.getLong("GPS_ELAPSEDTIME", 0));
         _myLocation.setDistance(_distance);
-        _myLocation.setAscent(settings.getFloat("GPS_ASCENT", 0));
+        _myLocation.setAscent(settings.getFloat("GPS_ASCENT", 0.0f));
 
         //PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
         
@@ -117,13 +117,14 @@ public class GPSService extends Service {
     public static void resetGPSStats(){
         if(_this == null)
             return;
+        Log.d("GPSService","resetGPSStats");
         SharedPreferences settings = _this.getSharedPreferences(Constants.PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putFloat("GPS_SPEED", 0.0f);
         editor.putFloat("GPS_DISTANCE",0.0f);
         editor.putFloat("GPS_AVGSPEED",0.0f);
         editor.putLong("GPS_ELAPSEDTIME",0);
-        editor.putLong("GPS_ASCENT",0);
+        editor.putFloat("GPS_ASCENT",0.0f);
         editor.putInt("GPS_UPDATES", 0);
         editor.commit();
         _this._myLocation = new AdvancedLocation(_this.getApplicationContext());
