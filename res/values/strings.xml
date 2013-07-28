@@ -4,6 +4,7 @@
     <string name="MAIN_TITLE">Pebble Bike v1.3.x alpha</string>
     <string name="ACTIVITY_TYPE_TEXT">Activity Type</string>
     <string name="AUTO_START_TEXT">Auto Start</string>
+    <string name="LIVE_TRACKING_TEXT">Live Tracking with JayPS</string>
     <string name="START_BUTTON_START">Start</string>
     <string name="UNITS_TEXT">Units</string>
     <string name="UNITS_TEXT_IMPERIAL">Miles</string>

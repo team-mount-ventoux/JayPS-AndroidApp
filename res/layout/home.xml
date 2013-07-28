@@ -37,8 +37,22 @@
     <TextView
             android:layout_width="94dp"
             android:layout_height="wrap_content"
+            android:text="@string/LIVE_TRACKING_TEXT"
+            android:id="@id/MAIN_LIVE_TRACKING_TEXT" android:layout_below="@id/MAIN_AUTO_START_TEXT"
+            android:layout_marginTop="30dp" android:layout_marginBottom="12dp"/>
+
+    <ToggleButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@id/MAIN_LIVE_TRACKING_BUTTON"
+            android:singleLine="false" android:layout_toRightOf="@id/MAIN_LIVE_TRACKING_TEXT"
+            android:layout_alignBaseline="@id/MAIN_LIVE_TRACKING_TEXT"/>            
+            
+    <TextView
+            android:layout_width="94dp"
+            android:layout_height="wrap_content"
             android:text="@string/UNITS_TEXT"
-            android:id="@id/MAIN_UNITS_TEXT" android:layout_below="@id/MAIN_AUTO_START_TEXT"
+            android:id="@id/MAIN_UNITS_TEXT" android:layout_below="@id/MAIN_LIVE_TRACKING_TEXT"
             android:layout_marginTop="20dp" android:layout_marginBottom="12dp"/>
 
     <ToggleButton

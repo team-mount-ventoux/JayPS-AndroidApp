@@ -205,23 +205,26 @@ public class GPSService extends Service {
                 _prevtime = _myLocation.getTime();
             }
             
-            _liveTracking.addPoint(location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getTime(), location.getAccuracy());
-            String friends = _liveTracking.getFriends(); 
-            if (friends != "") {
-                Toast.makeText(getApplicationContext(), friends, Toast.LENGTH_LONG).show();
-                final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
-
-                final Map data = new HashMap();
-                data.put("title", "Friends");
-                data.put("body", friends);
-                final JSONObject jsonData = new JSONObject(data);
-                final String notificationData = new JSONArray().put(jsonData).toString();
-
-                i.putExtra("messageType", "PEBBLE_ALERT");
-                i.putExtra("sender", "PebbleBike");
-                i.putExtra("notificationData", notificationData);
-
-                sendBroadcast(i);
+            Log.d("GPSService", "MainActivity._liveTracking:"+MainActivity._liveTracking);
+            if (MainActivity._liveTracking) {
+	            _liveTracking.addPoint(location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getTime(), location.getAccuracy());
+	            String friends = _liveTracking.getFriends(); 
+	            if (friends != "") {
+	                Toast.makeText(getApplicationContext(), friends, Toast.LENGTH_LONG).show();
+	                final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
+	
+	                final Map<String, String> data = new HashMap<String, String>();
+	                data.put("title", "Friends");
+	                data.put("body", friends);
+	                final JSONObject jsonData = new JSONObject(data);
+	                final String notificationData = new JSONArray().put(jsonData).toString();
+	
+	                i.putExtra("messageType", "PEBBLE_ALERT");
+	                i.putExtra("sender", "PebbleBike");
+	                i.putExtra("notificationData", notificationData);
+	
+	                sendBroadcast(i);
+	            }
             }
             
         }

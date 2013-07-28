@@ -34,6 +34,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private ActivityRecognitionClient _mActivityRecognitionClient;
 
     private static boolean _activityRecognition = false;
+    public static boolean _liveTracking = false;
     private PendingIntent _callbackIntent;
     private RequestType _requestType;
     private static int _units = Constants.IMPERIAL;
@@ -69,6 +70,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             case R.id.MAIN_UNITS_BUTTON:
                 unitsButtonClick(value);
                 break;
+            case R.id.MAIN_LIVE_TRACKING_BUTTON:
+                liveTrackingButtonClick(value);
+                break;
             case R.id.MAIN_INSTALL_WATCHFACE_BUTTON:
                 sendWatchFaceToPebble();
                 break;
@@ -87,7 +91,13 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         editor.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
         editor.commit();
     }
-
+    private void liveTrackingButtonClick(boolean value) {
+    	_liveTracking = value;
+        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("LIVE_TRACKING", _liveTracking);
+        editor.commit();
+    }  
     private void startButtonClick(boolean value) {
         if(value) {
             startGPSService();
@@ -136,10 +146,12 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         //setup the defaults
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         _activityRecognition = settings.getBoolean("ACTIVITY_RECOGNITION",false);
+        _liveTracking = settings.getBoolean("LIVE_TRACKING",false);
         setConversionUnits(settings.getInt("UNITS_OF_MEASURE",0));
 
         Bundle bundle = new Bundle();
         bundle.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
+        bundle.putBoolean("LIVE_TRACKING",_liveTracking);
         bundle.putInt("UNITS_OF_MEASURE",_units);
 
         //instantiate the map fragment and store for future use

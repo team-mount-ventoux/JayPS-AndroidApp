@@ -69,6 +69,7 @@ public class HomeActivity extends SherlockFragment {
         final ToggleButton _autoStart = (ToggleButton)_view.findViewById(R.id.MAIN_AUTO_START_BUTTON);
         final Button _startButton = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
         final Button _watchfaceButton = (Button)_view.findViewById(R.id.MAIN_INSTALL_WATCHFACE_BUTTON);
+        final ToggleButton _liveTrackingButton = (ToggleButton)_view.findViewById(R.id.MAIN_LIVE_TRACKING_BUTTON);
         final ToggleButton _unitsButton = (ToggleButton)_view.findViewById(R.id.MAIN_UNITS_BUTTON);
 
         _autoStart.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +83,15 @@ public class HomeActivity extends SherlockFragment {
                     _startButton.setVisibility(View.GONE);
                 else
                     _startButton.setVisibility(View.VISIBLE);
+            }
+        });
+        
+        _liveTrackingButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+            	_callback.onPressed(R.id.MAIN_LIVE_TRACKING_BUTTON,_liveTrackingButton.isChecked());
+                getArguments().putBoolean("LIVE_TRACKING",_liveTrackingButton.isChecked());
             }
         });
 
@@ -120,16 +130,18 @@ public class HomeActivity extends SherlockFragment {
 
         Bundle args = getArguments();
         boolean activityRecognition = args.getBoolean("ACTIVITY_RECOGNITION",false);
+        boolean liveTracking = args.getBoolean("LIVE_TRACKING",false);
         int units = args.getInt("UNITS_OF_MEASURE",0);
-        SetupButtons(activityRecognition,units);
+        SetupButtons(activityRecognition,liveTracking,units);
 
         return _view;
     }
 
-    public void SetupButtons(boolean activityRecognition, int units) {
+    public void SetupButtons(boolean activityRecognition, boolean liveTracking, int units) {
 
         Button _startButton = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
         ToggleButton _autoStart = (ToggleButton)_view.findViewById(R.id.MAIN_AUTO_START_BUTTON);
+        ToggleButton _liveTrackingButton = (ToggleButton)_view.findViewById(R.id.MAIN_LIVE_TRACKING_BUTTON);
         ToggleButton _unitsButton = (ToggleButton)_view.findViewById(R.id.MAIN_UNITS_BUTTON);
 
         if (activityRecognition) {
@@ -140,6 +152,7 @@ public class HomeActivity extends SherlockFragment {
 
         _autoStart.setChecked(activityRecognition);
 
+        _liveTrackingButton.setChecked(liveTracking);
         _unitsButton.setChecked(units == Constants.IMPERIAL);
 
     }
