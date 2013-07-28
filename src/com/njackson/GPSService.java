@@ -100,7 +100,13 @@ public class GPSService extends Service {
         _myLocation.debugLevel = 1;
         _myLocation.setElapsedTime(settings.getLong("GPS_ELAPSEDTIME", 0));
         _myLocation.setDistance(_distance);
-        _myLocation.setAscent(settings.getFloat("GPS_ASCENT", 0.0f));
+
+        try {
+            _myLocation.setAscent(settings.getFloat("GPS_ASCENT", 0.0f));
+        }catch (ClassCastException e) {
+            _myLocation.setAscent(0.0);
+        }
+
 
         //PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
         
