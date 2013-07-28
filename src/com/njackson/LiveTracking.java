@@ -20,6 +20,7 @@ import org.xml.sax.InputSource;
 
 import android.content.Context;
 import android.location.Location;
+import android.util.Base64;
 import android.util.Log;
 
 public class LiveTracking {
@@ -40,8 +41,16 @@ public class LiveTracking {
     public void addPoint(double lat, double lon, double altitude, long time, float accuracy) {
     	Log.d("JayPS-LiveTracking", "addPoint(" + lat + "," + lon + "," + altitude + "," + time + "," + accuracy+ ")");
     	_bufferPoints += (_bufferPoints != "" ? " " : "") + lat + " " + lon + " " + String.format(Locale.US, "%.1f", altitude) + " " + String.format("%d", (int) (time/1000));
-    	_bufferAccuracies += (_bufferAccuracies != "" ? " " : "") + String.format("%.1f", accuracy);
-    	if (_prevTime + 30000 < time) {
+    	_bufferAccuracies += (_bufferAccuracies != "" ? " " : "") + String.format(Locale.US, "%.1f", accuracy);
+    	this._friends = "";
+    	if (time - _prevTime < 5000) {
+    		// too early (dt<5s), do nothing
+    		return;
+    	} else if (time - _prevTime < 30000) {
+    		// too early (5s<dt<30s), save point to send it later
+    		Log.d("JayPS-LiveTracking", "too early: skip addPoint(" + lat + "," + lon + "," + altitude + "," + time + ")");
+    	} else {
+    		// ok
     		_prevTime = time;
     		this._lastLocation.setLatitude(lat);
     		this._lastLocation.setLongitude(lon);
@@ -50,24 +59,24 @@ public class LiveTracking {
     		this._lastLocation.setAccuracy(accuracy);
     		this._send(_bufferPoints, _bufferAccuracies);
     		_bufferPoints = _bufferAccuracies = "";
-    	} else {
-    		Log.d("JayPS-LiveTracking", "too frequent: skip addPoint(" + lat + "," + lon + "," + altitude + "," + time + ")");
-    		this._friends = "";
     	}
     }
     private void _send(String points, String accuracies) {
     	Log.d("JayPS-LiveTracking", "send(" + points + ", " + accuracies + ")");
         try {
-        	String postParameters = "autologin=demolive";
+        	String request = _activity_id == "" ? "start_activity" : "update_activity";
+        	String postParameters = "";
+        	String authString = ""; //"login:pass"
         	
-        	String request = "update_activity";
-        	if (_activity_id  == "") {
-        		request = "start_activity";
+        	postParameters = "request=" + request;
+        	if (_activity_id == "") {
         		postParameters += "&title=Test&source=PebbleBike&version=1.3";
     		} else {
     			postParameters += "&activity_id="+_activity_id;
     		}
-        	postParameters += "&request=" + request;
+        	if (authString == "") {
+        		postParameters += "&autologin=demolive";
+        	}        	
         	if (points != "") {
         		postParameters += "&points="+points;
     		}
@@ -75,8 +84,14 @@ public class LiveTracking {
         		postParameters += "&jayps_accuracies="+accuracies;
     		}
         	
-            URL url = new URL("http://www.jayps.fr/api/mmt-dev.php");
+            URL url = new URL("http://www.jayps.fr/api/mmt.php");
         	HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+        	
+        	if (authString != "") {
+        		String basicAuth = "Basic " + new String(Base64.encode(authString.getBytes(), Base64.NO_WRAP));
+        		urlConnection.setRequestProperty ("Authorization", basicAuth);
+        	}
+        	
     		urlConnection.setDoOutput(true);
     		urlConnection.setRequestMethod("POST");
     		urlConnection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");            
