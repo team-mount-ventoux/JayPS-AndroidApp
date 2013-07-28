@@ -1,9 +1,11 @@
 package com.njackson;
 
+import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -58,9 +60,18 @@ public class GPSService extends Service {
     @Override
     public void onCreate() {
         _locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, onLocationChange);
 
         super.onCreate();
+    }
+
+    private boolean checkGPSEnabled(LocationManager locationMgr) {
+
+        if(!locationMgr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+           return false;
+        } else {
+            return true;
+        }
+
     }
 
     @Override
@@ -107,17 +118,25 @@ public class GPSService extends Service {
             _myLocation.setAscent(0.0);
         }
 
+        // check to see if GPS is enabled
+        if(checkGPSEnabled(_locationMgr)) {
+            _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, onLocationChange);
+            // send the saved values directly to update pebble
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
+            broadcastIntent.putExtra("DISTANCE", _myLocation.getDistance());
+            broadcastIntent.putExtra("AVGSPEED", _myLocation.getAverageSpeed());
+            broadcastIntent.putExtra("ASCENT",   _myLocation.getAscent());
+            sendBroadcast(broadcastIntent);
+        }else {
+            Intent broadcastIntent = new Intent();
+            broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_GPS_DISABLED);
+            sendBroadcast(broadcastIntent);
+            return;
+        }
 
         //PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
-        
-        
-        // send the saved values directly to update pebble
-        Intent broadcastIntent = new Intent();
-        broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
-        broadcastIntent.putExtra("DISTANCE", _myLocation.getDistance());
-        broadcastIntent.putExtra("AVGSPEED", _myLocation.getAverageSpeed());
-        broadcastIntent.putExtra("ASCENT",   _myLocation.getAscent());
-        sendBroadcast(broadcastIntent);        
+
     }
 
     public static void resetGPSStats(){
@@ -128,9 +147,9 @@ public class GPSService extends Service {
         SharedPreferences.Editor editor = settings.edit();
         editor.putFloat("GPS_SPEED", 0.0f);
         editor.putFloat("GPS_DISTANCE",0.0f);
-        editor.putFloat("GPS_AVGSPEED",0.0f);
-        editor.putLong("GPS_ELAPSEDTIME",0);
-        editor.putFloat("GPS_ASCENT",0.0f);
+        editor.putFloat("GPS_AVGSPEED", 0.0f);
+        editor.putLong("GPS_ELAPSEDTIME", 0);
+        editor.putFloat("GPS_ASCENT", 0.0f);
         editor.putInt("GPS_UPDATES", 0);
         editor.commit();
         _this._myLocation = new AdvancedLocation(_this.getApplicationContext());

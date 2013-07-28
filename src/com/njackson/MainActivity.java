@@ -1,6 +1,7 @@
 package com.njackson;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.*;
@@ -260,7 +261,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             Log.d("PebbleBike:MainActivity", "Sending speed:" + dic.getString(Constants.SPEED_TEXT) + " dist: " + dic.getString(Constants.DISTANCE_TEXT) + " avgspeed:" + dic.getString(Constants.AVGSPEED_TEXT));
         }
         dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
-        Log.d("PebbleBike:MainActivity", "Sending MEASUREMENT_UNITS: "   + dic.getInteger(Constants.MEASUREMENT_UNITS));
+        Log.d("PebbleBike:MainActivity", "Sending MEASUREMENT_UNITS: " + dic.getInteger(Constants.MEASUREMENT_UNITS));
         
         if (checkServiceRunning()) {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
@@ -337,10 +338,15 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     }
 
     private void registerGPSServiceIntentReceiver() {
-        IntentFilter filter = new IntentFilter(GPSServiceReceiver.ACTION_RESP);
-        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        IntentFilter filterResponse = new IntentFilter(GPSServiceReceiver.ACTION_RESP);
+        filterResponse.addCategory(Intent.CATEGORY_DEFAULT);
+
+        IntentFilter filterDisabled = new IntentFilter(GPSServiceReceiver.ACTION_GPS_DISABLED);
+        filterDisabled.addCategory(Intent.CATEGORY_DEFAULT);
+
         _gpsServiceReceiver = new GPSServiceReceiver();
-        registerReceiver(_gpsServiceReceiver, filter);
+        registerReceiver(_gpsServiceReceiver, filterResponse);
+        registerReceiver(_gpsServiceReceiver, filterDisabled);
     }
 
     private void removeGPSServiceIntentReceiver() {
@@ -372,6 +378,28 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }
         return false;
 
+    }
+
+    private void showGPSDisabledAlertToUser(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Goto Settings Page To Enable GPS",
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                Intent callGPSSettingIntent = new Intent(
+                                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(callGPSSettingIntent);
+                            }
+                        });
+        alertDialogBuilder.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
     }
 
     private void updateActivityType(int type) {
@@ -451,19 +479,30 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     public class GPSServiceReceiver extends BroadcastReceiver {
         public static final String ACTION_RESP =
                 "com.njackson.intent.action.UPDATE_PEBBLE";
+        public static final String ACTION_GPS_DISABLED =
+                "com.njackson.intent.action.GPS_DISABLED";
         @Override
         public void onReceive(Context context, Intent intent) {
-           
-            sendDataToPebble(intent);
 
-            // do we need to update the map
-            double lat =  intent.getDoubleExtra("LAT",0);
-            double lon = intent.getDoubleExtra("LON",0);
-            MapActivity activity = (MapActivity)getSupportFragmentManager().findFragmentByTag("map");
-            if(activity != null)
-                activity.setLocation(new LatLng(lat,lon));
+            if(intent.getAction() == ACTION_RESP) {
+                sendDataToPebble(intent);
+                //updateMapLocation(intent);
+            } else if(intent.getAction() == ACTION_GPS_DISABLED) {
+                stopGPSService();
+                SetStartButtonText("Start");
+                showGPSDisabledAlertToUser();
+            }
 
         }
+    }
+
+    private void updateMapLocation(Intent intent) {
+        // do we need to update the map
+        double lat =  intent.getDoubleExtra("LAT",0);
+        double lon = intent.getDoubleExtra("LON",0);
+        MapActivity activity = (MapActivity)getSupportFragmentManager().findFragmentByTag("map");
+        if(activity != null)
+            activity.setLocation(new LatLng(lat,lon));
     }
 
     public static class TabListener<T extends SherlockFragment> implements ActionBar.TabListener {
