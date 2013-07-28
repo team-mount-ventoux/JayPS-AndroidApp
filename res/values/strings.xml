@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Pebble Bike</string>
-    <string name="MAIN_TITLE">Pebble Bike v1.2.1</string>
+    <string name="MAIN_TITLE">Pebble Bike v1.2.2</string>
     <string name="ACTIVITY_TYPE_TEXT">Activity Type</string>
     <string name="AUTO_START_TEXT">Auto Start</string>
     <string name="START_BUTTON_START">Start</string>
