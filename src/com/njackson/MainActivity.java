@@ -484,10 +484,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if(intent.getAction() == ACTION_RESP) {
+            if(intent.getAction().compareTo(ACTION_RESP) == 0) {
                 sendDataToPebble(intent);
                 //updateMapLocation(intent);
-            } else if(intent.getAction() == ACTION_GPS_DISABLED) {
+            } else if(intent.getAction().compareTo(ACTION_GPS_DISABLED) == 0) {
                 stopGPSService();
                 SetStartButtonText("Start");
                 showGPSDisabledAlertToUser();

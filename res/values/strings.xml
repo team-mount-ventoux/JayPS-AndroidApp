@@ -10,4 +10,16 @@
     <string name="UNITS_TEXT_METRIC">Kilometers</string>
     <string name="TAB_TITLE_HOME">Home</string>
     <string name="TAB_TITLE_MAP">Map</string>
+    <string name="DISTANCE_LABEL_TEXT">DISTANCE</string>
+    <string name="SPEED_LABEL_TEXT">SPEED</string>
+    <string name="PREF_AUTOSTART_TITLE">Auto Start</string>
+    <string name="PREF_AUTOSTART_SUMMARY">Select this item if you would like pebble bike to autostart everytime you
+        start cycling
+    </string>
+    <string name="PREF_UNITS_TITLE">Units</string>
+    <string name="PREF_UNITS_DIALOG_TITLE">Units</string>
+    <string name="PREF_UNITS_DEFULT">1</string>
+    <string name="TIME_TEXT">TIME</string>
+    <string name="AVG_SPEED_TEXT">AVG. MPH</string>
+    <string name="GPS_STATUS_LABEL">GPS STATUS</string><string name="ALTITUDE_TEXT">ALTITUDE</string>
 </resources>

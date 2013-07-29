@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+            android:key="pref_autostart"
+            android:title="@string/PREF_AUTOSTART_TITLE"
+            android:summary="@string/PREF_AUTOSTART_SUMMARY"
+            android:defaultValue="true" />
+    <ListPreference
+            android:key="pref_units"
+            android:title="@string/PREF_UNITS_TITLE"
+            android:dialogTitle="@string/PREF_UNITS_DIALOG_TITLE"
+            android:entries="@array/PREF_UNITS_ENTRIES"
+            android:entryValues="@array/PREF_UNITS_ENTRY_VALUES"
+            android:defaultValue="@string/PREF_UNITS_DEFULT" />
+</PreferenceScreen>

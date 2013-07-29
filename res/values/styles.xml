@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="START_BUTTON_START">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:background">#0BA824</item>
+        <item name="android:width">238dp</item>
+    </style>
+    <style name="LARGE_TEXT">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">42dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="SMALL_TEXT" parent="LARGE_TEXT">
+        <item name="android:textSize">14dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="V_SMALL_TEXT" parent="SMALL_TEXT">
+        <item name="android:textSize">10dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="LARGE_LABEL">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">18dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#555555</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="LARGE_TEXT_BLUE" parent="LARGE_TEXT">
+        <item name="android:textColor">#0072BC</item>t
+    </style>
+    <style name="NORMAL_LABEL" parent="LARGE_LABEL">
+        <item name="android:textSize">12dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="SMALL_LABEL" parent="LARGE_LABEL">
+        <item name="android:textSize">10dp</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+</resources>
