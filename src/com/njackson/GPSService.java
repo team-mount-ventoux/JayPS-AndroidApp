@@ -100,6 +100,10 @@ public class GPSService extends Service {
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         _speed = settings.getFloat("GPS_SPEED",0.0f);
         _distance = settings.getFloat("GPS_DISTANCE",0.0f);
+        
+        _liveTracking.setLogin(settings.getString("LIVE_TRACKING_LOGIN", ""));
+        _liveTracking.setPassword(settings.getString("LIVE_TRACKING_PASSWORD", ""));
+        _liveTracking.setUrl(settings.getString("LIVE_TRACKING_URL", ""));
 
         try {
             _updates = settings.getInt("GPS_UPDATES",0);
@@ -122,7 +126,7 @@ public class GPSService extends Service {
         broadcastIntent.putExtra("DISTANCE", _myLocation.getDistance());
         broadcastIntent.putExtra("AVGSPEED", _myLocation.getAverageSpeed());
         broadcastIntent.putExtra("ASCENT",   _myLocation.getAscent());
-        sendBroadcast(broadcastIntent);        
+        sendBroadcast(broadcastIntent);    
     }
 
     public static void resetGPSStats(){

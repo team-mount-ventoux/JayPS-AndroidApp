@@ -31,6 +31,9 @@ public class LiveTracking {
     private String _friends = "";
     private String _bufferPoints = "";
     private String _bufferAccuracies = "";
+    private String _login = "";
+    private String _password = "";
+    private String _url = "";
     public LiveTracking() {
         this._context = null;
     }    
@@ -38,6 +41,16 @@ public class LiveTracking {
         this._context = context;
         this._lastLocation = new Location("PebbleBike");
     }
+    void setLogin(String login) {
+    	this._login = login;
+    }
+    void setPassword(String password) {
+    	this._password = password;
+    }
+    void setUrl(String url) {
+    	this._url = url;
+    }
+
     public void addPoint(double lat, double lon, double altitude, long time, float accuracy) {
     	Log.d("JayPS-LiveTracking", "addPoint(" + lat + "," + lon + "," + altitude + "," + time + "," + accuracy+ ")");
     	_bufferPoints += (_bufferPoints != "" ? " " : "") + lat + " " + lon + " " + String.format(Locale.US, "%.1f", altitude) + " " + String.format("%d", (int) (time/1000));
@@ -68,6 +81,10 @@ public class LiveTracking {
         	String postParameters = "";
         	String authString = ""; //"login:pass"
         	
+        	if (_login != "" && _password != "") { 
+            	authString = _login + ":" + _password;
+            }
+        	
         	postParameters = "request=" + request;
         	if (_activity_id == "") {
         		postParameters += "&title=Test&source=PebbleBike&version=1.3";
@@ -84,7 +101,7 @@ public class LiveTracking {
         		postParameters += "&jayps_accuracies="+accuracies;
     		}
         	
-            URL url = new URL("http://www.jayps.fr/api/mmt.php");
+            URL url = new URL(_url != "" ? _url : "http://www.jayps.fr/api/mmt.php");
         	HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         	
         	if (authString != "") {
