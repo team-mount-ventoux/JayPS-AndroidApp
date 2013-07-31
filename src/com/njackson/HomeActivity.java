@@ -7,14 +7,12 @@ import android.app.PendingIntent;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.*;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -65,9 +63,22 @@ public class HomeActivity extends SherlockFragment {
 
         // Inflate the layout for this fragment
         _view = (RelativeLayout)inflater.inflate(R.layout.home, container, false);
+        final Button _startButton = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
+        final ImageView _settingsButton = (ImageView)_view.findViewById(R.id.MAIN_SETTINGS_IMAGE);
+        final Context context = this.getActivity();
+
+        _settingsButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context,SettingsActivity.class));
+            }
+
+        });
+
         /*
         final ToggleButton _autoStart = (ToggleButton)_view.findViewById(R.id.MAIN_AUTO_START_BUTTON);
-        final Button _startButton = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
+
         final Button _watchfaceButton = (Button)_view.findViewById(R.id.MAIN_INSTALL_WATCHFACE_BUTTON);
         final ToggleButton _unitsButton = (ToggleButton)_view.findViewById(R.id.MAIN_UNITS_BUTTON);
 
