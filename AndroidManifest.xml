@@ -45,6 +45,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".AltitudeFragment"/>
 
         <receiver android:name=".PebbleDataReceiver" >
             <intent-filter>

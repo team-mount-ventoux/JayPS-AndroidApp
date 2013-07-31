@@ -65,13 +65,13 @@ public class HomeActivity extends SherlockFragment {
 
         // Inflate the layout for this fragment
         _view = (RelativeLayout)inflater.inflate(R.layout.home, container, false);
-
+        /*
         final ToggleButton _autoStart = (ToggleButton)_view.findViewById(R.id.MAIN_AUTO_START_BUTTON);
         final Button _startButton = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
         final Button _watchfaceButton = (Button)_view.findViewById(R.id.MAIN_INSTALL_WATCHFACE_BUTTON);
         final ToggleButton _unitsButton = (ToggleButton)_view.findViewById(R.id.MAIN_UNITS_BUTTON);
 
-        _autoStart.setOnClickListener(new View.OnClickListener() {
+        //_autoStart.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -85,7 +85,7 @@ public class HomeActivity extends SherlockFragment {
             }
         });
 
-        _unitsButton.setOnClickListener(new View.OnClickListener() {
+        //_unitsButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -95,7 +95,7 @@ public class HomeActivity extends SherlockFragment {
             }
         });
 
-        _startButton.setOnClickListener(new View.OnClickListener() {
+       // _startButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -121,7 +121,8 @@ public class HomeActivity extends SherlockFragment {
         Bundle args = getArguments();
         boolean activityRecognition = args.getBoolean("ACTIVITY_RECOGNITION",false);
         int units = args.getInt("UNITS_OF_MEASURE",0);
-        SetupButtons(activityRecognition,units);
+*/
+        //SetupButtons(activityRecognition,units);
 
         return _view;
     }

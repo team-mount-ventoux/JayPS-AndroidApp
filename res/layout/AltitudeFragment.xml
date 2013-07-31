@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+    <FrameLayout
+            android:layout_width="@dimen/ALTITUDE_BAR_WIDTH"
+            android:layout_height="@dimen/ALTITUDE_BAR_HEIGHT" android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/MAIN_BLUE" android:layout_marginLeft="@dimen/ALTITUDE_BAR_LEFT_MARGIN">
+    </FrameLayout>
+</LinearLayout>
