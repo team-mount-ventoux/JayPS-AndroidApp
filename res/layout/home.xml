@@ -16,7 +16,7 @@
     <TextView
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="112.0"
+            android:text="0.0"
             android:id="@id/MAIN_DISTANCE_TEXT" android:layout_alignParentLeft="false"
             android:layout_alignParentTop="false"
             android:layout_alignParentBottom="false" android:layout_above="@id/MAIN_START_BUTTON"
@@ -31,7 +31,7 @@
     <TextView
             android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:text="12.2"
+            android:text="0.0"
             android:id="@id/MAIN_SPEED_TEXT" android:layout_alignParentLeft="false"
             android:layout_alignParentTop="false"
             android:layout_alignParentRight="true" android:layout_above="@id/MAIN_START_BUTTON"
@@ -151,8 +151,9 @@
 
     <fragment class="com.njackson.AltitudeFragment"
               android:id="@id/MAIN_ALTITUDE"
-              android:layout_width="match_parent" android:layout_height="140dp"
+              android:layout_width="match_parent" android:layout_height="wrap_content"
               android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
               android:layout_below="@id/MAIN_ALTITUDE_LABEL"
-              android:tag="tag_fragment_altitudefragment"/>
+              android:tag="tag_fragment_altitudefragment" android:layout_above="@id/MAIN_DISTANCE_LABEL"
+              android:layout_marginBottom="20dp"/>
 </RelativeLayout>

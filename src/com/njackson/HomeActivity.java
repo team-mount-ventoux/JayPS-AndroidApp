@@ -76,6 +76,22 @@ public class HomeActivity extends SherlockFragment {
 
         });
 
+        _startButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                _callback.onPressed(R.id.MAIN_START_BUTTON,_startButton.getText().equals("Start"));
+                if(_startButton.getText().equals("Start")) {
+                    _startButton.setText("Stop");
+                    _startButton.setBackgroundColor(R.color.START_STOP);
+                } else {
+                    _startButton.setText("Start");
+                    _startButton.setBackgroundColor(R.color.START_START);
+                }
+            }
+        });
+
         /*
         final ToggleButton _autoStart = (ToggleButton)_view.findViewById(R.id.MAIN_AUTO_START_BUTTON);
 
@@ -105,22 +121,9 @@ public class HomeActivity extends SherlockFragment {
 
             }
         });
+       */
 
-       // _startButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                _callback.onPressed(R.id.MAIN_START_BUTTON,_startButton.getText().equals("Start"));
-                if(_startButton.getText().equals("Start"))
-                    _startButton.setText("Stop");
-                else
-                    _startButton.setText("Start");
-
-            }
-        });
-
-
+        /*
         _watchfaceButton.setOnClickListener(new View.OnClickListener() {
 
             @Override

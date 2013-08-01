@@ -13,4 +13,7 @@
             android:entries="@array/PREF_UNITS_ENTRIES"
             android:entryValues="@array/PREF_UNITS_ENTRY_VALUES"
             android:defaultValue="@string/PREF_UNITS_DEFULT" />
+    <Preference
+        android:key="pref_install"
+        android:title="@string/PREF_INSTALL_WATCHFACE"/>
 </PreferenceScreen>

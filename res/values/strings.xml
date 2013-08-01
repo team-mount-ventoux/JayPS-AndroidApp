@@ -22,4 +22,5 @@
     <string name="TIME_TEXT">TIME</string>
     <string name="AVG_SPEED_TEXT">AVG. MPH</string>
     <string name="GPS_STATUS_LABEL">GPS STATUS</string><string name="ALTITUDE_TEXT">ALTITUDE</string>
+    <string name="PREF_INSTALL_WATCHFACE">Install Watchface</string>
 </resources>

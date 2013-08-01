@@ -1,6 +1,7 @@
 package com.njackson;
 
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
 /**
@@ -16,6 +17,17 @@ public class SettingsActivity extends PreferenceActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+
+        Preference pref = findPreference("pref_install");
+        pref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                // TODO Auto-generated method stub
+                return false;
+            }
+        });
+
     }
 
 }

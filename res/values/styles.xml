@@ -2,8 +2,11 @@
 <resources>
     <style name="START_BUTTON_START">
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:background">#0BA824</item>
+        <item name="android:background">@color/START_START</item>
         <item name="android:width">238dp</item>
+    </style>
+    <style name="START_BUTTON_STOP" parent="START_BUTTON_START">
+        <item name="android:background">@color/START_STOP</item>
     </style>
     <style name="LARGE_TEXT">
         <item name="android:fontFamily">sans-serif</item>
