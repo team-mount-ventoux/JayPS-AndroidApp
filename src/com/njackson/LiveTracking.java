@@ -4,7 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -28,12 +31,78 @@ public class LiveTracking {
     private long _prevTime = -1;
     private Location _lastLocation = null;
     private String _activity_id = "";
-    private String _friends = "";
     private String _bufferPoints = "";
     private String _bufferAccuracies = "";
     private String _login = "";
     private String _password = "";
     private String _url = "";
+    
+    class LiveTrackingFriend {
+    	public String id = "";
+    	public String nickname = "";
+    	public Double lat = null, lon = null;
+    	long ts = 0;
+    	long dt = -1;
+    	private long _receivedTimestamp = 0;
+    	float deltaDistance = 0.0f, bearing = 0.0f;
+    	private Location _location;
+    	
+    	public LiveTrackingFriend() {
+    		_location = new Location("PebbleBike");
+    	}
+    	public String toString() {
+			return id + " " + _receivedTimestamp + " " + lat + "/" + lon + "--" + ts + "//" + dt;
+    	}
+    	public boolean setFromNodeList(NodeList friendChildNodes) {
+    		id = "";
+	        for( int j = 0; j < friendChildNodes.getLength(); j++ ) {
+	        	// for each fields
+	        	
+	            Node item = friendChildNodes.item( j );
+	            String nodeName = item.getNodeName();
+	            if (nodeName.equals("id")) {
+	            	_receivedTimestamp = System.currentTimeMillis() / 1000;
+	            	id = item.getChildNodes().item(0).getNodeValue();
+	            }
+	            if (nodeName.equals("nickname")) {
+	            	nickname = item.getChildNodes().item(0).getNodeValue();
+	            }
+	            if (nodeName.equals("lat")) {
+	            	lat = Double.valueOf(item.getChildNodes().item(0).getNodeValue());
+	            }
+	            if (nodeName.equals("lon")) {
+	            	lon = Double.valueOf(item.getChildNodes().item(0).getNodeValue());
+	            }
+	            if (nodeName.equals("ts")) {
+	            	ts = Long.valueOf(item.getChildNodes().item(0).getNodeValue());
+	            }
+	        }
+	        return id != "";
+    	}
+    	public void compareToLocation(Location location) {
+	    	_location.setLatitude(lat);
+	    	_location.setLongitude(lon);
+	
+	    	deltaDistance = location.distanceTo(_location);
+	    	bearing = location.bearingTo(_location);
+    	}
+		public boolean updateFromFriend(LiveTrackingFriend friend) {
+			if ((id == "") || !friend.id.equals(this.id)) {
+				Log.e("JayPS-LiveTracking", "updateFromFriend this "+this.toString());
+				Log.e("JayPS-LiveTracking", "updateFromFriend friend "+friend.toString());
+				return false;
+			}
+			dt = friend.ts-ts;
+			//Log.d("JayPS-LiveTracking", "dt:"+ts+"->"+friend.ts+" "+dt+"s");
+			ts = friend.ts;
+			lat = friend.lat;
+			lon = friend.lon;
+			return true;
+		}
+    }
+    
+    private HashMap<String, LiveTrackingFriend> _friends = new HashMap<String, LiveTrackingFriend>();
+    
     public LiveTracking() {
         this._context = null;
     }    
@@ -51,30 +120,27 @@ public class LiveTracking {
     	this._url = url;
     }
 
-    public void addPoint(double lat, double lon, double altitude, long time, float accuracy) {
-    	Log.d("JayPS-LiveTracking", "addPoint(" + lat + "," + lon + "," + altitude + "," + time + "," + accuracy+ ")");
-    	_bufferPoints += (_bufferPoints != "" ? " " : "") + lat + " " + lon + " " + String.format(Locale.US, "%.1f", altitude) + " " + String.format("%d", (int) (time/1000));
-    	_bufferAccuracies += (_bufferAccuracies != "" ? " " : "") + String.format(Locale.US, "%.1f", accuracy);
-    	this._friends = "";
-    	if (time - _prevTime < 5000) {
+    public boolean addPoint(Location location) {
+    	//Log.d("JayPS-LiveTracking", "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude() + "," + location.getTime() + "," + location.getAccuracy()+ ")");
+    	if (location.getTime() - _prevTime < 5000) {
     		// too early (dt<5s), do nothing
-    		return;
-    	} else if (time - _prevTime < 30000) {
+    		return false;
+    	} 
+    	_bufferPoints += (_bufferPoints != "" ? " " : "") + location.getLatitude() + " " + location.getLongitude() + " " + String.format(Locale.US, "%.1f", location.getAltitude()) + " " + String.format("%d", (int) (location.getTime()/1000));
+    	_bufferAccuracies += (_bufferAccuracies != "" ? " " : "") + String.format(Locale.US, "%.1f", location.getAccuracy());
+    	if (location.getTime() - _prevTime < 30000) {
     		// too early (5s<dt<30s), save point to send it later
-    		Log.d("JayPS-LiveTracking", "too early: skip addPoint(" + lat + "," + lon + "," + altitude + "," + time + ")");
-    	} else {
-    		// ok
-    		_prevTime = time;
-    		this._lastLocation.setLatitude(lat);
-    		this._lastLocation.setLongitude(lon);
-    		this._lastLocation.setAltitude(altitude);
-    		this._lastLocation.setTime(time);
-    		this._lastLocation.setAccuracy(accuracy);
-    		this._send(_bufferPoints, _bufferAccuracies);
-    		_bufferPoints = _bufferAccuracies = "";
+    		Log.d("JayPS-LiveTracking", "too early: skip addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude() + "," + location.getTime() + ")");
+    		return false;
     	}
+		// ok
+		_prevTime = location.getTime();
+		this._lastLocation = location;
+		boolean result = this._send(_bufferPoints, _bufferAccuracies);
+		_bufferPoints = _bufferAccuracies = "";
+		return result;
     }
-    private void _send(String points, String accuracies) {
+    private boolean _send(String points, String accuracies) {
     	Log.d("JayPS-LiveTracking", "send(" + points + ", " + accuracies + ")");
         try {
         	String request = _activity_id == "" ? "start_activity" : "update_activity";
@@ -148,65 +214,74 @@ public class LiveTracking {
 
             expression = "//friend";
             nodes = (NodeList)xpath.evaluate(expression, doc, XPathConstants.NODESET);
-            String friends = "";
-            Location location = new Location("PebbleBike");
-            float deltaDistance, bearing;
-
+            
+            int nbReceivedFriends = 0;
+            
             for( int i = 0; i < nodes.getLength(); i++ ) {
             	// for each friends
-                node = nodes.item( i );
-                NodeList friendChildNodes = node.getChildNodes();
+                node = nodes.item(i);
 
-                String nickname = "";
-                Double lat = null, lon = null;
-                deltaDistance = 0.0f; 
-            	bearing = 0.0f;
+            	LiveTrackingFriend friend = new LiveTrackingFriend();
+            	friend.setFromNodeList(node.getChildNodes());
 
-                for( int j = 0; j < friendChildNodes.getLength(); j++ ) {
-                	// for each fields
-                	
-                    Node item = friendChildNodes.item( j );
-                    String nodeName = item.getNodeName();
-
-                    if (nodeName.equals("nickname")) {
-                    	nickname = item.getChildNodes().item(0).getNodeValue();
+                if (friend.id != "" && friend.lat != null && friend.lon != null) {
+                	friend.compareToLocation(_lastLocation);
+                	nbReceivedFriends++;
+                    
+                    if (_friends.containsKey(friend.id)) {
+                    	// update friend
+                    	//Log.d("JayPS-LiveTracking", "update friend "+friend.id);
+                    	LiveTrackingFriend f2 = _friends.get(friend.id);
+                    	f2.updateFromFriend(friend);
+                    	_friends.put(friend.id, f2);
+                    } else {
+                    	// new friend
+                    	//Log.d("JayPS-LiveTracking", "new friend "+friend.id);
+                    	_friends.put(friend.id, friend);
                     }
-                    if (nodeName.equals("lat")) {
-                        lat = Double.valueOf(item.getChildNodes().item(0).getNodeValue());
-                    }
-                    if (nodeName.equals("lon")) {
-                        lon = Double.valueOf(item.getChildNodes().item(0).getNodeValue());
-                    }
-                }
-                if (lat != null && lon != null) {
-                	Log.d("JayPS-LiveTracking", "lat:"+lat + " - lon:"+lon);
-                	location.setLatitude(lat);
-                	location.setLongitude(lon);
-
-                    deltaDistance = _lastLocation.distanceTo(location);
-                    bearing = _lastLocation.bearingTo(location);
                  }
                 
-                if (friends != "") {
-            		friends += "\n";
-                }
-                String friend = nickname + " ";
-                if (deltaDistance > 1000) {
-                	friend += String.format(Locale.US, "%.1f",deltaDistance/1000) + "km";
-                } else {
-                	friend += String.format(Locale.US, "%.0f",deltaDistance) + "m";
-                }
-                friend += " " + String.format(Locale.US, "%.0f",bearing) + "°";
-                friends += friend;
-            }            
-            Log.d("JayPS-LiveTracking", "friends:"+friends);
-            this._friends = friends;
+            }
+            //Iterator<Entry<String, LiveTrackingFriend>> iter = _friends.entrySet().iterator();
+			//while (iter.hasNext()) {
+				//LiveTrackingFriend f = iter.next().getValue();
+				//Log.d("JayPS-LiveTracking", "+++"+f.toString());
+			//}            
+
+            return nbReceivedFriends > 0;
             
         } catch (Exception e) {
         	Log.d("JayPS-LiveTracking", "Exception:" + e);
         }
+        return false;
     }
     public String getFriends() {
-    	return this._friends;
+    	String result = "";
+        
+    	Iterator<Entry<String, LiveTrackingFriend>> iter = _friends.entrySet().iterator();
+		while (iter.hasNext()) {
+			LiveTrackingFriend f = iter.next().getValue();
+			
+			long lastViewed = System.currentTimeMillis() / 1000 - f.ts;
+			
+			//Log.i("JayPS-LiveTracking", "--" + f.toString() + "|" + lastViewed);
+			
+			String strFriend = f.nickname + " ";
+            if (f.deltaDistance > 1000) {
+            	strFriend += String.format(Locale.US, "%.1f", f.deltaDistance/1000) + "km";
+            } else {
+            	strFriend += String.format(Locale.US, "%.0f", f.deltaDistance) + "m";
+            }
+            strFriend += " " + String.format(Locale.US, "%.0f", f.bearing) + "°";
+            if (lastViewed >= 0) {
+            	if (lastViewed < 60) {
+	            	strFriend += " (" + lastViewed + "\")";
+	            } else if (lastViewed < 60 * 60) {
+	            	strFriend += " (" + (lastViewed / 60) + "')";
+	            }
+            }
+            result += (result != "" ? "\n" : "") + strFriend;
+		}
+		return result;
     }
 }

@@ -1,11 +1,5 @@
 package com.njackson;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -210,32 +204,17 @@ public class GPSService extends Service {
                 _prevtime = _myLocation.getTime();
             }
             
-            Log.d("GPSService", "MainActivity._liveTracking:"+MainActivity._liveTracking);
             if (MainActivity._liveTracking) {
-	            _liveTracking.addPoint(location.getLatitude(), location.getLongitude(), location.getAltitude(), location.getTime(), location.getAccuracy());
-	            String friends = _liveTracking.getFriends(); 
-	            if (friends != "") {
-	                Toast.makeText(getApplicationContext(), friends, Toast.LENGTH_LONG).show();
-/*
-	                final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
-	
-	                final Map<String, String> data = new HashMap<String, String>();
-	                data.put("title", "Friends");
-	                data.put("body", friends);
-	                final JSONObject jsonData = new JSONObject(data);
-	                final String notificationData = new JSONArray().put(jsonData).toString();
-	
-	                i.putExtra("messageType", "PEBBLE_ALERT");
-	                i.putExtra("sender", "PebbleBike");
-	                i.putExtra("notificationData", notificationData);
-	
-	                sendBroadcast(i);
-*/
-	                PebbleDictionary dic = new PebbleDictionary();
-	                
-	                dic.addString(Constants.LIVE_TRACKING_FRIENDS, friends);
-	                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
-	                
+	            if (_liveTracking.addPoint(location)) {
+	            	String friends = _liveTracking.getFriends(); 
+	            	if (friends != "") {
+	            		Toast.makeText(getApplicationContext(), friends, Toast.LENGTH_LONG).show();
+
+		                PebbleDictionary dic = new PebbleDictionary();
+		                
+		                dic.addString(Constants.LIVE_TRACKING_FRIENDS, friends);
+		                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+	            	}
 	            }
             }
             
