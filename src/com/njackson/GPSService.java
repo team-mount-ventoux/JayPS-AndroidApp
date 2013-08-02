@@ -22,6 +22,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.getpebble.android.kit.PebbleKit;
+import com.getpebble.android.kit.util.PebbleDictionary;
 
 import fr.jayps.android.AdvancedLocation;
 
@@ -215,6 +216,7 @@ public class GPSService extends Service {
 	            String friends = _liveTracking.getFriends(); 
 	            if (friends != "") {
 	                Toast.makeText(getApplicationContext(), friends, Toast.LENGTH_LONG).show();
+/*
 	                final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
 	
 	                final Map<String, String> data = new HashMap<String, String>();
@@ -228,6 +230,12 @@ public class GPSService extends Service {
 	                i.putExtra("notificationData", notificationData);
 	
 	                sendBroadcast(i);
+*/
+	                PebbleDictionary dic = new PebbleDictionary();
+	                
+	                dic.addString(Constants.LIVE_TRACKING_FRIENDS, friends);
+	                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+	                
 	            }
             }
             
