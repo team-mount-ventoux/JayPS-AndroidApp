@@ -81,6 +81,12 @@ public class HomeActivity extends SherlockFragment {
             @Override
             public void onClick(View v) {
 
+                // test animation
+                int[] alts = new int[] {100,200,200,200,300,400,500,600,700,800,900,1000,1000,1000};
+                AltitudeFragment altitudeFragment = (AltitudeFragment)getFragmentManager().findFragmentByTag("tag_fragment_altitudefragment");
+                altitudeFragment.setAltitude(alts,1000,true);
+
+                /*
                 _callback.onPressed(R.id.MAIN_START_BUTTON,_startButton.getText().equals("Start"));
                 if(_startButton.getText().equals("Start")) {
                     _startButton.setText("Stop");
@@ -89,6 +95,7 @@ public class HomeActivity extends SherlockFragment {
                     _startButton.setText("Start");
                     _startButton.setBackgroundColor(R.color.START_START);
                 }
+                */
             }
         });
 
