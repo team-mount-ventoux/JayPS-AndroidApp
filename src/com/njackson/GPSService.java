@@ -199,6 +199,7 @@ public class GPSService extends Service {
                 broadcastIntent.putExtra("ASCENTRATE", (3600f * _myLocation.getAscentRate())); // in m/h
                 broadcastIntent.putExtra("SLOPE",      (100f * _myLocation.getSlope())); // in %
                 broadcastIntent.putExtra("ACCURACY",   _myLocation.getAccuracy()); // m
+                broadcastIntent.putExtra("TIME",_myLocation.getElapsedTime());
                 sendBroadcast(broadcastIntent);
 
                 _prevaverageSpeed = _averageSpeed;
