@@ -14,6 +14,7 @@ import android.location.LocationManager;
 
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -107,9 +108,12 @@ public class GPSService extends Service {
         _speed = settings.getFloat("GPS_SPEED",0.0f);
         _distance = settings.getFloat("GPS_DISTANCE",0.0f);
         
-        _liveTracking.setLogin(settings.getString("LIVE_TRACKING_LOGIN", ""));
-        _liveTracking.setPassword(settings.getString("LIVE_TRACKING_PASSWORD", ""));
-        _liveTracking.setUrl(settings.getString("LIVE_TRACKING_URL", ""));
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        	 
+        _liveTracking.setLogin(prefs.getString("LIVE_TRACKING_LOGIN", ""));
+        _liveTracking.setPassword(prefs.getString("LIVE_TRACKING_PASSWORD", ""));
+        _liveTracking.setUrl(prefs.getString("LIVE_TRACKING_URL", ""));
 
         try {
             _updates = settings.getInt("GPS_UPDATES",0);

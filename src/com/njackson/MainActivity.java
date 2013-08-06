@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -145,8 +146,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
         //setup the defaults
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         _activityRecognition = settings.getBoolean("ACTIVITY_RECOGNITION",false);
-        _liveTracking = settings.getBoolean("LIVE_TRACKING",false);
+        _liveTracking = prefs.getBoolean("LIVE_TRACKING",false);
         setConversionUnits(settings.getInt("UNITS_OF_MEASURE",0));
 
         Bundle bundle = new Bundle();

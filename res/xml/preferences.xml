@@ -16,4 +16,25 @@
     <Preference
         android:key="pref_install"
         android:title="@string/PREF_INSTALL_WATCHFACE"/>
+ 
+ <PreferenceCategory
+   android:title="@string/PREF_LIVE_TRACKING_CATEGORIE_TITLE"
+   android:summary="@string/PREF_LIVE_TRACKING_CATEGORIE_SUMMARY"
+ >
+    <CheckBoxPreference
+            android:key="LIVE_TRACKING"
+            android:title="@string/PREF_LIVE_TRACKING_TITLE"
+            android:summary="@string/PREF_LIVE_TRACKING_SUMMARY"
+            android:defaultValue="false" />
+  <EditTextPreference
+     android:key="LIVE_TRACKING_LOGIN"
+     android:title="@string/PREF_LIVE_TRACKING_LOGIN_TITLE"
+     android:summary="@string/PREF_LIVE_TRACKING_LOGIN_SUMMARY"
+  />
+  <EditTextPreference
+     android:key="LIVE_TRACKING_PASSWORD"
+     android:title="@string/PREF_LIVE_TRACKING_PASSWORD_TITLE"
+     android:summary="@string/PREF_LIVE_TRACKING_PASSWORD_SUMMARY"
+  />
+ </PreferenceCategory>        
 </PreferenceScreen>
