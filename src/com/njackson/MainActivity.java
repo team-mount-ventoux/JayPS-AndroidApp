@@ -332,7 +332,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
             for(int n=0; n < _altitudeBins.length-1;n++){
                 if(_altitudeBins[n +1] > 0) {
-                    _altitudeBins[n] = (_altitudeBins[n] + _altitudeBins[n+1]) /2;
+                    if(_altitudeBins[n] > 0)
+                        _altitudeBins[n] = (_altitudeBins[n] + _altitudeBins[n+1]) /2;
+                    else
+                        _altitudeBins[n] = _altitudeBins[n+1];
                 }
             }
 
