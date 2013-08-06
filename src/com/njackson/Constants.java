@@ -22,6 +22,7 @@ public class Constants {
     static final int ASCENTRATE_TEXT = 0x07;
     static final int SLOPE_TEXT = 0x08;
     static final int ACCURACY_TEXT = 0x09;
+    static final int LIVE_TRACKING_FRIENDS = 0x10;
     
     static final String PREFS_NAME = "PebbleBikePrefs";
 
