@@ -14,8 +14,12 @@ import android.location.LocationManager;
 
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
+
 import com.getpebble.android.kit.PebbleKit;
+import com.getpebble.android.kit.util.PebbleDictionary;
 
 import fr.jayps.android.AdvancedLocation;
 
@@ -42,6 +46,7 @@ public class GPSService extends Service {
     private double _currentLon;
 
     private AdvancedLocation _myLocation;
+    private LiveTracking _liveTracking;
 
     private static GPSService _this;
 
@@ -96,10 +101,19 @@ public class GPSService extends Service {
 
     private void handleCommand(Intent intent) {
         Log.d("GPSService","Started GPS Service");
+        
+        _liveTracking = new LiveTracking(getApplicationContext());
 
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         _speed = settings.getFloat("GPS_SPEED",0.0f);
         _distance = settings.getFloat("GPS_DISTANCE",0.0f);
+        
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        	 
+        _liveTracking.setLogin(prefs.getString("LIVE_TRACKING_LOGIN", ""));
+        _liveTracking.setPassword(prefs.getString("LIVE_TRACKING_PASSWORD", ""));
+        _liveTracking.setUrl(prefs.getString("LIVE_TRACKING_URL", ""));
 
         try {
             _updates = settings.getInt("GPS_UPDATES",0);
@@ -136,7 +150,6 @@ public class GPSService extends Service {
         }
 
         //PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
-
     }
 
     public static void resetGPSStats(){
@@ -199,6 +212,7 @@ public class GPSService extends Service {
                 broadcastIntent.putExtra("ASCENTRATE", (3600f * _myLocation.getAscentRate())); // in m/h
                 broadcastIntent.putExtra("SLOPE",      (100f * _myLocation.getSlope())); // in %
                 broadcastIntent.putExtra("ACCURACY",   _myLocation.getAccuracy()); // m
+                broadcastIntent.putExtra("TIME",_myLocation.getElapsedTime());
                 sendBroadcast(broadcastIntent);
 
                 _prevaverageSpeed = _averageSpeed;
@@ -218,6 +232,21 @@ public class GPSService extends Service {
                 
                 _prevtime = _myLocation.getTime();
             }
+            
+            if (MainActivity._liveTracking) {
+	            if (_liveTracking.addPoint(location)) {
+	            	String friends = _liveTracking.getFriends(); 
+	            	if (friends != "") {
+	            		Toast.makeText(getApplicationContext(), friends, Toast.LENGTH_LONG).show();
+
+		                PebbleDictionary dic = new PebbleDictionary();
+		                
+		                dic.addString(Constants.LIVE_TRACKING_FRIENDS, friends);
+		                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+	            	}
+	            }
+            }
+            
         }
 
         @Override

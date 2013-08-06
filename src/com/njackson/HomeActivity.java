@@ -7,14 +7,12 @@ import android.app.PendingIntent;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import android.widget.*;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -65,13 +63,49 @@ public class HomeActivity extends SherlockFragment {
 
         // Inflate the layout for this fragment
         _view = (RelativeLayout)inflater.inflate(R.layout.home, container, false);
-
-        final ToggleButton _autoStart = (ToggleButton)_view.findViewById(R.id.MAIN_AUTO_START_BUTTON);
         final Button _startButton = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
+        final ImageView _settingsButton = (ImageView)_view.findViewById(R.id.MAIN_SETTINGS_IMAGE);
+        final Context context = this.getActivity();
+
+        _settingsButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                context.startActivity(new Intent(context,SettingsActivity.class));
+            }
+
+        });
+
+        _startButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                // test animation
+                //int[] alts = new int[] {100,200,200,200,300,400,500,600,700,800,900,1000,1000,1000};
+                //AltitudeFragment altitudeFragment = (AltitudeFragment)getFragmentManager().findFragmentByTag("tag_fragment_altitudefragment");
+                //altitudeFragment.setAltitude(alts,1000,true);
+
+                _callback.onPressed(R.id.MAIN_START_BUTTON,_startButton.getText().equals("Start"));
+                if(_startButton.getText().equals("Start")) {
+                    _startButton.setText("Stop");
+                    _startButton.setBackgroundColor(getResources().getColor(R.color.START_STOP));
+                } else {
+                    _startButton.setText("Start");
+                    _startButton.setBackgroundColor(getResources().getColor(R.color.START_START));
+                }
+
+            }
+        });
+
+        /*
+        final ToggleButton _autoStart = (ToggleButton)_view.findViewById(R.id.MAIN_AUTO_START_BUTTON);
+
         final Button _watchfaceButton = (Button)_view.findViewById(R.id.MAIN_INSTALL_WATCHFACE_BUTTON);
+        final ToggleButton _liveTrackingButton = (ToggleButton)_view.findViewById(R.id.MAIN_LIVE_TRACKING_BUTTON);
         final ToggleButton _unitsButton = (ToggleButton)_view.findViewById(R.id.MAIN_UNITS_BUTTON);
 
-        _autoStart.setOnClickListener(new View.OnClickListener() {
+        //_autoStart.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -84,8 +118,17 @@ public class HomeActivity extends SherlockFragment {
                     _startButton.setVisibility(View.VISIBLE);
             }
         });
+        
+        //_liveTrackingButton.setOnClickListener(new View.OnClickListener() {
 
-        _unitsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            	_callback.onPressed(R.id.MAIN_LIVE_TRACKING_BUTTON,_liveTrackingButton.isChecked());
+                getArguments().putBoolean("LIVE_TRACKING",_liveTrackingButton.isChecked());
+            }
+        });
+
+        //_unitsButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -94,22 +137,9 @@ public class HomeActivity extends SherlockFragment {
 
             }
         });
+       */
 
-        _startButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                _callback.onPressed(R.id.MAIN_START_BUTTON,_startButton.getText().equals("Start"));
-                if(_startButton.getText().equals("Start"))
-                    _startButton.setText("Stop");
-                else
-                    _startButton.setText("Start");
-
-            }
-        });
-
-
+        /*
         _watchfaceButton.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -120,16 +150,19 @@ public class HomeActivity extends SherlockFragment {
 
         Bundle args = getArguments();
         boolean activityRecognition = args.getBoolean("ACTIVITY_RECOGNITION",false);
+        boolean liveTracking = args.getBoolean("LIVE_TRACKING",false);
         int units = args.getInt("UNITS_OF_MEASURE",0);
-        SetupButtons(activityRecognition,units);
+*/
+        //SetupButtons(activityRecognition,liveTracking,units);
 
         return _view;
     }
 
-    public void SetupButtons(boolean activityRecognition, int units) {
+    /*public void SetupButtons(boolean activityRecognition, boolean liveTracking, int units) {
 
         Button _startButton = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
         ToggleButton _autoStart = (ToggleButton)_view.findViewById(R.id.MAIN_AUTO_START_BUTTON);
+        ToggleButton _liveTrackingButton = (ToggleButton)_view.findViewById(R.id.MAIN_LIVE_TRACKING_BUTTON);
         ToggleButton _unitsButton = (ToggleButton)_view.findViewById(R.id.MAIN_UNITS_BUTTON);
 
         if (activityRecognition) {
@@ -140,17 +173,38 @@ public class HomeActivity extends SherlockFragment {
 
         _autoStart.setChecked(activityRecognition);
 
+        _liveTrackingButton.setChecked(liveTracking);
         _unitsButton.setChecked(units == Constants.IMPERIAL);
 
+    }*/
+
+    public void setActivityText(String activity) {
+        //TextView textView = (TextView)_view.findViewById(R.id.MAIN_ACTIVITY_TYPE);
+        //textView.setText("Activity: " + activity);
     }
 
-    public void SetActivityText(String activity) {
-        TextView textView = (TextView)_view.findViewById(R.id.MAIN_ACTIVITY_TYPE);
-        textView.setText("Activity: " + activity);
-    }
-
-    public void SetStartText(String text) {
+    public void setStartButtonText(String text) {
         Button button = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
+        button.setText(text);
+    }
+
+    public void setSpeed(String text) {
+        TextView textView = (TextView)_view.findViewById(R.id.MAIN_SPEED_TEXT);
+        textView.setText(text);
+    }
+
+    public void setAvgSpeed(String text) {
+        TextView textView = (TextView)_view.findViewById(R.id.MAIN_AVG_SPEED_TEXT);
+        textView.setText(text);
+    }
+
+    public void setDistance(String text) {
+        TextView textView = (TextView)_view.findViewById(R.id.MAIN_DISTANCE_TEXT);
+        textView.setText(text);
+    }
+
+    public void setTime(String text) {
+        Button button = (Button)_view.findViewById(R.id.MAIN_TIME_TEXT);
         button.setText(text);
     }
 

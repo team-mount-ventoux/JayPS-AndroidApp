@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBoxPreference
+            android:key="ACTIVITY_RECOGNITION"
+            android:title="@string/PREF_AUTOSTART_TITLE"
+            android:summary="@string/PREF_AUTOSTART_SUMMARY"
+            android:defaultValue="true" />
+    <ListPreference
+            android:key="UNITS_OF_MEASURE"
+            android:title="@string/PREF_UNITS_TITLE"
+            android:dialogTitle="@string/PREF_UNITS_DIALOG_TITLE"
+            android:entries="@array/PREF_UNITS_ENTRIES"
+            android:entryValues="@array/PREF_UNITS_ENTRY_VALUES"
+            android:defaultValue="@string/PREF_UNITS_DEFULT" />
+    <Preference
+        android:key="pref_install"
+        android:title="@string/PREF_INSTALL_WATCHFACE"/>
+ 
+ <PreferenceCategory
+   android:title="@string/PREF_LIVE_TRACKING_CATEGORIE_TITLE"
+   android:summary="@string/PREF_LIVE_TRACKING_CATEGORIE_SUMMARY"
+ >
+    <CheckBoxPreference
+            android:key="LIVE_TRACKING"
+            android:title="@string/PREF_LIVE_TRACKING_TITLE"
+            android:summary="@string/PREF_LIVE_TRACKING_SUMMARY"
+            android:defaultValue="false" />
+  <EditTextPreference
+     android:key="LIVE_TRACKING_LOGIN"
+     android:title="@string/PREF_LIVE_TRACKING_LOGIN_TITLE"
+     android:summary="@string/PREF_LIVE_TRACKING_LOGIN_SUMMARY"
+  />
+  <EditTextPreference
+     android:key="LIVE_TRACKING_PASSWORD"
+     android:title="@string/PREF_LIVE_TRACKING_PASSWORD_TITLE"
+     android:summary="@string/PREF_LIVE_TRACKING_PASSWORD_SUMMARY"
+  />
+ </PreferenceCategory>        
+</PreferenceScreen>

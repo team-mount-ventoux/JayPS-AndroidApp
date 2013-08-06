@@ -5,63 +5,155 @@
                 android:rowCount="4"
                 android:columnCount="2"
                 android:padding="10dp">
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/MAIN_TITLE"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_gravity="center" android:id="@id/MAIN_TITLE"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ACTIVITY_TYPE_TEXT"
-            android:layout_gravity="center_vertical|left" android:id="@id/MAIN_ACTIVITY_TYPE"
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/MAIN_TITLE"/>
-
-    <TextView
-            android:layout_width="94dp"
-            android:layout_height="wrap_content"
-            android:text="@string/AUTO_START_TEXT"
-            android:id="@id/MAIN_AUTO_START_TEXT" android:layout_below="@id/MAIN_ACTIVITY_TYPE"
-            android:layout_marginTop="20dp" android:layout_marginBottom="12dp"/>
-
-    <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@id/MAIN_AUTO_START_BUTTON"
-            android:singleLine="false" android:layout_toRightOf="@id/MAIN_AUTO_START_TEXT"
-            android:layout_alignBaseline="@id/MAIN_AUTO_START_TEXT"/>
-
-    <TextView
-            android:layout_width="94dp"
-            android:layout_height="wrap_content"
-            android:text="@string/UNITS_TEXT"
-            android:id="@id/MAIN_UNITS_TEXT" android:layout_below="@id/MAIN_AUTO_START_TEXT"
-            android:layout_marginTop="20dp" android:layout_marginBottom="12dp"/>
-
-    <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@id/MAIN_UNITS_BUTTON"
-            android:singleLine="false"
-            android:layout_alignBaseline="@id/MAIN_UNITS_TEXT" android:layout_toRightOf="@id/MAIN_UNITS_TEXT"
-            android:textOn="@string/UNITS_TEXT_IMPERIAL" android:textOff="@string/UNITS_TEXT_METRIC"/>
 
     <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/START_BUTTON_START"
             android:id="@id/MAIN_START_BUTTON"
-            android:layout_alignParentBottom="true"/>
-    <Button
+            android:layout_alignParentBottom="true" style="@style/START_BUTTON_START"
+            android:layout_centerHorizontal="true"/>
+    <TextView
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="0.0"
+            android:id="@id/MAIN_DISTANCE_TEXT" android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentBottom="false" android:layout_above="@id/MAIN_START_BUTTON"
+            style="@style/LARGE_TEXT" android:layout_marginBottom="30dp"/>
+    <TextView
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/DISTANCE_LABEL_TEXT"
+            android:id="@id/MAIN_DISTANCE_LABEL" android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false" android:layout_above="@id/MAIN_DISTANCE_TEXT"
+            style="@style/LARGE_LABEL"/>
+    <TextView
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="0.0"
+            android:id="@id/MAIN_SPEED_TEXT" android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentRight="true" android:layout_above="@id/MAIN_START_BUTTON"
+            style="@style/LARGE_TEXT_BLUE" android:singleLine="false" android:layout_marginBottom="30dp"/>
+    <TextView
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/SPEED_LABEL_TEXT"
+            android:id="@id/MAIN_SPEED_LABEL" android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false"
+            android:layout_alignParentRight="true" android:layout_above="@id/MAIN_SPEED_TEXT"
+            style="@style/LARGE_LABEL"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="100dp" android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" android:id="@id/MAIN_GRID" android:padding="1dp"
+            android:background="@color/abs__background_holo_dark">
+        <RelativeLayout
+                android:layout_width="50dp"
+                android:layout_height="fill_parent" android:background="@color/abs__background_holo_light"
+                android:paddingLeft="1dp">
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@id/MAIN_SETTINGS_IMAGE" android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_action_settings"/>
+        </RelativeLayout>
+        <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent" android:layout_weight="1"
+                android:background="@color/abs__background_holo_light" android:layout_marginLeft="1dp"
+                android:layout_marginRight="1dp">
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="00:00"
+                    android:id="@id/MAIN_TIME_TEXT" android:layout_alignParentLeft="false"
+                    android:layout_alignParentTop="false" style="@style/LARGE_TEXT"
+                    android:layout_centerVertical="true" android:layout_marginLeft="30dp"/>
+            <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/TIME_TEXT"
+                    android:id="@+id/textView" android:layout_alignParentLeft="false"
+                    android:layout_alignParentTop="false" style="@style/NORMAL_LABEL"
+                    android:layout_above="@id/MAIN_TIME_TEXT" android:layout_marginLeft="30dp"/>
+        </RelativeLayout>
+        <TableLayout
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent" android:layout_alignParentLeft="false"
+                android:layout_alignParentTop="true" android:background="@color/abs__background_holo_dark"
+                android:columnCount="3" android:rowCount="1">
+
+            <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent" android:layout_marginBottom="1dp">
+                <RelativeLayout
+                        android:layout_width="80dp"
+                        android:layout_height="50dp" android:background="@color/abs__background_holo_light"
+                        >
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="12.3"
+                            android:id="@id/MAIN_AVG_SPEED_TEXT" android:layout_centerHorizontal="true"
+                            android:layout_alignParentTop="true" android:layout_marginTop="10dp"
+                            style="@style/SMALL_TEXT"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/AVG_SPEED_TEXT"
+                            android:id="@id/MAIN_AVG_SPEED_LABEL" android:layout_centerHorizontal="true"
+                            android:layout_alignParentTop="false" android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="10dp" style="@style/SMALL_LABEL"/>
+                </RelativeLayout>
+            </TableRow>
+            <TableRow android:layout_width="fill_parent"
+                      android:layout_height="fill_parent">
+                <RelativeLayout
+                        android:layout_width="80dp"
+                        android:layout_height="50dp" android:background="@color/abs__background_holo_light"
+                        >
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="GOOD"
+                            android:id="@id/MAIN_STATUS_TEXT"
+                            android:layout_alignParentTop="false" style="@style/V_SMALL_TEXT"
+                            android:layout_toRightOf="@id/MAIN_STATUS_ICON"
+                            android:layout_alignParentRight="true" android:layout_marginTop="10dp"/>
+                    <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/GPS_STATUS_LABEL"
+                            android:id="@id/MAIN_STATUS_LABEL"
+                            android:layout_centerHorizontal="true"
+                            android:layout_alignParentBottom="true" style="@style/SMALL_LABEL"
+                            android:layout_marginBottom="10dp"/>
+                    <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:id="@id/MAIN_STATUS_ICON"
+                            android:src="@drawable/ic_action_bars" android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="10dp" android:layout_marginTop="6dp"/>
+                </RelativeLayout>
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+    <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Install Watchface"
-            android:id="@id/MAIN_INSTALL_WATCHFACE_BUTTON" android:layout_alignParentLeft="false"
-            android:layout_alignParentTop="false"
-            android:layout_below="@id/MAIN_UNITS_TEXT" android:layout_alignLeft="@id/MAIN_UNITS_BUTTON"
-            android:layout_marginTop="5dp"/>
+            android:text="@string/ALTITUDE_TEXT"
+            android:id="@id/MAIN_ALTITUDE_LABEL" style="@style/LARGE_LABEL" android:layout_below="@id/MAIN_GRID"
+            android:layout_centerHorizontal="true" android:layout_marginTop="10dp"/>
 
+    <fragment class="com.njackson.AltitudeFragment"
+              android:id="@id/MAIN_ALTITUDE"
+              android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
+              android:layout_below="@id/MAIN_ALTITUDE_LABEL"
+              android:tag="tag_fragment_altitudefragment" android:layout_above="@id/MAIN_DISTANCE_LABEL"
+              android:layout_marginBottom="20dp"/>
 </RelativeLayout>
