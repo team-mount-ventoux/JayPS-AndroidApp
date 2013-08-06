@@ -15,18 +15,6 @@ import android.util.Log;
  * To change this template use File | Settings | File Templates.
  */
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
-    public static final String KEY_PREF_SYNC_CONN = "pref_syncConnectionType";
-    
-
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    	Log.d("PebbleBike:SettingsActivity", "onSharedPreferenceChanged:" + key);
-        if (key.equals(KEY_PREF_SYNC_CONN)) {
-            Preference connectionPref = findPreference(key);
-            // Set summary to be the user-description for the selected value
-            connectionPref.setSummary(sharedPreferences.getString(key, ""));
-        }
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,12 +27,39 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 // TODO Auto-generated method stub
-            	Log.d("PebbleBike:SettingsActivity", "onPreferenceClick:" + preference.getKey());
-            	Log.d("PebbleBike:SettingsActivity", "onPreferenceClick:" + preference.getTitle());
             	return false;
             }
         });
 
     }
+	
+	@Override
+    protected void onResume() {
+        super.onResume();
+        // Set up a listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister the listener whenever a key changes
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals("LIVE_TRACKING")) {
+        	MainActivity._liveTracking = sharedPreferences.getBoolean(key, false);
+        }
+        if (key.equals("ACTIVITY_RECOGNITION")) {
+        	MainActivity._activityRecognition = sharedPreferences.getBoolean(key, false);
+        }
+        if (key.equals("UNITS_OF_MEASURE")) {
+        	MainActivity.setConversionUnits(Integer.valueOf(sharedPreferences.getString(key, "0")));
+        }
+    }
+
+
 
 }
