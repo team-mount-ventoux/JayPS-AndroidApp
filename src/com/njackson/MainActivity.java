@@ -1,6 +1,7 @@
 package com.njackson;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.*;
@@ -14,7 +15,6 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.getpebble.android.kit.PebbleKit;
-import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -23,7 +23,6 @@ import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -118,6 +117,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             _altitudeConversion = (float)Constants.M_TO_M;
         }
     }
+
     private void unitsButtonClick(boolean value) {
         if (value) {
             setConversionUnits(Constants.IMPERIAL);
@@ -189,11 +189,11 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         switch (state) {
             case Constants.STOP_PRESS:
                 stopGPSService();
-                SetStartButtonText("Start");
+                setStartButtonText("Start");
                 break;
             case Constants.PLAY_PRESS:
                 startGPSService();
-                SetStartButtonText("Stop");
+                setStartButtonText("Stop");
                 break;
             case Constants.REFRESH_PRESS:
                 ResetSavedGPSStats();
@@ -272,7 +272,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             Log.d("PebbleBike:MainActivity", "Sending speed:" + dic.getString(Constants.SPEED_TEXT) + " dist: " + dic.getString(Constants.DISTANCE_TEXT) + " avgspeed:" + dic.getString(Constants.AVGSPEED_TEXT));
         }
         dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
-        Log.d("PebbleBike:MainActivity", "Sending MEASUREMENT_UNITS: "   + dic.getInteger(Constants.MEASUREMENT_UNITS));
+        Log.d("PebbleBike:MainActivity", "Sending MEASUREMENT_UNITS: " + dic.getInteger(Constants.MEASUREMENT_UNITS));
         
         if (checkServiceRunning()) {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
@@ -284,14 +284,46 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);        
     }
 
+    private void updateScreen(Intent intent) {
+
+        HomeActivity homeScreen = getHomeScreen();
+
+        if (intent.hasExtra("SPEED")) {
+            String speed = String.format(Locale.US, "%.1f", intent.getFloatExtra("SPEED", 99) * _speedConversion);
+            homeScreen.setSpeed(speed);
+        }
+        if (intent.hasExtra("DISTANCE")) {
+            String distance = String.format(Locale.US, "%.1f", Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * _distanceConversion) / 10);
+            homeScreen.setDistance(distance);
+        }
+        if (intent.hasExtra("AVGSPEED")) {
+            String avgSpeed = String.format(Locale.US, "%.1f", intent.getFloatExtra("AVGSPEED", 99) * _speedConversion);
+            homeScreen.setAvgSpeed(avgSpeed);
+        }
+        if (intent.hasExtra("TIME")) {
+            long time = intent.getLongExtra("TIME",0);
+
+            //dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
+            //Log.d("PebbleBike:MainActivity", "Sending ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT));
+        }
+        if (intent.hasExtra("ALTITUDE")) {
+            //dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
+            //Log.d("PebbleBike:MainActivity", "Sending ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT));
+        }
+    }
+
     private void ResetSavedGPSStats() {
         GPSService.resetGPSStats();
     }
 
-    private void SetStartButtonText(String text) {
-        HomeActivity activity = (HomeActivity)(getSupportFragmentManager().findFragmentByTag("home"));
+    private void setStartButtonText(String text) {
+        HomeActivity activity = getHomeScreen();
         if(activity != null)
-            activity.SetStartText(text);
+            activity.setStartButtonText(text);
+    }
+
+    private HomeActivity getHomeScreen() {
+        return (HomeActivity)(getSupportFragmentManager().findFragmentByTag("home"));
     }
 
     private void stopActivityRecogntionClient() {
@@ -349,10 +381,15 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     }
 
     private void registerGPSServiceIntentReceiver() {
-        IntentFilter filter = new IntentFilter(GPSServiceReceiver.ACTION_RESP);
-        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        IntentFilter filterResponse = new IntentFilter(GPSServiceReceiver.ACTION_RESP);
+        filterResponse.addCategory(Intent.CATEGORY_DEFAULT);
+
+        IntentFilter filterDisabled = new IntentFilter(GPSServiceReceiver.ACTION_GPS_DISABLED);
+        filterDisabled.addCategory(Intent.CATEGORY_DEFAULT);
+
         _gpsServiceReceiver = new GPSServiceReceiver();
-        registerReceiver(_gpsServiceReceiver, filter);
+        registerReceiver(_gpsServiceReceiver, filterResponse);
+        registerReceiver(_gpsServiceReceiver, filterDisabled);
     }
 
     private void removeGPSServiceIntentReceiver() {
@@ -386,6 +423,28 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
     }
 
+    private void showGPSDisabledAlertToUser(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Goto Settings Page To Enable GPS",
+                        new DialogInterface.OnClickListener(){
+                            public void onClick(DialogInterface dialog, int id){
+                                Intent callGPSSettingIntent = new Intent(
+                                        android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(callGPSSettingIntent);
+                            }
+                        });
+        alertDialogBuilder.setNegativeButton("Cancel",
+                new DialogInterface.OnClickListener(){
+                    public void onClick(DialogInterface dialog, int id){
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = alertDialogBuilder.create();
+        alert.show();
+    }
+
     private void updateActivityType(int type) {
 
         String activityType = "";
@@ -404,9 +463,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 break;
         }
 
-        HomeActivity activity = (HomeActivity)(getSupportFragmentManager().findFragmentByTag("home"));
+        HomeActivity activity = getHomeScreen();
         if(activity != null)
-            activity.SetActivityText(activityType);
+            activity.setActivityText(activityType);
     }
 
     @Override
@@ -463,19 +522,31 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     public class GPSServiceReceiver extends BroadcastReceiver {
         public static final String ACTION_RESP =
                 "com.njackson.intent.action.UPDATE_PEBBLE";
+        public static final String ACTION_GPS_DISABLED =
+                "com.njackson.intent.action.GPS_DISABLED";
         @Override
         public void onReceive(Context context, Intent intent) {
-           
-            sendDataToPebble(intent);
 
-            // do we need to update the map
-            double lat =  intent.getDoubleExtra("LAT",0);
-            double lon = intent.getDoubleExtra("LON",0);
-            MapActivity activity = (MapActivity)getSupportFragmentManager().findFragmentByTag("map");
-            if(activity != null)
-                activity.setLocation(new LatLng(lat,lon));
+            if(intent.getAction().compareTo(ACTION_RESP) == 0) {
+                sendDataToPebble(intent);
+                updateScreen(intent);
+                //updateMapLocation(intent);
+            } else if(intent.getAction().compareTo(ACTION_GPS_DISABLED) == 0) {
+                stopGPSService();
+                setStartButtonText("Start");
+                showGPSDisabledAlertToUser();
+            }
 
         }
+    }
+
+    private void updateMapLocation(Intent intent) {
+        // do we need to update the map
+        double lat =  intent.getDoubleExtra("LAT",0);
+        double lon = intent.getDoubleExtra("LON",0);
+        MapActivity activity = (MapActivity)getSupportFragmentManager().findFragmentByTag("map");
+        if(activity != null)
+            activity.setLocation(new LatLng(lat,lon));
     }
 
     public static class TabListener<T extends SherlockFragment> implements ActionBar.TabListener {
