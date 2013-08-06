@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
@@ -24,6 +25,7 @@ import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -49,6 +51,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private GPSServiceReceiver _gpsServiceReceiver;
     private boolean _googlePlayInstalled;
     private Fragment _mapFragment;
+
+    private int[] _altitudeBins;
+    private int _altitudeMax = 0;
+    private int _altitudeMin = 0;
 
 
     enum RequestType {
@@ -171,6 +177,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             
             changeState(getIntent().getExtras().getInt("state"));
         }
+
+        _altitudeBins = new int[14];
     }
 
     @Override
@@ -308,13 +316,29 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }
         if (intent.hasExtra("TIME")) {
             long time = intent.getLongExtra("TIME",0);
-
+            Date date = new Date(time);
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+            String dateFormatted = formatter.format(date);
+            homeScreen.setTime(dateFormatted);
             //dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
             //Log.d("PebbleBike:MainActivity", "Sending ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT));
         }
         if (intent.hasExtra("ALTITUDE")) {
-            //dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
-            //Log.d("PebbleBike:MainActivity", "Sending ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT));
+            int altitude = (int)intent.getDoubleExtra("ALTITUDE", 0);
+            if(altitude > _altitudeMax)
+                _altitudeMax = altitude;
+            if(altitude < _altitudeMin)
+                _altitudeMin = altitude;
+
+            for(int n=0; n < _altitudeBins.length-1;n++){
+                if(_altitudeBins[n +1] > 0) {
+                    _altitudeBins[n] = (_altitudeBins[n] + _altitudeBins[n+1]) /2;
+                }
+            }
+
+            _altitudeBins[13] = altitude;
+            homeScreen.setAltitude(_altitudeBins,_altitudeMax,_altitudeMin);
+
         }
     }
 

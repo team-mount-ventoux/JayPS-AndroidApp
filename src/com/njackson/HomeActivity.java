@@ -204,8 +204,13 @@ public class HomeActivity extends SherlockFragment {
     }
 
     public void setTime(String text) {
-        Button button = (Button)_view.findViewById(R.id.MAIN_TIME_TEXT);
-        button.setText(text);
+        TextView textView  = (TextView)_view.findViewById(R.id.MAIN_TIME_TEXT);
+        textView.setText(text);
+    }
+
+    public void setAltitude(int[] altitude, int maxAltitude, int minAltitude) {
+        AltitudeFragment altitudeFragment = (AltitudeFragment)getFragmentManager().findFragmentByTag("tag_fragment_altitudefragment");
+        altitudeFragment.setAltitude(altitude,maxAltitude,true);
     }
 
 }

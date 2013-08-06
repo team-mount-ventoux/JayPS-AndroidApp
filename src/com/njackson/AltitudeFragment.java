@@ -22,9 +22,12 @@ import java.util.ArrayList;
  */
 public class AltitudeFragment extends Fragment {
 
+    private float[] _prevValues;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = (LinearLayout)inflater.inflate(R.layout.altitudefragment, container, false);
+        _prevValues = new float[] {1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f};
         return view;
 
     }
@@ -44,12 +47,14 @@ public class AltitudeFragment extends Fragment {
 
         for(int v =0; v < views.length;v++) {
             views[v].setMaxHeight(getView().getHeight());
-            ScaleAnimation scale = new ScaleAnimation(1, 1, 1, displayValues[v], Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f);
+            ScaleAnimation scale = new ScaleAnimation(1, 1, _prevValues[v], displayValues[v], Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 1.0f);
             scale.setFillAfter(true);
             scale.setDuration(500);
             scale.setInterpolator(new AccelerateInterpolator(1.0f));
             views[v].startAnimation(scale);
         }
+
+        _prevValues = displayValues;
 
     }
 
