@@ -5,6 +5,8 @@
     <item name="MAIN_ACTIVITY_TYPE" type="id"/>
     <item name="MAIN_AUTO_START_TEXT" type="id"/>
     <item name="MAIN_AUTO_START_BUTTON" type="id"/>
+    <item name="MAIN_LIVE_TRACKING_TEXT" type="id"/>
+    <item name="MAIN_LIVE_TRACKING_BUTTON" type="id"/>
     <item name="MAIN_START_BUTTON" type="id"/>
     <item name="MAIN_UNITS_TEXT" type="id"/>
     <item name="MAIN_UNITS_BUTTON" type="id"/>

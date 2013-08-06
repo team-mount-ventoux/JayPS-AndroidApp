@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Pebble Bike</string>
-    <string name="MAIN_TITLE">Pebble Bike v1.2.2</string>
+    <string name="MAIN_TITLE">Pebble Bike v1.3 alpha1</string>
     <string name="ACTIVITY_TYPE_TEXT">Activity Type</string>
     <string name="AUTO_START_TEXT">Auto Start</string>
+    <string name="LIVE_TRACKING_TEXT">Live Tracking with JayPS</string>
     <string name="START_BUTTON_START">Start</string>
     <string name="UNITS_TEXT">Units</string>
     <string name="UNITS_TEXT_IMPERIAL">Miles</string>
@@ -23,4 +24,14 @@
     <string name="AVG_SPEED_TEXT">AVG. MPH</string>
     <string name="GPS_STATUS_LABEL">GPS STATUS</string><string name="ALTITUDE_TEXT">ALTITUDE</string>
     <string name="PREF_INSTALL_WATCHFACE">Install Watchface</string>
+    <string name="PREF_LIVE_TRACKING_CATEGORIE_TITLE">JayPS Live Tracking</string>
+    <string name="PREF_LIVE_TRACKING_CATEGORIE_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_TITLE">Live Tracking with JayPS</string>
+    <string name="PREF_LIVE_TRACKING_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_LOGIN_TITLE">Login</string>
+    <string name="PREF_LIVE_TRACKING_LOGIN_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_PASSWORD_TITLE">Password</string>
+    <string name="PREF_LIVE_TRACKING_PASSWORD_SUMMARY"></string>
+    
+    
 </resources>
