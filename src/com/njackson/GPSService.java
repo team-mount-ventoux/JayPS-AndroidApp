@@ -84,7 +84,44 @@ public class GPSService extends Service {
     @Override
     public void onDestroy (){
         Log.d(TAG, "Stopped GPS Service");
-        // save the state
+        
+        saveGPSStats();
+
+        _this = null;
+        
+        removeServiceForeground();
+        
+        //PebbleKit.closeAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+
+        _locationMgr.removeUpdates(onLocationChange);
+    }
+
+    // load the saved state
+    public void loadGPSStats() {
+    	Log.d(TAG, "loadGPSStats()");
+    	
+    	SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+        _speed = settings.getFloat("GPS_SPEED",0.0f);
+        _distance = settings.getFloat("GPS_DISTANCE",0.0f);
+        _myLocation.setDistance(_distance);
+        _myLocation.setElapsedTime(settings.getLong("GPS_ELAPSEDTIME", 0));
+        
+        try {
+            _myLocation.setAscent(settings.getFloat("GPS_ASCENT", 0.0f));
+        } catch (ClassCastException e) {
+            _myLocation.setAscent(0.0);
+        }
+        try {
+            _updates = settings.getInt("GPS_UPDATES",0);
+        } catch (ClassCastException e) {
+            _updates = 0;
+        }        
+    }
+
+    // save the state
+    public void saveGPSStats() {
+    	Log.d(TAG, "saveGPSStats()");
+    	
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putFloat("GPS_SPEED", _speed);
@@ -93,12 +130,29 @@ public class GPSService extends Service {
         editor.putFloat("GPS_ASCENT", (float) _myLocation.getAscent());
         editor.putInt("GPS_UPDATES", _updates);
         editor.commit();
+    }
 
-        removeServiceForeground();
-        
-        //PebbleKit.closeAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+    // reset the saved state
+    public static void resetGPSStats(SharedPreferences settings) {
+    	Log.d(TAG, "resetGPSStats()");
+    	
+	    SharedPreferences.Editor editor = settings.edit();
+	    editor.putFloat("GPS_SPEED", 0.0f);
+	    editor.putFloat("GPS_DISTANCE",0.0f);
+	    editor.putLong("GPS_ELAPSEDTIME", 0);
+	    editor.putFloat("GPS_ASCENT", 0.0f);
+	    editor.putInt("GPS_UPDATES", 0);
+	    editor.commit();
+	    
+	    if (_this != null) {
+	    	// GPS is running
+		    // reninit all properties
+	    	_this._myLocation = new AdvancedLocation(_this.getApplicationContext());
+	    	_this._myLocation.debugLevel = 1;
+	    	_this._myLocation.debugTagPrefix = "PB-";
 
-        _locationMgr.removeUpdates(onLocationChange);
+	    	_this.loadGPSStats();  	    	
+	    }
     }
 
     private void handleCommand(Intent intent) {
@@ -106,34 +160,17 @@ public class GPSService extends Service {
         
         _liveTracking = new LiveTracking(getApplicationContext());
 
-        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
-        _speed = settings.getFloat("GPS_SPEED",0.0f);
-        _distance = settings.getFloat("GPS_DISTANCE",0.0f);
-        
+        _myLocation = new AdvancedLocation(getApplicationContext());
+        _myLocation.debugLevel = 1;
+        _myLocation.debugTagPrefix = "PB-";
 
+        loadGPSStats();
+        
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         	 
         _liveTracking.setLogin(prefs.getString("LIVE_TRACKING_LOGIN", ""));
         _liveTracking.setPassword(prefs.getString("LIVE_TRACKING_PASSWORD", ""));
         _liveTracking.setUrl(prefs.getString("LIVE_TRACKING_URL", ""));
-
-        try {
-            _updates = settings.getInt("GPS_UPDATES",0);
-        }catch (ClassCastException e) {
-            _updates = 0;
-        }
-
-        _myLocation = new AdvancedLocation(getApplicationContext());
-        _myLocation.debugLevel = 1;
-        _myLocation.debugTagPrefix = "PB-";
-        _myLocation.setElapsedTime(settings.getLong("GPS_ELAPSEDTIME", 0));
-        _myLocation.setDistance(_distance);
-
-        try {
-            _myLocation.setAscent(settings.getFloat("GPS_ASCENT", 0.0f));
-        }catch (ClassCastException e) {
-            _myLocation.setAscent(0.0);
-        }
 
         // check to see if GPS is enabled
         if(checkGPSEnabled(_locationMgr)) {
@@ -155,22 +192,7 @@ public class GPSService extends Service {
         //PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
     }
 
-    public static void resetGPSStats(){
-        if(_this == null)
-            return;
-        Log.d(TAG, "resetGPSStats");
-        SharedPreferences settings = _this.getSharedPreferences(Constants.PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putFloat("GPS_SPEED", 0.0f);
-        editor.putFloat("GPS_DISTANCE",0.0f);
-        editor.putFloat("GPS_AVGSPEED", 0.0f);
-        editor.putLong("GPS_ELAPSEDTIME", 0);
-        editor.putFloat("GPS_ASCENT", 0.0f);
-        editor.putInt("GPS_UPDATES", 0);
-        editor.commit();
-        _this._myLocation = new AdvancedLocation(_this.getApplicationContext());
-        _this._myLocation.debugLevel = 1;
-    }
+
 
     @Override
     public IBinder onBind(Intent intent) {

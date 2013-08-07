@@ -353,7 +353,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     }
 
     private void ResetSavedGPSStats() {
-        GPSService.resetGPSStats();
+        GPSService.resetGPSStats(getSharedPreferences(Constants.PREFS_NAME, 0));
     }
 
     private void setStartButtonText(String text) {
