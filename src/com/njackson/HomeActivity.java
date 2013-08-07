@@ -90,11 +90,9 @@ public class HomeActivity extends SherlockFragment {
 
                 _callback.onPressed(R.id.MAIN_START_BUTTON,_startButton.getText().equals("Start"));
                 if(_startButton.getText().equals("Start")) {
-                    _startButton.setText("Stop");
-                    _startButton.setBackgroundColor(getResources().getColor(R.color.START_STOP));
+                	setStartButtonText("Stop");
                 } else {
-                    _startButton.setText("Start");
-                    _startButton.setBackgroundColor(getResources().getColor(R.color.START_START));
+                	setStartButtonText("Start");
                 }
 
             }
@@ -188,6 +186,11 @@ public class HomeActivity extends SherlockFragment {
     public void setStartButtonText(String text) {
         Button button = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
         button.setText(text);
+        if (text.equals("Start")) {
+        	button.setBackgroundColor(getResources().getColor(R.color.START_START));
+        } else {
+        	button.setBackgroundColor(getResources().getColor(R.color.START_STOP));
+        }        
     }
 
     public void setSpeed(String text) {
