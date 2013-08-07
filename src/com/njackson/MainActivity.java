@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -192,6 +193,14 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         super.onResume();
     }
 
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+        	// Physical Menu button
+        	startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+        }
+        return super.onKeyUp(keyCode, event);
+    }    
+    
     // This is called for activities that set launchMode to "singleTop" in their package, or if a client used the FLAG_ACTIVITY_SINGLE_TOP flag when calling startActivity(Intent).
     // In either case, when the activity is re-launched while at the top of the activity stack instead of a new instance of the activity being started, onNewIntent() will be called 
     // on the existing instance with the Intent that was used to re-launch it.
