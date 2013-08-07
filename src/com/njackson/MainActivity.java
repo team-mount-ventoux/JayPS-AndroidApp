@@ -26,6 +26,8 @@ import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.maps.model.LatLng;
 
+import de.cketti.library.changelog.ChangeLog;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -164,6 +166,11 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayHomeAsUpEnabled(false);
 
+        ChangeLog cl = new ChangeLog(this);
+        if (cl.isFirstRun()) {
+          cl.getLogDialog().show();
+        }
+        
         checkGooglePlayServices();
 
         loadPreferences();
