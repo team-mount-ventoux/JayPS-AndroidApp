@@ -37,7 +37,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
     private ActivityRecognitionClient _mActivityRecognitionClient;
 
-    public static boolean _activityRecognition = false;
+    private static boolean _activityRecognition = false;
     public static boolean _liveTracking = false;
     private PendingIntent _callbackIntent;
     private RequestType _requestType;
@@ -84,6 +84,19 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 //            case R.id.MAIN_INSTALL_WATCHFACE_BUTTON:
 //                sendWatchFaceToPebble();
 //                break;
+        }
+    }
+    public void loadPreferences() {
+    	loadPreferences(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+    }
+    public static void loadPreferences(SharedPreferences prefs) {
+        //setup the defaults
+        _activityRecognition = prefs.getBoolean("ACTIVITY_RECOGNITION",false);
+        _liveTracking = prefs.getBoolean("LIVE_TRACKING",false);
+        try {
+        	setConversionUnits(Integer.valueOf(prefs.getString("UNITS_OF_MEASURE", "0")));
+        } catch (Exception e) {
+        	Log.e(TAG, "Exception:" + e);
         }
     }
 
@@ -152,16 +165,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
         checkGooglePlayServices();
 
-        //setup the defaults
-        //SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        _activityRecognition = prefs.getBoolean("ACTIVITY_RECOGNITION",false);
-        _liveTracking = prefs.getBoolean("LIVE_TRACKING",false);
-        try {
-        	setConversionUnits(Integer.valueOf(prefs.getString("UNITS_OF_MEASURE", "0")));
-        } catch (Exception e) {
-        	Log.e(TAG, "Exception:" + e);
-        }
+        loadPreferences();
 
         Bundle bundle = new Bundle();
         bundle.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);

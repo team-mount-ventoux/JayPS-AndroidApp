@@ -51,15 +51,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals("LIVE_TRACKING")) {
-        	MainActivity._liveTracking = sharedPreferences.getBoolean(key, false);
-        }
-        if (key.equals("ACTIVITY_RECOGNITION")) {
-        	MainActivity._activityRecognition = sharedPreferences.getBoolean(key, false);
-        }
-        if (key.equals("UNITS_OF_MEASURE")) {
-        	MainActivity.setConversionUnits(Integer.valueOf(sharedPreferences.getString(key, "0")));
-        }
+    	MainActivity.loadPreferences(sharedPreferences);
     }
 
 
