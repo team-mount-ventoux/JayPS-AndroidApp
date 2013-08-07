@@ -17,9 +17,8 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     
     @Override
     public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
-        int newState = data.getUnsignedInteger(Constants.STATE_CHANGED).intValue();
-        int state = newState;
-        Log.d(TAG, "state: " + state);             
+        int button = data.getUnsignedInteger(Constants.STATE_CHANGED).intValue();
+        Log.d(TAG, "button: " + button);             
         PebbleKit.sendAckToPebble(context, transactionId);
 
         Intent i = new Intent(context, MainActivity.class);
@@ -28,7 +27,7 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
               | Intent.FLAG_ACTIVITY_CLEAR_TOP  // If set, and the activity being launched is already running in the current task, then instead of launching a new instance of that activity, all of the other activities on top of it will be closed and this Intent will be delivered to the (now on top) old activity as a new Intent
               | Intent.FLAG_ACTIVITY_SINGLE_TOP // If set, the activity will not be launched if it is already running at the top of the history stack
         );
-        i.putExtra("state", state);
+        i.putExtra("button", button);
         context.startActivity(i);
     }
 }

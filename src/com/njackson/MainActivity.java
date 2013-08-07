@@ -178,10 +178,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<HomeActivity>(this, "home", HomeActivity.class, bundle)));
         //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,_mapFragment,null)));
 
-        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("state")) {
-            Log.d(TAG, "onCreate() state:" + getIntent().getExtras().getInt("state"));
+        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("button")) {
+            Log.d(TAG, "onCreate() button:" + getIntent().getExtras().getInt("button"));
             
-            changeState(getIntent().getExtras().getInt("state"));
+            changeState(getIntent().getExtras().getInt("button"));
         }
 
         _altitudeBins = new int[14];
@@ -197,16 +197,16 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     // on the existing instance with the Intent that was used to re-launch it.
     // An activity will always be paused before receiving a new intent, so you can count on onResume() being called after this method. 
     protected void onNewIntent (Intent intent) {
-        if (intent.getExtras() != null && intent.getExtras().containsKey("state")) {
-            Log.d(TAG, "onNewIntent() state:" + intent.getExtras().getInt("state"));
+        if (intent.getExtras() != null && intent.getExtras().containsKey("button")) {
+            Log.d(TAG, "onNewIntent() button:" + intent.getExtras().getInt("button"));
             
-            changeState(intent.getExtras().getInt("state"));
+            changeState(intent.getExtras().getInt("button"));
         }
     }
     
-    private void changeState(int state) {
-        Log.d(TAG, "changeState(" + state + ")");
-        switch (state) {
+    private void changeState(int button) {
+        Log.d(TAG, "changeState(button:" + button + ")");
+        switch (button) {
             case Constants.STOP_PRESS:
                 stopGPSService();
                 setStartButtonText("Start");
@@ -237,12 +237,14 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     }
 
     private void sendServiceState() {
-        PebbleDictionary dic = new PebbleDictionary();
+    	Log.d(TAG, "sendServiceState()");
+    	PebbleDictionary dic = new PebbleDictionary();
         if(checkServiceRunning()) {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
         } else {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
         }
+        Log.d(TAG, " STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED));
         PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
     }
     
@@ -353,7 +355,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     }
 
     private void ResetSavedGPSStats() {
-        GPSService.resetGPSStats(getSharedPreferences(Constants.PREFS_NAME, 0));
+    	GPSService.resetGPSStats(getSharedPreferences(Constants.PREFS_NAME, 0));
     }
 
     private void setStartButtonText(String text) {
@@ -415,6 +417,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private void stopGPSService() {
         if(!checkServiceRunning())
             return;
+        Log.d(TAG, "stopGPSService()");
         removeGPSServiceIntentReceiver();
         stopService(new Intent(getApplicationContext(), GPSService.class));
         sendServiceState();
