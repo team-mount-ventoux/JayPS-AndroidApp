@@ -27,6 +27,9 @@ import android.util.Base64;
 import android.util.Log;
 
 public class LiveTracking {
+	
+	private static final String TAG = "PB-LiveTracking";
+	
     protected Context _context = null;
     private long _prevTime = -1;
     private Location _lastLocation = null;
@@ -88,12 +91,12 @@ public class LiveTracking {
     	}
 		public boolean updateFromFriend(LiveTrackingFriend friend) {
 			if ((id == "") || !friend.id.equals(this.id)) {
-				Log.e("JayPS-LiveTracking", "updateFromFriend this "+this.toString());
-				Log.e("JayPS-LiveTracking", "updateFromFriend friend "+friend.toString());
+				Log.e(TAG, "updateFromFriend this "+this.toString());
+				Log.e(TAG, "updateFromFriend friend "+friend.toString());
 				return false;
 			}
 			dt = friend.ts-ts;
-			//Log.d("JayPS-LiveTracking", "dt:"+ts+"->"+friend.ts+" "+dt+"s");
+			//Log.d(TAG, "dt:"+ts+"->"+friend.ts+" "+dt+"s");
 			ts = friend.ts;
 			lat = friend.lat;
 			lon = friend.lon;
@@ -121,7 +124,7 @@ public class LiveTracking {
     }
 
     public boolean addPoint(Location location) {
-    	//Log.d("JayPS-LiveTracking", "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude() + "," + location.getTime() + "," + location.getAccuracy()+ ")");
+    	//Log.d(TAG, "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude() + "," + location.getTime() + "," + location.getAccuracy()+ ")");
     	if (location.getTime() - _prevTime < 5000) {
     		// too early (dt<5s), do nothing
     		return false;
@@ -130,7 +133,7 @@ public class LiveTracking {
     	_bufferAccuracies += (_bufferAccuracies != "" ? " " : "") + String.format(Locale.US, "%.1f", location.getAccuracy());
     	if (location.getTime() - _prevTime < 30000) {
     		// too early (5s<dt<30s), save point to send it later
-    		Log.d("JayPS-LiveTracking", "too early: skip addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude() + "," + location.getTime() + ")");
+    		Log.d(TAG, "too early: skip addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude() + "," + location.getTime() + ")");
     		return false;
     	}
 		// ok
@@ -141,7 +144,7 @@ public class LiveTracking {
 		return result;
     }
     private boolean _send(String points, String accuracies) {
-    	Log.d("JayPS-LiveTracking", "send(" + points + ", " + accuracies + ")");
+    	Log.d(TAG, "send(" + points + ", " + accuracies + ")");
         try {
         	String request = _activity_id == "" ? "start_activity" : "update_activity";
         	String postParameters = "";
@@ -191,7 +194,7 @@ public class LiveTracking {
 			while(inStream.hasNextLine()) {
 				response+=(inStream.nextLine()) + "\n";
 			}
-			//Log.d("JayPS-LiveTracking", "response:" + response);
+			//Log.d(TAG, "response:" + response);
         			
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -206,7 +209,7 @@ public class LiveTracking {
                 expression = "/message/activity_id";
            
                 String activity_id = xpath.evaluate(expression, doc);
-                Log.d("JayPS-LiveTracking", "activity_id:"+activity_id);
+                Log.d(TAG, "activity_id:"+activity_id);
                 if (activity_id != "") {
                 	_activity_id = activity_id;
                 }
@@ -230,13 +233,13 @@ public class LiveTracking {
                     
                     if (_friends.containsKey(friend.id)) {
                     	// update friend
-                    	//Log.d("JayPS-LiveTracking", "update friend "+friend.id);
+                    	//Log.d(TAG, "update friend "+friend.id);
                     	LiveTrackingFriend f2 = _friends.get(friend.id);
                     	f2.updateFromFriend(friend);
                     	_friends.put(friend.id, f2);
                     } else {
                     	// new friend
-                    	//Log.d("JayPS-LiveTracking", "new friend "+friend.id);
+                    	//Log.d(TAG, "new friend "+friend.id);
                     	_friends.put(friend.id, friend);
                     }
                  }
@@ -245,13 +248,13 @@ public class LiveTracking {
             //Iterator<Entry<String, LiveTrackingFriend>> iter = _friends.entrySet().iterator();
 			//while (iter.hasNext()) {
 				//LiveTrackingFriend f = iter.next().getValue();
-				//Log.d("JayPS-LiveTracking", "+++"+f.toString());
+				//Log.d(TAG, "+++"+f.toString());
 			//}            
 
             return nbReceivedFriends > 0;
             
         } catch (Exception e) {
-        	Log.d("JayPS-LiveTracking", "Exception:" + e);
+        	Log.e(TAG, "Exception:" + e);
         }
         return false;
     }
@@ -264,7 +267,7 @@ public class LiveTracking {
 			
 			long lastViewed = System.currentTimeMillis() / 1000 - f.ts;
 			
-			//Log.i("JayPS-LiveTracking", "--" + f.toString() + "|" + lastViewed);
+			//Log.i(TAG, "--" + f.toString() + "|" + lastViewed);
 			
 			String strFriend = f.nickname + " ";
             if (f.deltaDistance > 1000) {

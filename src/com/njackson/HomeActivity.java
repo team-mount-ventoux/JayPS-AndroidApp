@@ -34,6 +34,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class HomeActivity extends SherlockFragment {
+	
+	private static final String TAG = "PB-HomeActivity";
 
     OnButtonPressListener _callback;
     // Container Activity must implement this interface

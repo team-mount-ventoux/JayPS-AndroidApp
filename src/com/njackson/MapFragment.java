@@ -12,6 +12,9 @@ import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.model.LatLng;
 
 public class MapFragment extends com.njackson.SherlockMapFragment {
+	
+	private static final String TAG = "PB-MapFragment";
+	
     private GoogleMap _map;
     private static View view;
 

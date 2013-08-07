@@ -21,6 +21,8 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class AltitudeFragment extends Fragment {
+	
+	private static final String TAG = "PB-AltitudeFragment";
 
     private float[] _prevValues;
 

@@ -31,6 +31,8 @@ import fr.jayps.android.AdvancedLocation;
  * To change this template use File | Settings | File Templates.
  */
 public class GPSService extends Service {
+	
+	private static final String TAG = "PB-GPSService";
 
     private int _updates;
     private float _speed;
@@ -81,7 +83,7 @@ public class GPSService extends Service {
 
     @Override
     public void onDestroy (){
-        Log.d("GPSService","Stopped GPS Service");
+        Log.d(TAG, "Stopped GPS Service");
         // save the state
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         SharedPreferences.Editor editor = settings.edit();
@@ -100,7 +102,7 @@ public class GPSService extends Service {
     }
 
     private void handleCommand(Intent intent) {
-        Log.d("GPSService","Started GPS Service");
+        Log.d(TAG, "Started GPS Service");
         
         _liveTracking = new LiveTracking(getApplicationContext());
 
@@ -123,6 +125,7 @@ public class GPSService extends Service {
 
         _myLocation = new AdvancedLocation(getApplicationContext());
         _myLocation.debugLevel = 1;
+        _myLocation.debugTagPrefix = "PB-";
         _myLocation.setElapsedTime(settings.getLong("GPS_ELAPSEDTIME", 0));
         _myLocation.setDistance(_distance);
 
@@ -155,7 +158,7 @@ public class GPSService extends Service {
     public static void resetGPSStats(){
         if(_this == null)
             return;
-        Log.d("GPSService","resetGPSStats");
+        Log.d(TAG, "resetGPSStats");
         SharedPreferences settings = _this.getSharedPreferences(Constants.PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putFloat("GPS_SPEED", 0.0f);
@@ -180,7 +183,7 @@ public class GPSService extends Service {
         public void onLocationChanged(Location location) {
             _myLocation.onLocationChanged(location);
             
-            Log.d("GPSService", "onLocationChanged: " + _myLocation.getTime() + " Accuracy: " + _myLocation.getAccuracy());
+            Log.d(TAG,  "onLocationChanged: " + _myLocation.getTime() + " Accuracy: " + _myLocation.getAccuracy());
 
             _speed = _myLocation.getSpeed();
 
@@ -221,7 +224,7 @@ public class GPSService extends Service {
                 _prevaltitude = _myLocation.getAltitude();
                 _prevtime = _myLocation.getTime();
             } else if (_prevtime + 5000 < _myLocation.getTime()) {
-                Log.d("GPSService", "New GPS data without move");
+                Log.d(TAG,  "New GPS data without move");
                 
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);

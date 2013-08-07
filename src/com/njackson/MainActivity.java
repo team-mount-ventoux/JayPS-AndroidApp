@@ -32,6 +32,8 @@ import java.util.Locale;
 
 public class MainActivity extends SherlockFragmentActivity  implements  GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener, HomeActivity.OnButtonPressListener {
+	
+	private static final String TAG = "PB-MainActivity";
 
     private ActivityRecognitionClient _mActivityRecognitionClient;
 
@@ -158,7 +160,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         try {
         	setConversionUnits(Integer.valueOf(prefs.getString("UNITS_OF_MEASURE", "0")));
         } catch (Exception e) {
-        	Log.d("PebbleBike:MainActivity", "Exception:" + e);
+        	Log.e(TAG, "Exception:" + e);
         }
 
         Bundle bundle = new Bundle();
@@ -173,7 +175,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,_mapFragment,null)));
 
         if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("state")) {
-            Log.d("MainActivity", "onCreate() state:" + getIntent().getExtras().getInt("state"));
+            Log.d(TAG, "onCreate() state:" + getIntent().getExtras().getInt("state"));
             
             changeState(getIntent().getExtras().getInt("state"));
         }
@@ -192,14 +194,14 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     // An activity will always be paused before receiving a new intent, so you can count on onResume() being called after this method. 
     protected void onNewIntent (Intent intent) {
         if (intent.getExtras() != null && intent.getExtras().containsKey("state")) {
-            Log.d("MainActivity", "onNewIntent() state:" + intent.getExtras().getInt("state"));
+            Log.d(TAG, "onNewIntent() state:" + intent.getExtras().getInt("state"));
             
             changeState(intent.getExtras().getInt("state"));
         }
     }
     
     private void changeState(int state) {
-        Log.d("MainActivity", "changeState(" + state + ")");
+        Log.d(TAG, "changeState(" + state + ")");
         switch (state) {
             case Constants.STOP_PRESS:
                 stopGPSService();
@@ -245,9 +247,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         sendDataToPebble(_lastIntent);
     }
     public void sendDataToPebble(Intent intent) {
-        Log.d("PebbleBike:MainActivity","sendDataToPebble()");
+    	Log.d(TAG, "sendDataToPebble()");
         
         PebbleDictionary dic = new PebbleDictionary();
+        String sending = "Sending ";
         
         if (intent != null) {
             _lastIntent = intent;
@@ -255,46 +258,48 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             // force Locale.US to force dot as a decimal separator
             if (intent.hasExtra("SPEED")) {
                 dic.addString(Constants.SPEED_TEXT,      String.format(Locale.US, "%.1f", intent.getFloatExtra("SPEED", 99) * _speedConversion)); // km/h or mph
+                sending += " SPEED: "   + dic.getString(Constants.SPEED_TEXT);
             }
             if (intent.hasExtra("DISTANCE")) {
                 dic.addString(Constants.DISTANCE_TEXT,   String.format(Locale.US, "%.1f", Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * _distanceConversion) / 10)); // km or miles
+                sending += " DISTANCE: "   + dic.getString(Constants.DISTANCE_TEXT);
             }
             if (intent.hasExtra("AVGSPEED")) {
                 dic.addString(Constants.AVGSPEED_TEXT,   String.format(Locale.US, "%.1f", intent.getFloatExtra("AVGSPEED", 99) * _speedConversion)); // km/h or mph
+                sending += " AVGSPEED: "   + dic.getString(Constants.AVGSPEED_TEXT);
             }
             if (intent.hasExtra("ALTITUDE")) {
                 dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
-                Log.d("PebbleBike:MainActivity", "Sending ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT));
+                sending += " ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT);
             }
             if (intent.hasExtra("ASCENT")) {
                 dic.addString(Constants.ASCENT_TEXT,     String.format("%d", (int) (intent.getDoubleExtra("ASCENT", 99) * _altitudeConversion))); // m of ft
-                Log.d("PebbleBike:MainActivity", "Sending ASCENT: "     + dic.getString(Constants.ASCENT_TEXT));
+                sending += " ASCENT: "   + dic.getString(Constants.ASCENT_TEXT);
             }
             if (intent.hasExtra("ASCENTRATE")) {
                 dic.addString(Constants.ASCENTRATE_TEXT, String.format("%d", (int) (intent.getFloatExtra("ASCENTRATE", 99) * _altitudeConversion))); // m/h or ft/h
-                Log.d("PebbleBike:MainActivity", "Sending ASCENTRATE: " + dic.getString(Constants.ASCENTRATE_TEXT));
+                sending += " ASCENTRATE: "   + dic.getString(Constants.ASCENTRATE_TEXT);
             }
             if (intent.hasExtra("SLOPE")) {
                 dic.addString(Constants.SLOPE_TEXT,      String.format("%d", (int) intent.getFloatExtra("SLOPE", 99))); // %
-                Log.d("PebbleBike:MainActivity", "Sending SLOPE: "      + dic.getString(Constants.SLOPE_TEXT));
+                sending += " SLOPE: "   + dic.getString(Constants.SLOPE_TEXT);
             }
             if (intent.hasExtra("ACCURACY")) {
                 dic.addString(Constants.ACCURACY_TEXT,   String.format("%d", (int) intent.getFloatExtra("ACCURACY", 99))); // m
-                Log.d("PebbleBike:MainActivity", "Sending ACCURACY: "   + dic.getString(Constants.ACCURACY_TEXT));
+                sending += " ACCURACY: "   + dic.getString(Constants.ACCURACY_TEXT);
             }
-            
-            Log.d("PebbleBike:MainActivity", "Sending speed:" + dic.getString(Constants.SPEED_TEXT) + " dist: " + dic.getString(Constants.DISTANCE_TEXT) + " avgspeed:" + dic.getString(Constants.AVGSPEED_TEXT));
         }
         dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
-        Log.d("PebbleBike:MainActivity", "Sending MEASUREMENT_UNITS: " + dic.getInteger(Constants.MEASUREMENT_UNITS));
+        sending += " MEASUREMENT_UNITS: "   + dic.getInteger(Constants.MEASUREMENT_UNITS);
         
         if (checkServiceRunning()) {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
         } else {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
         }
-        Log.d("PebbleBike:MainActivity", "Sending STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED));
+        sending += " STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED);
 
+        Log.d(TAG, sending);
         PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);        
     }
 
@@ -320,8 +325,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
             String dateFormatted = formatter.format(date);
             homeScreen.setTime(dateFormatted);
-            //dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
-            //Log.d("PebbleBike:MainActivity", "Sending ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT));
         }
         if (intent.hasExtra("ALTITUDE")) {
             int altitude = (int)intent.getDoubleExtra("ALTITUDE", 0);
@@ -506,10 +509,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         Intent intent = new Intent(getApplicationContext(), ActivityRecognitionIntentService.class);
         _callbackIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if(_requestType == RequestType.START) {
-            Log.d("MainActivity", "Start Recognition");
+            Log.d(TAG, "Start Recognition");
             _mActivityRecognitionClient.requestActivityUpdates(30000, _callbackIntent);
         } else {
-            Log.d("MainActivity","Stop Recognition");
+            Log.d(TAG, "Stop Recognition");
             _mActivityRecognitionClient.removeActivityUpdates(_callbackIntent);
         }
     }
@@ -533,17 +536,17 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             updateActivityType(activity);
 
             if(activity == DetectedActivity.ON_BICYCLE) {
-                Log.d("MainActivity","AutoStart");
+                Log.d(TAG, "AutoStart");
                 startGPSService();
                 _lastCycling = new Date();
             } else {
-                Log.d("MainActivity","Waiting for stop");
+                Log.d(TAG, "Waiting for stop");
                 // check to see if we have been inactive for 2 minutes
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date());
                 cal.add(Calendar.MINUTE, -2);
                 if(_lastCycling == null || _lastCycling.before(cal.getTime())) {
-                    Log.d("MainActivity","AutoStop");
+                    Log.d(TAG, "AutoStop");
                     stopGPSService();
                     _lastCycling = null;
                 }

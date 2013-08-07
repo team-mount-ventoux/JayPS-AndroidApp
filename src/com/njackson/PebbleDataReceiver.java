@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.util.Log;
 
 public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.PebbleDataReceiver {
+	
+	private static final String TAG = "PB-PebbleDataReceiver";
+	
     public PebbleDataReceiver() {
         super(Constants.WATCH_UUID);
     }
@@ -16,7 +19,7 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
         int newState = data.getUnsignedInteger(Constants.STATE_CHANGED).intValue();
         int state = newState;
-        Log.d("PebbleDataReceiver::receiveData", "state: " + state);             
+        Log.d(TAG, "state: " + state);             
         PebbleKit.sendAckToPebble(context, transactionId);
 
         Intent i = new Intent(context, MainActivity.class);

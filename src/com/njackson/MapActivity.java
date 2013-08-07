@@ -19,6 +19,8 @@ import com.google.android.gms.maps.model.LatLng;
  * To change this template use File | Settings | File Templates.
  */
 public class MapActivity extends SherlockFragment{
+	
+	private static final String TAG = "PB-MapActivity";
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment

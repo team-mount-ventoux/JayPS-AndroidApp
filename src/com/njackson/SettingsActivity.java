@@ -15,6 +15,8 @@ import android.util.Log;
  * To change this template use File | Settings | File Templates.
  */
 public class SettingsActivity extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+	
+	private static final String TAG = "PB-SettingsActivity";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
