@@ -17,7 +17,7 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     
     @Override
     public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
-        int button = data.getUnsignedInteger(Constants.STATE_CHANGED).intValue();
+        int button = data.getUnsignedInteger(Constants.CMD_BUTTON_PRESS).intValue();
         Log.d(TAG, "button: " + button);             
         PebbleKit.sendAckToPebble(context, transactionId);
 
