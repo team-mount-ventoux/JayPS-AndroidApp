@@ -1,11 +1,18 @@
 package com.njackson;
 
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Created with IntelliJ IDEA.
@@ -29,6 +36,34 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 // TODO Auto-generated method stub
+            	Log.d(TAG, "onPreferenceClick:" + preference.getKey());
+            	if (preference.getKey().equals("pref_install")) {
+                    int versionCode;
+
+                    // Get current version code and version name
+                    try {
+                        PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(
+                        		getApplicationContext().getPackageName(), 0);
+
+                        versionCode = packageInfo.versionCode;
+                    } catch (NameNotFoundException e) {
+                    	versionCode = 0;
+                    }
+                    Log.d(TAG, "versionCode:" + versionCode);
+            		
+            		try {
+	                    Uri uri = Uri.parse("http://labs.jayps.fr/pebblebike/pebblebike-1.3.0-beta1.pbw?and&v=" + versionCode);
+	                    Intent startupIntent = new Intent();
+	                    startupIntent.setAction(Intent.ACTION_VIEW);
+	                    startupIntent.setType("application/octet-stream");
+	                    startupIntent.setData(uri);
+	                    ComponentName distantActivity = new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity");
+	                    startupIntent.setComponent(distantActivity);
+	                    startActivity(startupIntent);
+	                } catch (ActivityNotFoundException ae) {
+	                    Toast.makeText(getApplicationContext(),"Unable to install watchface, do you have the latest pebble app installed?",Toast.LENGTH_LONG).show();
+	                }
+            	}
             	return false;
             }
         });
