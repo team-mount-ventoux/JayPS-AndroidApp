@@ -22,6 +22,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Location;
 import android.util.Base64;
 import android.util.Log;
@@ -39,6 +41,7 @@ public class LiveTracking {
     private String _login = "";
     private String _password = "";
     private String _url = "";
+    private int _versionCode = -1;
     
     class LiveTrackingFriend {
     	public String id = "";
@@ -112,6 +115,16 @@ public class LiveTracking {
     public LiveTracking(Context context) {
         this._context = context;
         this._lastLocation = new Location("PebbleBike");
+        
+        // Get current version code
+        try {
+            PackageInfo packageInfo = this._context.getPackageManager().getPackageInfo(
+            		this._context.getPackageName(), 0);
+
+            _versionCode = packageInfo.versionCode;
+        } catch (NameNotFoundException e) {
+        	_versionCode = -1;
+        }        
     }
     void setLogin(String login) {
     	this._login = login;
@@ -156,7 +169,7 @@ public class LiveTracking {
         	
         	postParameters = "request=" + request;
         	if (_activity_id == "") {
-        		postParameters += "&title=Test&source=PebbleBike&version=1.3";
+        		postParameters += "&title=Test&source=PebbleBike&version="+_versionCode;
     		} else {
     			postParameters += "&activity_id="+_activity_id;
     		}
@@ -170,7 +183,7 @@ public class LiveTracking {
         		postParameters += "&jayps_accuracies="+accuracies;
     		}
         	
-            URL url = new URL(_url != "" ? _url : "http://www.jayps.fr/api/mmt.php");
+            URL url = new URL(_url != "" ? _url : "http://live.jayps.fr/api/mmt.php");
         	HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         	
         	if (authString != "") {
