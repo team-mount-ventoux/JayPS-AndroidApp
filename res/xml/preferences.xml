@@ -5,7 +5,7 @@
             android:key="ACTIVITY_RECOGNITION"
             android:title="@string/PREF_AUTOSTART_TITLE"
             android:summary="@string/PREF_AUTOSTART_SUMMARY"
-            android:defaultValue="true" />
+            android:defaultValue="false" />
     <ListPreference
             android:key="UNITS_OF_MEASURE"
             android:title="@string/PREF_UNITS_TITLE"

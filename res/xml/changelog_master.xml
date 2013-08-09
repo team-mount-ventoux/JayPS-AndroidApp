@@ -3,6 +3,7 @@
   <release version="1.3.0 beta1" versioncode="12" >
       <change>UI Refresh</change>
       <change>Live Tracking with JayPS</change>
+      <change>=> Install the new watchface (click on "Install Watchface in settings")</change>
   </release>
   <release version="1.2.1" versioncode="10" >
       <change>Bugfix: reset then start gps from watchface could crash the android app (first use of the app only)</change>
