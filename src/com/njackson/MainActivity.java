@@ -299,7 +299,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 sending += " ASCENT: "   + dic.getString(Constants.ASCENT_TEXT);
             }
             if (intent.hasExtra("ASCENTRATE")) {
-            	if (intent.getFloatExtra("ASCENTRATE", 99) >= 10) { // m/h
+            	if (Math.abs(intent.getFloatExtra("ASCENTRATE", 99)) >= 10) { // m/h
             		dic.addString(Constants.ASCENTRATE_TEXT, String.format("%d", (int) (intent.getFloatExtra("ASCENTRATE", 99) * _altitudeConversion))); // m/h or ft/h
             	} else {
             		dic.addString(Constants.ASCENTRATE_TEXT, "-");
@@ -307,7 +307,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 sending += " ASCENTRATE: "   + dic.getString(Constants.ASCENTRATE_TEXT);
             }
             if (intent.hasExtra("SLOPE")) {
-            	if (intent.getFloatExtra("SLOPE", 99) >= 1) { // %
+            	if (Math.abs(intent.getFloatExtra("SLOPE", 99)) >= 1) { // %
             		dic.addString(Constants.SLOPE_TEXT,      String.format("%d", (int) intent.getFloatExtra("SLOPE", 99))); // %
             	} else {
             		dic.addString(Constants.SLOPE_TEXT, "-");
