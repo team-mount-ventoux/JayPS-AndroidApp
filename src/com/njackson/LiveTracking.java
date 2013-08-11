@@ -21,6 +21,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import fr.jayps.android.AdvancedLocation;
+
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -165,7 +167,11 @@ public class LiveTracking {
         	
         	if (_login != "" && _password != "") { 
             	authString = _login + ":" + _password;
-            }
+            } else {
+            	Log.d(TAG, "Missing login or password");
+        		return false;
+        	}        	
+
         	
         	postParameters = "request=" + request;
         	if (_activity_id == "") {
@@ -173,9 +179,7 @@ public class LiveTracking {
     		} else {
     			postParameters += "&activity_id="+_activity_id;
     		}
-        	if (authString == "") {
-        		postParameters += "&autologin=demolive";
-        	}        	
+    	
         	if (points != "") {
         		postParameters += "&points="+points;
     		}
@@ -289,6 +293,7 @@ public class LiveTracking {
             	strFriend += String.format(Locale.US, "%.0f", f.deltaDistance) + "m";
             }
             strFriend += " " + String.format(Locale.US, "%.0f", f.bearing) + "°";
+            strFriend += " (" + AdvancedLocation.bearingText(f.bearing) + ")";
             if (lastViewed >= 0) {
             	if (lastViewed < 60) {
 	            	strFriend += " (" + lastViewed + "\")";
