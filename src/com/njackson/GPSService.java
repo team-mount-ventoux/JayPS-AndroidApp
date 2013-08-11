@@ -203,7 +203,7 @@ public class GPSService extends Service {
     private LocationListener onLocationChange = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            _myLocation.onLocationChanged(location);
+            int resultOnLocationChanged = _myLocation.onLocationChanged(location);
             
             Log.d(TAG,  "onLocationChanged: " + _myLocation.getTime() + " Accuracy: " + _myLocation.getAccuracy());
 
@@ -257,8 +257,8 @@ public class GPSService extends Service {
                 
                 _prevtime = _myLocation.getTime();
             }
-            
-            if (MainActivity._liveTracking) {
+
+            if (MainActivity._liveTracking && resultOnLocationChanged == AdvancedLocation.SAVED) {
 	            if (_liveTracking.addPoint(location)) {
 	            	String friends = _liveTracking.getFriends(); 
 	            	if (friends != "") {
