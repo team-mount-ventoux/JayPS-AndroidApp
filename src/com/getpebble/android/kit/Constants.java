@@ -35,6 +35,16 @@ public final class Constants {
     public static final String INTENT_APP_RECEIVE = "com.getpebble.action.app.RECEIVE";
 
     /**
+     * Intent broadcast from pebble.apk indicating that a sent message was successfully received by a watch app.
+     */
+    public static final String INTENT_APP_RECEIVE_ACK = "com.getpebble.action.app.RECEIVE_ACK";
+
+    /**
+     * Intent broadcast from pebble.apk indicating that a sent message was not received by a watch app.
+     */
+    public static final String INTENT_APP_RECEIVE_NACK = "com.getpebble.action.app.RECEIVE_NACK";
+
+    /**
      * Intent broadcast to pebble.apk containing one-or-more key-value pairs to be sent to the watch from the phone.
      */
     public static final String INTENT_APP_SEND = "com.getpebble.action.app.SEND";
@@ -101,9 +111,10 @@ public final class Constants {
      */
     public static final int SPORTS_DISTANCE_KEY = 0x01;
     /**
-     * The PebbleDictionary key corresponding to the 'pace' field sent to the Sports watch-app.
+     * The PebbleDictionary key corresponding to the 'data' field sent to the Sports watch-app.
+     * The data field is paired with a variable label and can be used to display any data.
      */
-    public static final int SPORTS_PACE_KEY = 0x02;
+    public static final int SPORTS_DATA_KEY = 0x02;
     /**
      * The PebbleDictionary key corresponding to the 'units' field sent to the Sports watch-app.
      */
@@ -114,6 +125,11 @@ public final class Constants {
      * transitions to stay in sync with the watch-app's state.
      */
     public static final int SPORTS_STATE_KEY = 0x04;
+    /**
+     * The PebbleDictionary key corresponding to the 'label' field sent to the Sports watch-app.
+     * The label field controls the label above the 'data' field.
+     */
+    public static final int SPORTS_LABEL_KEY = 0x05;
 
     /**
      * PebbleDictionary value corresponding to 'imperial' units.
@@ -123,6 +139,15 @@ public final class Constants {
      * PebbleDictionary value corresponding to 'metric' units.
      */
     public static final int SPORTS_UNITS_METRIC = 0x01;
+    /**
+     * PebbleDictionary value corresponding to 'speed' data.
+     */
+    public static final int SPORTS_DATA_SPEED = 0x00;
+    /**
+     * PebbleDictionary value corresponding to 'pace' data.
+     */
+    public static final int SPORTS_DATA_PACE = 0x01;
+
     public static final int SPORTS_STATE_INIT = 0x00;
     public static final int SPORTS_STATE_RUNNING = 0x01;
     public static final int SPORTS_STATE_PAUSED = 0x02;
