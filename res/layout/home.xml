@@ -149,11 +149,11 @@
             android:id="@id/MAIN_ALTITUDE_LABEL" style="@style/LARGE_LABEL" android:layout_below="@id/MAIN_GRID"
             android:layout_centerHorizontal="true" android:layout_marginTop="10dp"/>
 
-    <fragment class="com.njackson.AltitudeFragment"
+    <FrameLayout
               android:id="@id/MAIN_ALTITUDE"
               android:layout_width="match_parent" android:layout_height="wrap_content"
               android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
               android:layout_below="@id/MAIN_ALTITUDE_LABEL"
-              android:tag="tag_fragment_altitudefragment" android:layout_above="@id/MAIN_DISTANCE_LABEL"
+              android:layout_above="@id/MAIN_DISTANCE_LABEL"
               android:layout_marginBottom="20dp"/>
 </RelativeLayout>

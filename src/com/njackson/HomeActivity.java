@@ -58,6 +58,16 @@ public class HomeActivity extends SherlockFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState == null) {
+            // During initial setup, plug in the details fragment.
+            AltitudeFragment alt = new AltitudeFragment();
+            getFragmentManager().beginTransaction().add(R.id.MAIN_ALTITUDE, alt,"altitude_fragment").commit();
+        } else {
+            AltitudeFragment alt = (AltitudeFragment)getFragmentManager().findFragmentByTag("altitude_fragment");
+            getFragmentManager().beginTransaction().replace(R.id.MAIN_ALTITUDE,alt).commit();
+        }
+
     }
 
     @Override
