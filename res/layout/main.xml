@@ -1,61 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-              android:rowCount="4"
-              android:columnCount="2"
-              android:padding="10dp">
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/MAIN_TITLE"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_gravity="center" android:id="@id/MAIN_TITLE"/>
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ACTIVITY_TYPE_TEXT"
-            android:layout_gravity="center_vertical|left" android:id="@id/MAIN_ACTIVITY_TYPE"
-            android:layout_marginTop="10dp"
-            android:layout_below="@id/MAIN_TITLE"/>
+<TabHost
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@android:id/tabhost"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-            android:layout_width="94dp"
-            android:layout_height="wrap_content"
-            android:text="@string/AUTO_START_TEXT"
-            android:id="@id/MAIN_AUTO_START_TEXT" android:layout_below="@id/MAIN_ACTIVITY_TYPE"
-            android:layout_marginTop="20dp" android:layout_marginBottom="12dp"/>
-
-    <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@id/MAIN_AUTO_START_BUTTON"
-            android:singleLine="false" android:layout_toRightOf="@id/MAIN_AUTO_START_TEXT"
-            android:layout_alignBaseline="@id/MAIN_AUTO_START_TEXT"/>
-
-    <TextView
-            android:layout_width="94dp"
-            android:layout_height="wrap_content"
-            android:text="@string/UNITS_TEXT"
-            android:id="@id/MAIN_UNITS_TEXT" android:layout_below="@id/MAIN_AUTO_START_TEXT"
-            android:layout_marginTop="20dp" android:layout_marginBottom="12dp"/>
-
-    <ToggleButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@id/MAIN_UNITS_BUTTON"
-            android:singleLine="false"
-            android:layout_alignBaseline="@id/MAIN_UNITS_TEXT" android:layout_toRightOf="@id/MAIN_UNITS_TEXT"
-            android:textOn="@string/UNITS_TEXT_IMPERIAL" android:textOff="@string/UNITS_TEXT_METRIC"/>
-
-    <Button
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/START_BUTTON_START"
-            android:id="@id/MAIN_START_BUTTON"
-            android:layout_alignParentBottom="true"/>
+            android:layout_height="match_parent">
 
-</RelativeLayout>
+        <TabWidget
+                android:id="@android:id/tabs"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"/>
+
+        <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="0"/>
+
+        <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+    </LinearLayout>
+</TabHost>
 

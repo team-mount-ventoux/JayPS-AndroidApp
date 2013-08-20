@@ -16,11 +16,20 @@
       <excludeFolder url="file://$MODULE_DIR$/submodules/ActionBarSherlock" />
     </content>
     <orderEntry type="inheritedJdk" />
-    <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="src" level="project" />
     <orderEntry type="library" name="libs" level="application" />
-    <orderEntry type="library" name="google-play-services" level="project" />
-    <orderEntry type="module" module-name="actionbarsherlock" exported="" />
+    <orderEntry type="module" module-name="actionbarsherlock" />
+    <orderEntry type="module" module-name="google-play-services_lib" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Applications/Android/android-sdk-macosx/extras/google/google_play_services/libproject/google-play-services_lib/libs/google-play-services.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="sourceFolder" forTests="false" />
   </component>
 </module>
 
