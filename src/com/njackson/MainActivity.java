@@ -269,7 +269,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         sendDataToPebble(_lastIntent);
     }
     public void sendDataToPebble(Intent intent) {
-    	Log.d(TAG, "sendDataToPebble()");
+    	//Log.d(TAG, "sendDataToPebble()");
         
         PebbleDictionary dic = new PebbleDictionary();
         String sending = "Sending ";
