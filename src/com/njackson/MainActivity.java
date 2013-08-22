@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.Toast;
@@ -28,10 +27,11 @@ import com.google.android.gms.maps.model.LatLng;
 
 import de.cketti.library.changelog.ChangeLog;
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends SherlockFragmentActivity  implements  GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener, HomeActivity.OnButtonPressListener {
@@ -57,10 +57,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private boolean _googlePlayInstalled;
     private Fragment _mapFragment;
 
-    private int[] _altitudeBins;
-    private int _altitudeMax = 0;
-    private int _altitudeMin = 0;
-
+    private ArrayList<Integer> _altitudeBins = new ArrayList<Integer>();
+    private Date _lastAltitudeBinChange = null;
+    private int _altitudeBinSizeMin = 2;
 
     enum RequestType {
         START,
@@ -192,7 +191,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             changeState(getIntent().getExtras().getInt("button"));
         }
 
-        _altitudeBins = new int[14];
     }
 
     @Override
@@ -351,29 +349,60 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }
         if (intent.hasExtra("TIME")) {
             long time = intent.getLongExtra("TIME",0);
-            Date date = new Date(time);
-            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-            String dateFormatted = formatter.format(date);
+            //Log.d("PebbleBike",String.valueOf(TimeUnit.MILLISECONDS.toMinutes(time)));
+            String dateFormatted = String.format("%d:%02d:%02d",
+                    TimeUnit.MILLISECONDS.toHours(time),
+                    TimeUnit.MILLISECONDS.toMinutes(time) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time)),
+                    TimeUnit.MILLISECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time)));
+
+
             homeScreen.setTime(dateFormatted);
         }
         if (intent.hasExtra("ALTITUDE")) {
             int altitude = (int)intent.getDoubleExtra("ALTITUDE", 0);
-            if(altitude > _altitudeMax)
-                _altitudeMax = altitude;
-            if(altitude < _altitudeMin)
-                _altitudeMin = altitude;
 
-            for(int n=0; n < _altitudeBins.length-1;n++){
-                if(_altitudeBins[n +1] > 0) {
-                    if(_altitudeBins[n] > 0)
-                        _altitudeBins[n] = (_altitudeBins[n] + _altitudeBins[n+1]) /2;
-                    else
-                        _altitudeBins[n] = _altitudeBins[n+1];
-                }
+            if(_lastAltitudeBinChange == null) {
+                _altitudeBins.add(0); // initialise the first bin
+                _lastAltitudeBinChange = new Date();
             }
 
-            _altitudeBins[13] = altitude;
-            homeScreen.setAltitude(_altitudeBins,_altitudeMax,_altitudeMin);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(_lastAltitudeBinChange);
+            cal.add(Calendar.MINUTE, _altitudeBinSizeMin);
+            Log.d("PebbleBike",cal.getTime().toString() + " " + new Date().toString());
+            if(new Date().before(cal.getTime())) {
+                _altitudeBins.set(
+                        _altitudeBins.size()-1,
+                        (_altitudeBins.get(_altitudeBins.size()-1) + altitude) / 2
+                ); // set the current altitude into the bin and average
+            } else {
+                _altitudeBins.add(altitude); // create a new bin and add the altitude
+                _lastAltitudeBinChange = new Date();
+            }
+
+            // calculate our graph based upon the stored data
+            int binsPerBar = _altitudeBins.size() / 14;
+            int[] graphData = new int[14];
+            int altiudeMax = 0;
+            int altitudeMin = 99999;
+            int lastBin = 0;
+
+            for(int n=0; n < _altitudeBins.size();n++)
+            {
+                int currentBinData = _altitudeBins.get(n);
+                if(currentBinData > altiudeMax)
+                    altiudeMax = altitude;
+                if(currentBinData < altitudeMin)
+                    altitudeMin = altitude;
+
+                if(lastBin+binsPerBar < n)
+                    lastBin++;
+
+                graphData[lastBin] = (graphData[lastBin] + currentBinData) / 2; //amalgamate the bin into one
+
+            }
+
+            homeScreen.setAltitude(graphData,altiudeMax,altitudeMin);
 
         }
     }
