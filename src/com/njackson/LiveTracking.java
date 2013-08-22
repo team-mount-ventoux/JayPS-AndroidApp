@@ -105,6 +105,8 @@ public class LiveTracking {
 			ts = friend.ts;
 			lat = friend.lat;
 			lon = friend.lon;
+			deltaDistance = friend.deltaDistance;
+            bearing = friend.bearing;
 			return true;
 		}
     }
