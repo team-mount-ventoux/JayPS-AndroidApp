@@ -224,7 +224,7 @@ public class HomeActivity extends SherlockFragment {
     }
 
     public void setAltitude(int[] altitude, int maxAltitude, int minAltitude) {
-        AltitudeFragment altitudeFragment = (AltitudeFragment)getFragmentManager().findFragmentByTag("tag_fragment_altitudefragment");
+        AltitudeFragment altitudeFragment = (AltitudeFragment)getFragmentManager().findFragmentByTag("altitude_fragment");
         altitudeFragment.setAltitude(altitude,maxAltitude,true);
     }
 
