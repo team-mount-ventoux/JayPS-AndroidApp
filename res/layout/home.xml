@@ -5,45 +5,51 @@
                 android:rowCount="4"
                 android:columnCount="2"
                 android:padding="10dp">
-
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:orientation="vertical" android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true" android:id="@id/MAIN_START_BUTTON_CONTAINER">
     <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/START_BUTTON_START"
             android:id="@id/MAIN_START_BUTTON"
-            android:layout_alignParentBottom="true" style="@style/START_BUTTON_START"
+             style="@style/START_BUTTON_START"
             android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
     <TextView
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="0.0"
             android:id="@id/MAIN_DISTANCE_TEXT" android:layout_alignParentLeft="false"
             android:layout_alignParentTop="false"
-            android:layout_alignParentBottom="false" android:layout_above="@id/MAIN_START_BUTTON"
-            style="@style/LARGE_TEXT" android:layout_marginBottom="30dp"/>
+            android:layout_alignParentBottom="false"
+            style="@style/LARGE_TEXT" android:layout_marginBottom="10dp"
+            android:layout_above="@id/MAIN_START_BUTTON_CONTAINER"/>
     <TextView
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="@string/DISTANCE_LABEL_TEXT"
             android:id="@id/MAIN_DISTANCE_LABEL" android:layout_alignParentLeft="false"
-            android:layout_alignParentTop="false" android:layout_above="@id/MAIN_DISTANCE_TEXT"
-            style="@style/LARGE_LABEL"/>
+            android:layout_alignParentTop="false"
+            style="@style/LARGE_LABEL" android:layout_above="@id/MAIN_DISTANCE_TEXT"/>
     <TextView
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="0.0"
             android:id="@id/MAIN_SPEED_TEXT" android:layout_alignParentLeft="false"
             android:layout_alignParentTop="false"
-            android:layout_alignParentRight="true" android:layout_above="@id/MAIN_START_BUTTON"
-            style="@style/LARGE_TEXT_BLUE" android:singleLine="false" android:layout_marginBottom="30dp"/>
+            android:layout_alignParentRight="true"
+            style="@style/LARGE_TEXT_BLUE" android:singleLine="false" android:layout_marginBottom="10dp"
+            android:layout_above="@id/MAIN_START_BUTTON_CONTAINER"/>
     <TextView
             android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:text="@string/SPEED_LABEL_TEXT"
             android:id="@id/MAIN_SPEED_LABEL" android:layout_alignParentLeft="false"
             android:layout_alignParentTop="false"
-            android:layout_alignParentRight="true" android:layout_above="@id/MAIN_SPEED_TEXT"
-            style="@style/LARGE_LABEL"/>
+            android:layout_alignParentRight="true"
+            style="@style/LARGE_LABEL" android:layout_above="@id/MAIN_SPEED_TEXT"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
@@ -148,12 +154,11 @@
             android:text="@string/ALTITUDE_TEXT"
             android:id="@id/MAIN_ALTITUDE_LABEL" style="@style/LARGE_LABEL" android:layout_below="@id/MAIN_GRID"
             android:layout_centerHorizontal="true" android:layout_marginTop="10dp"/>
-
-    <FrameLayout
+        <FrameLayout
               android:id="@id/MAIN_ALTITUDE"
               android:layout_width="match_parent" android:layout_height="wrap_content"
               android:layout_marginLeft="10dp" android:layout_marginRight="10dp"
               android:layout_below="@id/MAIN_ALTITUDE_LABEL"
-              android:layout_above="@id/MAIN_DISTANCE_LABEL"
-              android:layout_marginBottom="20dp"/>
+              android:layout_marginBottom="20dp"
+              android:layout_above="@id/MAIN_DISTANCE_LABEL"/>
 </RelativeLayout>

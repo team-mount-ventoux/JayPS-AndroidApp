@@ -12,6 +12,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -68,6 +70,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         return instance;
     }
 
+    public Boolean activityRecognitionEnabled() {
+        return _activityRecognition;
+    }
+
     // Listener for the fragment button press
     @Override
     public void onPressed(int sender, boolean value) {
@@ -78,13 +84,25 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 break;
         }
     }
+
     public void loadPreferences() {
     	loadPreferences(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
     }
+
     public void loadPreferences(SharedPreferences prefs) {
         //setup the defaults
         _activityRecognition = prefs.getBoolean("ACTIVITY_RECOGNITION",false);
         _liveTracking = prefs.getBoolean("LIVE_TRACKING",false);
+
+        if(_activityRecognition)
+            initActivityRecognitionClient();
+        else
+            stopActivityRecogntionClient();
+
+            HomeActivity activity = getHomeScreen();
+        if(activity != null)
+            activity.setStartButtonVisibility(!_activityRecognition);
+
         try {
         	setConversionUnits(Integer.valueOf(prefs.getString("UNITS_OF_MEASURE", "0")));
         } catch (Exception e) {
@@ -92,25 +110,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }
     }
 
-    private void autoStartButtonClick(boolean value) {
-        _activityRecognition = value;
-        if(value) {
-            initActivityRecognitionClient();
-        }else {
-            stopActivityRecogntionClient();
-        }
-        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
-        editor.commit();
-    }
-    private void liveTrackingButtonClick(boolean value) {
-    	_liveTracking = value;
-        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("LIVE_TRACKING", _liveTracking);
-        editor.commit();
-    }  
     private void startButtonClick(boolean value) {
         if(value) {
             startGPSService();
@@ -175,14 +174,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             
             changeState(getIntent().getExtras().getInt("button"));
         }
-
-        // if we are using activity recognition hide the start button
-        getHomeScreen().setStartButtonVisibility(!_activityRecognition);
-
-        if(checkServiceRunning())
-            getHomeScreen().setStartButtonText(getString(R.string.START_BUTTON_STOP));
-        else
-            getHomeScreen().setStartButtonText(getString(R.string.START_BUTTON_START));
 
     }
 
@@ -466,7 +457,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }
     }
 
-    private boolean checkServiceRunning() {
+    public boolean checkServiceRunning() {
 
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {

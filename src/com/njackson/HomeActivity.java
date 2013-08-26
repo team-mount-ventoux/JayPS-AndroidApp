@@ -89,11 +89,6 @@ public class HomeActivity extends SherlockFragment {
                     AltitudeGraphReduce.getInstance().getMin()
             );
         }
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
-        int units = Integer.valueOf(prefs.getString("UNITS_OF_MEASURE", "0"));
-        setUnits(units);
-
     }
 
     @Override
@@ -148,6 +143,18 @@ public class HomeActivity extends SherlockFragment {
 
             }
         });
+
+        // if we are using activity recognition hide the start button
+        setStartButtonVisibility(!MainActivity.getInstance().activityRecognitionEnabled());
+
+        if(MainActivity.getInstance().checkServiceRunning())
+            setStartButtonText(getString(R.string.START_BUTTON_STOP));
+        else
+            setStartButtonText(getString(R.string.START_BUTTON_START));
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        int units = Integer.valueOf(prefs.getString("UNITS_OF_MEASURE", "0"));
+        setUnits(units);
 
         return _view;
     }
