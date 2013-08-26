@@ -40,6 +40,10 @@ public class AltitudeGraphReduce {
         return _altitudeBins;
     }
 
+    public void setCache(ArrayList<Integer> value) {
+         _altitudeBins = value;
+    }
+
     public AltitudeGraphReduce() {
 
     }

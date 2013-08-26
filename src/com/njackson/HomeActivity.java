@@ -21,8 +21,10 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
+import com.njackson.util.AltitudeGraphReduce;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -66,7 +68,46 @@ public class HomeActivity extends SherlockFragment {
         } else {
             AltitudeFragment alt = (AltitudeFragment)getFragmentManager().findFragmentByTag("altitude_fragment");
             getFragmentManager().beginTransaction().replace(R.id.MAIN_ALTITUDE,alt).commit();
+
+            TextView timeView = (TextView)_view.findViewById(R.id.MAIN_TIME_TEXT);
+            timeView.setText(savedInstanceState.getString("Time"));
+
+            TextView avgSpeedView = (TextView)_view.findViewById(R.id.MAIN_AVG_SPEED_TEXT);
+            avgSpeedView.setText(savedInstanceState.getString("AvgSpeed"));
+
+            TextView speedView = (TextView)_view.findViewById(R.id.MAIN_SPEED_TEXT);
+            speedView.setText(savedInstanceState.getString("Speed"));
+
+            TextView distanceView = (TextView)_view.findViewById(R.id.MAIN_DISTANCE_TEXT);
+            distanceView.setText(savedInstanceState.getString("Distance"));
+
+            ArrayList<Integer> graphData = savedInstanceState.getIntegerArrayList("Altitude");
+            AltitudeGraphReduce.getInstance().setCache(graphData);
+            setAltitude(
+                    AltitudeGraphReduce.getInstance().getGraphData(),
+                    AltitudeGraphReduce.getInstance().getMax(),
+                    AltitudeGraphReduce.getInstance().getMin()
+            );
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle instanceState) {
+
+        TextView timeView = (TextView)_view.findViewById(R.id.MAIN_TIME_TEXT);
+        instanceState.putString("Time", timeView.getText().toString());
+
+        TextView avgSpeedView = (TextView)_view.findViewById(R.id.MAIN_AVG_SPEED_TEXT);
+        instanceState.putString("AvgSpeed",avgSpeedView.getText().toString());
+
+        TextView speedView = (TextView)_view.findViewById(R.id.MAIN_SPEED_TEXT);
+        instanceState.putString("Speed",speedView.getText().toString());
+
+        TextView distanceView = (TextView)_view.findViewById(R.id.MAIN_DISTANCE_TEXT);
+        instanceState.putString("Distance",distanceView.getText().toString());
+
+        ArrayList<Integer> graphData = AltitudeGraphReduce.getInstance().getCache();
+        instanceState.putIntegerArrayList("Altitude", graphData);
 
     }
 
@@ -93,11 +134,6 @@ public class HomeActivity extends SherlockFragment {
             @Override
             public void onClick(View v) {
 
-                // test animation
-                //int[] alts = new int[] {100,200,200,200,300,400,500,600,700,800,900,1000,1000,1000};
-                //AltitudeFragment altitudeFragment = (AltitudeFragment)getFragmentManager().findFragmentByTag("tag_fragment_altitudefragment");
-                //altitudeFragment.setAltitude(alts,1000,true);
-
                 _callback.onPressed(R.id.MAIN_START_BUTTON,_startButton.getText().equals("Start"));
                 if(_startButton.getText().equals("Start")) {
                 	setStartButtonText("Stop");
@@ -108,85 +144,28 @@ public class HomeActivity extends SherlockFragment {
             }
         });
 
-        /*
-        final ToggleButton _autoStart = (ToggleButton)_view.findViewById(R.id.MAIN_AUTO_START_BUTTON);
+        // if we are using activity recognition hide the start button
+        setStartButtonVisibility(!MainActivity.getInstance().activityRecognitionEnabled());
 
-        final Button _watchfaceButton = (Button)_view.findViewById(R.id.MAIN_INSTALL_WATCHFACE_BUTTON);
-        final ToggleButton _liveTrackingButton = (ToggleButton)_view.findViewById(R.id.MAIN_LIVE_TRACKING_BUTTON);
-        final ToggleButton _unitsButton = (ToggleButton)_view.findViewById(R.id.MAIN_UNITS_BUTTON);
+        if(MainActivity.getInstance().checkServiceRunning())
+            setStartButtonText(getString(R.string.START_BUTTON_STOP));
+        else
+            setStartButtonText(getString(R.string.START_BUTTON_START));
 
-        //_autoStart.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                _callback.onPressed(R.id.MAIN_AUTO_START_BUTTON,_autoStart.isChecked());
-                getArguments().putBoolean("ACTIVITY_RECOGNITION",_autoStart.isChecked());
-                if(_autoStart.isChecked())
-                    _startButton.setVisibility(View.GONE);
-                else
-                    _startButton.setVisibility(View.VISIBLE);
-            }
-        });
-        
-        //_liveTrackingButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-            	_callback.onPressed(R.id.MAIN_LIVE_TRACKING_BUTTON,_liveTrackingButton.isChecked());
-                getArguments().putBoolean("LIVE_TRACKING",_liveTrackingButton.isChecked());
-            }
-        });
-
-        //_unitsButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                getArguments().putInt("UNITS_OF_MEASURE",(_autoStart.isChecked()) ? Constants.IMPERIAL : Constants.METRIC);
-                _callback.onPressed(R.id.MAIN_UNITS_BUTTON,_unitsButton.isChecked());
-
-            }
-        });
-       */
-
-        /*
-        _watchfaceButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                 _callback.onPressed(R.id.MAIN_INSTALL_WATCHFACE_BUTTON,true);
-            }
-        });
-
-        Bundle args = getArguments();
-        boolean activityRecognition = args.getBoolean("ACTIVITY_RECOGNITION",false);
-        boolean liveTracking = args.getBoolean("LIVE_TRACKING",false);
-        int units = args.getInt("UNITS_OF_MEASURE",0);
-*/
-        //SetupButtons(activityRecognition,liveTracking,units);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
+        int units = Integer.valueOf(prefs.getString("UNITS_OF_MEASURE", "0"));
+        setUnits(units);
 
         return _view;
     }
 
-    /*public void SetupButtons(boolean activityRecognition, boolean liveTracking, int units) {
-
-        Button _startButton = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
-        ToggleButton _autoStart = (ToggleButton)_view.findViewById(R.id.MAIN_AUTO_START_BUTTON);
-        ToggleButton _liveTrackingButton = (ToggleButton)_view.findViewById(R.id.MAIN_LIVE_TRACKING_BUTTON);
-        ToggleButton _unitsButton = (ToggleButton)_view.findViewById(R.id.MAIN_UNITS_BUTTON);
-
-        if (activityRecognition) {
-            _startButton.setVisibility(View.GONE);
-        }else {
-            _startButton.setVisibility(View.VISIBLE);
-        }
-
-        _autoStart.setChecked(activityRecognition);
-
-        _liveTrackingButton.setChecked(liveTracking);
-        _unitsButton.setChecked(units == Constants.IMPERIAL);
-
-    }*/
+    public void setStartButtonVisibility(Boolean shown) {
+        Button startButton = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
+        if(shown)
+            startButton.setVisibility(View.VISIBLE);
+        else
+            startButton.setVisibility(View.GONE);
+    }
 
     public void setActivityText(String activity) {
         //TextView textView = (TextView)_view.findViewById(R.id.MAIN_ACTIVITY_TYPE);
@@ -226,6 +205,19 @@ public class HomeActivity extends SherlockFragment {
     public void setAltitude(int[] altitude, int maxAltitude, int minAltitude) {
         AltitudeFragment altitudeFragment = (AltitudeFragment)getFragmentManager().findFragmentByTag("altitude_fragment");
         altitudeFragment.setAltitude(altitude,maxAltitude,true);
+    }
+
+    // Sets the display units based upon user preference
+    public void setUnits(int units) {
+
+        TextView avgSpeedView = (TextView)_view.findViewById(R.id.MAIN_AVG_SPEED_LABEL);
+
+        if(units == Constants.IMPERIAL) {
+            avgSpeedView.setText(R.string.AVG_SPEED_TEXT_IMPERIAL);
+        } else {
+            avgSpeedView.setText(R.string.AVG_SPEED_TEXT_METRIC);
+        }
+
     }
 
 }

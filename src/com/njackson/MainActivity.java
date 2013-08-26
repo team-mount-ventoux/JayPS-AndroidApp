@@ -12,6 +12,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -28,7 +30,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.njackson.util.AltitudeGraphReduce;
 import de.cketti.library.changelog.ChangeLog;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -63,35 +64,45 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         STOP
     }
 
+    static MainActivity instance;
+
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
+    public Boolean activityRecognitionEnabled() {
+        return _activityRecognition;
+    }
+
     // Listener for the fragment button press
     @Override
     public void onPressed(int sender, boolean value) {
         //To change body of implemented methods use File | Settings | File Templates.
         switch(sender) {
-//            case R.id.MAIN_AUTO_START_BUTTON:
-//                autoStartButtonClick(value);
-//                break;
             case R.id.MAIN_START_BUTTON:
                 startButtonClick(value);
                 break;
-//            case R.id.MAIN_UNITS_BUTTON:
-//                unitsButtonClick(value);
-//                break;
-//            case R.id.MAIN_LIVE_TRACKING_BUTTON:
-//                liveTrackingButtonClick(value);
-//                break;
-//            case R.id.MAIN_INSTALL_WATCHFACE_BUTTON:
-//                sendWatchFaceToPebble();
-//                break;
         }
     }
+
     public void loadPreferences() {
     	loadPreferences(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
     }
-    public static void loadPreferences(SharedPreferences prefs) {
+
+    public void loadPreferences(SharedPreferences prefs) {
         //setup the defaults
         _activityRecognition = prefs.getBoolean("ACTIVITY_RECOGNITION",false);
         _liveTracking = prefs.getBoolean("LIVE_TRACKING",false);
+
+        if(_activityRecognition)
+            initActivityRecognitionClient();
+        else
+            stopActivityRecogntionClient();
+
+            HomeActivity activity = getHomeScreen();
+        if(activity != null)
+            activity.setStartButtonVisibility(!_activityRecognition);
+
         try {
         	setConversionUnits(Integer.valueOf(prefs.getString("UNITS_OF_MEASURE", "0")));
         } catch (Exception e) {
@@ -99,25 +110,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }
     }
 
-    private void autoStartButtonClick(boolean value) {
-        _activityRecognition = value;
-        if(value) {
-            initActivityRecognitionClient();
-        }else {
-            stopActivityRecogntionClient();
-        }
-        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
-        editor.commit();
-    }
-    private void liveTrackingButtonClick(boolean value) {
-    	_liveTracking = value;
-        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("LIVE_TRACKING", _liveTracking);
-        editor.commit();
-    }  
     private void startButtonClick(boolean value) {
         if(value) {
             startGPSService();
@@ -125,7 +117,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             stopGPSService();
         }
     }
-    public static void setConversionUnits(int units) {
+    public void setConversionUnits(int units) {
         _units = units;
         
         if(units == Constants.IMPERIAL) {
@@ -137,24 +129,19 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             _distanceConversion = (float)Constants.M_TO_KM;
             _altitudeConversion = (float)Constants.M_TO_M;
         }
-    }
 
-//    private void unitsButtonClick(boolean value) {
-//        if (value) {
-//            setConversionUnits(Constants.IMPERIAL);
-//        } else {
-//            setConversionUnits(Constants.METRIC);
-//        }
-//        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
-//        SharedPreferences.Editor editor = settings.edit();
-//        editor.putInt("UNITS_OF_MEASURE",_units);
-//        editor.commit();
-//        resendLastDataToPebble();
-//    }
+        // set the screen units
+        HomeActivity homeScreen = getHomeScreen();
+        if(homeScreen != null)
+            homeScreen.setUnits(units);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        instance = this;
+
         setContentView(R.layout.main);
 
         final ActionBar actionBar = getSupportActionBar();
@@ -477,7 +464,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }
     }
 
-    private boolean checkServiceRunning() {
+    public boolean checkServiceRunning() {
 
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {

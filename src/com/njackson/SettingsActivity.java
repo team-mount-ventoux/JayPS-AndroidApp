@@ -86,9 +86,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    	MainActivity.loadPreferences(sharedPreferences);
+        MainActivity activity = MainActivity.getInstance();
+        if(activity != null)
+            activity.loadPreferences(sharedPreferences);
     }
-
-
 
 }
