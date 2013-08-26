@@ -461,9 +461,16 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         int googlePlayServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if(googlePlayServicesAvailable !=  ConnectionResult.SUCCESS) {
             // google play services need to be updated
-            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(googlePlayServicesAvailable, this, 123);
-            if(errorDialog != null)
-                errorDialog.show();
+            try {
+                Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(googlePlayServicesAvailable, this, 123);
+                if(errorDialog != null)
+                    errorDialog.show();
+            } catch (NoClassDefFoundError e) {
+                Log.d(TAG, "NoClassDefFoundError " + e.getMessage());
+                Toast.makeText(this, "This device is not supported by Google Play Service.", Toast.LENGTH_LONG).show();                
+            } catch (Exception e) {
+                Log.e(TAG, "Exception " + e.getMessage());
+            }
             _googlePlayInstalled = false;
         } else {
             _googlePlayInstalled = true;
