@@ -25,6 +25,7 @@ import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.maps.model.LatLng;
 
+import com.njackson.util.AltitudeGraphReduce;
 import de.cketti.library.changelog.ChangeLog;
 
 import java.util.ArrayList;
@@ -56,10 +57,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private GPSServiceReceiver _gpsServiceReceiver;
     private boolean _googlePlayInstalled;
     private Fragment _mapFragment;
-
-    private ArrayList<Integer> _altitudeBins = new ArrayList<Integer>();
-    private Date _lastAltitudeBinChange = null;
-    private int _altitudeBinSizeMin = 2;
 
     enum RequestType {
         START,
@@ -361,54 +358,20 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         if (intent.hasExtra("ALTITUDE")) {
             int altitude = (int)intent.getDoubleExtra("ALTITUDE", 0);
 
-            if(_lastAltitudeBinChange == null) {
-                _altitudeBins.add(0); // initialise the first bin
-                _lastAltitudeBinChange = new Date();
-            }
+            AltitudeGraphReduce alt = AltitudeGraphReduce.getInstance();
+            alt.addAltitude(altitude);
 
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(_lastAltitudeBinChange);
-            cal.add(Calendar.MINUTE, _altitudeBinSizeMin);
-            Log.d("PebbleBike",cal.getTime().toString() + " " + new Date().toString());
-            if(new Date().before(cal.getTime())) {
-                _altitudeBins.set(
-                        _altitudeBins.size()-1,
-                        (_altitudeBins.get(_altitudeBins.size()-1) + altitude) / 2
-                ); // set the current altitude into the bin and average
-            } else {
-                _altitudeBins.add(altitude); // create a new bin and add the altitude
-                _lastAltitudeBinChange = new Date();
-            }
-
-            // calculate our graph based upon the stored data
-            int binsPerBar = _altitudeBins.size() / 14;
-            int[] graphData = new int[14];
-            int altiudeMax = 0;
-            int altitudeMin = 99999;
-            int lastBin = 0;
-
-            for(int n=0; n < _altitudeBins.size();n++)
-            {
-                int currentBinData = _altitudeBins.get(n);
-                if(currentBinData > altiudeMax)
-                    altiudeMax = altitude;
-                if(currentBinData < altitudeMin)
-                    altitudeMin = altitude;
-
-                if(lastBin+binsPerBar < n)
-                    lastBin++;
-
-                graphData[lastBin] = (graphData[lastBin] + currentBinData) / 2; //amalgamate the bin into one
-
-            }
-
-            homeScreen.setAltitude(graphData,altiudeMax,altitudeMin);
+            homeScreen.setAltitude(
+                    alt.getGraphData(),
+                    alt.getMax(),
+                    alt.getMin());
 
         }
     }
 
     private void ResetSavedGPSStats() {
     	GPSService.resetGPSStats(getSharedPreferences(Constants.PREFS_NAME, 0));
+        AltitudeGraphReduce.getInstance().restData();
     }
 
     private void setStartButtonText(String text) {
