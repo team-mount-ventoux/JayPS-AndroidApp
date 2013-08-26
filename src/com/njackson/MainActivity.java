@@ -413,7 +413,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             int altitude = (int)intent.getDoubleExtra("ALTITUDE", 0);
 
             AltitudeGraphReduce alt = AltitudeGraphReduce.getInstance();
-            alt.addAltitude(altitude);
+            alt.addAltitude(altitude, intent.getLongExtra("TIME",0), intent.getFloatExtra("DISTANCE", 0));
 
             homeScreen.setAltitude(
                     alt.getGraphData(),

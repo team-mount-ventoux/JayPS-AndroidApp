@@ -20,7 +20,7 @@ public class AltitudeGraphReduce {
     private static AltitudeGraphReduce _instance;
 
     private ArrayList<Integer> _altitudeBins = new ArrayList<Integer>();
-    private Date _lastAltitudeBinChange = null;
+    private long _lastAltitudeBinChange = 0;
     private int _altitudeBinSizeMs = 120000;
 
     private int _altitudeMax = 0;
@@ -56,11 +56,15 @@ public class AltitudeGraphReduce {
         return _instance;
     }
 
-    public void addAltitude(int altitude) {
-
-        if(_lastAltitudeBinChange == null) {
-            _altitudeBins.add(0); // initialise the first bin
-            _lastAltitudeBinChange = new Date();
+    public void addAltitude(int altitude, long time, float distance) {
+        if (time == 0) {
+            time = System.currentTimeMillis();
+        }
+        Log.d(TAG, "addAltitude("+altitude+", "+time+", "+distance+")");
+        
+        if(_lastAltitudeBinChange == 0) {
+            _altitudeBins.add(altitude); // initialise the first bin
+            _lastAltitudeBinChange = time;
         }
 
         if(altitude > _altitudeMax)
@@ -68,18 +72,16 @@ public class AltitudeGraphReduce {
         if(altitude < _altitudeMin)
             _altitudeMin = altitude;
 
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(_lastAltitudeBinChange);
-        cal.add(Calendar.MILLISECOND, _altitudeBinSizeMs);
-        //Log.d(TAG, cal.getTime().toString() + " " + new Date().toString());
-        if(new Date().before(cal.getTime())) {
+        if (_lastAltitudeBinChange + _altitudeBinSizeMs > time) {
+            Log.d(TAG, _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " > " + time);
             _altitudeBins.set(
                     _altitudeBins.size()-1,
                     (_altitudeBins.get(_altitudeBins.size()-1) + altitude) / 2
             ); // set the current altitude into the bin and average
         } else {
+            Log.d(TAG, _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " <= " + time);
             _altitudeBins.add(altitude); // create a new bin and add the altitude
-            _lastAltitudeBinChange = new Date();
+            _lastAltitudeBinChange = time;
         }
 
     }
@@ -118,7 +120,7 @@ public class AltitudeGraphReduce {
 
     public void restData() {
         _altitudeBins = new ArrayList<Integer>();
-        _lastAltitudeBinChange = null;
+        _lastAltitudeBinChange = 0;
         _altitudeMax =0;
         _altitudeMin=99999;
     }
