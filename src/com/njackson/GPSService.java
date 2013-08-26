@@ -205,7 +205,7 @@ public class GPSService extends Service {
         public void onLocationChanged(Location location) {
             int resultOnLocationChanged = _myLocation.onLocationChanged(location);
             
-            Log.d(TAG,  "onLocationChanged: " + _myLocation.getTime() + " Accuracy: " + _myLocation.getAccuracy());
+            //Log.d(TAG,  "onLocationChanged: " + _myLocation.getTime() + " Accuracy: " + _myLocation.getAccuracy());
 
             _speed = _myLocation.getSpeed();
 
