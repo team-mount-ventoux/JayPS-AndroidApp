@@ -28,7 +28,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.njackson.util.AltitudeGraphReduce;
 import de.cketti.library.changelog.ChangeLog;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -63,32 +62,26 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         STOP
     }
 
+    static MainActivity instance;
+
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
     // Listener for the fragment button press
     @Override
     public void onPressed(int sender, boolean value) {
         //To change body of implemented methods use File | Settings | File Templates.
         switch(sender) {
-//            case R.id.MAIN_AUTO_START_BUTTON:
-//                autoStartButtonClick(value);
-//                break;
             case R.id.MAIN_START_BUTTON:
                 startButtonClick(value);
                 break;
-//            case R.id.MAIN_UNITS_BUTTON:
-//                unitsButtonClick(value);
-//                break;
-//            case R.id.MAIN_LIVE_TRACKING_BUTTON:
-//                liveTrackingButtonClick(value);
-//                break;
-//            case R.id.MAIN_INSTALL_WATCHFACE_BUTTON:
-//                sendWatchFaceToPebble();
-//                break;
         }
     }
     public void loadPreferences() {
     	loadPreferences(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
     }
-    public static void loadPreferences(SharedPreferences prefs) {
+    public void loadPreferences(SharedPreferences prefs) {
         //setup the defaults
         _activityRecognition = prefs.getBoolean("ACTIVITY_RECOGNITION",false);
         _liveTracking = prefs.getBoolean("LIVE_TRACKING",false);
@@ -125,7 +118,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             stopGPSService();
         }
     }
-    public static void setConversionUnits(int units) {
+    public void setConversionUnits(int units) {
         _units = units;
         
         if(units == Constants.IMPERIAL) {
@@ -137,24 +130,19 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             _distanceConversion = (float)Constants.M_TO_KM;
             _altitudeConversion = (float)Constants.M_TO_M;
         }
-    }
 
-//    private void unitsButtonClick(boolean value) {
-//        if (value) {
-//            setConversionUnits(Constants.IMPERIAL);
-//        } else {
-//            setConversionUnits(Constants.METRIC);
-//        }
-//        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
-//        SharedPreferences.Editor editor = settings.edit();
-//        editor.putInt("UNITS_OF_MEASURE",_units);
-//        editor.commit();
-//        resendLastDataToPebble();
-//    }
+        // set the screen units
+        HomeActivity homeScreen = getHomeScreen();
+        if(homeScreen != null)
+            homeScreen.setUnits(units);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        instance = this;
+
         setContentView(R.layout.main);
 
         final ActionBar actionBar = getSupportActionBar();
@@ -187,6 +175,14 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             
             changeState(getIntent().getExtras().getInt("button"));
         }
+
+        // if we are using activity recognition hide the start button
+        getHomeScreen().setStartButtonVisibility(!_activityRecognition);
+
+        if(checkServiceRunning())
+            getHomeScreen().setStartButtonText(getString(R.string.START_BUTTON_STOP));
+        else
+            getHomeScreen().setStartButtonText(getString(R.string.START_BUTTON_START));
 
     }
 

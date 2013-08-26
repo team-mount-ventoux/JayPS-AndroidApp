@@ -6,6 +6,7 @@
     <string name="AUTO_START_TEXT">Auto Start</string>
     <string name="LIVE_TRACKING_TEXT">Live Tracking with JayPS</string>
     <string name="START_BUTTON_START">Start</string>
+    <string name="START_BUTTON_STOP">Stop</string>
     <string name="UNITS_TEXT">Units</string>
     <string name="UNITS_TEXT_IMPERIAL">Miles</string>
     <string name="UNITS_TEXT_METRIC">Kilometers</string>
@@ -21,7 +22,8 @@
     <string name="PREF_UNITS_DIALOG_TITLE">Units</string>
     <string name="PREF_UNITS_DEFULT">1</string>
     <string name="TIME_TEXT">TIME</string>
-    <string name="AVG_SPEED_TEXT">AVG. MPH</string>
+    <string name="AVG_SPEED_TEXT_IMPERIAL">AVG. MPH</string>
+    <string name="AVG_SPEED_TEXT_METRIC">AVG. KPH</string>
     <string name="GPS_STATUS_LABEL">GPS STATUS</string><string name="ALTITUDE_TEXT">ALTITUDE</string>
     <string name="PREF_INSTALL_WATCHFACE">Install Watchface</string>
     <string name="PREF_LIVE_TRACKING_CATEGORIE_TITLE">JayPS Live Tracking</string>

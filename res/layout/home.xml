@@ -97,14 +97,14 @@
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="12.3"
+                            android:text="0.0"
                             android:id="@id/MAIN_AVG_SPEED_TEXT" android:layout_centerHorizontal="true"
                             android:layout_alignParentTop="true" android:layout_marginTop="10dp"
                             style="@style/SMALL_TEXT"/>
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/AVG_SPEED_TEXT"
+                            android:text="@string/AVG_SPEED_TEXT_IMPERIAL"
                             android:id="@id/MAIN_AVG_SPEED_LABEL" android:layout_centerHorizontal="true"
                             android:layout_alignParentTop="false" android:layout_alignParentBottom="true"
                             android:layout_marginBottom="10dp" style="@style/SMALL_LABEL"/>
