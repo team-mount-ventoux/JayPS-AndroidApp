@@ -68,27 +68,8 @@ public class HomeActivity extends SherlockFragment {
         } else {
             AltitudeFragment alt = (AltitudeFragment)getFragmentManager().findFragmentByTag("altitude_fragment");
             getFragmentManager().beginTransaction().replace(R.id.MAIN_ALTITUDE,alt).commit();
-
-            TextView timeView = (TextView)_view.findViewById(R.id.MAIN_TIME_TEXT);
-            timeView.setText(savedInstanceState.getString("Time"));
-
-            TextView avgSpeedView = (TextView)_view.findViewById(R.id.MAIN_AVG_SPEED_TEXT);
-            avgSpeedView.setText(savedInstanceState.getString("AvgSpeed"));
-
-            TextView speedView = (TextView)_view.findViewById(R.id.MAIN_SPEED_TEXT);
-            speedView.setText(savedInstanceState.getString("Speed"));
-
-            TextView distanceView = (TextView)_view.findViewById(R.id.MAIN_DISTANCE_TEXT);
-            distanceView.setText(savedInstanceState.getString("Distance"));
-
-            ArrayList<Integer> graphData = savedInstanceState.getIntegerArrayList("Altitude");
-            AltitudeGraphReduce.getInstance().setCache(graphData);
-            setAltitude(
-                    AltitudeGraphReduce.getInstance().getGraphData(),
-                    AltitudeGraphReduce.getInstance().getMax(),
-                    AltitudeGraphReduce.getInstance().getMin()
-            );
         }
+
     }
 
     @Override
@@ -109,6 +90,8 @@ public class HomeActivity extends SherlockFragment {
         ArrayList<Integer> graphData = AltitudeGraphReduce.getInstance().getCache();
         instanceState.putIntegerArrayList("Altitude", graphData);
 
+        Toast.makeText(getActivity(),"onSave",1);
+
     }
 
     @Override
@@ -116,6 +99,31 @@ public class HomeActivity extends SherlockFragment {
 
         // Inflate the layout for this fragment
         _view = (RelativeLayout)inflater.inflate(R.layout.home, container, false);
+
+        if(savedInstanceState != null){
+
+            TextView timeView = (TextView)_view.findViewById(R.id.MAIN_TIME_TEXT);
+            timeView.setText(savedInstanceState.getString("Time"));
+
+            TextView avgSpeedView = (TextView)_view.findViewById(R.id.MAIN_AVG_SPEED_TEXT);
+            avgSpeedView.setText(savedInstanceState.getString("AvgSpeed"));
+
+            TextView speedView = (TextView)_view.findViewById(R.id.MAIN_SPEED_TEXT);
+            speedView.setText(savedInstanceState.getString("Speed"));
+
+            TextView distanceView = (TextView)_view.findViewById(R.id.MAIN_DISTANCE_TEXT);
+            distanceView.setText(savedInstanceState.getString("Distance"));
+
+            ArrayList<Integer> graphData = savedInstanceState.getIntegerArrayList("Altitude");
+            AltitudeGraphReduce.getInstance().setCache(graphData);
+            setAltitude(
+                    AltitudeGraphReduce.getInstance().getGraphData(),
+                    AltitudeGraphReduce.getInstance().getMax(),
+                    AltitudeGraphReduce.getInstance().getMin()
+            );
+
+        }
+
         final Button _startButton = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
         final ImageView _settingsButton = (ImageView)_view.findViewById(R.id.MAIN_SETTINGS_IMAGE);
         final Context context = this.getActivity();
@@ -155,6 +163,8 @@ public class HomeActivity extends SherlockFragment {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         int units = Integer.valueOf(prefs.getString("UNITS_OF_MEASURE", "0"));
         setUnits(units);
+
+        Toast.makeText(getActivity(),"onCreateView",1);
 
         return _view;
     }
