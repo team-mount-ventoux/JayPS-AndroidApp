@@ -99,7 +99,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         else
             stopActivityRecogntionClient();
 
-            HomeActivity activity = getHomeScreen();
+        HomeActivity activity = getHomeScreen();
         if(activity != null)
             activity.setStartButtonVisibility(!_activityRecognition);
 
