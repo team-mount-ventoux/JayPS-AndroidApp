@@ -259,50 +259,55 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         if (intent != null) {
             _lastIntent = intent;
 
-            // force Locale.US to force dot as a decimal separator
-            if (intent.hasExtra("SPEED")) {
-                dic.addString(Constants.SPEED_TEXT,      String.format(Locale.US, "%.1f", intent.getFloatExtra("SPEED", 99) * _speedConversion)); // km/h or mph
-                sending += " SPEED: "   + dic.getString(Constants.SPEED_TEXT);
+            byte[] data = new byte[20];
+
+            int version = 0;
+            data[0] = (byte) ((_units % 2) * 1);
+            if (checkServiceRunning()) {
+                data[0] += (byte) (1 * 2);
+            } else {
+                data[0] += (byte) (0 * 2);
             }
-            if (intent.hasExtra("DISTANCE")) {
-                dic.addString(Constants.DISTANCE_TEXT,   String.format(Locale.US, "%.1f", Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * _distanceConversion) / 10)); // km or miles
-                sending += " DISTANCE: "   + dic.getString(Constants.DISTANCE_TEXT);
+            // 2 unused bits
+            data[0] += (byte) (0 * 4);
+            data[0] += (byte) (0 * 8);
+            data[0] += (byte) ((version % 4) * 16);
+            
+            data[1] = (byte) ((int)  Math.ceil(intent.getFloatExtra("ACCURACY", 0)));
+            data[2] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0) * _distanceConversion) / 1)) % 256);
+            data[3] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0) * _distanceConversion) / 1)) / 256);
+            data[4] = (byte) (((int) intent.getLongExtra("TIME", 0) / 1000) % 256);
+            data[5] = (byte) (((int) intent.getLongExtra("TIME", 0) / 1000) / 256);
+
+            data[6] = (byte) (((int) (intent.getDoubleExtra("ALTITUDE", 0) * _altitudeConversion)) % 256);
+            data[7] = (byte) (((int) (intent.getDoubleExtra("ALTITUDE", 0) * _altitudeConversion)) / 256);
+            data[8] = (byte) (((int) (intent.getDoubleExtra("ASCENT", 0) * _altitudeConversion)) % 256);
+            data[9] = (byte) (((int) (intent.getDoubleExtra("ASCENT", 0) * _altitudeConversion)) / 256);
+            data[10] = (byte) (((int) (intent.getFloatExtra("ASCENTRATE", 0) * _altitudeConversion)) % 256);
+            data[11] = (byte) (((int) (intent.getFloatExtra("ASCENTRATE", 0) * _altitudeConversion)) / 256);
+            data[12] = (byte) ((int)  intent.getFloatExtra("SLOPE", 0));
+            
+
+            data[13] = (byte) (((int) Math.abs(intent.getDoubleExtra("XPOS", 0))) % 256);
+            data[14] = (byte) ((((int) Math.abs(intent.getDoubleExtra("XPOS", 0))) / 256) % 128);
+            if (intent.getDoubleExtra("XPOS", 0) < 0) {
+                data[14] += 128;
             }
-            if (intent.hasExtra("AVGSPEED")) {
-                dic.addString(Constants.AVGSPEED_TEXT,   String.format(Locale.US, "%.1f", intent.getFloatExtra("AVGSPEED", 99) * _speedConversion)); // km/h or mph
-                sending += " AVGSPEED: "   + dic.getString(Constants.AVGSPEED_TEXT);
+            data[15] = (byte) (((int) Math.abs(intent.getDoubleExtra("YPOS", 0))) % 256);
+            data[16] = (byte) ((((int) Math.abs(intent.getDoubleExtra("YPOS", 0))) / 256) % 128);
+            if (intent.getDoubleExtra("YPOS", 0) < 0) {
+                data[16] += 128;
             }
-            if (intent.hasExtra("ALTITUDE")) {
-                dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
-                sending += " ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT);
-            }
-            if (intent.hasExtra("ASCENT")) {
-                dic.addString(Constants.ASCENT_TEXT,     String.format("%d", (int) (intent.getDoubleExtra("ASCENT", 99) * _altitudeConversion))); // m of ft
-                sending += " ASCENT: "   + dic.getString(Constants.ASCENT_TEXT);
-            }
-            if (intent.hasExtra("ASCENTRATE")) {
-            	if (Math.abs(intent.getFloatExtra("ASCENTRATE", 99)) >= 10) { // m/h
-            		dic.addString(Constants.ASCENTRATE_TEXT, String.format("%d", (int) (intent.getFloatExtra("ASCENTRATE", 99) * _altitudeConversion))); // m/h or ft/h
-            	} else {
-            		dic.addString(Constants.ASCENTRATE_TEXT, "-");
-            	}
-                sending += " ASCENTRATE: "   + dic.getString(Constants.ASCENTRATE_TEXT);
-            }
-            if (intent.hasExtra("SLOPE")) {
-            	if (Math.abs(intent.getFloatExtra("SLOPE", 99)) >= 1) { // %
-            		dic.addString(Constants.SLOPE_TEXT,      String.format("%d", (int) intent.getFloatExtra("SLOPE", 99))); // %
-            	} else {
-            		dic.addString(Constants.SLOPE_TEXT, "-");
-            	}
-                sending += " SLOPE: "   + dic.getString(Constants.SLOPE_TEXT);
-            }
-            if (intent.hasExtra("ACCURACY")) {
-                dic.addString(Constants.ACCURACY_TEXT,   String.format("%d", (int) intent.getFloatExtra("ACCURACY", 99))); // m
-                sending += " ACCURACY: "   + dic.getString(Constants.ACCURACY_TEXT);
+
+            data[17] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0) * _speedConversion) / 1)) % 256);
+            data[18] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0) * _speedConversion) / 1)) / 256);
+
+            dic.addBytes(Constants.ALTITUDE_DATA, data);
+            
+            for( int i = 0; i < data.length; i++ ) {
+                sending += " data["+i+"]: "   + ((256+data[i])%256);
             }
         }
-        dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
-        sending += " MEASUREMENT_UNITS: "   + dic.getInteger(Constants.MEASUREMENT_UNITS);
         
         if (checkServiceRunning()) {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);

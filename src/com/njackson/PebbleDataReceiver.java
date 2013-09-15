@@ -21,10 +21,6 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     	if (data.contains(Constants.CMD_BUTTON_PRESS)) {
 	        button = data.getUnsignedInteger(Constants.CMD_BUTTON_PRESS).intValue();
 	        Log.d(TAG, "Constants.CMD_BUTTON_PRESS, button: " + button);
-    	} else if (data.contains(Constants.STATE_CHANGED)) {
-    		// old value, prior to v1.3
-	        button = data.getUnsignedInteger(Constants.STATE_CHANGED).intValue();
-	        Log.d(TAG, "Constants.STATE_CHANGED, button: " + button);
     	}    	
     	
     	if (button >= 0) {

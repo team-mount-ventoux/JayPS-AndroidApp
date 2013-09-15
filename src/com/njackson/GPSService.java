@@ -46,7 +46,11 @@ public class GPSService extends Service {
     private long _prevtime = -1;
     private double _currentLat;
     private double _currentLon;
-
+    double xpos = 0;
+    double ypos = 0;
+    double prevXPos = 0;
+    double prevYPos = 0;
+    Location firstLocation = null;
     private AdvancedLocation _myLocation;
     private LiveTracking _liveTracking;
 
@@ -220,10 +224,37 @@ public class GPSService extends Service {
 
             _currentLat = location.getLatitude();
             _currentLon = location.getLongitude();
+            
+            if (firstLocation == null) {
+                firstLocation = location;
+            }
 
+            xpos = firstLocation.distanceTo(location) * Math.sin(firstLocation.bearingTo(location)/180*3.1415);
+            ypos = firstLocation.distanceTo(location) * Math.cos(firstLocation.bearingTo(location)/180*3.1415); 
+
+            xpos = Math.floor(xpos/10);
+            ypos = Math.floor(ypos/10);
+            Log.d(TAG,  "xpos="+xpos+"-ypos="+ypos);
+
+            boolean send = false;
             //if(_myLocation.getAccuracy() < 15.0) // not really needed, something similar is done in AdvancedLocation
             if (_speed != _prevspeed || _averageSpeed != _prevaverageSpeed || _distance != _prevdistance || _prevaltitude != _myLocation.getAltitude()) {
 
+                send = true;
+
+                _prevaverageSpeed = _averageSpeed;
+                _prevdistance = _distance;
+                _prevspeed = _speed;
+                _prevaltitude = _myLocation.getAltitude();
+                _prevtime = _myLocation.getTime();
+            } else if (_prevtime + 5000 < _myLocation.getTime()) {
+                Log.d(TAG,  "New GPS data without move");
+                
+                send = true;
+                
+                _prevtime = _myLocation.getTime();
+            }
+            if (send) {
                 Intent broadcastIntent = new Intent();
                 broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
                 broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
@@ -238,24 +269,14 @@ public class GPSService extends Service {
                 broadcastIntent.putExtra("SLOPE",      (100f * _myLocation.getSlope())); // in %
                 broadcastIntent.putExtra("ACCURACY",   _myLocation.getAccuracy()); // m
                 broadcastIntent.putExtra("TIME",_myLocation.getElapsedTime());
+                //if (xpos != prevXPos || ypos != prevYPos) {
+                //if (Math.sqrt((xpos-prevXPos)*(xpos-prevXPos) + (ypos-prevYPos)*(ypos-prevYPos)) > 10) {
+                    broadcastIntent.putExtra("XPOS", xpos);
+                    broadcastIntent.putExtra("YPOS", ypos);
+                    prevXPos = xpos;
+                    prevYPos = ypos;
+                //}
                 sendBroadcast(broadcastIntent);
-
-                _prevaverageSpeed = _averageSpeed;
-                _prevdistance = _distance;
-                _prevspeed = _speed;
-                _prevaltitude = _myLocation.getAltitude();
-                _prevtime = _myLocation.getTime();
-            } else if (_prevtime + 5000 < _myLocation.getTime()) {
-                Log.d(TAG,  "New GPS data without move");
-                
-                Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
-                broadcastIntent.putExtra("SPEED", _speed);
-                broadcastIntent.putExtra("ALTITUDE",   _myLocation.getAltitude()); // m
-                broadcastIntent.putExtra("ACCURACY",   _myLocation.getAccuracy()); // m
-                sendBroadcast(broadcastIntent);
-                
-                _prevtime = _myLocation.getTime();
             }
 
             if (MainActivity._liveTracking && resultOnLocationChanged == AdvancedLocation.SAVED) {

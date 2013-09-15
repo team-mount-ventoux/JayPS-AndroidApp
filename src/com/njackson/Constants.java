@@ -12,17 +12,10 @@ import java.util.UUID;
 
 public class Constants {
     static final UUID WATCH_UUID = java.util.UUID.fromString("5dd35873-3bb6-44d6-8255-0e61bc3b97f5");
-    static final int STATE_CHANGED = 0x00;
-    static final int SPEED_TEXT = 0x01;
-    static final int DISTANCE_TEXT = 0x02;
-    static final int AVGSPEED_TEXT = 0x03;
-    static final int MEASUREMENT_UNITS = 0x04;
-    static final int ALTITUDE_TEXT = 0x05;
-    static final int ASCENT_TEXT = 0x06; 
-    static final int ASCENTRATE_TEXT = 0x07;
-    static final int SLOPE_TEXT = 0x08;
-    static final int ACCURACY_TEXT = 0x09;
+    
     static final int LIVE_TRACKING_FRIENDS = 0x10;
+    static final int ALTITUDE_DATA = 0x13;
+    static final int STATE_CHANGED = 0x14;
     
     static final String PREFS_NAME = "PebbleBikePrefs";
 
@@ -31,8 +24,8 @@ public class Constants {
     static final int REFRESH_PRESS = 0x2;
     static final int CMD_BUTTON_PRESS = 0x4;
     
+    static final int STATE_STOP = 0x0;
     static final int STATE_START = 0x1;
-    static final int STATE_STOP = 0x2;
 
     static final int IMPERIAL = 0x0;
     static final int METRIC = 0x1;

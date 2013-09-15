@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="1.3.0 beta3" versioncode="14" >
+      <change>Map screen on Pebble</change>
+      <change>=> Install the new watchface (click on "Install Watchface in settings")</change>
+  </release>
   <release version="1.3.0 beta2" versioncode="13" >
       <change>Bugfixes</change>
       <change>Improve ascent/ascent rate/slope</change>
