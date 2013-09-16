@@ -14,6 +14,8 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class AltitudeGraphReduce {
+    
+    private static final String TAG = "PB-AltitudeGraphReduce";
 
     private static AltitudeGraphReduce _instance;
 
@@ -69,7 +71,7 @@ public class AltitudeGraphReduce {
         Calendar cal = Calendar.getInstance();
         cal.setTime(_lastAltitudeBinChange);
         cal.add(Calendar.MILLISECOND, _altitudeBinSizeMs);
-        Log.d("PebbleBike", cal.getTime().toString() + " " + new Date().toString());
+        //Log.d(TAG, cal.getTime().toString() + " " + new Date().toString());
         if(new Date().before(cal.getTime())) {
             _altitudeBins.set(
                     _altitudeBins.size()-1,
