@@ -293,7 +293,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 data[11] += 128;
             }            
             data[12] = (byte) (((int) Math.abs(intent.getFloatExtra("SLOPE", 0))) % 128);
-            if (intent.getDoubleExtra("SLOPE", 0) < 0) {
+            if (intent.getFloatExtra("SLOPE", 0) < 0) {
                 data[12] += 128;
             }            
 
