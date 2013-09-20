@@ -269,6 +269,7 @@ public class GPSService extends Service {
                 broadcastIntent.putExtra("SLOPE",      (100f * _myLocation.getSlope())); // in %
                 broadcastIntent.putExtra("ACCURACY",   _myLocation.getAccuracy()); // m
                 broadcastIntent.putExtra("TIME",_myLocation.getElapsedTime());
+                
                 //if (xpos != prevXPos || ypos != prevYPos) {
                 //if (Math.sqrt((xpos-prevXPos)*(xpos-prevXPos) + (ypos-prevYPos)*(ypos-prevYPos)) > 10) {
                     broadcastIntent.putExtra("XPOS", xpos);
@@ -276,6 +277,7 @@ public class GPSService extends Service {
                     prevXPos = xpos;
                     prevYPos = ypos;
                 //}
+                broadcastIntent.putExtra("BEARING", _myLocation.getBearing());
                 sendBroadcast(broadcastIntent);
             }
 

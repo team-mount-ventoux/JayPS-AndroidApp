@@ -281,12 +281,21 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
             data[6] = (byte) (((int) (intent.getDoubleExtra("ALTITUDE", 0) * _altitudeConversion)) % 256);
             data[7] = (byte) (((int) (intent.getDoubleExtra("ALTITUDE", 0) * _altitudeConversion)) / 256);
-            data[8] = (byte) (((int) (intent.getDoubleExtra("ASCENT", 0) * _altitudeConversion)) % 256);
-            data[9] = (byte) (((int) (intent.getDoubleExtra("ASCENT", 0) * _altitudeConversion)) / 256);
-            data[10] = (byte) (((int) (intent.getFloatExtra("ASCENTRATE", 0) * _altitudeConversion)) % 256);
-            data[11] = (byte) (((int) (intent.getFloatExtra("ASCENTRATE", 0) * _altitudeConversion)) / 256);
-            data[12] = (byte) ((int)  intent.getFloatExtra("SLOPE", 0));
-            
+
+            data[8] = (byte) (((int) Math.abs(intent.getDoubleExtra("ASCENT", 0) * _altitudeConversion)) % 256);
+            data[9] = (byte) ((((int) Math.abs(intent.getDoubleExtra("ASCENT", 0) * _altitudeConversion)) / 256) % 128);
+            if (intent.getDoubleExtra("ASCENT", 0) < 0) {
+                data[9] += 128;
+            }
+            data[10] = (byte) (((int) Math.abs(intent.getFloatExtra("ASCENTRATE", 0) * _altitudeConversion)) % 256);
+            data[11] = (byte) ((((int) Math.abs(intent.getFloatExtra("ASCENTRATE", 0) * _altitudeConversion)) / 256) % 128);
+            if (intent.getFloatExtra("ASCENTRATE", 0) < 0) {
+                data[11] += 128;
+            }            
+            data[12] = (byte) (((int) Math.abs(intent.getFloatExtra("SLOPE", 0))) % 128);
+            if (intent.getDoubleExtra("SLOPE", 0) < 0) {
+                data[12] += 128;
+            }            
 
             data[13] = (byte) (((int) Math.abs(intent.getDoubleExtra("XPOS", 0))) % 256);
             data[14] = (byte) ((((int) Math.abs(intent.getDoubleExtra("XPOS", 0))) / 256) % 128);
@@ -301,6 +310,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
             data[17] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0) * _speedConversion) / 1)) % 256);
             data[18] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0) * _speedConversion) / 1)) / 256);
+            data[19] = (byte) (((int)  (intent.getFloatExtra("BEARING", 0) / 360 * 256)) % 256);
 
             dic.addBytes(Constants.ALTITUDE_DATA, data);
             
@@ -309,12 +319,12 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             }
         }
         
-        if (checkServiceRunning()) {
+        /*if (checkServiceRunning()) {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
         } else {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
         }
-        sending += " STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED);
+        sending += " STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED);*/
 
         Log.d(TAG, sending);
         PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);        
