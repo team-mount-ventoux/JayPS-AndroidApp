@@ -29,7 +29,7 @@
     <string name="PREF_LIVE_TRACKING_CATEGORIE_TITLE">JayPS Live Tracking</string>
     <string name="PREF_LIVE_TRACKING_CATEGORIE_SUMMARY"></string>
     <string name="PREF_LIVE_TRACKING_TITLE">Live Tracking with JayPS</string>
-    <string name="PREF_LIVE_TRACKING_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_SUMMARY">Create your account: http://pebblebike.com/live</string>
     <string name="PREF_LIVE_TRACKING_LOGIN_TITLE">Login</string>
     <string name="PREF_LIVE_TRACKING_LOGIN_SUMMARY"></string>
     <string name="PREF_LIVE_TRACKING_PASSWORD_TITLE">Password</string>
