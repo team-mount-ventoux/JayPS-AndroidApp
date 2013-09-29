@@ -415,29 +415,30 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     }
 
     private void startGPSService() {
-        if(checkServiceRunning())
-            return;
-
-        //if(!_googlePlayInstalled) {
-        //    Toast.makeText(getApplicationContext(),"Please install google play services",10);
-        //    return;
-        //}
-
-        Intent intent = new Intent(getApplicationContext(), GPSService.class);
-
-        registerGPSServiceIntentReceiver();
-        startService(intent);
-        
-        PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+        if (!checkServiceRunning()) {
+            // only if GPS was not running on the phone
+            
+            Intent intent = new Intent(getApplicationContext(), GPSService.class);
+    
+            registerGPSServiceIntentReceiver();
+            startService(intent);
+            
+            PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+        }
+        // in all cases
         resendLastDataToPebble();
     }
 
     private void stopGPSService() {
-        if(!checkServiceRunning())
-            return;
         Log.d(TAG, "stopGPSService()");
-        removeGPSServiceIntentReceiver();
-        stopService(new Intent(getApplicationContext(), GPSService.class));
+        
+        if (checkServiceRunning()) {
+            // only if GPS was running on the phone
+            
+            removeGPSServiceIntentReceiver();
+            stopService(new Intent(getApplicationContext(), GPSService.class));
+        }
+        // in all cases
         sendServiceState();
     }
 
