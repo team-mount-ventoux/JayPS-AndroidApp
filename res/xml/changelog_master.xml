@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="1.3.0 beta4" versioncode="15" >
+      <change>Bugfix: very slow refresh rate</change>
+      <change>Map: marker with bearing at my position</change>
+      <change>Bugfix: negatives values for ascent, ascent rate and slope</change>
+      <change>=> Install the new watchface (click on "Install Watchface in settings")</change>
+  </release>
   <release version="1.3.0 beta3" versioncode="14" >
       <change>Map screen on Pebble</change>
       <change>=> Install the new watchface (click on "Install Watchface in settings")</change>
