@@ -48,8 +48,6 @@ public class GPSService extends Service {
     private double _currentLon;
     double xpos = 0;
     double ypos = 0;
-    double prevXPos = 0;
-    double prevYPos = 0;
     Location firstLocation = null;
     private AdvancedLocation _myLocation;
     private LiveTracking _liveTracking;
@@ -261,22 +259,16 @@ public class GPSService extends Service {
                 broadcastIntent.putExtra("SPEED", _speed);
                 broadcastIntent.putExtra("DISTANCE", _distance);
                 broadcastIntent.putExtra("AVGSPEED", _averageSpeed);
-                broadcastIntent.putExtra("LAT",_currentLat );
-                broadcastIntent.putExtra("LON",_currentLon );
+                broadcastIntent.putExtra("LAT",_currentLat);
+                broadcastIntent.putExtra("LON",_currentLon);
                 broadcastIntent.putExtra("ALTITUDE",   _myLocation.getAltitude()); // m
                 broadcastIntent.putExtra("ASCENT",     _myLocation.getAscent()); // m
                 broadcastIntent.putExtra("ASCENTRATE", (3600f * _myLocation.getAscentRate())); // in m/h
                 broadcastIntent.putExtra("SLOPE",      (100f * _myLocation.getSlope())); // in %
                 broadcastIntent.putExtra("ACCURACY",   _myLocation.getAccuracy()); // m
                 broadcastIntent.putExtra("TIME",_myLocation.getElapsedTime());
-                
-                //if (xpos != prevXPos || ypos != prevYPos) {
-                //if (Math.sqrt((xpos-prevXPos)*(xpos-prevXPos) + (ypos-prevYPos)*(ypos-prevYPos)) > 10) {
-                    broadcastIntent.putExtra("XPOS", xpos);
-                    broadcastIntent.putExtra("YPOS", ypos);
-                    prevXPos = xpos;
-                    prevYPos = ypos;
-                //}
+                broadcastIntent.putExtra("XPOS", xpos);
+                broadcastIntent.putExtra("YPOS", ypos);
                 broadcastIntent.putExtra("BEARING", _myLocation.getBearing());
                 sendBroadcast(broadcastIntent);
             }
