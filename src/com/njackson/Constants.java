@@ -13,9 +13,14 @@ import java.util.UUID;
 public class Constants {
     static final UUID WATCH_UUID = java.util.UUID.fromString("5dd35873-3bb6-44d6-8255-0e61bc3b97f5");
     
+    
+    static final int VERSION_ANDROID = 15;
+    
     static final int LIVE_TRACKING_FRIENDS = 0x10;
     static final int ALTITUDE_DATA = 0x13;
     static final int STATE_CHANGED = 0x14;
+    static final int MSG_VERSION_PEBBLE = 0x15;
+    static final int MSG_VERSION_ANDROID = 0x16;    
     
     static final String PREFS_NAME = "PebbleBikePrefs";
 

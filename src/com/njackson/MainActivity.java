@@ -169,12 +169,17 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<HomeActivity>(this, "home", HomeActivity.class, bundle)));
         //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,_mapFragment,null)));
 
-        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("button")) {
-            Log.d(TAG, "onCreate() button:" + getIntent().getExtras().getInt("button"));
+        if (getIntent().getExtras() != null) {
+            if (getIntent().getExtras().containsKey("button")) {
+                Log.d(TAG, "onCreate() button:" + getIntent().getExtras().getInt("button"));
             
-            changeState(getIntent().getExtras().getInt("button"));
+                changeState(getIntent().getExtras().getInt("button"));
+            }
+            if (getIntent().getExtras().containsKey("version")) {
+                Log.d(TAG, "onCreate() version:" + getIntent().getExtras().getInt("version"));
+                resendLastDataToPebble();
+            }
         }
-
     }
 
     @Override
@@ -195,10 +200,16 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     // on the existing instance with the Intent that was used to re-launch it.
     // An activity will always be paused before receiving a new intent, so you can count on onResume() being called after this method. 
     protected void onNewIntent (Intent intent) {
-        if (intent.getExtras() != null && intent.getExtras().containsKey("button")) {
-            Log.d(TAG, "onNewIntent() button:" + intent.getExtras().getInt("button"));
+        if (intent.getExtras() != null) {
+            if (intent.getExtras().containsKey("button")) {
+                Log.d(TAG, "onNewIntent() button:" + intent.getExtras().getInt("button"));
             
-            changeState(intent.getExtras().getInt("button"));
+                changeState(intent.getExtras().getInt("button"));
+            }
+            if (intent.getExtras().containsKey("version")) {
+                Log.d(TAG, "onNewIntent() version:" + intent.getExtras().getInt("version"));
+                resendLastDataToPebble();
+            }
         }
     }
     
@@ -256,6 +267,18 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         PebbleDictionary dic = new PebbleDictionary();
         String sending = "Sending ";
         
+        if (intent == null) {
+            Log.d(TAG, "sendDataToPebble(intent == null)");
+            intent = new Intent();
+            
+            SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+            float distance = settings.getFloat("GPS_DISTANCE", 0.0f);
+            intent.putExtra("DISTANCE", distance);
+            
+            dic.addInt32(Constants.MSG_VERSION_ANDROID, Constants.VERSION_ANDROID);
+            sending += " MSG_VERSION_ANDROID: "   + dic.getInteger(Constants.MSG_VERSION_ANDROID);
+        }
+
         if (intent != null) {
             _lastIntent = intent;
 
@@ -374,6 +397,13 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private void ResetSavedGPSStats() {
     	GPSService.resetGPSStats(getSharedPreferences(Constants.PREFS_NAME, 0));
         AltitudeGraphReduce.getInstance().restData();
+        
+        // send the saved values directly to update pebble
+        Intent intent = new Intent();
+        intent.putExtra("DISTANCE", 0);
+        intent.putExtra("AVGSPEED", 0);
+        intent.putExtra("ASCENT",   0);
+        sendDataToPebble(intent);
     }
 
     private void setStartButtonText(String text) {
