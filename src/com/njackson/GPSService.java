@@ -117,7 +117,16 @@ public class GPSService extends Service {
             _updates = settings.getInt("GPS_UPDATES",0);
         } catch (ClassCastException e) {
             _updates = 0;
-        }        
+        }
+        
+        if (settings.contains("GPS_FIRST_LOCATION_LAT") && settings.contains("GPS_FIRST_LOCATION_LON")) {
+            firstLocation = new Location("PebbleBike");
+            firstLocation.setLatitude(settings.getFloat("GPS_FIRST_LOCATION_LAT", 0.0f));
+            firstLocation.setLongitude(settings.getFloat("GPS_FIRST_LOCATION_LON", 0.0f));
+        } else {
+            firstLocation = null;
+        }
+        
     }
 
     // save the state
@@ -131,6 +140,10 @@ public class GPSService extends Service {
         editor.putLong("GPS_ELAPSEDTIME", _myLocation.getElapsedTime());
         editor.putFloat("GPS_ASCENT", (float) _myLocation.getAscent());
         editor.putInt("GPS_UPDATES", _updates);
+        if (firstLocation != null) {
+            editor.putFloat("GPS_FIRST_LOCATION_LAT", (float) firstLocation.getLatitude());
+            editor.putFloat("GPS_FIRST_LOCATION_LON", (float) firstLocation.getLongitude());
+        }
         editor.commit();
     }
 
@@ -144,6 +157,8 @@ public class GPSService extends Service {
 	    editor.putLong("GPS_ELAPSEDTIME", 0);
 	    editor.putFloat("GPS_ASCENT", 0.0f);
 	    editor.putInt("GPS_UPDATES", 0);
+        editor.remove("GPS_FIRST_LOCATION_LAT");
+        editor.remove("GPS_FIRST_LOCATION_LON");
 	    editor.commit();
 	    
 	    if (_this != null) {
@@ -284,6 +299,9 @@ public class GPSService extends Service {
 		                dic.addString(Constants.LIVE_TRACKING_FRIENDS, friends);
 		                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
 	            	}
+
+
+
 	            }
             }
             
