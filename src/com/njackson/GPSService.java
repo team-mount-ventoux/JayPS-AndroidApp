@@ -70,6 +70,8 @@ public class GPSService extends Service {
     public void onCreate() {
         _locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        
+
         super.onCreate();
     }
 
@@ -96,6 +98,7 @@ public class GPSService extends Service {
         //PebbleKit.closeAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
 
         _locationMgr.removeUpdates(onLocationChange);
+        
     }
 
     // load the saved state
@@ -171,7 +174,38 @@ public class GPSService extends Service {
 	    	_this.loadGPSStats();  	    	
 	    }
     }
+    
+    public static void liveSendNames(int live_max_name) {
+        Log.d(TAG, "liveSendNames("+live_max_name+")");
+        if (_this != null) {
+            // GPS is running
 
+            String[] names = _this._liveTracking.getNames();
+            
+            //for (int i = 0; i < names.length; i++ ) {
+            //    Log.d(TAG, "names["+i+"]: " + names[i]);
+            //}
+            PebbleDictionary dic = new PebbleDictionary();
+            if (live_max_name < 0 && names[0] != null) {
+                dic.addString(Constants.MSG_LIVE_NAME0, names[0]);
+            }
+            if (live_max_name < 1 && names[1] != null) {
+                dic.addString(Constants.MSG_LIVE_NAME1, names[1]);
+            }
+            if (live_max_name < 2 && names[2] != null) {
+                dic.addString(Constants.MSG_LIVE_NAME2, names[2]);
+            }
+            if (live_max_name < 3 && names[3] != null) {
+                dic.addString(Constants.MSG_LIVE_NAME3, names[3]);
+            }
+            if (live_max_name < 4 && names[4] != null) {
+                dic.addString(Constants.MSG_LIVE_NAME4, names[4]);
+            }
+            PebbleKit.sendDataToPebble(_this.getApplicationContext(), Constants.WATCH_UUID, dic);
+            
+            Log.d(TAG, "send MSG_LIVE_NAMEs");
+        }
+    }
     private void handleCommand(Intent intent) {
         Log.d(TAG, "Started GPS Service");
         
@@ -206,6 +240,8 @@ public class GPSService extends Service {
             return;
         }
 
+        
+        
         //PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
     }
 
@@ -290,16 +326,20 @@ public class GPSService extends Service {
 
             if (MainActivity._liveTracking && resultOnLocationChanged == AdvancedLocation.SAVED) {
 	            if (_liveTracking.addPoint(location)) {
-	            	String friends = _liveTracking.getFriends(); 
-	            	if (friends != "") {
-	            		Toast.makeText(getApplicationContext(), friends, Toast.LENGTH_LONG).show();
 
-		                PebbleDictionary dic = new PebbleDictionary();
-		                
-		                dic.addString(Constants.LIVE_TRACKING_FRIENDS, friends);
-		                PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
-	            	}
-
+	                byte[] msgLiveShort = _liveTracking.getMsgLiveShort(firstLocation); 
+                    if (msgLiveShort.length > 1) {
+                        String sending = "";
+                        for( int i = 0; i < msgLiveShort.length; i++ ) {
+                            sending += " msgLiveShort["+i+"]: "   + ((256+msgLiveShort[i])%256);
+                        }
+                        Log.d(TAG, sending);
+                        
+                        PebbleDictionary dic = new PebbleDictionary();
+                        
+                        dic.addBytes(Constants.MSG_LIVE_SHORT, msgLiveShort);
+                        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+                    }
 
 
 	            }

@@ -179,6 +179,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 Log.d(TAG, "onCreate() version:" + getIntent().getExtras().getInt("version"));
                 resendLastDataToPebble();
             }
+            if (getIntent().getExtras().containsKey("live_max_name")) {
+                Log.d(TAG, "onNewIntent() live_max_name:" + getIntent().getExtras().getInt("live_max_name"));
+                GPSService.liveSendNames(getIntent().getExtras().getInt("live_max_name"));
+            }            
         }
     }
 
@@ -209,6 +213,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             if (intent.getExtras().containsKey("version")) {
                 Log.d(TAG, "onNewIntent() version:" + intent.getExtras().getInt("version"));
                 resendLastDataToPebble();
+            }
+            if (intent.getExtras().containsKey("live_max_name")) {
+                Log.d(TAG, "onNewIntent() live_max_name:" + intent.getExtras().getInt("live_max_name"));
+                GPSService.liveSendNames(intent.getExtras().getInt("live_max_name"));
             }
         }
     }
@@ -569,14 +577,17 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
     @Override
     public void onConnected(Bundle connectionHint) {
+        Log.d(TAG, "onConnected");
         Intent intent = new Intent(getApplicationContext(), ActivityRecognitionIntentService.class);
         _callbackIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if(_requestType == RequestType.START) {
             Log.d(TAG, "Start Recognition");
             _mActivityRecognitionClient.requestActivityUpdates(30000, _callbackIntent);
-        } else {
+        } else if(_requestType == RequestType.STOP) {
             Log.d(TAG, "Stop Recognition");
             _mActivityRecognitionClient.removeActivityUpdates(_callbackIntent);
+        } else {
+            Log.d(TAG, "other?");
         }
     }
 

@@ -20,8 +20,15 @@ public class Constants {
     static final int ALTITUDE_DATA = 0x13;
     static final int STATE_CHANGED = 0x14;
     static final int MSG_VERSION_PEBBLE = 0x15;
-    static final int MSG_VERSION_ANDROID = 0x16;    
-    
+    static final int MSG_VERSION_ANDROID = 0x16;
+    static final int MSG_LIVE_SHORT = 0x17;
+    static final int MSG_LIVE_ASK_NAMES = 0x18;
+    static final int MSG_LIVE_NAME0 = 0x19;
+    static final int MSG_LIVE_NAME1 = 0x20;
+    static final int MSG_LIVE_NAME2 = 0x21;
+    static final int MSG_LIVE_NAME3 = 0x22;
+    static final int MSG_LIVE_NAME4 = 0x23;    
+
     static final String PREFS_NAME = "PebbleBikePrefs";
 
     static final int PLAY_PRESS = 0x0;

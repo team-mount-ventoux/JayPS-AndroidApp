@@ -19,6 +19,7 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
     	int  button = -1;
     	int  version = -1;
+    	int live_max_name = -99;
     	boolean  start = false;
     	if (data.contains(Constants.CMD_BUTTON_PRESS)) {
 	        button = data.getUnsignedInteger(Constants.CMD_BUTTON_PRESS).intValue();
@@ -30,7 +31,12 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
             Log.d(TAG, "Constants.MSG_VERSION_PEBBLE, version: " + version);
             start = true;
         }       
-        
+        if (data.contains(Constants.MSG_LIVE_ASK_NAMES)) {
+            live_max_name = data.getInteger(Constants.MSG_LIVE_ASK_NAMES).intValue();
+            Log.d(TAG, "Constants.MSG_LIVE_ASK_NAMES, live_max_name: " + live_max_name);
+            start = true;
+        }       
+
     	PebbleKit.sendAckToPebble(context, transactionId);
     	
         if (start) {
@@ -46,6 +52,9 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
         	}
             if (version >= 0) {
                 i.putExtra("version", version);
+            }
+            if (live_max_name != -99) {
+                i.putExtra("live_max_name", live_max_name);
             }
 
         	context.startActivity(i);
