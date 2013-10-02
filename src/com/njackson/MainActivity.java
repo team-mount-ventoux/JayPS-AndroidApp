@@ -179,10 +179,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 Log.d(TAG, "onCreate() version:" + getIntent().getExtras().getInt("version"));
                 resendLastDataToPebble();
             }
-            if (getIntent().getExtras().containsKey("live_max_name")) {
+            /*if (getIntent().getExtras().containsKey("live_max_name")) {
                 Log.d(TAG, "onNewIntent() live_max_name:" + getIntent().getExtras().getInt("live_max_name"));
                 GPSService.liveSendNames(getIntent().getExtras().getInt("live_max_name"));
-            }            
+            }*/
         }
     }
 
@@ -214,10 +214,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 Log.d(TAG, "onNewIntent() version:" + intent.getExtras().getInt("version"));
                 resendLastDataToPebble();
             }
-            if (intent.getExtras().containsKey("live_max_name")) {
+            /*if (intent.getExtras().containsKey("live_max_name")) {
                 Log.d(TAG, "onNewIntent() live_max_name:" + intent.getExtras().getInt("live_max_name"));
                 GPSService.liveSendNames(intent.getExtras().getInt("live_max_name"));
-            }
+            }*/
         }
     }
     
