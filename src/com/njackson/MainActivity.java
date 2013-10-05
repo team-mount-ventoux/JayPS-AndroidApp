@@ -304,9 +304,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             data[0] += (byte) (0 * 8);
             data[0] += (byte) ((version % 4) * 16);
             
-            data[1] = (byte) ((int)  Math.ceil(intent.getFloatExtra("ACCURACY", 0)));
-            data[2] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0) * _distanceConversion) / 1)) % 256);
-            data[3] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0) * _distanceConversion) / 1)) / 256);
+            data[1] = (byte) ((int)  Math.ceil(intent.getFloatExtra("ACCURACY", 0.0f)));
+            data[2] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0.0f) * _distanceConversion) / 1)) % 256);
+            data[3] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0.0f) * _distanceConversion) / 1)) / 256);
             data[4] = (byte) (((int) intent.getLongExtra("TIME", 0) / 1000) % 256);
             data[5] = (byte) (((int) intent.getLongExtra("TIME", 0) / 1000) / 256);
 
@@ -315,16 +315,16 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
             data[8] = (byte) (((int) Math.abs(intent.getDoubleExtra("ASCENT", 0) * _altitudeConversion)) % 256);
             data[9] = (byte) ((((int) Math.abs(intent.getDoubleExtra("ASCENT", 0) * _altitudeConversion)) / 256) % 128);
-            if (intent.getDoubleExtra("ASCENT", 0) < 0) {
+            if (intent.getDoubleExtra("ASCENT", 0.0f) < 0) {
                 data[9] += 128;
             }
-            data[10] = (byte) (((int) Math.abs(intent.getFloatExtra("ASCENTRATE", 0) * _altitudeConversion)) % 256);
-            data[11] = (byte) ((((int) Math.abs(intent.getFloatExtra("ASCENTRATE", 0) * _altitudeConversion)) / 256) % 128);
-            if (intent.getFloatExtra("ASCENTRATE", 0) < 0) {
+            data[10] = (byte) (((int) Math.abs(intent.getFloatExtra("ASCENTRATE", 0.0f) * _altitudeConversion)) % 256);
+            data[11] = (byte) ((((int) Math.abs(intent.getFloatExtra("ASCENTRATE", 0.0f) * _altitudeConversion)) / 256) % 128);
+            if (intent.getFloatExtra("ASCENTRATE", 0.0f) < 0) {
                 data[11] += 128;
             }            
-            data[12] = (byte) (((int) Math.abs(intent.getFloatExtra("SLOPE", 0))) % 128);
-            if (intent.getFloatExtra("SLOPE", 0) < 0) {
+            data[12] = (byte) (((int) Math.abs(intent.getFloatExtra("SLOPE", 0.0f))) % 128);
+            if (intent.getFloatExtra("SLOPE", 0.0f) < 0) {
                 data[12] += 128;
             }            
 
@@ -339,9 +339,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 data[16] += 128;
             }
 
-            data[17] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0) * _speedConversion) / 1)) % 256);
-            data[18] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0) * _speedConversion) / 1)) / 256);
-            data[19] = (byte) (((int)  (intent.getFloatExtra("BEARING", 0) / 360 * 256)) % 256);
+            data[17] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * _speedConversion) / 1)) % 256);
+            data[18] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * _speedConversion) / 1)) / 256);
+            data[19] = (byte) (((int)  (intent.getFloatExtra("BEARING", 0.0f) / 360 * 256)) % 256);
 
             dic.addBytes(Constants.ALTITUDE_DATA, data);
             
