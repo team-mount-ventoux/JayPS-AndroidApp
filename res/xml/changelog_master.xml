@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="1.3.0 beta5" versioncode="16" >
+      <change>Live: friends are now displayed in real time on the map</change>
+      <change>Pebble menu</change>
+      <change>Several bugfixes to improve stability</change>
+      <change>=> Install the new watchface (click on "Install Watchface in settings")</change>
+  </release>
   <release version="1.3.0 beta4" versioncode="15" >
       <change>Bugfix: very slow refresh rate</change>
       <change>Map: marker with bearing at my position</change>
       <change>Bugfix: negatives values for ascent, ascent rate and slope</change>
-      <change>=> Install the new watchface (click on "Install Watchface in settings")</change>
   </release>
   <release version="1.3.0 beta3" versioncode="14" >
       <change>Map screen on Pebble</change>
-      <change>=> Install the new watchface (click on "Install Watchface in settings")</change>
   </release>
   <release version="1.3.0 beta2" versioncode="13" >
       <change>Bugfixes</change>
@@ -17,7 +21,6 @@
   <release version="1.3.0 beta1" versioncode="12" >
       <change>UI Refresh</change>
       <change>Live Tracking with JayPS</change>
-      <change>=> Install the new watchface (click on "Install Watchface in settings")</change>
   </release>
   <release version="1.2.1" versioncode="10" >
       <change>Bugfix: reset then start gps from watchface could crash the android app (first use of the app only)</change>
