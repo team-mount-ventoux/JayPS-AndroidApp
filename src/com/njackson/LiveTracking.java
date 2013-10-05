@@ -21,12 +21,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.getpebble.android.kit.PebbleKit;
+import com.getpebble.android.kit.util.PebbleDictionary;
+
 import fr.jayps.android.AdvancedLocation;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
@@ -35,6 +39,7 @@ public class LiveTracking {
 	private static final String TAG = "PB-LiveTracking";
 	
     protected Context _context = null;
+    private Location _firstLocation = null;
     private long _prevTime = -1;
     private Location _lastLocation = null;
     private String _activity_id = "";
@@ -45,6 +50,7 @@ public class LiveTracking {
     private String _url = "";
     private int _versionCode = -1;
     public int numberOfFriends = 0;
+    private int _numberOfFriendsSentToPebble = 0;
     
     final int maxNumberOfFriend = 5;
     
@@ -147,7 +153,8 @@ public class LiveTracking {
     	this._url = url;
     }
 
-    public boolean addPoint(Location location) {
+    public boolean addPoint(Location firstLocation, Location location) {
+        _firstLocation = firstLocation;
     	//Log.d(TAG, "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude() + "," + location.getTime() + "," + location.getAccuracy()+ ")");
     	if (location.getTime() - _prevTime < 5000) {
     		// too early (dt<5s), do nothing
@@ -163,10 +170,32 @@ public class LiveTracking {
 		// ok
 		_prevTime = location.getTime();
 		this._lastLocation = location;
-		boolean result = this._send(_bufferPoints, _bufferAccuracies);
-		_bufferPoints = _bufferAccuracies = "";
-		return result;
+		new SendLiveTask().execute(new SendLiveTaskParams(_bufferPoints, _bufferAccuracies));
+		return true;
     }
+    class SendLiveTaskParams {
+        String points;
+        String accuracies;
+        public SendLiveTaskParams(String points, String accuracies) {
+            this.points = points;
+            this.accuracies = accuracies;
+        }
+    }
+    private class SendLiveTask extends AsyncTask<SendLiveTaskParams, Void, Boolean> {
+        protected Boolean doInBackground(SendLiveTaskParams... params) {
+            int count = params.length;
+            boolean result = false;
+            for (int i = 0; i < count; i++) {
+                result = result || _send(params[i].points, params[i].accuracies);
+            }
+            return result;
+        }
+
+        protected void onPostExecute(Boolean result) {
+            Log.d(TAG, "onPostExecute(" + result + ")");
+        }
+    }
+
     private boolean _send(String points, String accuracies) {
     	Log.d(TAG, "send(" + points + ", " + accuracies + ")");
         try {
@@ -279,6 +308,45 @@ public class LiveTracking {
 				//Log.d(TAG, "+++"+f.toString());
 			//}            
 
+            byte[] msgLiveShort = getMsgLiveShort(_firstLocation);
+            String[] names = getNames();
+            if (msgLiveShort.length > 1) {
+                String sending = "";
+                
+                PebbleDictionary dic = new PebbleDictionary();
+                
+                if (_numberOfFriendsSentToPebble != msgLiveShort.length || (5 * Math.random() <= 1)) {
+                    _numberOfFriendsSentToPebble = msgLiveShort.length;
+                    
+                    if (names[0] != null) {
+                        dic.addString(Constants.MSG_LIVE_NAME0, names[0]);
+                    }
+                    if (names[1] != null) {
+                        dic.addString(Constants.MSG_LIVE_NAME1, names[1]);
+                    }
+                    if (names[2] != null) {
+                        dic.addString(Constants.MSG_LIVE_NAME2, names[2]);
+                    }
+                    if (names[3] != null) {
+                        dic.addString(Constants.MSG_LIVE_NAME3, names[3]);
+                    }
+                    if (names[4] != null) {
+                        dic.addString(Constants.MSG_LIVE_NAME4, names[4]);
+                    }
+                    sending += " MSG_LIVE_NAMEx";
+                }
+                dic.addBytes(Constants.MSG_LIVE_SHORT, msgLiveShort);
+                for( int i = 0; i < msgLiveShort.length; i++ ) {
+                    sending += " msgLiveShort["+i+"]: "   + ((256+msgLiveShort[i])%256);
+                }
+                Log.d(TAG, sending);
+
+                PebbleKit.sendDataToPebble(_context, Constants.WATCH_UUID, dic);
+            }
+            
+            
+            _bufferPoints = _bufferAccuracies = "";
+            
             return nbReceivedFriends > 0;
             
         } catch (Exception e) {
