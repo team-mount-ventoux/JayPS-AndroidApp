@@ -47,6 +47,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private PendingIntent _callbackIntent;
     private RequestType _requestType;
     private static int _units = Constants.IMPERIAL;
+    private static int _refresh_interval = 1000;
+    private static boolean _debug = false;
 
     private static float _speedConversion = 0.0f;
     private static float _distanceConversion = 0.0f;
@@ -108,6 +110,12 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         } catch (Exception e) {
         	Log.e(TAG, "Exception:" + e);
         }
+        try {
+            _refresh_interval = Integer.valueOf(prefs.getString("REFRESH_INTERVAL", "1000"));
+        } catch (Exception e) {
+            Log.e(TAG, "Exception converting REFRESH_INTERVAL:" + e);
+        }
+        _debug = prefs.getBoolean("PREF_DEBUG", false);
     }
 
     private void startButtonClick(boolean value) {
@@ -292,17 +300,24 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
             byte[] data = new byte[20];
 
-            int version = 0;
-            data[0] = (byte) ((_units % 2) * 1);
-            if (checkServiceRunning()) {
-                data[0] += (byte) (1 * 2);
-            } else {
-                data[0] += (byte) (0 * 2);
+            data[0] = (byte) ((_units % 2) * (1<<0));
+            data[0] += (byte) ((checkServiceRunning() ? 1 : 0) * (1<<1));
+            data[0] += (byte) ((_debug ? 1 : 0) * (1<<2));
+            data[0] += (byte) ((_liveTracking ? 1 : 0) * (1<<3));
+            
+            int refresh_code = 1; // 1s
+            if (_refresh_interval < 1000) {
+                refresh_code = 0; // [0;1[
+            } else if (_refresh_interval >= 5000) {
+                refresh_code = 3; // [5;+inf
+            } else if (_refresh_interval > 1000) {
+                refresh_code = 2; // ]1;5[
             }
-            // 2 unused bits
-            data[0] += (byte) (0 * 4);
-            data[0] += (byte) (0 * 8);
-            data[0] += (byte) ((version % 4) * 16);
+            data[0] += (byte) ((refresh_code % 4) * (1<<4)); // 2 bits
+            // unused bits
+            data[0] += (byte) (0 * (1<<6));
+            data[0] += (byte) (0 * (1<<7));
+            //Log.d(TAG, _units+"|"+checkServiceRunning()+"|_debug:"+_debug+"|"+_liveTracking+"|_refresh_interval="+_refresh_interval+"|refresh_code="+refresh_code+"|"+((256+data[0])%256));
             
             data[1] = (byte) ((int)  Math.ceil(intent.getFloatExtra("ACCURACY", 0.0f)));
             data[2] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0.0f) * _distanceConversion) / 1)) % 256);

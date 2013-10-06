@@ -9,8 +9,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -69,13 +71,39 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         });
 
     }
-	
+    private void _setUnitsSummary(SharedPreferences prefs) {
+        String units = prefs.getString("UNITS_OF_MEASURE", "0");
+        Preference unitsPref = findPreference("UNITS_OF_MEASURE");
+        unitsPref.setSummary(units.equals("0") ? getString(R.string.PREF_UNITS_UNIT_IMPERIAL) : getString(R.string.PREF_UNITS_UNIT_METRIC));
+    }
+    private void _setRefreshSummary(SharedPreferences prefs) {
+        try {
+            int refresh_interval = Integer.valueOf(prefs.getString("REFRESH_INTERVAL", "1000"));
+            Preference refreshPref = findPreference("REFRESH_INTERVAL");
+            if (refresh_interval < 1000) {
+                refreshPref.setSummary(refresh_interval + " ms");
+            } else {
+                refreshPref.setSummary(refresh_interval/1000 + " s");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception converting REFRESH_INTERVAL:" + e);
+        }
+    }
+    private void _setLoginSummary(SharedPreferences prefs) {
+        String login = prefs.getString("LIVE_TRACKING_LOGIN", "");
+        Preference loginPref = findPreference("LIVE_TRACKING_LOGIN");
+        loginPref.setSummary(login);
+    }
 	@Override
     protected void onResume() {
         super.onResume();
         // Set up a listener whenever a key changes
         getPreferenceScreen().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
+        
+        _setUnitsSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+        _setRefreshSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+        _setLoginSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
     }
 
     @Override
@@ -86,6 +114,17 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        
+        if (key.equals("UNITS_OF_MEASURE")) {
+            _setUnitsSummary(sharedPreferences);
+        }        
+        if (key.equals("REFRESH_INTERVAL")) {
+            _setRefreshSummary(sharedPreferences);
+        }
+        if (key.equals("LIVE_TRACKING_LOGIN")) {
+            _setLoginSummary(sharedPreferences);
+        }
+        
         MainActivity activity = MainActivity.getInstance();
         if(activity != null)
             activity.loadPreferences(sharedPreferences);

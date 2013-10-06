@@ -1,11 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="PREF_UNITS_ENTRIES">
-            <item>Imperial</item>
-            <item>Metric</item>
+            <item>@string/PREF_UNITS_UNIT_IMPERIAL</item>
+            <item>@string/PREF_UNITS_UNIT_METRIC</item>
     </string-array>
     <string-array name="PREF_UNITS_ENTRY_VALUES">
             <item>0</item>
             <item>1</item>
     </string-array>
+    
+    <string-array name="REFRESH_INTERVAL_ENTRIES">
+            <item>High (500ms)</item>
+            <item>Normal (1s)</item>
+            <item>2s</item>
+            <item>Save battery (5s)</item>
+    </string-array>
+    <string-array name="REFRESH_INTERVAL_ENTRY_VALUES">
+            <item>500</item>
+            <item>1000</item>
+            <item>2000</item>
+            <item>5000</item>
+    </string-array>    
 </resources>
