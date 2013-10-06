@@ -35,6 +35,9 @@ public class Constants {
     static final int STOP_PRESS = 0x1;
     static final int REFRESH_PRESS = 0x2;
     static final int CMD_BUTTON_PRESS = 0x4;
+    static final int ORUXMAPS_START_RECORD_CONTINUE_PRESS = 0x5;
+    static final int ORUXMAPS_STOP_RECORD_PRESS = 0x6;
+    static final int ORUXMAPS_NEW_WAYPOINT_PRESS = 0x7;
     
     static final int STATE_STOP = 0x0;
     static final int STATE_START = 0x1;
