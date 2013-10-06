@@ -53,6 +53,9 @@ public class GPSService extends Service {
     private LiveTracking _liveTracking;
     
     private static GPSService _this;
+    
+    private int _refresh_interval = 1000;
+    private boolean _gpsStarted = false;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -174,7 +177,14 @@ public class GPSService extends Service {
 	    	_this.loadGPSStats();  	    	
 	    }
     }
-    
+    public static void changeRefreshInterval(int refresh_interval) {
+        if (_this != null) {
+            // GPS is running
+            _this._refresh_interval = refresh_interval;
+            _this._requestLocationUpdates(refresh_interval);
+        }
+    }
+
     /*public static void liveSendNames(int live_max_name) {
         Log.d(TAG, "liveSendNames("+live_max_name+")");
         if (_this != null) {
@@ -225,7 +235,8 @@ public class GPSService extends Service {
 
         // check to see if GPS is enabled
         if(checkGPSEnabled(_locationMgr)) {
-            _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, onLocationChange);
+            _requestLocationUpdates(intent.getIntExtra("REFRESH_INTERVAL", 1000));
+
             // send the saved values directly to update pebble
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
@@ -244,8 +255,16 @@ public class GPSService extends Service {
         
         //PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
     }
+    private void _requestLocationUpdates(int refresh_interval) {
+        Log.d(TAG, "_requestLocationUpdates("+refresh_interval+")");
+        _refresh_interval = refresh_interval;
 
-
+        if (_gpsStarted) {
+            _locationMgr.removeUpdates(onLocationChange);
+        }
+        _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, _refresh_interval, 2, onLocationChange);
+        _gpsStarted = true;
+    }
 
     @Override
     public IBinder onBind(Intent intent) {

@@ -47,6 +47,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private PendingIntent _callbackIntent;
     private RequestType _requestType;
     private static int _units = Constants.IMPERIAL;
+    
+    private long _sendDataToPebbleLastTime = 0;
     private static int _refresh_interval = 1000;
     private static boolean _debug = false;
 
@@ -111,7 +113,11 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         	Log.e(TAG, "Exception:" + e);
         }
         try {
+            int prev_refresh_interval = _refresh_interval;
             _refresh_interval = Integer.valueOf(prefs.getString("REFRESH_INTERVAL", "1000"));
+            if (prev_refresh_interval != _refresh_interval) {
+                GPSService.changeRefreshInterval(_refresh_interval);
+            }
         } catch (Exception e) {
             Log.e(TAG, "Exception converting REFRESH_INTERVAL:" + e);
         }
@@ -472,6 +478,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             // only if GPS was not running on the phone
             
             Intent intent = new Intent(getApplicationContext(), GPSService.class);
+            intent.putExtra("REFRESH_INTERVAL", _refresh_interval);
     
             registerGPSServiceIntentReceiver();
             startService(intent);
@@ -653,7 +660,12 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         public void onReceive(Context context, Intent intent) {
 
             if(intent.getAction().compareTo(ACTION_RESP) == 0) {
-                sendDataToPebble(intent);
+                if (_sendDataToPebbleLastTime > 0 && (System.currentTimeMillis() - _sendDataToPebbleLastTime < _refresh_interval)) {
+                    Log.d(TAG, "skip sendDataToPebble");
+                } else {
+                    _sendDataToPebbleLastTime = System.currentTimeMillis();
+                    sendDataToPebble(intent);
+                }
                 updateScreen(intent);
                 //updateMapLocation(intent);
             } else if(intent.getAction().compareTo(ACTION_GPS_DISABLED) == 0) {
