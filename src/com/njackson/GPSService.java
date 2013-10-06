@@ -44,6 +44,7 @@ public class GPSService extends Service {
     private float _prevdistance = -1;
     private double _prevaltitude = -1;
     private long _prevtime = -1;
+    private long _lastSaveGPSTime = 0;
     private double _currentLat;
     private double _currentLon;
     double xpos = 0;
@@ -341,6 +342,11 @@ public class GPSService extends Service {
                 broadcastIntent.putExtra("YPOS", ypos);
                 broadcastIntent.putExtra("BEARING", _myLocation.getBearing());
                 sendBroadcast(broadcastIntent);
+
+                if (_lastSaveGPSTime == 0 || (_myLocation.getTime() - _lastSaveGPSTime > 60000)) {
+                    saveGPSStats();
+                    _lastSaveGPSTime = _myLocation.getTime();
+                }
             }
 
             if (MainActivity._liveTracking && resultOnLocationChanged == AdvancedLocation.SAVED) {
