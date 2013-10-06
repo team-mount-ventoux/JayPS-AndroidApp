@@ -22,6 +22,7 @@ public class AltitudeGraphReduce {
     private ArrayList<Integer> _altitudeBins = new ArrayList<Integer>();
     private long _lastAltitudeBinChange = 0;
     private int _altitudeBinSizeMs = 120000;
+    private int _numberAltitudesInBin = 0;
 
     private int _altitudeMax = 0;
     private int _altitudeMin = 99999;
@@ -73,13 +74,15 @@ public class AltitudeGraphReduce {
             _altitudeMin = altitude;
 
         if (_lastAltitudeBinChange + _altitudeBinSizeMs > time) {
-            Log.d(TAG, _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " > " + time);
+            Log.d(TAG, _numberAltitudesInBin + ":" + _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " > " + time);
             _altitudeBins.set(
                     _altitudeBins.size()-1,
-                    (_altitudeBins.get(_altitudeBins.size()-1) + altitude) / 2
+                    (_altitudeBins.get(_altitudeBins.size()-1) * _numberAltitudesInBin + altitude) / (_numberAltitudesInBin + 1)
             ); // set the current altitude into the bin and average
+            _numberAltitudesInBin++;
         } else {
-            Log.d(TAG, _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " <= " + time);
+            _numberAltitudesInBin = 1;
+            Log.d(TAG, _numberAltitudesInBin + ":" + _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " <= " + time);
             _altitudeBins.add(altitude); // create a new bin and add the altitude
             _lastAltitudeBinChange = time;
         }
