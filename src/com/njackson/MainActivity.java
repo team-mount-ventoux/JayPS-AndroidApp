@@ -399,14 +399,14 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             homeScreen.setAvgSpeed(avgSpeed);
         }
         if (intent.hasExtra("TIME")) {
-            long time = intent.getLongExtra("TIME",0);
-            //Log.d("PebbleBike",String.valueOf(TimeUnit.MILLISECONDS.toMinutes(time)));
-            String dateFormatted = String.format("%d:%02d:%02d",
-                    TimeUnit.MILLISECONDS.toHours(time),
-                    TimeUnit.MILLISECONDS.toMinutes(time) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time)),
-                    TimeUnit.MILLISECONDS.toSeconds(time) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time)));
-
-
+            int time = (int) (intent.getLongExtra("TIME",0) / 1000);
+            int s = time % 60;
+            int m = ((time-s) / 60) % 60;
+            int h = (time-s-60*m) / (60 * 60);
+            
+            String dateFormatted = String.format("%d:%02d:%02d", h, m, s);
+            //Log.d(TAG, time + ":" + h+"/"+m+"/"+s + " " + dateFormatted);
+            
             homeScreen.setTime(dateFormatted);
         }
         if (intent.hasExtra("ALTITUDE")) {
