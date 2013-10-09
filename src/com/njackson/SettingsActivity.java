@@ -54,7 +54,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
                     Log.d(TAG, "versionCode:" + versionCode);
             		
             		try {
-	                    Uri uri = Uri.parse("http://labs.jayps.fr/pebblebike/pebblebike-1.3.0-beta5.pbw?and&v=" + versionCode);
+	                    Uri uri = Uri.parse("http://labs.jayps.fr/pebblebike/pebblebike-1.3.0-beta6.pbw?and&v=" + versionCode);
 	                    Intent startupIntent = new Intent();
 	                    startupIntent.setAction(Intent.ACTION_VIEW);
 	                    startupIntent.setType("application/octet-stream");
