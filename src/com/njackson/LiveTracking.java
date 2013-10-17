@@ -97,14 +97,7 @@ public class LiveTracking {
 	        }
 	        return id != "";
     	}
-    	public void compareToLocation(Location location) {
-	    	_location.setLatitude(lat);
-	    	_location.setLongitude(lon);
-	
-	    	deltaDistance = location.distanceTo(_location);
-	    	bearing = location.bearingTo(_location);
-    	}
-		public boolean updateFromFriend(LiveTrackingFriend friend) {
+		public boolean updateFromFriend(LiveTrackingFriend friend, Location lastlocation) {
 			if ((id == "") || !friend.id.equals(this.id)) {
 				Log.e(TAG, "updateFromFriend this "+this.toString());
 				Log.e(TAG, "updateFromFriend friend "+friend.toString());
@@ -115,8 +108,11 @@ public class LiveTracking {
 			ts = friend.ts;
 			lat = friend.lat;
 			lon = friend.lon;
-			deltaDistance = friend.deltaDistance;
-            bearing = friend.bearing;
+            _location.setLatitude(lat);
+            _location.setLongitude(lon);
+
+            deltaDistance = lastlocation.distanceTo(_location);
+            bearing = lastlocation.bearingTo(_location);
 			return true;
 		}
 		public Location getLocation() {
@@ -142,6 +138,9 @@ public class LiveTracking {
         } catch (NameNotFoundException e) {
         	_versionCode = -1;
         }        
+    }
+    String getLogin() {
+        return this._login;
     }
     void setLogin(String login) {
     	this._login = login;
@@ -283,24 +282,21 @@ public class LiveTracking {
             	friend.setFromNodeList(node.getChildNodes());
 
                 if (friend.id != "" && friend.lat != null && friend.lon != null) {
-                	friend.compareToLocation(_lastLocation);
                 	nbReceivedFriends++;
                     
-                    if (_friends.containsKey(friend.id)) {
-                    	// update friend
+                	LiveTrackingFriend f2;
+                	if (_friends.containsKey(friend.id)) {
                     	//Log.d(TAG, "update friend "+friend.id);
-                    	LiveTrackingFriend f2 = _friends.get(friend.id);
-                    	f2.updateFromFriend(friend);
-                    	_friends.put(friend.id, f2);
+                    	f2 = _friends.get(friend.id);
                     } else {
-                    	// new friend
                     	//Log.d(TAG, "new friend "+friend.id);
                         friend.number = numberOfFriends;
                         numberOfFriends++;
-                    	_friends.put(friend.id, friend);
+                        f2 = friend;
                     }
-                 }
-                
+                    f2.updateFromFriend(friend, _lastLocation);
+                    _friends.put(friend.id, f2);
+                }
             }
             //Iterator<Entry<String, LiveTrackingFriend>> iter = _friends.entrySet().iterator();
 			//while (iter.hasNext()) {
@@ -315,8 +311,8 @@ public class LiveTracking {
                 
                 PebbleDictionary dic = new PebbleDictionary();
                 
-                if (_numberOfFriendsSentToPebble != msgLiveShort.length || (5 * Math.random() <= 1)) {
-                    _numberOfFriendsSentToPebble = msgLiveShort.length;
+                if (_numberOfFriendsSentToPebble != msgLiveShort[0] || (5 * Math.random() <= 1)) {
+                    _numberOfFriendsSentToPebble = msgLiveShort[0];
                     
                     if (names[0] != null) {
                         dic.addString(Constants.MSG_LIVE_NAME0, names[0]);
@@ -333,7 +329,7 @@ public class LiveTracking {
                     if (names[4] != null) {
                         dic.addString(Constants.MSG_LIVE_NAME4, names[4]);
                     }
-                    sending += " MSG_LIVE_NAMEx";
+                    sending += " MSG_LIVE_NAMEx"+msgLiveShort[0];
                 }
                 dic.addBytes(Constants.MSG_LIVE_SHORT, msgLiveShort);
                 for( int i = 0; i < msgLiveShort.length; i++ ) {
@@ -362,6 +358,8 @@ public class LiveTracking {
        byte[] data = new byte[1 + maxNumberOfFriend * sizeOfAFriend];
        
        data[0] = (byte) _friends.size();
+
+       //Log.d(TAG,  "firstLocation: lat="+firstLocation.getLatitude()+"-lon="+firstLocation.getLongitude());
        
        Iterator<Entry<String, LiveTrackingFriend>> iter = _friends.entrySet().iterator();
        while (iter.hasNext()) {
@@ -374,11 +372,12 @@ public class LiveTracking {
            //Log.d(TAG, firstLocation.toString());
            //Log.d(TAG, f.getLocation().toString());
 
-           double xpos = firstLocation.distanceTo(f.getLocation()) * Math.sin(firstLocation.bearingTo(f.getLocation())/180*3.1415);
-           double ypos = firstLocation.distanceTo(f.getLocation()) * Math.cos(firstLocation.bearingTo(f.getLocation())/180*3.1415);
+           Location tmploc = f.getLocation();
+           //Log.d(TAG,  f.number + "|lat="+firstLocation.getLatitude()+"-lon="+firstLocation.getLongitude());
+           double xpos = firstLocation.distanceTo(tmploc) * Math.sin(firstLocation.bearingTo(tmploc)/180*3.1415);
+           double ypos = firstLocation.distanceTo(tmploc) * Math.cos(firstLocation.bearingTo(tmploc)/180*3.1415);
            xpos = Math.floor(xpos/10);
            ypos = Math.floor(ypos/10);
-           Log.d(TAG,  "xpos="+xpos+"-ypos="+ypos);
            
            long lastViewed = System.currentTimeMillis() / 1000 - f.ts;
            //Log.d(TAG, "lastViewed="+lastViewed);
@@ -415,6 +414,8 @@ public class LiveTracking {
                    strFriend += " (" + (lastViewed / 60) + "')";
                }
            }
+           strFriend += " - xpos="+xpos+"-ypos="+ypos;
+           //strFriend += " - lat="+f.lat+"-lon="+f.lon;
            Log.d(TAG, strFriend);
        }
                   
