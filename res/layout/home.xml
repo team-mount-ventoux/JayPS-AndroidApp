@@ -72,13 +72,19 @@
                 android:layout_height="fill_parent" android:layout_weight="1"
                 android:background="@color/abs__background_holo_light" android:layout_marginLeft="1dp"
                 android:layout_marginRight="1dp">
+
             <TextView
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:text="00:00"
-                    android:id="@id/MAIN_TIME_TEXT" android:layout_alignParentLeft="false"
-                    android:layout_alignParentTop="false" style="@style/LARGE_TEXT"
-                    android:layout_centerVertical="true" android:layout_marginLeft="30dp"/>
+                android:id="@id/MAIN_TIME_TEXT"
+                style="@style/LARGE_TEXT"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="false"
+                android:layout_alignParentTop="false"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="30dp"
+                android:text="0:00:00"
+                android:textSize="38sp" />
+
             <TextView
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

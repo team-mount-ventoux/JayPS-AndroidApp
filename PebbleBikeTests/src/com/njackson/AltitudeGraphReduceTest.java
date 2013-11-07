@@ -31,7 +31,7 @@ public class AltitudeGraphReduceTest extends AndroidTestCase {
         int maxAlt = 200;
 
         for(int n = minAlt; n != maxAlt + 10; n+=10) {
-            alt.addAltitude(n);
+            alt.addAltitude(n, 0, 0);
         }
 
         assertTrue(
@@ -47,7 +47,7 @@ public class AltitudeGraphReduceTest extends AndroidTestCase {
         int maxAlt = 200;
 
         for(int n = minAlt; n != maxAlt + 10; n+=10) {
-            alt.addAltitude(n);
+            alt.addAltitude(n, 0, 0);
         }
 
         assertTrue(
@@ -65,7 +65,7 @@ public class AltitudeGraphReduceTest extends AndroidTestCase {
         int maxAlt = 300;
 
         for(int n = minAlt; n != maxAlt; n+=10) {
-            alt.addAltitude(n);
+            alt.addAltitude(n, 0, 0);
             Thread.sleep(binInterval);
         }
 
@@ -85,7 +85,7 @@ public class AltitudeGraphReduceTest extends AndroidTestCase {
         int maxAlt = 3000;
 
         for(int n = minAlt; n != maxAlt; n+=10) {
-            alt.addAltitude(n);
+            alt.addAltitude(n, 0, 0);
             Thread.sleep(binInterval);
         }
 

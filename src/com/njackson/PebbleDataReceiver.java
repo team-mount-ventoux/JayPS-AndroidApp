@@ -18,26 +18,63 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     @Override
     public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
     	int  button = -1;
+    	int  version = -1;
+    	//int live_max_name = -99;
+    	boolean  start = false;
+    	String oruxIntent = "";
     	if (data.contains(Constants.CMD_BUTTON_PRESS)) {
 	        button = data.getUnsignedInteger(Constants.CMD_BUTTON_PRESS).intValue();
 	        Log.d(TAG, "Constants.CMD_BUTTON_PRESS, button: " + button);
-    	} else if (data.contains(Constants.STATE_CHANGED)) {
-    		// old value, prior to v1.3
-	        button = data.getUnsignedInteger(Constants.STATE_CHANGED).intValue();
-	        Log.d(TAG, "Constants.STATE_CHANGED, button: " + button);
+	        if (button == Constants.ORUXMAPS_START_RECORD_CONTINUE_PRESS) {
+	            //oruxIntent = "com.oruxmaps.INTENT_START_RECORD_NEWTRACK";
+	            oruxIntent = "com.oruxmaps.INTENT_START_RECORD_NEWSEGMENT";
+	            //oruxIntent = "com.oruxmaps.INTENT_START_RECORD_CONTINUE";
+	        } else if (button == Constants.ORUXMAPS_STOP_RECORD_PRESS) {
+	            oruxIntent = "com.oruxmaps.INTENT_STOP_RECORD";
+	        } else if (button == Constants.ORUXMAPS_NEW_WAYPOINT_PRESS) {
+	            oruxIntent = "com.oruxmaps.INTENT_NEW_WAYPOINT";
+	        }
+	        if (!oruxIntent.equals("")) {
+                Log.d(TAG, "Sending " + oruxIntent);
+                Intent intent = new Intent();
+                intent.setAction(oruxIntent);
+                context.sendBroadcast(intent);    
+	        } else {
+	            start = true;
+	        }
     	}    	
+        if (data.contains(Constants.MSG_VERSION_PEBBLE)) {
+            version = data.getInteger(Constants.MSG_VERSION_PEBBLE).intValue();
+            Log.d(TAG, "Constants.MSG_VERSION_PEBBLE, version: " + version);
+            start = true;
+        }       
+        /*if (data.contains(Constants.MSG_LIVE_ASK_NAMES)) {
+            live_max_name = data.getInteger(Constants.MSG_LIVE_ASK_NAMES).intValue();
+            Log.d(TAG, "Constants.MSG_LIVE_ASK_NAMES, live_max_name: " + live_max_name);
+            start = true;
+        }*/
+
+    	PebbleKit.sendAckToPebble(context, transactionId);
     	
-    	if (button >= 0) {
-	        PebbleKit.sendAckToPebble(context, transactionId);
-	
-	        Intent i = new Intent(context, MainActivity.class);
-	        i.addFlags(
-	                Intent.FLAG_ACTIVITY_NEW_TASK   // If set, this activity will become the start of a new task on this history stack
-	              | Intent.FLAG_ACTIVITY_CLEAR_TOP  // If set, and the activity being launched is already running in the current task, then instead of launching a new instance of that activity, all of the other activities on top of it will be closed and this Intent will be delivered to the (now on top) old activity as a new Intent
-	              | Intent.FLAG_ACTIVITY_SINGLE_TOP // If set, the activity will not be launched if it is already running at the top of the history stack
-	        );
-	        i.putExtra("button", button);
-	        context.startActivity(i);
-    	}
+        if (start) {
+        	Intent i = new Intent(context, MainActivity.class);
+            i.addFlags(
+                    Intent.FLAG_ACTIVITY_NEW_TASK   // If set, this activity will become the start of a new task on this history stack
+                  | Intent.FLAG_ACTIVITY_CLEAR_TOP  // If set, and the activity being launched is already running in the current task, then instead of launching a new instance of that activity, all of the other activities on top of it will be closed and this Intent will be delivered to the (now on top) old activity as a new Intent
+                  | Intent.FLAG_ACTIVITY_SINGLE_TOP // If set, the activity will not be launched if it is already running at the top of the history stack
+            );
+            
+        	if (button >= 0) {
+    	        i.putExtra("button", button);
+        	}
+            if (version >= 0) {
+                i.putExtra("version", version);
+            }
+            /*if (live_max_name != -99) {
+                i.putExtra("live_max_name", live_max_name);
+            }*/
+
+        	context.startActivity(i);
+        }
     }
 }

@@ -21,12 +21,16 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.getpebble.android.kit.PebbleKit;
+import com.getpebble.android.kit.util.PebbleDictionary;
+
 import fr.jayps.android.AdvancedLocation;
 
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
@@ -35,6 +39,7 @@ public class LiveTracking {
 	private static final String TAG = "PB-LiveTracking";
 	
     protected Context _context = null;
+    private Location _firstLocation = null;
     private long _prevTime = -1;
     private Location _lastLocation = null;
     private String _activity_id = "";
@@ -44,8 +49,13 @@ public class LiveTracking {
     private String _password = "";
     private String _url = "";
     private int _versionCode = -1;
+    public int numberOfFriends = 0;
+    private int _numberOfFriendsSentToPebble = 0;
+    
+    final int maxNumberOfFriend = 5;
     
     class LiveTrackingFriend {
+        public int number = 0;
     	public String id = "";
     	public String nickname = "";
     	public Double lat = null, lon = null;
@@ -105,7 +115,12 @@ public class LiveTracking {
 			ts = friend.ts;
 			lat = friend.lat;
 			lon = friend.lon;
+			deltaDistance = friend.deltaDistance;
+            bearing = friend.bearing;
 			return true;
+		}
+		public Location getLocation() {
+		    return _location;
 		}
     }
     
@@ -138,7 +153,8 @@ public class LiveTracking {
     	this._url = url;
     }
 
-    public boolean addPoint(Location location) {
+    public boolean addPoint(Location firstLocation, Location location) {
+        _firstLocation = firstLocation;
     	//Log.d(TAG, "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude() + "," + location.getTime() + "," + location.getAccuracy()+ ")");
     	if (location.getTime() - _prevTime < 5000) {
     		// too early (dt<5s), do nothing
@@ -154,10 +170,32 @@ public class LiveTracking {
 		// ok
 		_prevTime = location.getTime();
 		this._lastLocation = location;
-		boolean result = this._send(_bufferPoints, _bufferAccuracies);
-		_bufferPoints = _bufferAccuracies = "";
-		return result;
+		new SendLiveTask().execute(new SendLiveTaskParams(_bufferPoints, _bufferAccuracies));
+		return true;
     }
+    class SendLiveTaskParams {
+        String points;
+        String accuracies;
+        public SendLiveTaskParams(String points, String accuracies) {
+            this.points = points;
+            this.accuracies = accuracies;
+        }
+    }
+    private class SendLiveTask extends AsyncTask<SendLiveTaskParams, Void, Boolean> {
+        protected Boolean doInBackground(SendLiveTaskParams... params) {
+            int count = params.length;
+            boolean result = false;
+            for (int i = 0; i < count; i++) {
+                result = result || _send(params[i].points, params[i].accuracies);
+            }
+            return result;
+        }
+
+        protected void onPostExecute(Boolean result) {
+            Log.d(TAG, "onPostExecute(" + result + ")");
+        }
+    }
+
     private boolean _send(String points, String accuracies) {
     	Log.d(TAG, "send(" + points + ", " + accuracies + ")");
         try {
@@ -257,6 +295,8 @@ public class LiveTracking {
                     } else {
                     	// new friend
                     	//Log.d(TAG, "new friend "+friend.id);
+                        friend.number = numberOfFriends;
+                        numberOfFriends++;
                     	_friends.put(friend.id, friend);
                     }
                  }
@@ -268,6 +308,45 @@ public class LiveTracking {
 				//Log.d(TAG, "+++"+f.toString());
 			//}            
 
+            byte[] msgLiveShort = getMsgLiveShort(_firstLocation);
+            String[] names = getNames();
+            if (msgLiveShort.length > 1) {
+                String sending = "";
+                
+                PebbleDictionary dic = new PebbleDictionary();
+                
+                if (_numberOfFriendsSentToPebble != msgLiveShort.length || (5 * Math.random() <= 1)) {
+                    _numberOfFriendsSentToPebble = msgLiveShort.length;
+                    
+                    if (names[0] != null) {
+                        dic.addString(Constants.MSG_LIVE_NAME0, names[0]);
+                    }
+                    if (names[1] != null) {
+                        dic.addString(Constants.MSG_LIVE_NAME1, names[1]);
+                    }
+                    if (names[2] != null) {
+                        dic.addString(Constants.MSG_LIVE_NAME2, names[2]);
+                    }
+                    if (names[3] != null) {
+                        dic.addString(Constants.MSG_LIVE_NAME3, names[3]);
+                    }
+                    if (names[4] != null) {
+                        dic.addString(Constants.MSG_LIVE_NAME4, names[4]);
+                    }
+                    sending += " MSG_LIVE_NAMEx";
+                }
+                dic.addBytes(Constants.MSG_LIVE_SHORT, msgLiveShort);
+                for( int i = 0; i < msgLiveShort.length; i++ ) {
+                    sending += " msgLiveShort["+i+"]: "   + ((256+msgLiveShort[i])%256);
+                }
+                Log.d(TAG, sending);
+
+                PebbleKit.sendDataToPebble(_context, Constants.WATCH_UUID, dic);
+            }
+            
+            
+            _bufferPoints = _bufferAccuracies = "";
+            
             return nbReceivedFriends > 0;
             
         } catch (Exception e) {
@@ -275,34 +354,86 @@ public class LiveTracking {
         }
         return false;
     }
-    public String getFriends() {
-    	String result = "";
-        
-    	Iterator<Entry<String, LiveTrackingFriend>> iter = _friends.entrySet().iterator();
-		while (iter.hasNext()) {
-			LiveTrackingFriend f = iter.next().getValue();
-			
-			long lastViewed = System.currentTimeMillis() / 1000 - f.ts;
-			
-			//Log.i(TAG, "--" + f.toString() + "|" + lastViewed);
-			
-			String strFriend = f.nickname + " ";
-            if (f.deltaDistance > 1000) {
-            	strFriend += String.format(Locale.US, "%.1f", f.deltaDistance/1000) + "km";
-            } else {
-            	strFriend += String.format(Locale.US, "%.0f", f.deltaDistance) + "m";
-            }
-            strFriend += " " + String.format(Locale.US, "%.0f", f.bearing) + "°";
-            strFriend += " (" + AdvancedLocation.bearingText(f.bearing) + ")";
-            if (lastViewed >= 0) {
-            	if (lastViewed < 60) {
-	            	strFriend += " (" + lastViewed + "\")";
-	            } else if (lastViewed < 60 * 60) {
-	            	strFriend += " (" + (lastViewed / 60) + "')";
-	            }
-            }
-            result += (result != "" ? "\n" : "") + strFriend;
-		}
-		return result;
-    }
+
+    public byte[] getMsgLiveShort(Location firstLocation) {
+       final int sizeOfAFriend = 9;
+       float _distanceConversion = (float) Constants.M_TO_KM; //TODO: miles
+       
+       byte[] data = new byte[1 + maxNumberOfFriend * sizeOfAFriend];
+       
+       data[0] = (byte) _friends.size();
+       
+       Iterator<Entry<String, LiveTrackingFriend>> iter = _friends.entrySet().iterator();
+       while (iter.hasNext()) {
+           LiveTrackingFriend f = iter.next().getValue();
+           if (f.number >= maxNumberOfFriend) {
+               // too many friends, skip this one
+               continue;
+           }
+           
+           //Log.d(TAG, firstLocation.toString());
+           //Log.d(TAG, f.getLocation().toString());
+
+           double xpos = firstLocation.distanceTo(f.getLocation()) * Math.sin(firstLocation.bearingTo(f.getLocation())/180*3.1415);
+           double ypos = firstLocation.distanceTo(f.getLocation()) * Math.cos(firstLocation.bearingTo(f.getLocation())/180*3.1415);
+           xpos = Math.floor(xpos/10);
+           ypos = Math.floor(ypos/10);
+           Log.d(TAG,  "xpos="+xpos+"-ypos="+ypos);
+           
+           long lastViewed = System.currentTimeMillis() / 1000 - f.ts;
+           //Log.d(TAG, "lastViewed="+lastViewed);
+           
+           data[1 + f.number * sizeOfAFriend + 0] = (byte) (((int) Math.abs(xpos)) % 256);
+           data[1 + f.number * sizeOfAFriend + 1] = (byte) ((((int) Math.abs(xpos)) / 256) % 128);
+           if (xpos < 0) {
+               data[1 + f.number * sizeOfAFriend + 1] += 128;
+           }
+           data[1 + f.number * sizeOfAFriend + 2] = (byte) (((int) Math.abs(ypos)) % 256);
+           data[1 + f.number * sizeOfAFriend + 3] = (byte) ((((int) Math.abs(ypos)) / 256) % 128);
+           if (ypos < 0) {
+               data[1 + f.number * sizeOfAFriend + 3] += 128;
+           }
+           data[1 + f.number * sizeOfAFriend + 4] = (byte) (((int) (Math.floor(100 * f.deltaDistance * _distanceConversion) / 1)) % 256);
+           data[1 + f.number * sizeOfAFriend + 5] = (byte) (((int) (Math.floor(100 * f.deltaDistance * _distanceConversion) / 1)) / 256);
+           data[1 + f.number * sizeOfAFriend + 6] = (byte) (((int) (f.bearing / 360 * 256)) % 256);
+           data[1 + f.number * sizeOfAFriend + 7] = (byte) (((int) lastViewed) % 256);
+           data[1 + f.number * sizeOfAFriend + 8] = (byte) (((int) lastViewed) / 256);
+
+           
+           String strFriend = f.number + "|" + f.nickname + " ";
+           if (f.deltaDistance > 1000) {
+               strFriend += String.format(Locale.US, "%.1f", f.deltaDistance/1000) + "km";
+           } else {
+               strFriend += String.format(Locale.US, "%.0f", f.deltaDistance) + "m";
+           }
+           strFriend += " " + String.format(Locale.US, "%.0f", f.bearing) + "°";
+           strFriend += " (" + AdvancedLocation.bearingText(f.bearing) + ")";
+           if (lastViewed >= 0) {
+               if (lastViewed < 60) {
+                   strFriend += " (" + lastViewed + "\")";
+               } else if (lastViewed < 60 * 60) {
+                   strFriend += " (" + (lastViewed / 60) + "')";
+               }
+           }
+           Log.d(TAG, strFriend);
+       }
+                  
+       return data; 
+   }
+   public String[] getNames() {
+     
+       String[] names = new String[maxNumberOfFriend];
+
+       Iterator<Entry<String, LiveTrackingFriend>> iter = _friends.entrySet().iterator();
+       while (iter.hasNext()) {
+           LiveTrackingFriend f = iter.next().getValue();
+           if (f.number >= maxNumberOfFriend) {
+               // too many friends, skip this one
+               continue;
+           }
+           names[f.number] = f.nickname;
+       }
+
+       return names;
+   }
 }
