@@ -170,6 +170,14 @@ public class HomeActivity extends SherlockFragment {
     }
 
     public void setStartButtonVisibility(Boolean shown) {
+        if (_view == null) {
+            Log.e(TAG, "setStartButtonVisibility: _view == null : exit");
+            // BUG! This could happen if the system is low on memory and choose to kill the app.
+            // All views are not correctly reconstructed when the app restarts, causing the present bug
+            // Waiting for a fix for this bug. In the meantime, force the app to close to avoid the "NullPointerException" crash
+            // Note: when GPS is running, it is not likely to happen: it runs in a foreground service with a sticky notification for the user
+            System.exit(0);
+        }
         Button startButton = (Button)_view.findViewById(R.id.MAIN_START_BUTTON);
         if(shown)
             startButton.setVisibility(View.VISIBLE);
