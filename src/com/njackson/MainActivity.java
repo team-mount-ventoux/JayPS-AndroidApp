@@ -412,6 +412,21 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             String avgSpeed = String.format(Locale.US, "%.1f", intent.getFloatExtra("AVGSPEED", 99) * _speedConversion);
             homeScreen.setAvgSpeed(avgSpeed);
         }
+        if (intent.hasExtra("ACCURACY")) {
+            String gpsStatus = "";
+            float accuracy = intent.getFloatExtra("ACCURACY", 99.9f);
+            if (accuracy <= 4) {
+                gpsStatus = "EXCELLENT";
+            } else if (accuracy <= 6) {
+                gpsStatus = "GOOD";
+            } else if (accuracy <= 10) {
+                gpsStatus = "MEDIUM";
+            } else {
+                gpsStatus = "POOR";
+            }
+            //Log.d(TAG, "gpsStatus: " + accuracy + " => " + gpsStatus);
+            homeScreen.setGPSStatus(gpsStatus);
+        }
         if (intent.hasExtra("TIME")) {
             int time = (int) (intent.getLongExtra("TIME",0) / 1000);
             int s = time % 60;

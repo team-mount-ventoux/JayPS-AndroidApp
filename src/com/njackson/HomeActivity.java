@@ -210,6 +210,12 @@ public class HomeActivity extends SherlockFragment {
         textView.setText(text);
     }
 
+    public void setGPSStatus(String text) {
+        TextView textView = (TextView)_view.findViewById(R.id.MAIN_STATUS_TEXT);
+        textView.setText(text);
+    }
+
+    
     public void setDistance(String text) {
         TextView textView = (TextView)_view.findViewById(R.id.MAIN_DISTANCE_TEXT);
         textView.setText(text);
