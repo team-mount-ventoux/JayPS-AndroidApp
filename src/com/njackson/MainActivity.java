@@ -46,8 +46,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private static boolean _activityRecognition = false;
     public static boolean _liveTracking = false;
     
-    public static int peebleFirmwareVersion = 0;
-    public static FirmwareVersionInfo peebleFirmwareVersionInfo;
+    public static int pebbleFirmwareVersion = 0;
+    public static FirmwareVersionInfo pebbleFirmwareVersionInfo;
     
     private PendingIntent _callbackIntent;
     private RequestType _requestType;
@@ -55,7 +55,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     
     private long _sendDataToPebbleLastTime = 0;
     private static int _refresh_interval = 1000;
-    private static boolean _debug = false;
+    public static boolean debug = false;
 
     private static float _speedConversion = 0.0f;
     private static float _distanceConversion = 0.0f;
@@ -126,7 +126,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         } catch (Exception e) {
             Log.e(TAG, "Exception converting REFRESH_INTERVAL:" + e);
         }
-        _debug = prefs.getBoolean("PREF_DEBUG", false);
+        debug = prefs.getBoolean("PREF_DEBUG", false);
     }
 
     private void startButtonClick(boolean value) {
@@ -207,24 +207,24 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         // try to get Pebble Watch Firmware version
         try {
             // getWatchFWVersion works only with firmware 2.x
-            peebleFirmwareVersionInfo = PebbleKit.getWatchFWVersion(getApplicationContext());
-            peebleFirmwareVersion = 2;
-            if (peebleFirmwareVersionInfo == null) {
+            pebbleFirmwareVersionInfo = PebbleKit.getWatchFWVersion(getApplicationContext());
+            pebbleFirmwareVersion = 2;
+            if (pebbleFirmwareVersionInfo == null) {
                 // if the watch is disconnected or we can't get the version
-                Log.e(TAG, "peebleFirmwareVersionInfo == null");
+                Log.e(TAG, "pebbleFirmwareVersionInfo == null");
             } else {
-                Log.e(TAG, "getMajor:"+peebleFirmwareVersionInfo.getMajor());
-                Log.e(TAG, "getMinor:"+peebleFirmwareVersionInfo.getMinor());
-                Log.e(TAG, "getPoint:"+peebleFirmwareVersionInfo.getPoint());
-                Log.e(TAG, "getTag:"+peebleFirmwareVersionInfo.getTag());
+                Log.e(TAG, "getMajor:"+pebbleFirmwareVersionInfo.getMajor());
+                Log.e(TAG, "getMinor:"+pebbleFirmwareVersionInfo.getMinor());
+                Log.e(TAG, "getPoint:"+pebbleFirmwareVersionInfo.getPoint());
+                Log.e(TAG, "getTag:"+pebbleFirmwareVersionInfo.getTag());
             }
         } catch (Exception e) {
-            Log.e(TAG, "Exception getWatchFWVersion " + e.getMessage());
+            //Log.e(TAG, "Exception getWatchFWVersion " + e.getMessage());
             // getWatchFWVersion works only with 2.x firmware
-            peebleFirmwareVersion = 1;
-            peebleFirmwareVersionInfo = null;
+            pebbleFirmwareVersion = 1;
+            pebbleFirmwareVersionInfo = null;
         }
-        Log.d(TAG, "peebleFirmwareVersion=" + peebleFirmwareVersion);
+        Log.d(TAG, "pebbleFirmwareVersion=" + pebbleFirmwareVersion);
     }
 
     @Override
@@ -322,7 +322,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
             data[0] = (byte) ((_units % 2) * (1<<0));
             data[0] += (byte) ((checkServiceRunning() ? 1 : 0) * (1<<1));
-            data[0] += (byte) ((_debug ? 1 : 0) * (1<<2));
+            data[0] += (byte) ((debug ? 1 : 0) * (1<<2));
             data[0] += (byte) ((_liveTracking ? 1 : 0) * (1<<3));
             
             int refresh_code = 1; // 1s
@@ -337,7 +337,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             // unused bits
             data[0] += (byte) (0 * (1<<6));
             data[0] += (byte) (0 * (1<<7));
-            //Log.d(TAG, _units+"|"+checkServiceRunning()+"|_debug:"+_debug+"|"+_liveTracking+"|_refresh_interval="+_refresh_interval+"|refresh_code="+refresh_code+"|"+((256+data[0])%256));
+            //Log.d(TAG, _units+"|"+checkServiceRunning()+"|debug:"+debug+"|"+_liveTracking+"|_refresh_interval="+_refresh_interval+"|refresh_code="+refresh_code+"|"+((256+data[0])%256));
             
             data[1] = (byte) ((int)  Math.ceil(intent.getFloatExtra("ACCURACY", 0.0f)));
             data[2] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0.0f) * _distanceConversion) / 1)) % 256);
@@ -392,7 +392,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }
         sending += " STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED);*/
 
-        Log.d(TAG, sending);
+        if (MainActivity.debug) Log.d(TAG, sending);
         PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);        
     }
 

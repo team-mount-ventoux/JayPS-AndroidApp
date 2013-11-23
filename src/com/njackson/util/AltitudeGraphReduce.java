@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.njackson.MainActivity;
+
 /**
  * Created with IntelliJ IDEA.
  * User: njackson
@@ -61,7 +63,7 @@ public class AltitudeGraphReduce {
         if (time == 0) {
             time = System.currentTimeMillis();
         }
-        Log.d(TAG, "addAltitude("+altitude+", "+time+", "+distance+")");
+        //if (MainActivity.debug) Log.d(TAG, "addAltitude("+altitude+", "+time+", "+distance+")");
         
         if(_lastAltitudeBinChange == 0) {
             _altitudeBins.add(altitude); // initialise the first bin
@@ -74,7 +76,7 @@ public class AltitudeGraphReduce {
             _altitudeMin = altitude;
 
         if (_lastAltitudeBinChange + _altitudeBinSizeMs > time) {
-            Log.d(TAG, _numberAltitudesInBin + ":" + _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " > " + time);
+            //if (MainActivity.debug) Log.d(TAG, _numberAltitudesInBin + ":" + _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " > " + time);
             _altitudeBins.set(
                     _altitudeBins.size()-1,
                     (_altitudeBins.get(_altitudeBins.size()-1) * _numberAltitudesInBin + altitude) / (_numberAltitudesInBin + 1)
@@ -82,7 +84,7 @@ public class AltitudeGraphReduce {
             _numberAltitudesInBin++;
         } else {
             _numberAltitudesInBin = 1;
-            Log.d(TAG, _numberAltitudesInBin + ":" + _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " <= " + time);
+            //if (MainActivity.debug) Log.d(TAG, _numberAltitudesInBin + ":" + _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " <= " + time);
             _altitudeBins.add(altitude); // create a new bin and add the altitude
             _lastAltitudeBinChange = time;
         }

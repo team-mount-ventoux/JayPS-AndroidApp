@@ -50,14 +50,14 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         
         Preference pref = findPreference("pref_install");
         pref.setOnPreferenceClickListener(pref_install_click_listener);
-        if (MainActivity.peebleFirmwareVersion == 1) {
+        if (MainActivity.pebbleFirmwareVersion == 1) {
             pref.setTitle(pref.getTitle() + " [your version]");
             pref.setSummary(pref.getSummary() + " This is the version compatible with your current Pebble firmware.");
         }
 
         Preference pref2 = findPreference("pref_install_sdk2");
         pref2.setOnPreferenceClickListener(pref_install_click_listener);
-        if (MainActivity.peebleFirmwareVersion == 2) {
+        if (MainActivity.pebbleFirmwareVersion == 2) {
             pref2.setTitle(pref2.getTitle() + " [your version]");
             pref2.setSummary(pref2.getSummary() + " This is the version compatible with your current Pebble firmware.");
         }
@@ -77,7 +77,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         }
         Log.d(TAG, "versionCode:" + versionCode);
         Log.d(TAG, "sdkVersion:" + sdkVersion);
-        Log.d(TAG, "peebleFirmwareVersion:" + MainActivity.peebleFirmwareVersion);
+        Log.d(TAG, "peebleFirmwareVersion:" + MainActivity.pebbleFirmwareVersion);
         
         try {
             String uriString = "http://labs.jayps.fr/pebblebike/pebblebike-1.3.0-beta7";

@@ -138,7 +138,7 @@ public class GPSService extends Service {
 
     // save the state
     public void saveGPSStats() {
-    	Log.d(TAG, "saveGPSStats()");
+        if (MainActivity.debug) Log.d(TAG, "saveGPSStats()");
     	
         SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
         SharedPreferences.Editor editor = settings.edit();
@@ -172,7 +172,7 @@ public class GPSService extends Service {
 	    	// GPS is running
 		    // reninit all properties
 	    	_this._myLocation = new AdvancedLocation(_this.getApplicationContext());
-	    	_this._myLocation.debugLevel = 1;
+	    	_this._myLocation.debugLevel = MainActivity.debug ? 2 : 0;
 	    	_this._myLocation.debugTagPrefix = "PB-";
 
 	    	_this.loadGPSStats();  	    	
@@ -223,7 +223,7 @@ public class GPSService extends Service {
         _liveTracking = new LiveTracking(getApplicationContext());
 
         _myLocation = new AdvancedLocation(getApplicationContext());
-        _myLocation.debugLevel = 1;
+        _myLocation.debugLevel = MainActivity.debug ? 2 : 0;
         _myLocation.debugTagPrefix = "PB-";
 
         loadGPSStats();
@@ -303,7 +303,7 @@ public class GPSService extends Service {
 
             xpos = Math.floor(xpos/10);
             ypos = Math.floor(ypos/10);
-            Log.d(TAG,  "xpos="+xpos+"-ypos="+ypos);
+            if (MainActivity.debug) Log.d(TAG,  "xpos="+xpos+"-ypos="+ypos);
 
             boolean send = false;
             //if(_myLocation.getAccuracy() < 15.0) // not really needed, something similar is done in AdvancedLocation
@@ -317,7 +317,7 @@ public class GPSService extends Service {
                 _prevaltitude = _myLocation.getAltitude();
                 _prevtime = _myLocation.getTime();
             } else if (_prevtime + 5000 < _myLocation.getTime()) {
-                Log.d(TAG,  "New GPS data without move");
+                if (MainActivity.debug) Log.d(TAG,  "New GPS data without move");
                 
                 send = true;
                 

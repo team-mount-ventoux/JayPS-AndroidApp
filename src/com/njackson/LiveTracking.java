@@ -163,7 +163,7 @@ public class LiveTracking {
     	_bufferAccuracies += (_bufferAccuracies != "" ? " " : "") + String.format(Locale.US, "%.1f", location.getAccuracy());
     	if (location.getTime() - _prevTime < 30000) {
     		// too early (5s<dt<30s), save point to send it later
-    		Log.d(TAG, "too early: skip addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude() + "," + location.getTime() + ")");
+    	    if (MainActivity.debug) Log.d(TAG, "too early: skip addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude() + "," + location.getTime() + ")");
     		return false;
     	}
 		// ok
@@ -191,12 +191,12 @@ public class LiveTracking {
         }
 
         protected void onPostExecute(Boolean result) {
-            Log.d(TAG, "onPostExecute(" + result + ")");
+            if (MainActivity.debug) Log.d(TAG, "onPostExecute(" + result + ")");
         }
     }
 
     private boolean _send(String points, String accuracies) {
-    	Log.d(TAG, "send(" + points + ", " + accuracies + ")");
+        if (MainActivity.debug) Log.d(TAG, "send(" + points + ", " + accuracies + ")");
         try {
         	String request = _activity_id == "" ? "start_activity" : "update_activity";
         	String postParameters = "";
@@ -263,7 +263,7 @@ public class LiveTracking {
                 expression = "/message/activity_id";
            
                 String activity_id = xpath.evaluate(expression, doc);
-                Log.d(TAG, "activity_id:"+activity_id);
+                if (MainActivity.debug) Log.d(TAG, "activity_id:"+activity_id);
                 if (activity_id != "") {
                 	_activity_id = activity_id;
                 }
@@ -335,7 +335,7 @@ public class LiveTracking {
                 for( int i = 0; i < msgLiveShort.length; i++ ) {
                     sending += " msgLiveShort["+i+"]: "   + ((256+msgLiveShort[i])%256);
                 }
-                Log.d(TAG, sending);
+                if (MainActivity.debug) Log.d(TAG, sending);
 
                 PebbleKit.sendDataToPebble(_context, Constants.WATCH_UUID, dic);
             }
@@ -416,7 +416,7 @@ public class LiveTracking {
            }
            strFriend += " - xpos="+xpos+"-ypos="+ypos;
            //strFriend += " - lat="+f.lat+"-lon="+f.lon;
-           Log.d(TAG, strFriend);
+           if (MainActivity.debug) Log.d(TAG, strFriend);
        }
                   
        return data; 
