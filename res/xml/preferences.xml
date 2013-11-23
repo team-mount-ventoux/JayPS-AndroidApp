@@ -72,7 +72,10 @@
         android:key="about"
         android:title="@string/PREF_ABOUT_TITLE"
         android:summary="@string/PREF_ABOUT_SUMMARY"
-        />
+        >
+            <intent android:action="android.intent.action.VIEW"
+            android:data="http://www.pebblebike.com" />
+    </Preference>
     <CheckBoxPreference
             android:key="PREF_DEBUG"
             android:title="@string/PREF_DEBUG_TITLE"
