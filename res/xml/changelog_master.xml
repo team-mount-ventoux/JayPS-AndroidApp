@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="1.3.0 beta7" versioncode="18" >
+      <change>Add support for Pebble 2.0</change>
+      <change>UI: update GPS Status</change>
+      <change>Several bugfixes</change>
+      <change>=> Install the new watchface (click on "Install Watchface in settings")</change>
+  </release>
   <release version="1.3.0 beta6" versioncode="17" >
       <change>OruxMaps integration (start/stop/add waypoint)</change>
       <change>Live: display list of friends in a menu</change>
       <change>New pictos for buttons</change>
       <change>New settings - refresh rate</change>
       <change>Several bugfixes</change>
-      <change>=> Install the new watchface (click on "Install Watchface in settings")</change>
   </release>
   <release version="1.3.0 beta5" versioncode="16" >
       <change>Live: friends are now displayed in real time on the map</change>
