@@ -39,8 +39,13 @@
     <string name="AVG_SPEED_TEXT_METRIC">AVG. KM/H</string>
     <string name="GPS_STATUS_LABEL">GPS STATUS</string><string name="ALTITUDE_TEXT">ALTITUDE</string>
 
-    <string name="PREF_INSTALL_WATCHFACE">Install Watchface</string>
-    <string name="PREF_INSTALL_WATCHFACE_SUMMARY">Download watchface and install it on your Pebble</string>
+    <string name="PREF_INSTALL_CATEGORY_TITLE">Install Watchface</string>
+    <string name="PREF_INSTALL_WATCHFACE">For Pebble 1.x</string>
+    <string name="PREF_INSTALL_WATCHFACE_SUMMARY">Download watchface and install it on your Pebble. For Pebble firmware 1.x only.</string>
+
+    <string name="PREF_INSTALL_WATCHFACE_SDK2">For Pebble 2.x</string>
+    <string name="PREF_INSTALL_WATCHFACE_SDK2_SUMMARY">Download watchface and install it on your Pebble. For Pebble firmware 2.x only.</string>
+
 
     <string name="PREF_ABOUT_TITLE">@string/MAIN_TITLE</string>
     <string name="PREF_ABOUT_SUMMARY">http://www.pebblebike.com</string>

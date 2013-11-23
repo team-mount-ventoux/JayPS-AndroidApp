@@ -19,6 +19,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.getpebble.android.kit.PebbleKit;
+import com.getpebble.android.kit.PebbleKit.FirmwareVersionInfo;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -44,6 +45,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
     private static boolean _activityRecognition = false;
     public static boolean _liveTracking = false;
+    
+    public static int peebleFirmwareVersion = 0;
+    public static FirmwareVersionInfo peebleFirmwareVersionInfo;
+    
     private PendingIntent _callbackIntent;
     private RequestType _requestType;
     private static int _units = Constants.IMPERIAL;
@@ -198,6 +203,28 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 GPSService.liveSendNames(getIntent().getExtras().getInt("live_max_name"));
             }*/
         }
+        
+        // try to get Pebble Watch Firmware version
+        try {
+            // getWatchFWVersion works only with firmware 2.x
+            peebleFirmwareVersionInfo = PebbleKit.getWatchFWVersion(getApplicationContext());
+            peebleFirmwareVersion = 2;
+            if (peebleFirmwareVersionInfo == null) {
+                // if the watch is disconnected or we can't get the version
+                Log.e(TAG, "peebleFirmwareVersionInfo == null");
+            } else {
+                Log.e(TAG, "getMajor:"+peebleFirmwareVersionInfo.getMajor());
+                Log.e(TAG, "getMinor:"+peebleFirmwareVersionInfo.getMinor());
+                Log.e(TAG, "getPoint:"+peebleFirmwareVersionInfo.getPoint());
+                Log.e(TAG, "getTag:"+peebleFirmwareVersionInfo.getTag());
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception getWatchFWVersion " + e.getMessage());
+            // getWatchFWVersion works only with 2.x firmware
+            peebleFirmwareVersion = 1;
+            peebleFirmwareVersionInfo = null;
+        }
+        Log.d(TAG, "peebleFirmwareVersion=" + peebleFirmwareVersion);
     }
 
     @Override
@@ -252,20 +279,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }        
     }
 
-    private void sendWatchFaceToPebble(){
-        try {
-            Uri uri = Uri.parse("http://labs.jayps.fr/pebblebike/pebblebike-1.2.0.pbw?and");
-            Intent startupIntent = new Intent();
-            startupIntent.setAction(Intent.ACTION_VIEW);
-            startupIntent.setType("application/octet-stream");
-            startupIntent.setData(uri);
-            ComponentName distantActivity = new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity");
-            startupIntent.setComponent(distantActivity);
-            startActivity(startupIntent);
-        }catch (ActivityNotFoundException ae) {
-            Toast.makeText(getApplicationContext(),"Unable to install watchface, do you have the latest pebble app installed?",Toast.LENGTH_LONG).show();
-        }
-    }
+
 
     private void sendServiceState() {
     	Log.d(TAG, "sendServiceState()");
