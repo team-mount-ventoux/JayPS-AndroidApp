@@ -22,7 +22,7 @@ public class AltitudeGraphReduce {
     private static AltitudeGraphReduce _instance;
 
     private ArrayList<Integer> _altitudeBins = new ArrayList<Integer>();
-    private long _lastAltitudeBinChange = 0;
+    private long _lastAltitudeBinChange = -1;
     private int _altitudeBinSizeMs = 120000;
     private int _numberAltitudesInBin = 0;
 
@@ -60,12 +60,10 @@ public class AltitudeGraphReduce {
     }
 
     public void addAltitude(int altitude, long time, float distance) {
-        if (time == 0) {
-            time = System.currentTimeMillis();
-        }
-        //if (MainActivity.debug) Log.d(TAG, "addAltitude("+altitude+", "+time+", "+distance+")");
+        // time: elapsed time, in millisecond, and not current time
+        if (MainActivity.debug) Log.d(TAG, "addAltitude("+altitude+", "+time+", "+distance+")");
         
-        if(_lastAltitudeBinChange == 0) {
+        if(_lastAltitudeBinChange == -1) {
             _altitudeBins.add(altitude); // initialise the first bin
             _lastAltitudeBinChange = time;
         }
@@ -76,7 +74,7 @@ public class AltitudeGraphReduce {
             _altitudeMin = altitude;
 
         if (_lastAltitudeBinChange + _altitudeBinSizeMs > time) {
-            //if (MainActivity.debug) Log.d(TAG, _numberAltitudesInBin + ":" + _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " > " + time);
+            if (MainActivity.debug) Log.d(TAG, _numberAltitudesInBin + ":" + _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " > " + time);
             _altitudeBins.set(
                     _altitudeBins.size()-1,
                     (_altitudeBins.get(_altitudeBins.size()-1) * _numberAltitudesInBin + altitude) / (_numberAltitudesInBin + 1)
@@ -84,7 +82,7 @@ public class AltitudeGraphReduce {
             _numberAltitudesInBin++;
         } else {
             _numberAltitudesInBin = 1;
-            //if (MainActivity.debug) Log.d(TAG, _numberAltitudesInBin + ":" + _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " <= " + time);
+            if (MainActivity.debug) Log.d(TAG, _numberAltitudesInBin + ":" + _lastAltitudeBinChange + "+" + _altitudeBinSizeMs + "=" + (_lastAltitudeBinChange+_altitudeBinSizeMs) + " <= " + time);
             _altitudeBins.add(altitude); // create a new bin and add the altitude
             _lastAltitudeBinChange = time;
         }
@@ -125,7 +123,7 @@ public class AltitudeGraphReduce {
 
     public void restData() {
         _altitudeBins = new ArrayList<Integer>();
-        _lastAltitudeBinChange = 0;
+        _lastAltitudeBinChange = -1;
         _altitudeMax =0;
         _altitudeMin=99999;
     }
