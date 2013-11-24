@@ -13,4 +13,4 @@ Pebble Bike has a Live Tracking function that sends your position every 30 secon
 * Nic Jackson (https://github.com/nicholasjackson)
 
 ## Watchface
-See also the [Pebble Bike Watch Face](https://github.com/pebble-bike/PebbleBike-AndroidApp).
+See also the [Pebble Bike Watch Face](https://github.com/pebble-bike/PebbleBike-PebbleWatchFace).
