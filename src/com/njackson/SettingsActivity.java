@@ -80,7 +80,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         Log.d(TAG, "peebleFirmwareVersion:" + MainActivity.pebbleFirmwareVersion);
         
         try {
-            String uriString = "http://labs.jayps.fr/pebblebike/pebblebike-1.3.0-beta7";
+            String uriString = "http://labs.jayps.fr/pebblebike/pebblebike-1.3.0";
             if (sdkVersion == 2) {
                 uriString += "-sdk2";
             }
