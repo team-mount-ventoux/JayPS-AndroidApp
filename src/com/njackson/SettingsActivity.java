@@ -124,6 +124,11 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         Preference loginPref = findPreference("LIVE_TRACKING_LOGIN");
         loginPref.setSummary(login);
     }
+    private void _setOruxMapsSummary(SharedPreferences prefs) {
+        ListPreference oruxPref = (ListPreference) findPreference("ORUXMAPS_AUTO");
+        CharSequence listDesc = oruxPref.getEntry();
+        oruxPref.setSummary(listDesc);
+    }    
 	@Override
     protected void onResume() {
         super.onResume();
@@ -134,6 +139,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         _setUnitsSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
         _setRefreshSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
         _setLoginSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+        _setOruxMapsSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
     }
 
     @Override
@@ -153,6 +159,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         }
         if (key.equals("LIVE_TRACKING_LOGIN")) {
             _setLoginSummary(sharedPreferences);
+        }
+        if (key.equals("ORUXMAPS_AUTO")) {
+            _setOruxMapsSummary(sharedPreferences);
         }
         
         MainActivity activity = MainActivity.getInstance();

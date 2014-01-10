@@ -21,4 +21,19 @@
             <item>2000</item>
             <item>5000</item>
     </string-array>    
+
+    <string-array name="ORUXMAPS_AUTO_ENTRIES">
+            <item>Disable</item>
+            <item>Continue record</item>
+            <item>Start new segment</item>
+            <item>Start new track</item>
+            <item>Start new segment (less than 12h) or new track</item>
+    </string-array>
+    <string-array name="ORUXMAPS_AUTO_ENTRY_VALUES">
+            <item>disable</item>
+            <item>continue</item>
+            <item>new_segment</item>
+            <item>new_track</item>
+            <item>auto</item> 
+    </string-array> 
 </resources>

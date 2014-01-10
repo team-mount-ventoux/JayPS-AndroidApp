@@ -99,6 +99,10 @@ public class GPSService extends Service {
         
         removeServiceForeground();
         
+        if (!MainActivity.oruxmaps_autostart.equals("disable")) {
+            OruxMaps.stopRecord(getApplicationContext());
+        }
+        
         //PebbleKit.closeAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
 
         _locationMgr.removeUpdates(onLocationChange);
@@ -238,6 +242,28 @@ public class GPSService extends Service {
         if(checkGPSEnabled(_locationMgr)) {
             _requestLocationUpdates(intent.getIntExtra("REFRESH_INTERVAL", 1000));
 
+            SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+            
+            if (MainActivity.oruxmaps_autostart.equals("continue")) {
+                OruxMaps.startRecordContinue(getApplicationContext());
+            } else if (MainActivity.oruxmaps_autostart.equals("new_segment")) {
+                OruxMaps.startRecordNewSegment(getApplicationContext());
+            } else if (MainActivity.oruxmaps_autostart.equals("new_track")) {
+                OruxMaps.startRecordNewTrack(getApplicationContext());
+            } else if (MainActivity.oruxmaps_autostart.equals("auto")) {
+                long last_start = settings.getLong("GPS_LAST_START", 0);
+                //Log.d(TAG, "GPS_LAST_START:" + last_start + " ts:" + System.currentTimeMillis());
+                if (System.currentTimeMillis() - last_start > 12 * 3600 * 1000) { // 12 hours
+                    OruxMaps.startRecordNewTrack(getApplicationContext());
+                } else {
+                    OruxMaps.startRecordNewSegment(getApplicationContext());
+                }
+            }
+            
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putLong("GPS_LAST_START", System.currentTimeMillis());
+            editor.commit();
+            
             // send the saved values directly to update pebble
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
