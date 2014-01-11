@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+ <PreferenceCategory
+   android:key="pref_install_category"
+   android:title="@string/PREF_INSTALL_CATEGORY_TITLE"
+ >
+    <Preference
+        android:key="pref_install"
+        android:title="@string/PREF_INSTALL_WATCHFACE"
+        android:summary="@string/PREF_INSTALL_WATCHFACE_SUMMARY"
+        />
+    
+    <Preference
+        android:key="pref_install_sdk2"
+        android:title="@string/PREF_INSTALL_WATCHFACE_SDK2"
+        android:summary="@string/PREF_INSTALL_WATCHFACE_SDK2_SUMMARY"
+        />            
+ </PreferenceCategory> 
+ <PreferenceCategory
+   android:title="@string/PREF_OPTIONS_CATEGORY_TITLE"
+ >
+    <ListPreference
+            android:key="UNITS_OF_MEASURE"
+            android:title="@string/PREF_UNITS_TITLE"
+            android:dialogTitle="@string/PREF_UNITS_DIALOG_TITLE"
+            android:entries="@array/PREF_UNITS_ENTRIES"
+            android:entryValues="@array/PREF_UNITS_ENTRY_VALUES"
+            android:defaultValue="@string/PREF_UNITS_DEFAULT" />
+
+    <ListPreference
+            android:key="REFRESH_INTERVAL"
+            android:title="@string/REFRESH_INTERVAL_TITLE"
+            android:dialogTitle="@string/REFRESH_INTERVAL_DIALOG_TITLE"
+            android:entries="@array/REFRESH_INTERVAL_ENTRIES"
+            android:entryValues="@array/REFRESH_INTERVAL_ENTRY_VALUES"
+            android:defaultValue="@string/REFRESH_INTERVAL_DEFAULT" />
+
+    <CheckBoxPreference
+            android:key="ACTIVITY_RECOGNITION"
+            android:title="@string/PREF_AUTOSTART_TITLE"
+            android:summary="@string/PREF_AUTOSTART_SUMMARY"
+            android:defaultValue="false" />
+
+ </PreferenceCategory> 
+ <PreferenceCategory
+   android:title="@string/PREF_LIVE_TRACKING_CATEGORIE_TITLE"
+   android:summary="@string/PREF_LIVE_TRACKING_CATEGORIE_SUMMARY"
+ >
+    <CheckBoxPreference
+            android:key="LIVE_TRACKING"
+            android:title="@string/PREF_LIVE_TRACKING_TITLE"
+            android:summary="@string/PREF_LIVE_TRACKING_SUMMARY"
+            android:defaultValue="false" />
+  <EditTextPreference
+     android:key="LIVE_TRACKING_LOGIN"
+     android:title="@string/PREF_LIVE_TRACKING_LOGIN_TITLE"
+     android:summary="@string/PREF_LIVE_TRACKING_LOGIN_SUMMARY"
+  />
+  <EditTextPreference
+     android:key="LIVE_TRACKING_PASSWORD"
+     android:title="@string/PREF_LIVE_TRACKING_PASSWORD_TITLE"
+     android:summary="@string/PREF_LIVE_TRACKING_PASSWORD_SUMMARY"
+  />
+ </PreferenceCategory>        
+
+
+ <PreferenceCategory
+   android:title="@string/PREF_ABOUT_CATEGORY_TITLE"
+ >
+    <Preference
+        android:key="about"
+        android:title="@string/PREF_ABOUT_TITLE"
+        android:summary="@string/PREF_ABOUT_SUMMARY"
+        >
+            <intent android:action="android.intent.action.VIEW"
+            android:data="http://www.pebblebike.com" />
+    </Preference>
+    <CheckBoxPreference
+            android:key="PREF_DEBUG"
+            android:title="@string/PREF_DEBUG_TITLE"
+            android:summary="@string/PREF_DEBUG_SUMMARY"
+            android:defaultValue="false" />
+</PreferenceCategory>
+</PreferenceScreen>

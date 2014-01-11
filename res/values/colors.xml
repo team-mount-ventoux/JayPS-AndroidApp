@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="MAIN_BLUE">#0076A3</color>
+    <color name="START_START">#0BA824</color>
+    <color name="START_STOP">#ED145B</color>
+</resources>

@@ -4,3 +4,6 @@
 [submodule "submodules/AdvancedLocation"]
 	path = submodules/AdvancedLocation
 	url = https://nicholasjackson@github.com/jay3/AdvancedLocation.git
+[submodule "submodules/ckChangelog"]
+	path = submodules/ckChangelog
+	url = https://github.com/cketti/ckChangeLog.git

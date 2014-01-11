@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<changelog>
+  <release version="1.3.0" versioncode="20" >
+      <change>Android UI Refresh</change>
+      <change>Live Tracking with JayPS</change>
+      <change>Map screen on Pebble, displays your track and your friends</change>
+      <change>Add support for Pebble 2.0</change>
+      <change>OruxMaps integration (start/stop/add waypoint)</change>
+      <change>Pebble menu</change>
+      <change>Several bugfixes to improve stability</change>
+      <change>=> Install the new watchface (click on "Install Watchface" in settings)</change>
+  </release>
+  <release version="1.2.1" versioncode="10" >
+      <change>Bugfix: reset then start gps from watchface could crash the android app (first use of the app only)</change>
+  </release>
+  <release version="1.2" versioncode="9" >
+      <change>Altitude functionalities (altitude, ascent, ascent rate, slope)</change>
+	  <change>Multipages pebble app (middle button to change the current page)</change>
+      <change>Improved stability</change>
+      <change>BUGFIXES:</change>
+      <change>speed display (missing separator &amp; wrong alignment)</change>
+      <change>saved distance &amp; average speed</change>
+	  <change>Foreground service (notification in status bar to prevent the app to be killed by android system low on memory)</change>
+  </release>
+  <release version="1.0" versioncode="1">
+      <change>First release</change>
+  </release>
+</changelog>

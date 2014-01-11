@@ -13,17 +13,19 @@ import com.google.android.gms.location.*;
  * To change this template use File | Settings | File Templates.
  */
 public class ActivityRecognitionIntentService extends IntentService {
+	
+	private static final String TAG = "PB-ActivityRecognitionIntentService";
 
     private static boolean _watchShown;
 
     public ActivityRecognitionIntentService() {
         super("ActivityRecognitionIntentService");
-        Log.d("MainActivity","Start");
+        Log.d(TAG, "Start");
     }
 
     public ActivityRecognitionIntentService(String name) {
         super(name);
-        Log.d("MainActivity","Start");
+        Log.d(TAG, "Start");
     }
 
     @Override
@@ -32,21 +34,21 @@ public class ActivityRecognitionIntentService extends IntentService {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
             //sendReply(DetectedActivity.ON_BICYCLE);
 
-            Log.d("MainActivity","Handle Intent");
+            Log.d(TAG, "Handle Intent");
 
             switch(result.getMostProbableActivity().getType()) {
 
                 case DetectedActivity.ON_BICYCLE:
                     //TODO: start pebble watch face
                     // start the watch face
-                    Log.d("ActivityIntent","ON_BICYCLE");
+                	Log.d(TAG, "ON_BICYCLE");
                     sendReply(result.getMostProbableActivity().getType());
                     break;
                 case DetectedActivity.TILTING:
-                    Log.d("ActivityIntent","TILTING");
+                	Log.d(TAG, "TILTING");
                     break;
                 case DetectedActivity.STILL:
-                    Log.d("ActivityIntent","STILL");
+                	Log.d(TAG, "STILL");
                 default:
                     sendReply(result.getMostProbableActivity().getType());
             }

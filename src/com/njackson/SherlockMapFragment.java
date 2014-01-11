@@ -21,6 +21,8 @@ import android.support.v4.app.Watson.OnPrepareOptionsMenuListener;
  * To change this template use File | Settings | File Templates.
  */
 public class SherlockMapFragment extends SupportMapFragment implements OnCreateOptionsMenuListener, OnPrepareOptionsMenuListener, OnOptionsItemSelectedListener {
+	
+	private static final String TAG = "PB-SherlockMapFragment";
 
     private SherlockFragmentActivity mActivity;
 

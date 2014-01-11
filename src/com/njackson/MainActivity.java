@@ -7,15 +7,19 @@ import android.app.PendingIntent;
 import android.content.*;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.getpebble.android.kit.PebbleKit;
-import com.getpebble.android.kit.PebbleKit.PebbleDataReceiver;
+import com.getpebble.android.kit.PebbleKit.FirmwareVersionInfo;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
@@ -24,20 +28,34 @@ import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.text.DecimalFormat;
+import com.njackson.util.AltitudeGraphReduce;
+import de.cketti.library.changelog.ChangeLog;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends SherlockFragmentActivity  implements  GooglePlayServicesClient.ConnectionCallbacks,
         GooglePlayServicesClient.OnConnectionFailedListener, HomeActivity.OnButtonPressListener {
+	
+	private static final String TAG = "PB-MainActivity";
 
     private ActivityRecognitionClient _mActivityRecognitionClient;
 
     private static boolean _activityRecognition = false;
+    public static boolean _liveTracking = false;
+    
+    public static int pebbleFirmwareVersion = 0;
+    public static FirmwareVersionInfo pebbleFirmwareVersionInfo;
+    
     private PendingIntent _callbackIntent;
     private RequestType _requestType;
     private static int _units = Constants.IMPERIAL;
+    
+    private long _sendDataToPebbleLastTime = 0;
+    private static int _refresh_interval = 1000;
+    public static boolean debug = false;
 
     private static float _speedConversion = 0.0f;
     private static float _distanceConversion = 0.0f;
@@ -50,10 +68,19 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private boolean _googlePlayInstalled;
     private Fragment _mapFragment;
 
-
     enum RequestType {
         START,
         STOP
+    }
+
+    static MainActivity instance;
+
+    public static MainActivity getInstance() {
+        return instance;
+    }
+
+    public Boolean activityRecognitionEnabled() {
+        return _activityRecognition;
     }
 
     // Listener for the fragment button press
@@ -61,32 +88,45 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     public void onPressed(int sender, boolean value) {
         //To change body of implemented methods use File | Settings | File Templates.
         switch(sender) {
-            case R.id.MAIN_AUTO_START_BUTTON:
-                autoStartButtonClick(value);
-                break;
             case R.id.MAIN_START_BUTTON:
                 startButtonClick(value);
-                break;
-            case R.id.MAIN_UNITS_BUTTON:
-                unitsButtonClick(value);
-                break;
-            case R.id.MAIN_INSTALL_WATCHFACE_BUTTON:
-                sendWatchFaceToPebble();
                 break;
         }
     }
 
-    private void autoStartButtonClick(boolean value) {
-        _activityRecognition = value;
-        if(value) {
+    public void loadPreferences() {
+    	loadPreferences(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+    }
+
+    public void loadPreferences(SharedPreferences prefs) {
+        //setup the defaults
+        _activityRecognition = prefs.getBoolean("ACTIVITY_RECOGNITION",false);
+        _liveTracking = prefs.getBoolean("LIVE_TRACKING",false);
+
+        if(_activityRecognition)
             initActivityRecognitionClient();
-        }else {
+        else
             stopActivityRecogntionClient();
+
+        HomeActivity activity = getHomeScreen();
+        if(activity != null)
+            activity.setStartButtonVisibility(!_activityRecognition);
+
+        try {
+        	setConversionUnits(Integer.valueOf(prefs.getString("UNITS_OF_MEASURE", "0")));
+        } catch (Exception e) {
+        	Log.e(TAG, "Exception:" + e);
         }
-        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
-        editor.commit();
+        try {
+            int prev_refresh_interval = _refresh_interval;
+            _refresh_interval = Integer.valueOf(prefs.getString("REFRESH_INTERVAL", "1000"));
+            if (prev_refresh_interval != _refresh_interval) {
+                GPSService.changeRefreshInterval(_refresh_interval);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Exception converting REFRESH_INTERVAL:" + e);
+        }
+        debug = prefs.getBoolean("PREF_DEBUG", false);
     }
 
     private void startButtonClick(boolean value) {
@@ -96,7 +136,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             stopGPSService();
         }
     }
-    public static void setConversionUnits(int units) {
+    public void setConversionUnits(int units) {
         _units = units;
         
         if(units == Constants.IMPERIAL) {
@@ -108,23 +148,19 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             _distanceConversion = (float)Constants.M_TO_KM;
             _altitudeConversion = (float)Constants.M_TO_M;
         }
-    }
-    private void unitsButtonClick(boolean value) {
-        if (value) {
-            setConversionUnits(Constants.IMPERIAL);
-        } else {
-            setConversionUnits(Constants.METRIC);
-        }
-        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putInt("UNITS_OF_MEASURE",_units);
-        editor.commit();
-        resendLastDataToPebble();
+
+        // set the screen units
+        HomeActivity homeScreen = getHomeScreen();
+        if(homeScreen != null)
+            homeScreen.setUnits(units);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        instance = this;
+
         setContentView(R.layout.main);
 
         final ActionBar actionBar = getSupportActionBar();
@@ -132,15 +168,18 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
         actionBar.setDisplayHomeAsUpEnabled(false);
 
+        ChangeLog cl = new ChangeLog(this);
+        if (cl.isFirstRun()) {
+          cl.getLogDialog().show();
+        }
+        
         checkGooglePlayServices();
 
-        //setup the defaults
-        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
-        _activityRecognition = settings.getBoolean("ACTIVITY_RECOGNITION",false);
-        setConversionUnits(settings.getInt("UNITS_OF_MEASURE",0));
+        loadPreferences();
 
         Bundle bundle = new Bundle();
         bundle.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
+        bundle.putBoolean("LIVE_TRACKING",_liveTracking);
         bundle.putInt("UNITS_OF_MEASURE",_units);
 
         //instantiate the map fragment and store for future use
@@ -149,11 +188,43 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<HomeActivity>(this, "home", HomeActivity.class, bundle)));
         //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,_mapFragment,null)));
 
-        if (getIntent().getExtras() != null && getIntent().getExtras().containsKey("state")) {
-            Log.d("MainActivity", "onCreate() state:" + getIntent().getExtras().getInt("state"));
+        if (getIntent().getExtras() != null) {
+            if (getIntent().getExtras().containsKey("button")) {
+                Log.d(TAG, "onCreate() button:" + getIntent().getExtras().getInt("button"));
             
-            changeState(getIntent().getExtras().getInt("state"));
+                changeState(getIntent().getExtras().getInt("button"));
+            }
+            if (getIntent().getExtras().containsKey("version")) {
+                Log.d(TAG, "onCreate() version:" + getIntent().getExtras().getInt("version"));
+                resendLastDataToPebble();
+            }
+            /*if (getIntent().getExtras().containsKey("live_max_name")) {
+                Log.d(TAG, "onNewIntent() live_max_name:" + getIntent().getExtras().getInt("live_max_name"));
+                GPSService.liveSendNames(getIntent().getExtras().getInt("live_max_name"));
+            }*/
         }
+        
+        // try to get Pebble Watch Firmware version
+        try {
+            // getWatchFWVersion works only with firmware 2.x
+            pebbleFirmwareVersionInfo = PebbleKit.getWatchFWVersion(getApplicationContext());
+            pebbleFirmwareVersion = 2;
+            if (pebbleFirmwareVersionInfo == null) {
+                // if the watch is disconnected or we can't get the version
+                Log.e(TAG, "pebbleFirmwareVersionInfo == null");
+            } else {
+                Log.e(TAG, "getMajor:"+pebbleFirmwareVersionInfo.getMajor());
+                Log.e(TAG, "getMinor:"+pebbleFirmwareVersionInfo.getMinor());
+                Log.e(TAG, "getPoint:"+pebbleFirmwareVersionInfo.getPoint());
+                Log.e(TAG, "getTag:"+pebbleFirmwareVersionInfo.getTag());
+            }
+        } catch (Exception e) {
+            //Log.e(TAG, "Exception getWatchFWVersion " + e.getMessage());
+            // getWatchFWVersion works only with 2.x firmware
+            pebbleFirmwareVersion = 1;
+            pebbleFirmwareVersionInfo = null;
+        }
+        Log.d(TAG, "pebbleFirmwareVersion=" + pebbleFirmwareVersion);
     }
 
     @Override
@@ -161,28 +232,46 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         super.onResume();
     }
 
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+        	// Physical Menu button
+        	startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+        }
+        return super.onKeyUp(keyCode, event);
+    }    
+    
     // This is called for activities that set launchMode to "singleTop" in their package, or if a client used the FLAG_ACTIVITY_SINGLE_TOP flag when calling startActivity(Intent).
     // In either case, when the activity is re-launched while at the top of the activity stack instead of a new instance of the activity being started, onNewIntent() will be called 
     // on the existing instance with the Intent that was used to re-launch it.
     // An activity will always be paused before receiving a new intent, so you can count on onResume() being called after this method. 
     protected void onNewIntent (Intent intent) {
-        if (intent.getExtras() != null && intent.getExtras().containsKey("state")) {
-            Log.d("MainActivity", "onNewIntent() state:" + intent.getExtras().getInt("state"));
+        if (intent.getExtras() != null) {
+            if (intent.getExtras().containsKey("button")) {
+                Log.d(TAG, "onNewIntent() button:" + intent.getExtras().getInt("button"));
             
-            changeState(intent.getExtras().getInt("state"));
+                changeState(intent.getExtras().getInt("button"));
+            }
+            if (intent.getExtras().containsKey("version")) {
+                Log.d(TAG, "onNewIntent() version:" + intent.getExtras().getInt("version"));
+                resendLastDataToPebble();
+            }
+            /*if (intent.getExtras().containsKey("live_max_name")) {
+                Log.d(TAG, "onNewIntent() live_max_name:" + intent.getExtras().getInt("live_max_name"));
+                GPSService.liveSendNames(intent.getExtras().getInt("live_max_name"));
+            }*/
         }
     }
     
-    private void changeState(int state) {
-        Log.d("MainActivity", "changeState(" + state + ")");
-        switch (state) {
+    private void changeState(int button) {
+        Log.d(TAG, "changeState(button:" + button + ")");
+        switch (button) {
             case Constants.STOP_PRESS:
                 stopGPSService();
-                SetStartButtonText("Start");
+                setStartButtonText("Start");
                 break;
             case Constants.PLAY_PRESS:
                 startGPSService();
-                SetStartButtonText("Stop");
+                setStartButtonText("Stop");
                 break;
             case Constants.REFRESH_PRESS:
                 ResetSavedGPSStats();
@@ -190,28 +279,17 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }        
     }
 
-    private void sendWatchFaceToPebble(){
-        try {
-            Uri uri = Uri.parse("http://labs.jayps.fr/pebblebike/pebblebike-1.2.0.pbw?and");
-            Intent startupIntent = new Intent();
-            startupIntent.setAction(Intent.ACTION_VIEW);
-            startupIntent.setType("application/octet-stream");
-            startupIntent.setData(uri);
-            ComponentName distantActivity = new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity");
-            startupIntent.setComponent(distantActivity);
-            startActivity(startupIntent);
-        }catch (ActivityNotFoundException ae) {
-            Toast.makeText(getApplicationContext(),"Unable to install watchface, do you have the latest pebble app installed?",Toast.LENGTH_LONG).show();
-        }
-    }
+
 
     private void sendServiceState() {
-        PebbleDictionary dic = new PebbleDictionary();
+    	Log.d(TAG, "sendServiceState()");
+    	PebbleDictionary dic = new PebbleDictionary();
         if(checkServiceRunning()) {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
         } else {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
         }
+        Log.d(TAG, " STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED));
         PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
     }
     
@@ -220,67 +298,180 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         sendDataToPebble(_lastIntent);
     }
     public void sendDataToPebble(Intent intent) {
-        Log.d("PebbleBike:MainActivity","sendDataToPebble()");
+    	//Log.d(TAG, "sendDataToPebble()");
         
         PebbleDictionary dic = new PebbleDictionary();
+        String sending = "Sending ";
         
+        if (intent == null) {
+            Log.d(TAG, "sendDataToPebble(intent == null)");
+            intent = new Intent();
+            
+            SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+            float distance = settings.getFloat("GPS_DISTANCE", 0.0f);
+            intent.putExtra("DISTANCE", distance);
+            
+            dic.addInt32(Constants.MSG_VERSION_ANDROID, Constants.VERSION_ANDROID);
+            sending += " MSG_VERSION_ANDROID: "   + dic.getInteger(Constants.MSG_VERSION_ANDROID);
+        }
+
         if (intent != null) {
             _lastIntent = intent;
 
-            // force Locale.US to force dot as a decimal separator
-            if (intent.hasExtra("SPEED")) {
-                dic.addString(Constants.SPEED_TEXT,      String.format(Locale.US, "%.1f", intent.getFloatExtra("SPEED", 99) * _speedConversion)); // km/h or mph
-            }
-            if (intent.hasExtra("DISTANCE")) {
-                dic.addString(Constants.DISTANCE_TEXT,   String.format(Locale.US, "%.1f", Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * _distanceConversion) / 10)); // km or miles
-            }
-            if (intent.hasExtra("AVGSPEED")) {
-                dic.addString(Constants.AVGSPEED_TEXT,   String.format(Locale.US, "%.1f", intent.getFloatExtra("AVGSPEED", 99) * _speedConversion)); // km/h or mph
-            }
-            if (intent.hasExtra("ALTITUDE")) {
-                dic.addString(Constants.ALTITUDE_TEXT,   String.format("%d", (int) (intent.getDoubleExtra("ALTITUDE", 99) * _altitudeConversion))); // m of ft
-                Log.d("PebbleBike:MainActivity", "Sending ALTITUDE: "   + dic.getString(Constants.ALTITUDE_TEXT));
-            }
-            if (intent.hasExtra("ASCENT")) {
-                dic.addString(Constants.ASCENT_TEXT,     String.format("%d", (int) (intent.getDoubleExtra("ASCENT", 99) * _altitudeConversion))); // m of ft
-                Log.d("PebbleBike:MainActivity", "Sending ASCENT: "     + dic.getString(Constants.ASCENT_TEXT));
-            }
-            if (intent.hasExtra("ASCENTRATE")) {
-                dic.addString(Constants.ASCENTRATE_TEXT, String.format("%d", (int) (intent.getFloatExtra("ASCENTRATE", 99) * _altitudeConversion))); // m/h or ft/h
-                Log.d("PebbleBike:MainActivity", "Sending ASCENTRATE: " + dic.getString(Constants.ASCENTRATE_TEXT));
-            }
-            if (intent.hasExtra("SLOPE")) {
-                dic.addString(Constants.SLOPE_TEXT,      String.format("%d", (int) intent.getFloatExtra("SLOPE", 99))); // %
-                Log.d("PebbleBike:MainActivity", "Sending SLOPE: "      + dic.getString(Constants.SLOPE_TEXT));
-            }
-            if (intent.hasExtra("ACCURACY")) {
-                dic.addString(Constants.ACCURACY_TEXT,   String.format("%d", (int) intent.getFloatExtra("ACCURACY", 99))); // m
-                Log.d("PebbleBike:MainActivity", "Sending ACCURACY: "   + dic.getString(Constants.ACCURACY_TEXT));
-            }
+            byte[] data = new byte[20];
+
+            data[0] = (byte) ((_units % 2) * (1<<0));
+            data[0] += (byte) ((checkServiceRunning() ? 1 : 0) * (1<<1));
+            data[0] += (byte) ((debug ? 1 : 0) * (1<<2));
+            data[0] += (byte) ((_liveTracking ? 1 : 0) * (1<<3));
             
-            Log.d("PebbleBike:MainActivity", "Sending speed:" + dic.getString(Constants.SPEED_TEXT) + " dist: " + dic.getString(Constants.DISTANCE_TEXT) + " avgspeed:" + dic.getString(Constants.AVGSPEED_TEXT));
+            int refresh_code = 1; // 1s
+            if (_refresh_interval < 1000) {
+                refresh_code = 0; // [0;1[
+            } else if (_refresh_interval >= 5000) {
+                refresh_code = 3; // [5;+inf
+            } else if (_refresh_interval > 1000) {
+                refresh_code = 2; // ]1;5[
+            }
+            data[0] += (byte) ((refresh_code % 4) * (1<<4)); // 2 bits
+            // unused bits
+            data[0] += (byte) (0 * (1<<6));
+            data[0] += (byte) (0 * (1<<7));
+            //Log.d(TAG, _units+"|"+checkServiceRunning()+"|debug:"+debug+"|"+_liveTracking+"|_refresh_interval="+_refresh_interval+"|refresh_code="+refresh_code+"|"+((256+data[0])%256));
+            
+            data[1] = (byte) ((int)  Math.ceil(intent.getFloatExtra("ACCURACY", 0.0f)));
+            data[2] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0.0f) * _distanceConversion) / 1)) % 256);
+            data[3] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0.0f) * _distanceConversion) / 1)) / 256);
+            data[4] = (byte) (((int) intent.getLongExtra("TIME", 0) / 1000) % 256);
+            data[5] = (byte) (((int) intent.getLongExtra("TIME", 0) / 1000) / 256);
+
+            data[6] = (byte) (((int) (intent.getDoubleExtra("ALTITUDE", 0) * _altitudeConversion)) % 256);
+            data[7] = (byte) (((int) (intent.getDoubleExtra("ALTITUDE", 0) * _altitudeConversion)) / 256);
+
+            data[8] = (byte) (((int) Math.abs(intent.getDoubleExtra("ASCENT", 0) * _altitudeConversion)) % 256);
+            data[9] = (byte) ((((int) Math.abs(intent.getDoubleExtra("ASCENT", 0) * _altitudeConversion)) / 256) % 128);
+            if (intent.getDoubleExtra("ASCENT", 0.0f) < 0) {
+                data[9] += 128;
+            }
+            data[10] = (byte) (((int) Math.abs(intent.getFloatExtra("ASCENTRATE", 0.0f) * _altitudeConversion)) % 256);
+            data[11] = (byte) ((((int) Math.abs(intent.getFloatExtra("ASCENTRATE", 0.0f) * _altitudeConversion)) / 256) % 128);
+            if (intent.getFloatExtra("ASCENTRATE", 0.0f) < 0) {
+                data[11] += 128;
+            }            
+            data[12] = (byte) (((int) Math.abs(intent.getFloatExtra("SLOPE", 0.0f))) % 128);
+            if (intent.getFloatExtra("SLOPE", 0.0f) < 0) {
+                data[12] += 128;
+            }            
+
+            data[13] = (byte) (((int) Math.abs(intent.getDoubleExtra("XPOS", 0))) % 256);
+            data[14] = (byte) ((((int) Math.abs(intent.getDoubleExtra("XPOS", 0))) / 256) % 128);
+            if (intent.getDoubleExtra("XPOS", 0) < 0) {
+                data[14] += 128;
+            }
+            data[15] = (byte) (((int) Math.abs(intent.getDoubleExtra("YPOS", 0))) % 256);
+            data[16] = (byte) ((((int) Math.abs(intent.getDoubleExtra("YPOS", 0))) / 256) % 128);
+            if (intent.getDoubleExtra("YPOS", 0) < 0) {
+                data[16] += 128;
+            }
+
+            data[17] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * _speedConversion) / 1)) % 256);
+            data[18] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * _speedConversion) / 1)) / 256);
+            data[19] = (byte) (((int)  (intent.getFloatExtra("BEARING", 0.0f) / 360 * 256)) % 256);
+
+            dic.addBytes(Constants.ALTITUDE_DATA, data);
+            
+            for( int i = 0; i < data.length; i++ ) {
+                sending += " data["+i+"]: "   + ((256+data[i])%256);
+            }
         }
-        dic.addInt32(Constants.MEASUREMENT_UNITS, _units);
-        Log.d("PebbleBike:MainActivity", "Sending MEASUREMENT_UNITS: " + dic.getInteger(Constants.MEASUREMENT_UNITS));
         
-        if (checkServiceRunning()) {
+        /*if (checkServiceRunning()) {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
         } else {
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
         }
-        Log.d("PebbleBike:MainActivity", "Sending STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED));
+        sending += " STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED);*/
 
+        if (MainActivity.debug) Log.d(TAG, sending);
         PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);        
     }
 
-    private void ResetSavedGPSStats() {
-        GPSService.resetGPSStats();
+    private void updateScreen(Intent intent) {
+
+        HomeActivity homeScreen = getHomeScreen();
+
+        if (intent.hasExtra("SPEED")) {
+            String speed = String.format(Locale.US, "%.1f", intent.getFloatExtra("SPEED", 99) * _speedConversion);
+            homeScreen.setSpeed(speed);
+        }
+        if (intent.hasExtra("DISTANCE")) {
+            String distance = String.format(Locale.US, "%.1f", Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * _distanceConversion) / 10);
+            homeScreen.setDistance(distance);
+        }
+        if (intent.hasExtra("AVGSPEED")) {
+            String avgSpeed = String.format(Locale.US, "%.1f", intent.getFloatExtra("AVGSPEED", 99) * _speedConversion);
+            homeScreen.setAvgSpeed(avgSpeed);
+        }
+        if (intent.hasExtra("ACCURACY")) {
+            String gpsStatus = "";
+            float accuracy = intent.getFloatExtra("ACCURACY", 99.9f);
+            if (accuracy <= 4) {
+                gpsStatus = "EXCELLENT";
+            } else if (accuracy <= 6) {
+                gpsStatus = "GOOD";
+            } else if (accuracy <= 10) {
+                gpsStatus = "MEDIUM";
+            } else {
+                gpsStatus = "POOR";
+            }
+            //Log.d(TAG, "gpsStatus: " + accuracy + " => " + gpsStatus);
+            homeScreen.setGPSStatus(gpsStatus);
+        }
+        if (intent.hasExtra("TIME")) {
+            int time = (int) (intent.getLongExtra("TIME",0) / 1000);
+            int s = time % 60;
+            int m = ((time-s) / 60) % 60;
+            int h = (time-s-60*m) / (60 * 60);
+            
+            String dateFormatted = String.format("%d:%02d:%02d", h, m, s);
+            //Log.d(TAG, time + ":" + h+"/"+m+"/"+s + " " + dateFormatted);
+            
+            homeScreen.setTime(dateFormatted);
+        }
+        if (intent.hasExtra("ALTITUDE")) {
+            int altitude = (int)intent.getDoubleExtra("ALTITUDE", 0);
+
+            AltitudeGraphReduce alt = AltitudeGraphReduce.getInstance();
+            alt.addAltitude(altitude, intent.getLongExtra("TIME",0), intent.getFloatExtra("DISTANCE", 0));
+
+            homeScreen.setAltitude(
+                    alt.getGraphData(),
+                    alt.getMax(),
+                    alt.getMin());
+
+        }
     }
 
-    private void SetStartButtonText(String text) {
-        HomeActivity activity = (HomeActivity)(getSupportFragmentManager().findFragmentByTag("home"));
+    private void ResetSavedGPSStats() {
+    	GPSService.resetGPSStats(getSharedPreferences(Constants.PREFS_NAME, 0));
+        AltitudeGraphReduce.getInstance().restData();
+        
+        // send the saved values directly to update pebble
+        Intent intent = new Intent();
+        intent.putExtra("DISTANCE", 0);
+        intent.putExtra("AVGSPEED", 0);
+        intent.putExtra("ASCENT",   0);
+        sendDataToPebble(intent);
+    }
+
+    private void setStartButtonText(String text) {
+        HomeActivity activity = getHomeScreen();
         if(activity != null)
-            activity.SetStartText(text);
+            activity.setStartButtonText(text);
+    }
+
+    private HomeActivity getHomeScreen() {
+        return (HomeActivity)(getSupportFragmentManager().findFragmentByTag("home"));
     }
 
     private void stopActivityRecogntionClient() {
@@ -312,28 +503,31 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     }
 
     private void startGPSService() {
-        if(checkServiceRunning())
-            return;
-
-        //if(!_googlePlayInstalled) {
-        //    Toast.makeText(getApplicationContext(),"Please install google play services",10);
-        //    return;
-        //}
-
-        Intent intent = new Intent(getApplicationContext(), GPSService.class);
-
-        registerGPSServiceIntentReceiver();
-        startService(intent);
-        
-        PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+        if (!checkServiceRunning()) {
+            // only if GPS was not running on the phone
+            
+            Intent intent = new Intent(getApplicationContext(), GPSService.class);
+            intent.putExtra("REFRESH_INTERVAL", _refresh_interval);
+    
+            registerGPSServiceIntentReceiver();
+            startService(intent);
+            
+            PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+        }
+        // in all cases
         resendLastDataToPebble();
     }
 
     private void stopGPSService() {
-        if(!checkServiceRunning())
-            return;
-        removeGPSServiceIntentReceiver();
-        stopService(new Intent(getApplicationContext(), GPSService.class));
+        Log.d(TAG, "stopGPSService()");
+        
+        if (checkServiceRunning()) {
+            // only if GPS was running on the phone
+            
+            removeGPSServiceIntentReceiver();
+            stopService(new Intent(getApplicationContext(), GPSService.class));
+        }
+        // in all cases
         sendServiceState();
     }
 
@@ -359,16 +553,23 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         int googlePlayServicesAvailable = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if(googlePlayServicesAvailable !=  ConnectionResult.SUCCESS) {
             // google play services need to be updated
-            Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(googlePlayServicesAvailable, this, 123);
-            if(errorDialog != null)
-                errorDialog.show();
+            try {
+                Dialog errorDialog = GooglePlayServicesUtil.getErrorDialog(googlePlayServicesAvailable, this, 123);
+                if(errorDialog != null)
+                    errorDialog.show();
+            } catch (NoClassDefFoundError e) {
+                Log.d(TAG, "NoClassDefFoundError " + e.getMessage());
+                Toast.makeText(this, "This device is not supported by Google Play Service.", Toast.LENGTH_LONG).show();                
+            } catch (Exception e) {
+                Log.e(TAG, "Exception " + e.getMessage());
+            }
             _googlePlayInstalled = false;
         } else {
             _googlePlayInstalled = true;
         }
     }
 
-    private boolean checkServiceRunning() {
+    public boolean checkServiceRunning() {
 
         ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -420,21 +621,24 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 break;
         }
 
-        HomeActivity activity = (HomeActivity)(getSupportFragmentManager().findFragmentByTag("home"));
+        HomeActivity activity = getHomeScreen();
         if(activity != null)
-            activity.SetActivityText(activityType);
+            activity.setActivityText(activityType);
     }
 
     @Override
     public void onConnected(Bundle connectionHint) {
+        Log.d(TAG, "onConnected");
         Intent intent = new Intent(getApplicationContext(), ActivityRecognitionIntentService.class);
         _callbackIntent = PendingIntent.getService(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         if(_requestType == RequestType.START) {
-            Log.d("MainActivity", "Start Recognition");
+            Log.d(TAG, "Start Recognition");
             _mActivityRecognitionClient.requestActivityUpdates(30000, _callbackIntent);
-        } else {
-            Log.d("MainActivity","Stop Recognition");
+        } else if(_requestType == RequestType.STOP) {
+            Log.d(TAG, "Stop Recognition");
             _mActivityRecognitionClient.removeActivityUpdates(_callbackIntent);
+        } else {
+            Log.d(TAG, "other?");
         }
     }
 
@@ -457,17 +661,17 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             updateActivityType(activity);
 
             if(activity == DetectedActivity.ON_BICYCLE) {
-                Log.d("MainActivity","AutoStart");
+                Log.d(TAG, "AutoStart");
                 startGPSService();
                 _lastCycling = new Date();
             } else {
-                Log.d("MainActivity","Waiting for stop");
+                Log.d(TAG, "Waiting for stop");
                 // check to see if we have been inactive for 2 minutes
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(new Date());
                 cal.add(Calendar.MINUTE, -2);
                 if(_lastCycling == null || _lastCycling.before(cal.getTime())) {
-                    Log.d("MainActivity","AutoStop");
+                    Log.d(TAG, "AutoStop");
                     stopGPSService();
                     _lastCycling = null;
                 }
@@ -484,12 +688,18 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if(intent.getAction() == ACTION_RESP) {
-                sendDataToPebble(intent);
+            if(intent.getAction().compareTo(ACTION_RESP) == 0) {
+                if (_sendDataToPebbleLastTime > 0 && (System.currentTimeMillis() - _sendDataToPebbleLastTime < _refresh_interval)) {
+                    Log.d(TAG, "skip sendDataToPebble");
+                } else {
+                    _sendDataToPebbleLastTime = System.currentTimeMillis();
+                    sendDataToPebble(intent);
+                }
+                updateScreen(intent);
                 //updateMapLocation(intent);
-            } else if(intent.getAction() == ACTION_GPS_DISABLED) {
+            } else if(intent.getAction().compareTo(ACTION_GPS_DISABLED) == 0) {
                 stopGPSService();
-                SetStartButtonText("Start");
+                setStartButtonText("Start");
                 showGPSDisabledAlertToUser();
             }
 
