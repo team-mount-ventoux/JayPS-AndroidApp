@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.PebbleKit.FirmwareVersionInfo;
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -45,6 +47,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
     private static boolean _activityRecognition = false;
     public static boolean _liveTracking = false;
+    public static String oruxmaps_autostart = "disable";
     
     public static int pebbleFirmwareVersion = 0;
     public static FirmwareVersionInfo pebbleFirmwareVersionInfo;
@@ -102,6 +105,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         //setup the defaults
         _activityRecognition = prefs.getBoolean("ACTIVITY_RECOGNITION",false);
         _liveTracking = prefs.getBoolean("LIVE_TRACKING",false);
+        oruxmaps_autostart = prefs.getString("ORUXMAPS_AUTO", "disable");
 
         if(_activityRecognition)
             initActivityRecognitionClient();
@@ -769,5 +773,22 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             //Do nothing
         }
     }
+    
+    @Override
+    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.activity_action_bar, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu_settings :
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }    
 }

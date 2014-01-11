@@ -21,24 +21,15 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     	int  version = -1;
     	//int live_max_name = -99;
     	boolean  start = false;
-    	String oruxIntent = "";
     	if (data.contains(Constants.CMD_BUTTON_PRESS)) {
 	        button = data.getUnsignedInteger(Constants.CMD_BUTTON_PRESS).intValue();
 	        Log.d(TAG, "Constants.CMD_BUTTON_PRESS, button: " + button);
 	        if (button == Constants.ORUXMAPS_START_RECORD_CONTINUE_PRESS) {
-	            //oruxIntent = "com.oruxmaps.INTENT_START_RECORD_NEWTRACK";
-	            oruxIntent = "com.oruxmaps.INTENT_START_RECORD_NEWSEGMENT";
-	            //oruxIntent = "com.oruxmaps.INTENT_START_RECORD_CONTINUE";
+	            OruxMaps.startRecordNewSegment(context);
 	        } else if (button == Constants.ORUXMAPS_STOP_RECORD_PRESS) {
-	            oruxIntent = "com.oruxmaps.INTENT_STOP_RECORD";
+	            OruxMaps.stopRecord(context);
 	        } else if (button == Constants.ORUXMAPS_NEW_WAYPOINT_PRESS) {
-	            oruxIntent = "com.oruxmaps.INTENT_NEW_WAYPOINT";
-	        }
-	        if (!oruxIntent.equals("")) {
-                Log.d(TAG, "Sending " + oruxIntent);
-                Intent intent = new Intent();
-                intent.setAction(oruxIntent);
-                context.sendBroadcast(intent);    
+                OruxMaps.newWaypoint(context);
 	        } else {
 	            start = true;
 	        }

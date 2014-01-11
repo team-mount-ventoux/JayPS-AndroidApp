@@ -64,6 +64,19 @@
   />
  </PreferenceCategory>        
 
+ <PreferenceCategory
+   android:title="OruxMaps Integration"
+ >
+    <ListPreference
+            android:key="ORUXMAPS_AUTO"
+            android:title="@string/ORUXMAPS_AUTO_TITLE"
+            android:dialogTitle="@string/ORUXMAPS_AUTO_DIALOG_TITLE"
+            android:entries="@array/ORUXMAPS_AUTO_ENTRIES"
+            android:entryValues="@array/ORUXMAPS_AUTO_ENTRY_VALUES"
+            android:defaultValue="@string/ORUXMAPS_AUTO_DEFAULT" />
+
+</PreferenceCategory>
+
 
  <PreferenceCategory
    android:title="@string/PREF_ABOUT_CATEGORY_TITLE"
