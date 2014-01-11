@@ -18,6 +18,8 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.PebbleKit.FirmwareVersionInfo;
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -771,5 +773,22 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             //Do nothing
         }
     }
+    
+    @Override
+    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+        MenuInflater inflater = getSupportMenuInflater();
+        inflater.inflate(R.menu.activity_action_bar, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu_settings :
+                startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }    
 }
