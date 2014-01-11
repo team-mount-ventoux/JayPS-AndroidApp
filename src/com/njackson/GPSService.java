@@ -8,6 +8,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -58,6 +62,8 @@ public class GPSService extends Service {
     private int _refresh_interval = 1000;
     private boolean _gpsStarted = false;
 
+    private SensorManager _mSensorMgr = null;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleCommand(intent);
@@ -73,6 +79,7 @@ public class GPSService extends Service {
     @Override
     public void onCreate() {
         _locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        _mSensorMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         
 
@@ -107,6 +114,7 @@ public class GPSService extends Service {
 
         _locationMgr.removeUpdates(onLocationChange);
         
+        _mSensorMgr.unregisterListener(mSensorListener);
     }
 
     // load the saved state
@@ -278,6 +286,8 @@ public class GPSService extends Service {
             return;
         }
 
+        // delay between events in microseconds
+        _mSensorMgr.registerListener(mSensorListener, _mSensorMgr.getDefaultSensor(Sensor.TYPE_PRESSURE), 3000000);
         
         
         //PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
@@ -398,6 +408,38 @@ public class GPSService extends Service {
             // TODO Auto-generated method stub
             
         }        
+    };
+
+    private SensorEventListener mSensorListener = new SensorEventListener() {
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            //Log.d(TAG, "onAccuracyChanged" + accuracy);
+        }
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            //Log.d(TAG, "onSensorChanged sensor:" + event.sensor.getName() + " type:"+event.sensor.getType());
+
+            float pressure_value = 0.0f;
+            double altitude = 0.0f;
+
+            // we register to TYPE_PRESSURE, so we don't really need this test
+            if( Sensor.TYPE_PRESSURE == event.sensor.getType()) {
+                pressure_value = event.values[0];
+                altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure_value);
+                if (MainActivity.debug) Log.d(TAG, "pressure_value=" + pressure_value + " altitude=" + altitude);
+
+                _myLocation.onAltitudeChanged(altitude);
+
+                /*Intent broadcastIntent = new Intent();
+                broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
+                broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+                broadcastIntent.putExtra("ALTITUDE",   _myLocation.getAltitude()); // m
+                sendBroadcast(broadcastIntent);
+                */
+            }
+        }
     };
 
     private void makeServiceForeground(String titre, String texte) {
