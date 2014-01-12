@@ -21,5 +21,5 @@ local.properties
 
 *.iml
 .DS_Store
-/.idea/
-/PebbleBike-AndroidApp.iml
+.idea/
+*.iml
