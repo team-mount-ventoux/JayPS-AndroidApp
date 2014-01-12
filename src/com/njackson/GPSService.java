@@ -12,6 +12,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.GpsStatus.NmeaListener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -113,6 +114,7 @@ public class GPSService extends Service {
         //PebbleKit.closeAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
 
         _locationMgr.removeUpdates(onLocationChange);
+        _locationMgr.removeNmeaListener(mNmeaListener);
         
         _mSensorMgr.unregisterListener(mSensorListener);
     }
@@ -300,6 +302,7 @@ public class GPSService extends Service {
             _locationMgr.removeUpdates(onLocationChange);
         }
         _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, _refresh_interval, 2, onLocationChange);
+        _locationMgr.addNmeaListener(mNmeaListener);
         _gpsStarted = true;
     }
 
@@ -391,6 +394,35 @@ public class GPSService extends Service {
             // TODO Auto-generated method stub
             
         }        
+    };
+
+    NmeaListener mNmeaListener = new NmeaListener() {
+        @Override
+        public void onNmeaReceived(long timestamp, String nmea) {
+           //Log.d(TAG, "Received some nmea strings: " + nmea);
+           if (nmea.startsWith("$GPGGA")) {
+               // http://aprs.gids.nl/nmea/#gga
+               //Log.d(TAG, "geoid: " + nmea);
+
+               String[] strValues = nmea.split(",");
+               /*
+               Log.d(TAG, "nmea 7 nb sat: " + strValues[7]);
+               Log.d(TAG, "nmea 8 hdop: " + strValues[8]);
+               Log.d(TAG, "nmea 11 geoid_height: " + strValues[11]);
+               */
+               try {
+                   // Height of geoid above WGS84 ellipsoid
+                   double geoid_height = Double.parseDouble(strValues[11]);
+
+                   if (MainActivity.debug) Log.d(TAG, "nmea geoid_height: " + geoid_height);
+                   _myLocation.setGeoidHeight(geoid_height);
+
+                   // no longer need Nmea updates
+                   _locationMgr.removeNmeaListener(mNmeaListener);
+               } catch (Exception e) {
+               }
+           }
+        }
     };
 
     private SensorEventListener mSensorListener = new SensorEventListener() {
