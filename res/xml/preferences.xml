@@ -103,7 +103,7 @@
 
     <Preference
         android:key="PREF_GEOID_HEIGHT_INFO"
-        android:title="Altitude correction"
+        android:title="Altitude correction (WGS84)"
         android:summary=""
         />
 
