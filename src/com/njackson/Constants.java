@@ -27,7 +27,8 @@ public class Constants {
     static final int MSG_LIVE_NAME1 = 0x20;
     static final int MSG_LIVE_NAME2 = 0x21;
     static final int MSG_LIVE_NAME3 = 0x22;
-    static final int MSG_LIVE_NAME4 = 0x23;    
+    static final int MSG_LIVE_NAME4 = 0x23;
+    static final int MSG_BATTERY_LEVEL = 0x24;
 
     static final String PREFS_NAME = "PebbleBikePrefs";
 

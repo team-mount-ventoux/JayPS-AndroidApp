@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.*;
 import android.net.Uri;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -60,6 +61,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private static int _refresh_interval = 1000;
     // Height of geoid above WGS84 ellipsoid
     public static double geoidHeight = 0; // in m
+    public static int batteryLevel = -1;
     public static boolean debug = false;
 
     private static float _speedConversion = 0.0f;
@@ -231,6 +233,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             pebbleFirmwareVersionInfo = null;
         }
         Log.d(TAG, "pebbleFirmwareVersion=" + pebbleFirmwareVersion);
+        
+        IntentFilter batteryLevelFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(batteryLevelReceiver, batteryLevelFilter);
     }
 
     @Override
@@ -301,6 +306,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     
     private Intent _lastIntent = null;
     private void resendLastDataToPebble() {
+        sendBatteryLevel();
         sendDataToPebble(_lastIntent);
     }
     public void sendDataToPebble(Intent intent) {
@@ -792,5 +798,23 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }    
+    }
+    BroadcastReceiver batteryLevelReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            int rawlevel = intent.getIntExtra("level", -1);
+            int scale = intent.getIntExtra("scale", -1);
+            if (rawlevel >= 0 && scale > 0) {
+                batteryLevel = (rawlevel * 100) / scale;
+                sendBatteryLevel();
+            }
+            if (debug) Log.d(TAG, "battery rawlevel:" + rawlevel + " scale:" + scale + " batteryLevel:" + batteryLevel);
+         }
+    };
+    public void sendBatteryLevel() {
+        if (debug) Log.d(TAG, "sendBatteryLevel:" + batteryLevel);
+        
+        PebbleDictionary dic = new PebbleDictionary();
+        dic.addInt32(Constants.MSG_BATTERY_LEVEL, batteryLevel);
+        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+    }
 }
