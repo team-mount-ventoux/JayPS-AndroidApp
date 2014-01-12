@@ -694,7 +694,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
             if(intent.getAction().compareTo(ACTION_RESP) == 0) {
                 if (_sendDataToPebbleLastTime > 0 && (System.currentTimeMillis() - _sendDataToPebbleLastTime < _refresh_interval)) {
-                    Log.d(TAG, "skip sendDataToPebble");
+                    if (debug) Log.d(TAG, "skip sendDataToPebble");
                 } else {
                     _sendDataToPebbleLastTime = System.currentTimeMillis();
                     sendDataToPebble(intent);

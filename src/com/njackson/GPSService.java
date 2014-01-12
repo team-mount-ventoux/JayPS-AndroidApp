@@ -360,24 +360,7 @@ public class GPSService extends Service {
                 _prevtime = _myLocation.getTime();
             }
             if (send) {
-                Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
-                broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-                broadcastIntent.putExtra("SPEED", _speed);
-                broadcastIntent.putExtra("DISTANCE", _distance);
-                broadcastIntent.putExtra("AVGSPEED", _averageSpeed);
-                broadcastIntent.putExtra("LAT",_currentLat);
-                broadcastIntent.putExtra("LON",_currentLon);
-                broadcastIntent.putExtra("ALTITUDE",   _myLocation.getAltitude()); // m
-                broadcastIntent.putExtra("ASCENT",     _myLocation.getAscent()); // m
-                broadcastIntent.putExtra("ASCENTRATE", (3600f * _myLocation.getAscentRate())); // in m/h
-                broadcastIntent.putExtra("SLOPE",      (100f * _myLocation.getSlope())); // in %
-                broadcastIntent.putExtra("ACCURACY",   _myLocation.getAccuracy()); // m
-                broadcastIntent.putExtra("TIME",_myLocation.getElapsedTime());
-                broadcastIntent.putExtra("XPOS", xpos);
-                broadcastIntent.putExtra("YPOS", ypos);
-                broadcastIntent.putExtra("BEARING", _myLocation.getBearing());
-                sendBroadcast(broadcastIntent);
+                broadcastLocation();
 
                 if (_lastSaveGPSTime == 0 || (_myLocation.getTime() - _lastSaveGPSTime > 60000)) {
                     saveGPSStats();
@@ -432,15 +415,31 @@ public class GPSService extends Service {
 
                 _myLocation.onAltitudeChanged(altitude);
 
-                /*Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
-                broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
-                broadcastIntent.putExtra("ALTITUDE",   _myLocation.getAltitude()); // m
-                sendBroadcast(broadcastIntent);
-                */
+                broadcastLocation();
             }
         }
     };
+    
+    private void broadcastLocation() {
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
+        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        broadcastIntent.putExtra("SPEED",       _myLocation.getSpeed());
+        broadcastIntent.putExtra("DISTANCE",    _myLocation.getDistance());
+        broadcastIntent.putExtra("AVGSPEED",    _myLocation.getAverageSpeed());
+        broadcastIntent.putExtra("LAT",         _myLocation.getLatitude());
+        broadcastIntent.putExtra("LON",         _myLocation.getLongitude());
+        broadcastIntent.putExtra("ALTITUDE",    _myLocation.getAltitude()); // m
+        broadcastIntent.putExtra("ASCENT",      _myLocation.getAscent()); // m
+        broadcastIntent.putExtra("ASCENTRATE",  (3600f * _myLocation.getAscentRate())); // in m/h
+        broadcastIntent.putExtra("SLOPE",       (100f * _myLocation.getSlope())); // in %
+        broadcastIntent.putExtra("ACCURACY",   _myLocation.getAccuracy()); // m
+        broadcastIntent.putExtra("TIME",        _myLocation.getElapsedTime());
+        broadcastIntent.putExtra("XPOS",        xpos);
+        broadcastIntent.putExtra("YPOS",        ypos);
+        broadcastIntent.putExtra("BEARING",     _myLocation.getBearing());
+        sendBroadcast(broadcastIntent);
+    }
 
     private void makeServiceForeground(String titre, String texte) {
         //http://stackoverflow.com/questions/3687200/implement-startforeground-method-in-android
