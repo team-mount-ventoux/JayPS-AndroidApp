@@ -2,11 +2,14 @@ package com.njackson;
 
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -61,8 +64,23 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             pref2.setTitle(pref2.getTitle() + " [your version]");
             pref2.setSummary(pref2.getSummary() + " This is the version compatible with your current Pebble firmware.");
         }
+
+        pref = findPreference("PREF_PRESSURE_INFO");
+        SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
+            pref.setSummary("Pressure sensor available");
+        } else {
+            pref.setSummary("No pressure sensor");
+        }
+
+        pref = findPreference("PREF_GEOID_HEIGHT_INFO");
+        if (MainActivity.geoidHeight != 0) {
+            pref.setSummary("Correction: " + MainActivity.geoidHeight + "m");
+        } else {
+            pref.setSummary("No correction");
+        }
     }
-    
+
     private boolean install_watchface(int sdkVersion) {
         int versionCode;
     
@@ -128,7 +146,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         ListPreference oruxPref = (ListPreference) findPreference("ORUXMAPS_AUTO");
         CharSequence listDesc = oruxPref.getEntry();
         oruxPref.setSummary(listDesc);
-    }    
+    }
+
 	@Override
     protected void onResume() {
         super.onResume();
@@ -163,7 +182,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         if (key.equals("ORUXMAPS_AUTO")) {
             _setOruxMapsSummary(sharedPreferences);
         }
-        
+
         MainActivity activity = MainActivity.getInstance();
         if(activity != null)
             activity.loadPreferences(sharedPreferences);

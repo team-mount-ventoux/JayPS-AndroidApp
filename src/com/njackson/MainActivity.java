@@ -58,6 +58,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     
     private long _sendDataToPebbleLastTime = 0;
     private static int _refresh_interval = 1000;
+    // Height of geoid above WGS84 ellipsoid
+    public static double geoidHeight = 0; // in m
     public static boolean debug = false;
 
     private static float _speedConversion = 0.0f;

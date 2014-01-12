@@ -94,5 +94,18 @@
             android:title="@string/PREF_DEBUG_TITLE"
             android:summary="@string/PREF_DEBUG_SUMMARY"
             android:defaultValue="false" />
+
+    <Preference
+        android:key="PREF_PRESSURE_INFO"
+        android:title="Altimeter Pressure sensor"
+        android:summary=""
+        />
+
+    <Preference
+        android:key="PREF_GEOID_HEIGHT_INFO"
+        android:title="Altitude correction"
+        android:summary=""
+        />
+
 </PreferenceCategory>
 </PreferenceScreen>

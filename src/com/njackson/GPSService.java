@@ -416,6 +416,7 @@ public class GPSService extends Service {
 
                    if (MainActivity.debug) Log.d(TAG, "nmea geoid_height: " + geoid_height);
                    _myLocation.setGeoidHeight(geoid_height);
+                   MainActivity.geoidHeight = geoid_height;
 
                    // no longer need Nmea updates
                    _locationMgr.removeNmeaListener(mNmeaListener);
