@@ -1,13 +1,23 @@
 package com.njackson;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Messenger;
 import android.test.ServiceTestCase;
+import com.google.android.gms.location.ActivityRecognitionResult;
+import com.google.android.gms.location.DetectedActivity;
 
 /**
  * Created by njackson on 11/01/2014.
  */
 public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityRecognitionIntentService> {
+
+    private BroadcastReceiver receiver = null;
+    private Bundle results = null;
 
     public ActivityRecognitionServiceTest() {
         super(ActivityRecognitionIntentService.class);
@@ -16,33 +26,47 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                results = intent.getExtras();
+            }
+        };
+        IntentFilter filter =  new IntentFilter();
+        filter.addAction("com.njackson.intent.action.MESSAGE_PROCESSED");
+        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        getSystemContext().registerReceiver(receiver, filter);
     }
 
-    /**
-     * The name 'test preconditions' is a convention to signal that if this
-     * test doesn't pass, the test case was not set up properly and it might
-     * explain any and all failures in other tests.  This is not guaranteed
-     * to run before other tests, as junit uses reflection to find the tests.
-     */
-    public void testPreconditions() {
+    public void testRecieveBicycle() throws InterruptedException {
+        startWithType(DetectedActivity.ON_BICYCLE);
+        assertNotNull(results);
+        assertEquals(results.getInt("ACTIVITY_CHANGED"),DetectedActivity.ON_BICYCLE);
     }
 
-    /**
-     * Test basic startup/shutdown of Service
-     */
-    public void testStartable() {
+    public void testRecieveOnFoot() throws InterruptedException {
+        startWithType(DetectedActivity.ON_FOOT);
+        assertNotNull(results);
+        assertEquals(results.getInt("ACTIVITY_CHANGED"),DetectedActivity.ON_FOOT);
+    }
+
+    private void startWithType(int activityType) throws InterruptedException {
+        DetectedActivity activity = new DetectedActivity(activityType,1);
+        ActivityRecognitionResult result = new ActivityRecognitionResult(activity,1000,1000);
+
         Intent startIntent = new Intent();
+        startIntent.putExtra(ActivityRecognitionResult.EXTRA_ACTIVITY_RESULT,result);
         startIntent.setClass(getContext(), ActivityRecognitionIntentService.class);
-        startService(startIntent);
+
+        getSystemContext().startService(startIntent);
+        Thread.sleep(100);
     }
 
-    /**
-     * Test binding to service
-     */
-    public void testBindable() {
-        Intent startIntent = new Intent();
-        startIntent.setClass(getContext(), ActivityRecognitionIntentService.class);
-        IBinder service = bindService(startIntent);
-    }
-
+    @Override
+    protected  void tearDown() throws Exception {
+        super.tearDown();
+        if(receiver != null)
+            getSystemContext().unregisterReceiver(receiver);
+    } 
 }
