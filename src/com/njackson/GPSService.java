@@ -302,7 +302,13 @@ public class GPSService extends Service {
             _locationMgr.removeUpdates(onLocationChange);
         }
         _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, _refresh_interval, 2, onLocationChange);
-        _locationMgr.addNmeaListener(mNmeaListener);
+        if (MainActivity.geoidHeight != 0.0) {
+            // already got a correction, use it
+            _myLocation.setGeoidHeight(MainActivity.geoidHeight);
+        } else {
+            // request Nmea updates to get a geoid height
+            _locationMgr.addNmeaListener(mNmeaListener);
+        }
         _gpsStarted = true;
     }
 
