@@ -36,34 +36,17 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
 
-        OnPreferenceClickListener pref_install_click_listener = new Preference.OnPreferenceClickListener() {
+        Preference pref = findPreference("pref_install");
+        pref.setTitle(pref.getTitle() + " " + MainActivity.pebbleFirmwareVersion + ".x");
+        pref.setSummary(pref.getSummary() + " " + MainActivity.pebbleFirmwareVersion + ".x only");
+
+        pref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                // TODO Auto-generated method stub
-                Log.d(TAG, "onPreferenceClick:" + preference.getKey());
-                if (preference.getKey().equals("pref_install")) {
-                    install_watchface(1);
-                }
-                if (preference.getKey().equals("pref_install_sdk2")) {
-                    install_watchface(2);
-                }
+                install_watchface(MainActivity.pebbleFirmwareVersion);
                 return false;
             }
-        };
-        
-        Preference pref = findPreference("pref_install");
-        pref.setOnPreferenceClickListener(pref_install_click_listener);
-        if (MainActivity.pebbleFirmwareVersion == 1) {
-            pref.setTitle(pref.getTitle() + " [your version]");
-            pref.setSummary(pref.getSummary() + " This is the version compatible with your current Pebble firmware.");
-        }
-
-        Preference pref2 = findPreference("pref_install_sdk2");
-        pref2.setOnPreferenceClickListener(pref_install_click_listener);
-        if (MainActivity.pebbleFirmwareVersion == 2) {
-            pref2.setTitle(pref2.getTitle() + " [your version]");
-            pref2.setSummary(pref2.getSummary() + " This is the version compatible with your current Pebble firmware.");
-        }
+        });
 
         pref = findPreference("PREF_PRESSURE_INFO");
         SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);

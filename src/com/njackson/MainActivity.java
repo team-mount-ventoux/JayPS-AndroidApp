@@ -206,10 +206,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 Log.d(TAG, "onCreate() version:" + getIntent().getExtras().getInt("version"));
                 resendLastDataToPebble();
             }
-            /*if (getIntent().getExtras().containsKey("live_max_name")) {
-                Log.d(TAG, "onNewIntent() live_max_name:" + getIntent().getExtras().getInt("live_max_name"));
-                GPSService.liveSendNames(getIntent().getExtras().getInt("live_max_name"));
-            }*/
         }
         
         // try to get Pebble Watch Firmware version

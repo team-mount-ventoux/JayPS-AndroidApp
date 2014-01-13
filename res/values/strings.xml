@@ -27,28 +27,10 @@
     <string name="PREF_UNITS_DEFAULT">1</string>
     <string name="PREF_UNITS_UNIT_IMPERIAL">Imperial (miles)</string>
     <string name="PREF_UNITS_UNIT_METRIC">Metric (km/h)</string>
-    
-
-    <string name="REFRESH_INTERVAL_TITLE">GPS Minimum time</string>
-    <string name="REFRESH_INTERVAL_DIALOG_TITLE">GPS Minimum time</string>
-    <string name="REFRESH_INTERVAL_DEFAULT">1000</string>
-
-    <string name="ORUXMAPS_AUTO_TITLE">Link OruxMaps start</string>
-    <string name="ORUXMAPS_AUTO_DIALOG_TITLE">Link OruxMaps start</string>
-    <string name="ORUXMAPS_AUTO_DEFAULT">disable</string>
-
-    <string name="TIME_TEXT">TIME</string>
-    <string name="AVG_SPEED_TEXT_IMPERIAL">AVG. MPH</string>
-    <string name="AVG_SPEED_TEXT_METRIC">AVG. KM/H</string>
-    <string name="GPS_STATUS_LABEL">GPS STATUS</string><string name="ALTITUDE_TEXT">ALTITUDE</string>
 
     <string name="PREF_INSTALL_CATEGORY_TITLE">Install Watchface</string>
-    <string name="PREF_INSTALL_WATCHFACE">For Pebble 1.x</string>
-    <string name="PREF_INSTALL_WATCHFACE_SUMMARY">Download watchface and install it on your Pebble. For Pebble firmware 1.x only.</string>
-
-    <string name="PREF_INSTALL_WATCHFACE_SDK2">For Pebble 2.x</string>
-    <string name="PREF_INSTALL_WATCHFACE_SDK2_SUMMARY">Download watchface and install it on your Pebble. For Pebble firmware 2.x only.</string>
-
+    <string name="PREF_INSTALL_WATCHFACE">For Pebble</string>
+    <string name="PREF_INSTALL_WATCHFACE_SUMMARY">Download watchface and install it on your Pebble. For Pebble firmware</string>
 
     <string name="PREF_ABOUT_TITLE">@string/MAIN_TITLE</string>
     <string name="PREF_ABOUT_SUMMARY">http://www.pebblebike.com</string>
@@ -64,6 +46,18 @@
     <string name="PREF_LIVE_TRACKING_LOGIN_SUMMARY"></string>
     <string name="PREF_LIVE_TRACKING_PASSWORD_TITLE">Password</string>
     <string name="PREF_LIVE_TRACKING_PASSWORD_SUMMARY"></string>
-    
-    
+
+    <string name="REFRESH_INTERVAL_TITLE">GPS Minimum time</string>
+    <string name="REFRESH_INTERVAL_DIALOG_TITLE">GPS Minimum time</string>
+    <string name="REFRESH_INTERVAL_DEFAULT">1000</string>
+
+    <string name="ORUXMAPS_AUTO_TITLE">Link OruxMaps start</string>
+    <string name="ORUXMAPS_AUTO_DIALOG_TITLE">Link OruxMaps start</string>
+    <string name="ORUXMAPS_AUTO_DEFAULT">disable</string>
+
+    <string name="TIME_TEXT">TIME</string>
+    <string name="AVG_SPEED_TEXT_IMPERIAL">AVG. MPH</string>
+    <string name="AVG_SPEED_TEXT_METRIC">AVG. KM/H</string>
+    <string name="GPS_STATUS_LABEL">GPS STATUS</string><string name="ALTITUDE_TEXT">ALTITUDE</string>
+
 </resources>
