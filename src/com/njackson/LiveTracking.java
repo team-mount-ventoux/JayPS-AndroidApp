@@ -21,7 +21,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 
 import fr.jayps.android.AdvancedLocation;
@@ -310,7 +309,7 @@ public class LiveTracking {
                 String sending = "";
                 
                 PebbleDictionary dic = new PebbleDictionary();
-                
+                boolean forceSend = false;
                 if (_numberOfFriendsSentToPebble != msgLiveShort[0] || (5 * Math.random() <= 1)) {
                     _numberOfFriendsSentToPebble = msgLiveShort[0];
                     
@@ -330,6 +329,7 @@ public class LiveTracking {
                         dic.addString(Constants.MSG_LIVE_NAME4, names[4]);
                     }
                     sending += " MSG_LIVE_NAMEx"+msgLiveShort[0];
+                    forceSend = true;
                 }
                 dic.addBytes(Constants.MSG_LIVE_SHORT, msgLiveShort);
                 for( int i = 0; i < msgLiveShort.length; i++ ) {
@@ -337,7 +337,7 @@ public class LiveTracking {
                 }
                 if (MainActivity.debug) Log.d(TAG, sending);
 
-                PebbleKit.sendDataToPebble(_context, Constants.WATCH_UUID, dic);
+                VirtualPebble.sendDataToPebble(dic, forceSend);
             }
             
             
