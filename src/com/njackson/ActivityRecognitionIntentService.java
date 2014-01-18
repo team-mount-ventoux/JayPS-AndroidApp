@@ -16,8 +16,6 @@ public class ActivityRecognitionIntentService extends IntentService {
 	
 	private static final String TAG = "PB-ActivityRecognitionIntentService";
 
-    private static boolean _watchShown;
-
     public ActivityRecognitionIntentService() {
         super("ActivityRecognitionIntentService");
         Log.d(TAG, "Start");

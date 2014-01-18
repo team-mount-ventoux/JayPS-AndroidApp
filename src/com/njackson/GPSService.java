@@ -1,11 +1,9 @@
 package com.njackson;
 
-import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
@@ -21,10 +19,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.getpebble.android.kit.PebbleKit;
-import com.getpebble.android.kit.util.PebbleDictionary;
 
 import fr.jayps.android.AdvancedLocation;
 
@@ -200,37 +194,6 @@ public class GPSService extends Service {
         }
     }
 
-    /*public static void liveSendNames(int live_max_name) {
-        Log.d(TAG, "liveSendNames("+live_max_name+")");
-        if (_this != null) {
-            // GPS is running
-
-            String[] names = _this._liveTracking.getNames();
-            
-            //for (int i = 0; i < names.length; i++ ) {
-            //    Log.d(TAG, "names["+i+"]: " + names[i]);
-            //}
-            PebbleDictionary dic = new PebbleDictionary();
-            if (live_max_name < 0 && names[0] != null) {
-                dic.addString(Constants.MSG_LIVE_NAME0, names[0]);
-            }
-            if (live_max_name < 1 && names[1] != null) {
-                dic.addString(Constants.MSG_LIVE_NAME1, names[1]);
-            }
-            if (live_max_name < 2 && names[2] != null) {
-                dic.addString(Constants.MSG_LIVE_NAME2, names[2]);
-            }
-            if (live_max_name < 3 && names[3] != null) {
-                dic.addString(Constants.MSG_LIVE_NAME3, names[3]);
-            }
-            if (live_max_name < 4 && names[4] != null) {
-                dic.addString(Constants.MSG_LIVE_NAME4, names[4]);
-            }
-            PebbleKit.sendDataToPebble(_this.getApplicationContext(), Constants.WATCH_UUID, dic);
-            
-            Log.d(TAG, "send MSG_LIVE_NAMEs");
-        }
-    }*/
     private void handleCommand(Intent intent) {
         Log.d(TAG, "Started GPS Service");
         
