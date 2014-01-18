@@ -25,7 +25,6 @@ import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.ActivityRecognitionClient;
 import com.google.android.gms.location.DetectedActivity;
-import com.google.android.gms.maps.model.LatLng;
 
 import com.njackson.util.AltitudeGraphReduce;
 import de.cketti.library.changelog.ChangeLog;
@@ -68,7 +67,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private ActivityRecognitionReceiver _activityRecognitionReceiver;
     private GPSServiceReceiver _gpsServiceReceiver;
     private boolean _googlePlayInstalled;
-    private Fragment _mapFragment;
 
     enum RequestType {
         START,
@@ -185,11 +183,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         bundle.putBoolean("LIVE_TRACKING",_liveTracking);
         bundle.putInt("UNITS_OF_MEASURE",_units);
 
-        //instantiate the map fragment and store for future use
-        //_mapFragment = Fragment.instantiate(this, "map", bundle);
 
         actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_HOME).setTabListener(new TabListener<HomeActivity>(this, "home", HomeActivity.class, bundle)));
-        //actionBar.addTab(actionBar.newTab().setText(R.string.TAB_TITLE_MAP).setTabListener(new TabListener<MapActivity>(this,"map",MapActivity.class,_mapFragment,null)));
 
         if (getIntent().getExtras() != null) {
             if (getIntent().getExtras().containsKey("button")) {
@@ -703,7 +698,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                     sendDataToPebble(intent);
                 }
                 updateScreen(intent);
-                //updateMapLocation(intent);
             } else if(intent.getAction().compareTo(ACTION_GPS_DISABLED) == 0) {
                 stopGPSService();
                 setStartButtonText("Start");
@@ -711,15 +705,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             }
 
         }
-    }
-
-    private void updateMapLocation(Intent intent) {
-        // do we need to update the map
-        double lat =  intent.getDoubleExtra("LAT",0);
-        double lon = intent.getDoubleExtra("LON",0);
-        MapActivity activity = (MapActivity)getSupportFragmentManager().findFragmentByTag("map");
-        if(activity != null)
-            activity.setLocation(new LatLng(lat,lon));
     }
 
     public static class TabListener<T extends SherlockFragment> implements ActionBar.TabListener {

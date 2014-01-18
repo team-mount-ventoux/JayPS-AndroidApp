@@ -11,7 +11,6 @@
     <string name="UNITS_TEXT_IMPERIAL">Miles</string>
     <string name="UNITS_TEXT_METRIC">Kilometers</string>
     <string name="TAB_TITLE_HOME">Home</string>
-    <string name="TAB_TITLE_MAP">Map</string>
     <string name="DISTANCE_LABEL_TEXT">DISTANCE</string>
     <string name="SPEED_LABEL_TEXT">SPEED</string>
     
