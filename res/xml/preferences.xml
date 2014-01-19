@@ -6,12 +6,6 @@
    android:title="@string/PREF_INSTALL_CATEGORY_TITLE"
  >
     <Preference
-        android:key="pref_install"
-        android:title="@string/PREF_INSTALL_WATCHFACE"
-        android:summary="@string/PREF_INSTALL_WATCHFACE_SUMMARY"
-        />
-    
-    <Preference
         android:key="pref_install_sdk2"
         android:title="@string/PREF_INSTALL_WATCHFACE_SDK2"
         android:summary="@string/PREF_INSTALL_WATCHFACE_SDK2_SUMMARY"

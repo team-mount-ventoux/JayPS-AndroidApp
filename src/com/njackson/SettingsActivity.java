@@ -50,14 +50,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
                 return false;
             }
         };
-        
-        Preference pref = findPreference("pref_install");
-        pref.setOnPreferenceClickListener(pref_install_click_listener);
-        if (MainActivity.pebbleFirmwareVersion == 1) {
-            pref.setTitle(pref.getTitle() + " [your version]");
-            pref.setSummary(pref.getSummary() + " This is the version compatible with your current Pebble firmware.");
-        }
-
+        Preference pref;
         Preference pref2 = findPreference("pref_install_sdk2");
         pref2.setOnPreferenceClickListener(pref_install_click_listener);
         if (MainActivity.pebbleFirmwareVersion == 2) {
