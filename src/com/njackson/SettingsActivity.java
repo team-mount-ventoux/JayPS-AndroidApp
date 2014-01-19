@@ -115,6 +115,15 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
            MainActivity.getInstance().loadPreferences();
 
            _setHrmSummary();
+
+           if (!hrm_address.equals("")) {
+               if (MainActivity.getInstance().checkServiceRunning()) {
+                   Toast.makeText(getApplicationContext(), "Please restart GPS to display heart rate", Toast.LENGTH_LONG).show();
+               } else {
+                   // only one toast message...
+                   Toast.makeText(getApplicationContext(), "Beta version: heart rate will be sent to Pebble instead of instant speed", Toast.LENGTH_LONG).show();
+               }
+           }
         }
     }
     private boolean install_watchface(int sdkVersion) {
