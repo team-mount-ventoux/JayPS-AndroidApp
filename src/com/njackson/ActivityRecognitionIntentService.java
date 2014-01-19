@@ -16,8 +16,6 @@ public class ActivityRecognitionIntentService extends IntentService {
 	
 	private static final String TAG = "PB-ActivityRecognitionIntentService";
 
-    private static boolean _watchShown;
-
     public ActivityRecognitionIntentService() {
         super("ActivityRecognitionIntentService");
         Log.d(TAG, "Start");
@@ -25,23 +23,25 @@ public class ActivityRecognitionIntentService extends IntentService {
 
     public ActivityRecognitionIntentService(String name) {
         super(name);
-        Log.d(TAG, "Start");
+        Log.d(TAG, "Start: " + name);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
+
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
-            //sendReply(DetectedActivity.ON_BICYCLE);
 
             Log.d(TAG, "Handle Intent");
 
             switch(result.getMostProbableActivity().getType()) {
 
                 case DetectedActivity.ON_BICYCLE:
-                    //TODO: start pebble watch face
-                    // start the watch face
                 	Log.d(TAG, "ON_BICYCLE");
+                    sendReply(result.getMostProbableActivity().getType());
+                    break;
+                case DetectedActivity.ON_FOOT:
+                    Log.d(TAG, "ON_FOOT");
                     sendReply(result.getMostProbableActivity().getType());
                     break;
                 case DetectedActivity.TILTING:
@@ -49,8 +49,6 @@ public class ActivityRecognitionIntentService extends IntentService {
                     break;
                 case DetectedActivity.STILL:
                 	Log.d(TAG, "STILL");
-                default:
-                    sendReply(result.getMostProbableActivity().getType());
             }
 
         }
@@ -63,7 +61,6 @@ public class ActivityRecognitionIntentService extends IntentService {
         broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         broadcastIntent.putExtra("ACTIVITY_CHANGED", type);
         sendBroadcast(broadcastIntent);
-
     }
 
 }

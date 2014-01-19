@@ -1,11 +1,7 @@
 package com.njackson;
 
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.Dialog;
-import android.app.PendingIntent;
 import android.content.*;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -14,19 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.getpebble.android.kit.PebbleKit;
-import com.getpebble.android.kit.util.PebbleDictionary;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.location.ActivityRecognitionClient;
-import com.google.android.gms.location.DetectedActivity;
 import com.njackson.util.AltitudeGraphReduce;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -89,9 +75,6 @@ public class HomeActivity extends SherlockFragment {
 
         ArrayList<Integer> graphData = AltitudeGraphReduce.getInstance().getCache();
         instanceState.putIntegerArrayList("Altitude", graphData);
-
-        Toast.makeText(getActivity(),"onSave",1);
-
     }
 
     @Override
@@ -163,8 +146,6 @@ public class HomeActivity extends SherlockFragment {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         int units = Integer.valueOf(prefs.getString("UNITS_OF_MEASURE", "0"));
         setUnits(units);
-
-        Toast.makeText(getActivity(),"onCreateView",1);
 
         return _view;
     }

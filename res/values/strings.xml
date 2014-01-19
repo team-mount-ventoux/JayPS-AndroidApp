@@ -11,7 +11,6 @@
     <string name="UNITS_TEXT_IMPERIAL">Miles</string>
     <string name="UNITS_TEXT_METRIC">Kilometers</string>
     <string name="TAB_TITLE_HOME">Home</string>
-    <string name="TAB_TITLE_MAP">Map</string>
     <string name="DISTANCE_LABEL_TEXT">DISTANCE</string>
     <string name="SPEED_LABEL_TEXT">SPEED</string>
     
@@ -43,9 +42,6 @@
     <string name="GPS_STATUS_LABEL">GPS STATUS</string><string name="ALTITUDE_TEXT">ALTITUDE</string>
 
     <string name="PREF_INSTALL_CATEGORY_TITLE">Install Watchface</string>
-    <string name="PREF_INSTALL_WATCHFACE">For Pebble 1.x</string>
-    <string name="PREF_INSTALL_WATCHFACE_SUMMARY">Download watchface and install it on your Pebble. For Pebble firmware 1.x only.</string>
-
     <string name="PREF_INSTALL_WATCHFACE_SDK2">For Pebble 2.x</string>
     <string name="PREF_INSTALL_WATCHFACE_SDK2_SUMMARY">Download watchface and install it on your Pebble. For Pebble firmware 2.x only.</string>
 
