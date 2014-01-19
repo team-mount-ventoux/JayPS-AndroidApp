@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="1.4.0-beta3" versioncode="23" >
+      <change>Bluetooth Smart (BLE) Heart Rate Monitor</change>
+      <change>Pebble: HRM is displayed instead of speed (beta version)</change>
+  </release>
   <release version="1.4.0-beta2" versioncode="22" >
       <change>Improved communication to avoid bluetooth errors and pebble disconnections</change>
       <change>Pebble: Bluetooth state</change>
