@@ -44,6 +44,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     public static boolean _liveTracking = false;
     public static String oruxmaps_autostart = "disable";
     
+    public static String hrm_name = "";
+    public static String hrm_address = "";
+
     public static int pebbleFirmwareVersion = 0;
     public static FirmwareVersionInfo pebbleFirmwareVersionInfo;
     
@@ -102,6 +105,15 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
     public void loadPreferences(SharedPreferences prefs) {
         //setup the defaults
+
+        debug = prefs.getBoolean("PREF_DEBUG", false);
+
+        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+
+        hrm_name = settings.getString("hrm_name", "");
+        hrm_address = settings.getString("hrm_address", "");
+        if (debug) Log.d(TAG, "hrm_name:" + hrm_name + " " + hrm_address);
+
         _activityRecognition = prefs.getBoolean("ACTIVITY_RECOGNITION",false);
         _liveTracking = prefs.getBoolean("LIVE_TRACKING",false);
         oruxmaps_autostart = prefs.getString("ORUXMAPS_AUTO", "disable");
@@ -129,7 +141,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         } catch (Exception e) {
             Log.e(TAG, "Exception converting REFRESH_INTERVAL:" + e);
         }
-        debug = prefs.getBoolean("PREF_DEBUG", false);
     }
 
     private void startButtonClick(boolean value) {
