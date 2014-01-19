@@ -73,4 +73,6 @@
     <string name="ble_disconnect">Disconnect</string>
     <string name="ble_scan">Scan</string>
     <string name="ble_stop">Stop</string>
+    <string name="ble_unknown_characteristic">Unknown characteristic</string>
+    <string name="ble_unknown_service">Unknown service</string>
 </resources>

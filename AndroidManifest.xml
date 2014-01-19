@@ -43,6 +43,7 @@
         <activity android:name=".SettingsActivity"/>
         <activity android:name=".AltitudeFragment"/>
         <activity android:name=".HRMScanActivity"/>
+        <service android:name=".BluetoothLeService" android:enabled="true"/>
 
         <receiver android:name=".PebbleDataReceiver">
             <intent-filter>
