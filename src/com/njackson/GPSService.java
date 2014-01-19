@@ -474,7 +474,9 @@ public class GPSService extends Service {
         broadcastIntent.putExtra("XPOS",        xpos);
         broadcastIntent.putExtra("YPOS",        ypos);
         broadcastIntent.putExtra("BEARING",     _myLocation.getBearing());
-        broadcastIntent.putExtra("HEARTRATE",   heart_rate);
+        if (heart_rate >= 0) {
+            broadcastIntent.putExtra("HEARTRATE",   heart_rate);
+        }
         sendBroadcast(broadcastIntent);
     }
 
