@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
@@ -77,20 +78,23 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         } else {
             pref.setSummary("No correction");
         }
-        
-        Preference pref_hrm = findPreference("PREF_HRM");
+
         _setHrmSummary();
 
-        pref_hrm.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                if (preference.getKey().equals("PREF_HRM")) {
-                    final Intent intent = new Intent(getApplicationContext(), HRMScanActivity.class);
-                    startActivityForResult(intent, 1);
+        // check to determine whether BLE is supported on the device.
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Preference pref_hrm = findPreference("PREF_HRM");
+            pref_hrm.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    if (preference.getKey().equals("PREF_HRM")) {
+                        final Intent intent = new Intent(getApplicationContext(), HRMScanActivity.class);
+                        startActivityForResult(intent, 1);
+                    }
+                    return false;
                 }
-                return false;
-            }
-        });
+            });
+        }
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
@@ -184,6 +188,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
     }
     private void _setHrmSummary() {
         String summary = MainActivity.hrm_name;
+        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            summary = getResources().getString(R.string.ble_not_supported);
+        }
         if (summary.equals("")) {
             summary = "Click to choose a sensor";
         }
