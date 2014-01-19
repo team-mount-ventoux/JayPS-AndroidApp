@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Activity for scanning and displaying available Bluetooth LE devices.
@@ -165,7 +166,9 @@ public class HRMScanActivity extends ListActivity {
             }, SCAN_PERIOD);
 
             mScanning = true;
-            mBluetoothAdapter.startLeScan(mLeScanCallback);
+            UUID[] uuids = { UUID.fromString(BLESampleGattAttributes.HEART_RATE_SERVICE)};
+            mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+            //same with no filtering: mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
             mScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
