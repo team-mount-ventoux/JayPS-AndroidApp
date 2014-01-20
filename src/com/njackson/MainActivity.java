@@ -73,6 +73,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         STOP
     }
 
+    private static VirtualPebble _virtualPebble;
+
     static MainActivity instance;
 
     public static MainActivity getInstance() {
@@ -164,6 +166,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
         setContentView(R.layout.main);
 
+        VirtualPebble.start(getApplicationContext());
+
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -231,6 +235,12 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     @Override
     public void onResume() {
         super.onResume();
+        if (debug) Log.d(TAG, "onResume");
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (debug) Log.d(TAG, "onPause");
     }
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -291,7 +301,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
         }
         Log.d(TAG, " STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED));
-        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+        VirtualPebble.sendDataToPebble(dic);
     }
     
     private Intent _lastIntent = null;
@@ -304,6 +314,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         
         PebbleDictionary dic = new PebbleDictionary();
         String sending = "Sending ";
+        boolean forceSend = false;
         
         if (intent == null) {
             Log.d(TAG, "sendDataToPebble(intent == null)");
@@ -315,6 +326,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             
             dic.addInt32(Constants.MSG_VERSION_ANDROID, Constants.VERSION_ANDROID);
             sending += " MSG_VERSION_ANDROID: "   + dic.getInteger(Constants.MSG_VERSION_ANDROID);
+
+            forceSend = true;
         }
 
         if (intent != null) {
@@ -395,7 +408,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         sending += " STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED);*/
 
         if (MainActivity.debug) Log.d(TAG, sending);
-        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);        
+        VirtualPebble.sendDataToPebble(dic, forceSend);
     }
 
     private void updateScreen(Intent intent) {
@@ -795,6 +808,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         
         PebbleDictionary dic = new PebbleDictionary();
         dic.addInt32(Constants.MSG_BATTERY_LEVEL, batteryLevel);
-        PebbleKit.sendDataToPebble(getApplicationContext(), Constants.WATCH_UUID, dic);
+        VirtualPebble.sendDataToPebble(dic);
     }
 }
