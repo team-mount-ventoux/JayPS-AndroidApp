@@ -344,7 +344,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         if (intent != null) {
             _lastIntent = intent;
 
-            byte[] data = new byte[20];
+            byte[] data = new byte[21];
 
             data[0] = (byte) ((_units % 2) * (1<<0));
             data[0] += (byte) ((checkServiceRunning() ? 1 : 0) * (1<<1));
@@ -400,15 +400,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 data[16] += 128;
             }
 
-            if (intent.hasExtra("HEARTRATE")) {
-                if (MainActivity.debug) Log.d(TAG, "HEARTRATE instead of SPEED");
-                data[17] = (byte) ((10 * intent.getIntExtra("HEARTRATE", 0)) % 256);
-                data[18] = (byte) ((10 * intent.getIntExtra("HEARTRATE", 0)) / 256);
-            } else {
-                data[17] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * _speedConversion) / 1)) % 256);
-                data[18] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * _speedConversion) / 1)) / 256);
-            }
+            data[17] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * _speedConversion) / 1)) % 256);
+            data[18] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * _speedConversion) / 1)) / 256);
             data[19] = (byte) (((int)  (intent.getFloatExtra("BEARING", 0.0f) / 360 * 256)) % 256);
+            data[20] = (byte) ((intent.getIntExtra("HEARTRATE", 255)) % 256);
 
             dic.addBytes(Constants.ALTITUDE_DATA, data);
             
