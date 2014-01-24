@@ -78,6 +78,7 @@ public class GPSService extends Service {
     private BluetoothGattCharacteristic mNotifyCharacteristic;
     public final static UUID UUID_HEART_RATE_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.HEART_RATE_MEASUREMENT);
     public int heart_rate = -1;
+    private long heart_rate_ts = 0;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -475,7 +476,11 @@ public class GPSService extends Service {
         broadcastIntent.putExtra("YPOS",        ypos);
         broadcastIntent.putExtra("BEARING",     _myLocation.getBearing());
         if (heart_rate >= 0) {
-            broadcastIntent.putExtra("HEARTRATE",   heart_rate);
+            if (System.currentTimeMillis() - heart_rate_ts < 5000) {
+                broadcastIntent.putExtra("HEARTRATE", heart_rate);
+            } else {
+                broadcastIntent.putExtra("HEARTRATE", 0);
+            }
         }
         sendBroadcast(broadcastIntent);
     }
@@ -546,6 +551,7 @@ public class GPSService extends Service {
                 //Log.d(TAG, "ACTION_DATA_AVAILABLE");
                 if (intent.hasExtra(BluetoothLeService.EXTRA_HEART_RATE)) {
                     heart_rate = intent.getIntExtra(BluetoothLeService.EXTRA_HEART_RATE, -1);
+                    heart_rate_ts = System.currentTimeMillis();
                     if (MainActivity.debug) Log.d(TAG, "heart_rate:" + heart_rate);
                     broadcastLocation();
                 }
