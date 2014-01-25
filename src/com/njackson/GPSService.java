@@ -524,6 +524,7 @@ public class GPSService extends Service {
 
         @Override
         public void onServiceDisconnected(ComponentName componentName) {
+            if (MainActivity.debug) Log.d(TAG, "BluetoothLeService onServiceDisconnected");
             mBluetoothLeService = null;
         }
     };
@@ -543,6 +544,12 @@ public class GPSService extends Service {
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 if (MainActivity.debug) Log.d(TAG, "ACTION_GATT_DISCONNECTED");
                 mBLEConnected = false;
+
+                if (mBluetoothLeService != null) {
+                    final boolean result = mBluetoothLeService.connect(mDeviceAddress);
+                    if (MainActivity.debug) Log.d(TAG, "Connect request result=" + result);
+                }
+
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 // Show all the supported services and characteristics on the user interface
                 if (MainActivity.debug) Log.d(TAG, "ACTION_GATT_SERVICES_DISCOVERED");
