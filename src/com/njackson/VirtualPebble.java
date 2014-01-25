@@ -1,7 +1,12 @@
 package com.njackson;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -42,6 +47,21 @@ public class VirtualPebble {
         } else {
             sendDataToPebbleIfPossible(data);
         }
+    }
+
+    public static void  showSimpleNotificationOnPebble(String title, String text) {
+        final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
+        final Map<String, String> data = new HashMap<String, String>();
+        data.put("title", title);
+        data.put("body", text);
+        final JSONObject jsonData = new JSONObject(data);
+        final String notificationData = new JSONArray().put(jsonData).toString();
+
+        i.putExtra("messageType", "PEBBLE_ALERT");
+        i.putExtra("sender", "Pebble Bike");
+        i.putExtra("notificationData", notificationData);
+
+        _context.sendBroadcast(i);
     }
 
     public VirtualPebble() {

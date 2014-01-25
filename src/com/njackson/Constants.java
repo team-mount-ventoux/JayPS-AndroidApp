@@ -15,6 +15,8 @@ public class Constants {
     
     
     static final int VERSION_ANDROID = 15;
+    static final int LAST_VERSION_PEBBLE = 23;
+    static final int MIN_VERSION_PEBBLE = 22;
     
     static final int LIVE_TRACKING_FRIENDS = 0x10;
     static final int ALTITUDE_DATA = 0x13;

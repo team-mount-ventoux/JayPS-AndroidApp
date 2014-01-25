@@ -209,6 +209,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             }
             if (getIntent().getExtras().containsKey("version")) {
                 Log.d(TAG, "onCreate() version:" + getIntent().getExtras().getInt("version"));
+                notificationVersion(getIntent().getExtras().getInt("version"));
                 resendLastDataToPebble();
             }
             /*if (getIntent().getExtras().containsKey("live_max_name")) {
@@ -275,6 +276,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             }
             if (intent.getExtras().containsKey("version")) {
                 Log.d(TAG, "onNewIntent() version:" + intent.getExtras().getInt("version"));
+                notificationVersion(intent.getExtras().getInt("version"));
                 resendLastDataToPebble();
             }
             /*if (intent.getExtras().containsKey("live_max_name")) {
@@ -283,7 +285,16 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             }*/
         }
     }
-    
+    private void notificationVersion(int version) {
+        if (version < Constants.LAST_VERSION_PEBBLE) {
+            if (debug) Log.d(TAG, "version:" + version + " min:" + Constants.MIN_VERSION_PEBBLE + " last:" + Constants.LAST_VERSION_PEBBLE);
+            String msg = "A new watchface is available. Please install it from the Pebble Bike android application settings";
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+            if (version < Constants.MIN_VERSION_PEBBLE) {
+                VirtualPebble.showSimpleNotificationOnPebble("Pebble Bike", msg);
+            }
+        }
+    }
     private void changeState(int button) {
         Log.d(TAG, "changeState(button:" + button + ")");
         switch (button) {
