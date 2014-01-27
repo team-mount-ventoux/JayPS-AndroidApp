@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="1.4.0-beta4" versioncode="24" >
+      <change>Pebble: display heart rate on a new screen</change>
+      <change>Notification when a new watchface is available</change>
+      <change>=> Install the new 2.x watchface (click on "Install Watchface" in settings)</change>
+  </release>
   <release version="1.4.0-beta3" versioncode="23" >
       <change>Bluetooth Smart (BLE) Heart Rate Monitor</change>
       <change>Pebble: HRM is displayed instead of speed (beta version)</change>
