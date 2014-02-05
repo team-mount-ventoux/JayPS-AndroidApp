@@ -44,6 +44,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     public static boolean _liveTracking = false;
     public static String oruxmaps_autostart = "disable";
     
+    public static String hrm_name = "";
+    public static String hrm_address = "";
+
     public static int pebbleFirmwareVersion = 0;
     public static FirmwareVersionInfo pebbleFirmwareVersionInfo;
     
@@ -102,6 +105,15 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
     public void loadPreferences(SharedPreferences prefs) {
         //setup the defaults
+
+        debug = prefs.getBoolean("PREF_DEBUG", false);
+
+        SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME,0);
+
+        hrm_name = settings.getString("hrm_name", "");
+        hrm_address = settings.getString("hrm_address", "");
+        if (debug) Log.d(TAG, "hrm_name:" + hrm_name + " " + hrm_address);
+
         _activityRecognition = prefs.getBoolean("ACTIVITY_RECOGNITION",false);
         _liveTracking = prefs.getBoolean("LIVE_TRACKING",false);
         oruxmaps_autostart = prefs.getString("ORUXMAPS_AUTO", "disable");
@@ -129,7 +141,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         } catch (Exception e) {
             Log.e(TAG, "Exception converting REFRESH_INTERVAL:" + e);
         }
-        debug = prefs.getBoolean("PREF_DEBUG", false);
     }
 
     private void startButtonClick(boolean value) {
@@ -198,6 +209,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             }
             if (getIntent().getExtras().containsKey("version")) {
                 Log.d(TAG, "onCreate() version:" + getIntent().getExtras().getInt("version"));
+                notificationVersion(getIntent().getExtras().getInt("version"));
                 resendLastDataToPebble();
             }
             /*if (getIntent().getExtras().containsKey("live_max_name")) {
@@ -264,6 +276,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             }
             if (intent.getExtras().containsKey("version")) {
                 Log.d(TAG, "onNewIntent() version:" + intent.getExtras().getInt("version"));
+                notificationVersion(intent.getExtras().getInt("version"));
                 resendLastDataToPebble();
             }
             /*if (intent.getExtras().containsKey("live_max_name")) {
@@ -272,7 +285,16 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             }*/
         }
     }
-    
+    private void notificationVersion(int version) {
+        if (version < Constants.LAST_VERSION_PEBBLE) {
+            if (debug) Log.d(TAG, "version:" + version + " min:" + Constants.MIN_VERSION_PEBBLE + " last:" + Constants.LAST_VERSION_PEBBLE);
+            String msg = "A new watchface is available. Please install it from the Pebble Bike android application settings";
+            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+            if (version < Constants.MIN_VERSION_PEBBLE) {
+                VirtualPebble.showSimpleNotificationOnPebble("Pebble Bike", msg);
+            }
+        }
+    }
     private void changeState(int button) {
         Log.d(TAG, "changeState(button:" + button + ")");
         switch (button) {
@@ -333,7 +355,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         if (intent != null) {
             _lastIntent = intent;
 
-            byte[] data = new byte[20];
+            byte[] data = new byte[21];
 
             data[0] = (byte) ((_units % 2) * (1<<0));
             data[0] += (byte) ((checkServiceRunning() ? 1 : 0) * (1<<1));
@@ -392,6 +414,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             data[17] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * _speedConversion) / 1)) % 256);
             data[18] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * _speedConversion) / 1)) / 256);
             data[19] = (byte) (((int)  (intent.getFloatExtra("BEARING", 0.0f) / 360 * 256)) % 256);
+            data[20] = (byte) ((intent.getIntExtra("HEARTRATE", 255)) % 256);
 
             dic.addBytes(Constants.ALTITUDE_DATA, data);
             

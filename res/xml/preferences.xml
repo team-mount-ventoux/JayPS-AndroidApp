@@ -71,6 +71,17 @@
 
 </PreferenceCategory>
 
+ <PreferenceCategory
+   android:title="@string/PREF_HRM_CATEGORY_TITLE"
+ >
+    <Preference
+        android:key="PREF_HRM"
+        android:title="@string/PREF_HRM_TITLE"
+        android:summary=""
+        /> 
+
+</PreferenceCategory>
+
 
  <PreferenceCategory
    android:title="@string/PREF_ABOUT_CATEGORY_TITLE"
