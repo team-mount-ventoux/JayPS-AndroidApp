@@ -71,12 +71,12 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private GPSServiceReceiver _gpsServiceReceiver;
     private boolean _googlePlayInstalled;
 
+    private boolean _batteryServiceRunning = false;
+
     enum RequestType {
         START,
         STOP
     }
-
-    private static VirtualPebble _virtualPebble;
 
     static MainActivity instance;
 
@@ -240,8 +240,11 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }
         Log.d(TAG, "pebbleFirmwareVersion=" + pebbleFirmwareVersion);
         
-        IntentFilter batteryLevelFilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
-        registerReceiver(batteryLevelReceiver, batteryLevelFilter);
+        if (!_batteryServiceRunning) {
+            Intent intent = new Intent(getApplicationContext(), BatteryService.class);
+            startService(intent);
+            _batteryServiceRunning = true;
+        }
     }
 
     @Override
@@ -815,18 +818,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 return super.onOptionsItemSelected(item);
         }
     }
-    BroadcastReceiver batteryLevelReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            int rawlevel = intent.getIntExtra("level", -1);
-            int scale = intent.getIntExtra("scale", -1);
-            if (rawlevel >= 0 && scale > 0) {
-                batteryLevel = (rawlevel * 100) / scale;
-                sendBatteryLevel();
-            }
-            if (debug) Log.d(TAG, "battery rawlevel:" + rawlevel + " scale:" + scale + " batteryLevel:" + batteryLevel);
-         }
-    };
-    public void sendBatteryLevel() {
+    public static void sendBatteryLevel() {
         if (debug) Log.d(TAG, "sendBatteryLevel:" + batteryLevel);
         
         PebbleDictionary dic = new PebbleDictionary();
