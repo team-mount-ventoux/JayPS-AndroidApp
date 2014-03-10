@@ -14,12 +14,14 @@
             <item>Normal (1s)</item>
             <item>2s</item>
             <item>Save battery (5s)</item>
+            <item>30s</item>
     </string-array>
     <string-array name="REFRESH_INTERVAL_ENTRY_VALUES">
             <item>500</item>
             <item>1000</item>
             <item>2000</item>
             <item>5000</item>
+            <item>30000</item>
     </string-array>    
 
     <string-array name="ORUXMAPS_AUTO_ENTRIES">
