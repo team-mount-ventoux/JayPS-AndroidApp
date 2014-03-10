@@ -145,8 +145,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         try {
             String uriString;
             if (sdkVersion == 2) {
-                uriString = "http://labs.jayps.fr/pebblebike/pebblebike-1.4.0-beta4";
-                uriString += "-sdk2";
+                uriString = "http://dl.pebblebike.com/p/pebblebike-1.4.0";
             } else {
                 uriString = "http://labs.jayps.fr/pebblebike/pebblebike-1.3.0";
             }
