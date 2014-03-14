@@ -16,6 +16,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import android.content.Intent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -337,7 +338,7 @@ public class LiveTracking {
                 }
                 if (MainActivity.debug) Log.d(TAG, sending);
 
-                VirtualPebble.sendDataToPebble(dic, forceSend);
+                sendPebbleEvent(dic);
             }
             
             
@@ -349,6 +350,13 @@ public class LiveTracking {
         	Log.e(TAG, "Exception:" + e);
         }
         return false;
+    }
+
+    private void sendPebbleEvent(PebbleDictionary dic) {
+        String jsonData = dic.toJsonString();
+        Intent dataIntent = new Intent(VirtualPebbleService.PEBBLE_DATA_EVENT);
+        dataIntent.putExtra(VirtualPebbleService.INTENT_EXTRA_NAME,jsonData);
+        _context.sendBroadcast(dataIntent);
     }
 
     public byte[] getMsgLiveShort(Location firstLocation) {

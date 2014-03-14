@@ -16,7 +16,7 @@ import junit.framework.Assert;
  */
 public class AltitudeGraphReduceTest extends AndroidTestCase {
 
-    public void  setUp() {
+    public void setUp() {
 
     }
 
@@ -30,7 +30,7 @@ public class AltitudeGraphReduceTest extends AndroidTestCase {
         int minAlt = 100;
         int maxAlt = 200;
 
-        for(int n = minAlt; n != maxAlt + 10; n+=10) {
+        for (int n = minAlt; n != maxAlt + 10; n += 10) {
             alt.addAltitude(n, 0, 0);
         }
 
@@ -46,7 +46,7 @@ public class AltitudeGraphReduceTest extends AndroidTestCase {
         int minAlt = 100;
         int maxAlt = 200;
 
-        for(int n = minAlt; n != maxAlt + 10; n+=10) {
+        for (int n = minAlt; n != maxAlt + 10; n += 10) {
             alt.addAltitude(n, 0, 0);
         }
 
@@ -65,16 +65,16 @@ public class AltitudeGraphReduceTest extends AndroidTestCase {
         int maxAlt = 300;
         int elapsedTime = 0;
 
-        for(int n = minAlt; n != maxAlt; n+=10) {
+        for (int n = minAlt; n != maxAlt; n += 10) {
             alt.addAltitude(n, elapsedTime, 0);
             elapsedTime += binInterval;
         }
 
         int cacheSize = alt.getCache().size();
-        int expectedSize = ((maxAlt - minAlt) /10);
+        int expectedSize = ((maxAlt - minAlt) / 10);
         assertTrue(
                 "Cache should contain " + expectedSize + " items contains " + cacheSize,
-                 cacheSize == expectedSize);
+                cacheSize == expectedSize);
     }
 
     public void testBinData() throws InterruptedException {
@@ -86,7 +86,7 @@ public class AltitudeGraphReduceTest extends AndroidTestCase {
         int maxAlt = 3000;
         int elapsedTime = 0;
 
-        for(int n = minAlt; n != maxAlt; n+=10) {
+        for (int n = minAlt; n != maxAlt; n += 10) {
             alt.addAltitude(n, elapsedTime, 0);
             elapsedTime += 100;
         }

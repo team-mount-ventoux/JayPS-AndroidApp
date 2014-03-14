@@ -1,12 +1,12 @@
 package com.njackson;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.app.Service;
+import android.content.IntentFilter;
+import android.os.IBinder;
+import org.json.JSONException;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,65 +18,38 @@ import android.util.Log;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 
-public class VirtualPebble {
+public class VirtualPebbleService extends Service{
     
-    private static final String TAG = "PB-VirtualPebble";
+    private final String TAG = "PB-VirtualPebble";
+    public static final String PEBBLE_DATA_EVENT = "PEBBLE_DATA_EVENT";
+    public static final String INTENT_EXTRA_NAME = "PEBBLE_DATA";
 
-    private static VirtualPebble _instance;
-    private static Context _context;
-    
     private int transID = 0;
     private PebbleKit.PebbleAckReceiver ackReceiver;
     private PebbleKit.PebbleNackReceiver nackReceiver;
     private final MessageManager messageManager = new MessageManager();
-    
-    public static void start(Context context) {
-        _context = context;
-        _instance = new VirtualPebble();
+    private BroadcastReceiver _broadcastReceiver;
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        handleIntent(intent);
+        return START_STICKY;
     }
 
-    public static void sendDataToPebble(PebbleDictionary data) {
-        _instance.messageManager.offer(data);
-    }
-    public static void sendDataToPebbleIfPossible(PebbleDictionary data) {
-        _instance.messageManager.offerIfLow(data, 5);
-    }
-    public static void sendDataToPebble(PebbleDictionary data, boolean forceSend) {
-        if (forceSend) {
-            sendDataToPebble(data);
-        } else {
-            sendDataToPebbleIfPossible(data);
-        }
-    }
+    @Override
+    public void onCreate() {
 
-    public static void  showSimpleNotificationOnPebble(String title, String text) {
-        final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
-        final Map<String, String> data = new HashMap<String, String>();
-        data.put("title", title);
-        data.put("body", text);
-        final JSONObject jsonData = new JSONObject(data);
-        final String notificationData = new JSONArray().put(jsonData).toString();
+        registerBroadcastReceiver();
 
-        i.putExtra("messageType", "PEBBLE_ALERT");
-        i.putExtra("sender", "Pebble Bike");
-        i.putExtra("notificationData", notificationData);
-
-        _context.sendBroadcast(i);
-    }
-
-    public VirtualPebble() {
-        
         new Thread(messageManager).start();
-        
-        // TODO: put VirtualPebble in a service and call unregisterReceiver(ackReceiver) in onDestroy
-        
+
         ackReceiver = new PebbleKit.PebbleAckReceiver(Constants.WATCH_UUID) {
             @Override
             public void receiveAck(final Context context, final int transactionId) {
                 messageManager.notifyAckReceivedAsync(transactionId);
             }
         };
-        PebbleKit.registerReceivedAckHandler(_context, ackReceiver);
+        PebbleKit.registerReceivedAckHandler(getApplicationContext(), ackReceiver);
 
         nackReceiver = new PebbleKit.PebbleNackReceiver(Constants.WATCH_UUID) {
             @Override
@@ -84,22 +57,64 @@ public class VirtualPebble {
                 messageManager.notifyNackReceivedAsync(transactionId);
             }
         };
-        PebbleKit.registerReceivedNackHandler(_context, nackReceiver);
-        
-        PebbleKit.registerPebbleConnectedReceiver(_context, new BroadcastReceiver() {
+        PebbleKit.registerReceivedNackHandler(getApplicationContext(), nackReceiver);
+
+        PebbleKit.registerPebbleConnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-              _instance.messageManager.pebbleConnected();
+                messageManager.pebbleConnected();
             }
-        });  
-        PebbleKit.registerPebbleDisconnectedReceiver(_context, new BroadcastReceiver() {
+        });
+        PebbleKit.registerPebbleDisconnectedReceiver(getApplicationContext(), new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-              //Log.d(TAG, "Pebble disconnected!");
+                //Log.d(TAG, "Pebble disconnected!");
             }
-        });        
+        });
+
+        super.onCreate();
     }
-    
+
+    private void registerBroadcastReceiver() {
+
+        _broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String jsonString = intent.getStringExtra(INTENT_EXTRA_NAME);
+                Log.w(TAG,"Got Data:" + jsonString);
+                try {
+                    PebbleDictionary data = PebbleDictionary.fromJson(jsonString);
+                    sendDataToPebble(data);
+                }catch (JSONException e) {
+                    Log.w(TAG,"Error decoding json data");
+                }
+            }
+        };
+        IntentFilter dataFilter = new IntentFilter(PEBBLE_DATA_EVENT);
+        registerReceiver(_broadcastReceiver,dataFilter);
+    }
+
+    @Override
+    public void onDestroy (){
+        //unregisterReceiver(ackReceiver);
+    }
+
+    private void handleIntent(Intent intent) {
+
+    }
+
+    private void sendDataToPebble(PebbleDictionary data) {
+        messageManager.offer(data);
+    }
+    private void sendDataToPebbleIfPossible(PebbleDictionary data) {
+        messageManager.offerIfLow(data, 5);
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
     /**
     * Manages a thread-safe message queue using a Looper worker thread to complete blocking tasks.
     */
@@ -131,7 +146,7 @@ public class VirtualPebble {
                             transID = (transID + 1) % 256;
                             PebbleDictionary data = messageQueue.peek();
                             if (MainActivity.debug) Log.d(TAG, "sendDataToPebble s:" + messageQueue.size() + " transID:" + transID + " " + data.toJsonString());
-                            PebbleKit.sendDataToPebbleWithTransactionId(_context, Constants.WATCH_UUID, data, transID);
+                            PebbleKit.sendDataToPebbleWithTransactionId(getApplicationContext(), Constants.WATCH_UUID, data, transID);
                         }
 
                         isMessagePending = Boolean.valueOf(true);
@@ -141,18 +156,18 @@ public class VirtualPebble {
         }
 
         public void notifyAckReceivedAsync(int transactionId) {
-            if (MainActivity.debug) Log.d(TAG, "notifyAckReceivedAsync("+transactionId+") transID:" + transID);
+            Log.d(TAG, "notifyAckReceivedAsync("+transactionId+") transID:" + transID);
             removeMessageASync();
             consumeAsync();
         }
 
         public void notifyNackReceivedAsync(int transactionId) {
-            if (MainActivity.debug) Log.d(TAG, "notifyNackReceivedAsync("+transactionId+") transID:" + transID);
+            Log.d(TAG, "notifyNackReceivedAsync("+transactionId+") transID:" + transID);
             removeMessageASync();
             consumeAsync();
         }
         public void pebbleConnected() {
-            if (MainActivity.debug) Log.d(TAG, "pebbleConnected");
+            Log.d(TAG, "pebbleConnected");
             removeMessageASync();
             consumeAsync();
         }
