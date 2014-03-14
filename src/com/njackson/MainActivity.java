@@ -177,10 +177,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
         setContentView(R.layout.main);
 
-
-
-        //VirtualPebble.start(getApplicationContext());
-
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -310,7 +306,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             dic.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
         }
         Log.d(TAG, " STATE_CHANGED: "   + dic.getInteger(Constants.STATE_CHANGED));
-        //VirtualPebble.sendDataToPebble(dic);
+        sendPebbleEvent(dic);
     }
     
     private Intent _lastIntent = null;
@@ -413,7 +409,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
         if (MainActivity.debug)
             Log.d(TAG, sending);
-        //VirtualPebble.sendDataToPebble(dic, forceSend);
+        sendPebbleEvent(dic);
     }
 
     private void updateScreen(Intent intent) {
