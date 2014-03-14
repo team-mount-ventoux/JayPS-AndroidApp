@@ -117,7 +117,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
            _setHrmSummary();
 
            if (!hrm_address.equals("")) {
-               if (MainActivity.getInstance().checkServiceRunning()) {
+               if (MainActivity.getInstance().checkServiceRunning(GPSService.class.getName())) {
                    Toast.makeText(getApplicationContext(), "Please restart GPS to display heart rate", Toast.LENGTH_LONG).show();
                } else {
                    // only one toast message...

@@ -138,7 +138,7 @@ public class HomeActivity extends SherlockFragment {
         // if we are using activity recognition hide the start button
         setStartButtonVisibility(!MainActivity.getInstance().activityRecognitionEnabled());
 
-        if(MainActivity.getInstance().checkServiceRunning())
+        if(MainActivity.getInstance().checkServiceRunning(GPSService.class.getName()))
             setStartButtonText(getString(R.string.START_BUTTON_STOP));
         else
             setStartButtonText(getString(R.string.START_BUTTON_START));

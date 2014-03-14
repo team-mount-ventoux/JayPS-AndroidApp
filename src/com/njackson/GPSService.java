@@ -86,9 +86,6 @@ public class GPSService extends Service {
         _this = this;
         
         makeServiceForeground("Pebble Bike", "GPS started");
-        
-        // We want this service to continue running until it is explicitly
-        // stopped, so return sticky.
         return START_STICKY;
     }
     
@@ -96,10 +93,12 @@ public class GPSService extends Service {
     public void onCreate() {
         _locationMgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         _mSensorMgr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-        
-
         super.onCreate();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     private boolean checkGPSEnabled(LocationManager locationMgr) {
@@ -252,7 +251,6 @@ public class GPSService extends Service {
                 OruxMaps.startRecordNewTrack(getApplicationContext());
             } else if (MainActivity.oruxmaps_autostart.equals("auto")) {
                 long last_start = settings.getLong("GPS_LAST_START", 0);
-                //Log.d(TAG, "GPS_LAST_START:" + last_start + " ts:" + System.currentTimeMillis());
                 if (System.currentTimeMillis() - last_start > 12 * 3600 * 1000) { // 12 hours
                     OruxMaps.startRecordNewTrack(getApplicationContext());
                 } else {
@@ -310,11 +308,6 @@ public class GPSService extends Service {
         _gpsStarted = true;
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-    
     private LocationManager _locationMgr = null;
     private LocationListener onLocationChange = new LocationListener() {
         @Override

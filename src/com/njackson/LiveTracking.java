@@ -337,7 +337,7 @@ public class LiveTracking {
                 }
                 if (MainActivity.debug) Log.d(TAG, sending);
 
-                VirtualPebble.sendDataToPebble(dic, forceSend);
+                //VirtualPebble.sendDataToPebble(dic, forceSend);
             }
             
             
