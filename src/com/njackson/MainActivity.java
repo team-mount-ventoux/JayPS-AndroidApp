@@ -71,6 +71,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private GPSServiceReceiver _gpsServiceReceiver;
     private boolean _googlePlayInstalled;
 
+    public static VirtualPebble virtualPebble;
+
     private boolean _batteryServiceRunning = false;
 
     enum RequestType {
@@ -177,7 +179,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
         setContentView(R.layout.main);
 
-        VirtualPebble.start(getApplicationContext());
+        virtualPebble = new VirtualPebble(getApplicationContext());
 
         final ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);

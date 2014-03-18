@@ -22,24 +22,18 @@ public class VirtualPebble {
     
     private static final String TAG = "PB-VirtualPebble";
 
-    private static VirtualPebble _instance;
-    private static Context _context;
+    private Context _context;
     
     private int transID = 0;
     private PebbleKit.PebbleAckReceiver ackReceiver;
     private PebbleKit.PebbleNackReceiver nackReceiver;
     private final MessageManager messageManager = new MessageManager();
     
-    public static void start(Context context) {
-        _context = context;
-        _instance = new VirtualPebble();
-    }
-
     public static void sendDataToPebble(PebbleDictionary data) {
-        _instance.messageManager.offer(data);
+        MainActivity.virtualPebble.messageManager.offer(data);
     }
     public static void sendDataToPebbleIfPossible(PebbleDictionary data) {
-        _instance.messageManager.offerIfLow(data, 5);
+        MainActivity.virtualPebble.messageManager.offerIfLow(data, 5);
     }
     public static void sendDataToPebble(PebbleDictionary data, boolean forceSend) {
         if (forceSend) {
@@ -61,10 +55,12 @@ public class VirtualPebble {
         i.putExtra("sender", "Pebble Bike");
         i.putExtra("notificationData", notificationData);
 
-        _context.sendBroadcast(i);
+        MainActivity.virtualPebble._context.sendBroadcast(i);
     }
 
-    public VirtualPebble() {
+    public VirtualPebble(Context context) {
+
+        _context = context;
         
         new Thread(messageManager).start();
         
@@ -89,7 +85,7 @@ public class VirtualPebble {
         PebbleKit.registerPebbleConnectedReceiver(_context, new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-              _instance.messageManager.pebbleConnected();
+                MainActivity.virtualPebble.messageManager.pebbleConnected();
             }
         });  
         PebbleKit.registerPebbleDisconnectedReceiver(_context, new BroadcastReceiver() {
