@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="1.4.1-rc" versioncode="26" >
+      <change>Bugfix: prevent crashes</change>
+  </release>
   <release version="1.4.0" versioncode="25" >
       <change>Bluetooth Smart (BLE) Heart Rate Monitor</change>
       <change>If available, use pressure sensor to improve altitude accuracy</change>
