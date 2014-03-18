@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-  <release version="1.4.1-rc" versioncode="26" >
+  <release version="1.4.1" versioncode="26" >
       <change>Bugfix: prevent crashes</change>
   </release>
   <release version="1.4.0" versioncode="25" >
