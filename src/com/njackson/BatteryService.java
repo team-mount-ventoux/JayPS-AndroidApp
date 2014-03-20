@@ -24,6 +24,12 @@ public class BatteryService extends Service {
         
         return START_STICKY;
     }
+
+    @Override
+    public void onDestroy() {
+        unregisterReceiver(batteryLevelReceiver);
+    }
+
     BroadcastReceiver batteryLevelReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             int rawlevel = intent.getIntExtra("level", -1);

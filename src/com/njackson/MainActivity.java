@@ -259,6 +259,16 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         super.onPause();
         if (debug) Log.d(TAG, "onPause");
     }
+    @Override
+    public void onDestroy() {
+    	super.onDestroy();
+
+    	Intent intent = new Intent(getApplicationContext(), BatteryService.class);
+        stopService(intent);
+        _batteryServiceRunning = false;
+
+        System.exit(0);
+    }
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU) {
