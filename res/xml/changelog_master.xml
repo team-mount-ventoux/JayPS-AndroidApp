@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="1.4.2" versioncode="27" >
+      <change>Improve battery level</change>
+  </release>
   <release version="1.4.1" versioncode="26" >
       <change>Bugfix: prevent crashes</change>
   </release>
