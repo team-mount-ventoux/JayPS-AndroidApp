@@ -1,6 +1,11 @@
 PebbleBike-AndroidApp
 =====================
 
+##Prerequisites  
+
+Gradle 1.9
+``http://www.gradle.org/downloads``
+
 ##Build Instructions  
 
 Update the submodules 
