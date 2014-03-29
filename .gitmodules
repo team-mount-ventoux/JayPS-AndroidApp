@@ -7,3 +7,6 @@
 [submodule "submodules/ckChangelog"]
 	path = submodules/ckChangelog
 	url = https://github.com/cketti/ckChangeLog.git
+[submodule "submodules/gradle-android-test-plugin"]
+	path = submodules/gradle-android-test-plugin
+	url = git@github.com:JakeWharton/gradle-android-test-plugin.git
