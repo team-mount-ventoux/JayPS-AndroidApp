@@ -1,37 +1,37 @@
-language: java
-jdk: oraclejdk7
 env:
   matrix:
-    - ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
+   - ANDROID_SDKS=android-19, sysimg-19  ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
+
+before_script:
+  # Calabash install
+  - "gem install travis-artifacts"
+
 before_install:
+  - ANDROID_API_LEVEL=19
+  - ANDROID_SDK_TOOLS_VERSION=22.6.2
+  - ANDROID_BUILD_TOOLS_VERSION=19.0.3
+  - ANDROID_OS_VERSION=4.4.2
+
   # Install base Android SDK
+  - chmod +x gradlew
   - sudo apt-get update -qq
   - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
-  - wget http://dl.google.com/android/android-sdk_r22.3-linux.tgz
-  - tar xzf android-sdk_r22.3-linux.tgz
+  - wget http://dl.google.com/android/android-sdk_r$ANDROID_SDK_TOOLS_VERSION-linux.tgz
+  - tar xzf android-sdk_r$ANDROID_SDK_TOOLS_VERSION-linux.tgz
   - export ANDROID_HOME=$PWD/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
 
-  # Install required components.
-  # For a full list, run `android list sdk -a --extended`
-  # Note that sysimg-19 downloads only ARM, because only the first license query is accepted.
-  - echo yes | android update sdk --filter platform-tools --no-ui --force > /dev/null
-  - echo yes | android update sdk --all --filter build-tools-19.0.0 --no-ui --force > /dev/null
-  - echo yes | android update sdk --filter android-19 --no-ui --force > /dev/null
-  - echo yes | android update sdk --filter sysimg-19 --no-ui --force > /dev/null
-  - echo yes | android update sdk --filter extra-android-support --no-ui --force > /dev/null
-  - echo yes | android update sdk --filter extra-android-m2repository --no-ui --force > /dev/null
+  # Install Android SDK components
+  - echo y | android update sdk --filter tools,platform-tools,build-tools-$ANDROID_BUILD_TOOLS_VERSION,android-$ANDROID_API_LEVEL,extra-android-m2repository --no-ui --force > /dev/null
 
-  # Create and start emulator
-  - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
-  - emulator -avd test -no-skin -no-audio -no-window &
-  
-  # Set gradlew permissions
-  - chmod +x gradlew
+  # install android build tools
+  - wget https://dl-ssl.google.com/android/repository/build-tools_r$ANDROID_BUILD_TOOLS_VERSION-linux.zip
+  - unzip build-tools_r$ANDROID_BUILD_TOOLS_VERSION-linux.zip -d $ANDROID_HOME
+  - mkdir -p $ANDROID_HOME/build-tools/
+  - mv $ANDROID_HOME/android-$ANDROID_OS_VERSION $ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS_VERSION
 
-before_script:
-  - adb wait-for-device
-  - adb shell input keyevent 82 &
+install:
+  - TERM=dumb ./gradlew assemble
 
 script:
-  - ./gradlew assemble --stacktrace
+  - TERM=dumb ./gradlew clean check
