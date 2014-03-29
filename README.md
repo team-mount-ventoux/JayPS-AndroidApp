@@ -1,7 +1,7 @@
 PebbleBike-AndroidApp
 =====================
 
-[![Build Status](https://travis-ci.org/DigitalInnovation/MNSRemoteAB-iOS.svg?branch=master)](https://travis-ci.org/DigitalInnovation/MNSRemoteAB-iOS)
+[![Build Status](https://travis-ci.org/pebble-bike/PebbleBike-AndroidApp.svg?branch=v2)](https://travis-ci.org/pebble-bike/PebbleBike-AndroidApp)
 
 ##Prerequisites  
 
