@@ -1,6 +1,8 @@
 PebbleBike-AndroidApp
 =====================
 
+[![Build Status](https://travis-ci.org/DigitalInnovation/MNSRemoteAB-iOS.svg?branch=master)](https://travis-ci.org/DigitalInnovation/MNSRemoteAB-iOS)
+
 ##Prerequisites  
 
 Gradle 1.10  
