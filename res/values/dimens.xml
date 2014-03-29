@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <dimen name="ALTITUDE_BAR_WIDTH">20dp</dimen>
-    <dimen name="ALTITUDE_BAR_HEIGHT">10dp</dimen>
-    <dimen name="ALTITUDE_BAR_LEFT_MARGIN">5dp</dimen>
-</resources>
