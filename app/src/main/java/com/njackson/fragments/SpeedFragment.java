@@ -1,9 +1,9 @@
-package com.pebblebike.fragments;
+package com.njackson.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import com.pebblebike.R;
-import com.pebblebike.application.PebbleBikeApplication;
+import com.njackson.R;
+import com.njackson.application.PebbleBikeApplication;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;

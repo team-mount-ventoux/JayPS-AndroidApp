@@ -1,4 +1,4 @@
-package com.pebblebike.application;
+package com.njackson.application;
 
 /**
  * Created by server on 30/03/2014.

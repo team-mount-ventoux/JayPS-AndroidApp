@@ -1,10 +1,10 @@
-package com.pebblebike.application;
+package com.njackson.application;
 
 /**
  * Created by server on 30/03/2014.
  */
-import com.pebblebike.activities.MainActivity;
-import com.pebblebike.fragments.SpeedFragment;
+import com.njackson.activities.MainActivity;
+import com.njackson.fragments.SpeedFragment;
 import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;

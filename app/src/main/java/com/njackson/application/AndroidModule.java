@@ -1,4 +1,4 @@
-package com.pebblebike.application;
+package com.njackson.application;
 
 import android.content.Context;
 import android.location.LocationManager;

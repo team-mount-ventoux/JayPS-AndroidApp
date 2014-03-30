@@ -11,4 +11,8 @@
     <item name="distance_text" type="id" />
     <item name="distance_units_label" type="id" />
     <item name="avgspeed_units_label" type="id" />
+    <item name="time_container" type="id" />
+    <item name="speed_container" type="id" />
+    <item name="distance_container" type="id" />
+    <item name="avgspeed_container" type="id" />
 </resources>

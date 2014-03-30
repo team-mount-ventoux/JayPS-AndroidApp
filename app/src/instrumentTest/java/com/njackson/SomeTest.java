@@ -1,4 +1,4 @@
-package com.pebblebike;
+package com.njackson;
 
 import android.test.suitebuilder.annotation.SmallTest;
 

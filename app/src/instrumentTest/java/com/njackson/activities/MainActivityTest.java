@@ -1,4 +1,4 @@
-package com.pebblebike.activities;
+package com.njackson.activities;
 
 import android.test.ActivityInstrumentationTestCase2;
 

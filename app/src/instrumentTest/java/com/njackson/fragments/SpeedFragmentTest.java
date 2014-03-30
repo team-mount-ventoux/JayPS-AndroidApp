@@ -1,13 +1,11 @@
-package com.pebblebike.fragments;
+package com.njackson.fragments;
 
-import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.TextView;
 
-import com.pebblebike.R;
-
-import org.w3c.dom.Text;
+import com.njackson.R;
+import com.njackson.events.GPSService.NewLocationEvent;
 
 /**
  * Created by server on 30/03/2014.
@@ -31,10 +29,6 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
     private TextView _avgspeedText;
     private TextView _avgspeedUnitsLabel;
 
-
-
-
-
     public SpeedFragmentTest() {
         super(SpeedFragment.class);
     }
@@ -42,6 +36,8 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        //((PebbleBikeApplication) getApplication()).inject(this);
 
         setActivityInitialTouchMode(false);
 
@@ -79,6 +75,12 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
         assertNotNull(_avgspeedLabel);
         assertNotNull(_avgspeedText);
         assertNotNull(_avgspeedUnitsLabel);
+    }
+
+    @MediumTest
+    public void testRespondsToNewLocationEvent() {
+        NewLocationEvent event = new NewLocationEvent();
+
     }
 
 }

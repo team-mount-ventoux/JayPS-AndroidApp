@@ -1,12 +1,12 @@
-package com.pebblebike.activities;
+package com.njackson.activities;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.pebblebike.R;
-import com.pebblebike.application.PebbleBikeApplication;
+import com.njackson.R;
+import com.njackson.application.PebbleBikeApplication;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
