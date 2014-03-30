@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="speed_label" type="id" />
+    <item name="speed_text" type="id" />
+    <item name="speed_units_label" type="id" />
+    <item name="time_label" type="id" />
+    <item name="time_text" type="id" />
+    <item name="avgspeed_label" type="id" />
+    <item name="avgspeed_text" type="id" />
+    <item name="distance_label" type="id" />
+    <item name="distance_text" type="id" />
+    <item name="distance_units_label" type="id" />
+    <item name="avgspeed_units_label" type="id" />
+</resources>

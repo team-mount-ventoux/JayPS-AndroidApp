@@ -4,6 +4,7 @@ package com.pebblebike.application;
  * Created by server on 30/03/2014.
  */
 import com.pebblebike.activities.MainActivity;
+import com.pebblebike.fragments.SpeedFragment;
 import com.squareup.otto.Bus;
 
 import javax.inject.Singleton;
@@ -12,7 +13,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = MainActivity.class,
+        injects = {MainActivity.class, SpeedFragment.class},
         library = true
 )
 public class PebbleBikeModule {
