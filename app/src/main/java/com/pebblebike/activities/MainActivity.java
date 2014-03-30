@@ -1,15 +1,26 @@
-package com.pebblebike;
+package com.pebblebike.activities;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.pebblebike.R;
+import com.pebblebike.application.PebbleBikeApplication;
+import com.squareup.otto.Bus;
+
+import javax.inject.Inject;
+
 public class MainActivity extends ActionBarActivity {
+
+    @Inject Bus _bus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((PebbleBikeApplication) getApplication()).inject(this);
+
         setContentView(R.layout.activity_main);
     }
 
