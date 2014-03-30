@@ -30,8 +30,17 @@ before_install:
   - mkdir -p $ANDROID_HOME/build-tools/
   - mv $ANDROID_HOME/android-$ANDROID_OS_VERSION $ANDROID_HOME/build-tools/$ANDROID_BUILD_TOOLS_VERSION
 
+  # Start the emulator
+  - echo no | android create avd --force -n test -t android-19 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-audio -no-window &
+
 install:
   - TERM=dumb ./gradlew assemble
 
+before_script:
+    # Make sure the emulator has started before running tests
+    - chmod +x wait_for_emulator
+    - ./wait_for_emulator
+
 script:
-  - TERM=dumb ./gradlew clean check
+  - TERM=dumb ./gradlew connectedCheck

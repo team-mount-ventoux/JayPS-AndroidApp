@@ -79,6 +79,7 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
         assertNotNull(_avgspeedLabel);
         assertNotNull(_avgspeedText);
         assertNotNull(_avgspeedUnitsLabel);
+        assertEquals(true,false);
     }
 
 }
