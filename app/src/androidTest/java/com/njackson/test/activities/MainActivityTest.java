@@ -1,6 +1,8 @@
-package com.njackson.activities;
+package com.njackson.test.activities;
 
 import android.test.ActivityInstrumentationTestCase2;
+
+import com.njackson.activities.MainActivity;
 
 /**
  * Created by server on 30/03/2014.

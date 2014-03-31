@@ -1,11 +1,16 @@
-package com.njackson.fragments;
+package com.njackson.test.fragments;
 
+import android.content.Context;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.TextView;
 
 import com.njackson.R;
 import com.njackson.events.GPSService.NewLocationEvent;
+import com.njackson.fragments.SpeedFragment;
+import com.njackson.test.application.TestApplication;
+
+import dagger.ObjectGraph;
 
 /**
  * Created by server on 30/03/2014.
@@ -37,6 +42,8 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
     protected void setUp() throws Exception {
         super.setUp();
 
+        TestApplication app = (TestApplication)this.getInstrumentation().getTargetContext().getApplicationContext();
+        ObjectGraph graph = app.getObjectGraph();
         //((PebbleBikeApplication) getApplication()).inject(this);
 
         setActivityInitialTouchMode(false);
@@ -80,6 +87,7 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
     @MediumTest
     public void testRespondsToNewLocationEvent() {
         NewLocationEvent event = new NewLocationEvent();
+        assertEquals(false, true);
 
     }
 

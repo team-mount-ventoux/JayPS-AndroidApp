@@ -12,7 +12,7 @@ import dagger.ObjectGraph;
  */
 public class PebbleBikeApplication extends Application {
 
-    private ObjectGraph graph;
+    protected ObjectGraph graph;
 
     @Override public void onCreate() {
         super.onCreate();

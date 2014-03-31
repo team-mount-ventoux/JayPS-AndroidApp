@@ -19,9 +19,13 @@ public class SpeedFragment extends FragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((PebbleBikeApplication) getApplication()).inject(this);
+        setupInjection();
 
         setContentView(R.layout.fragment_speed);
+    }
+
+    protected void setupInjection() {
+        ((PebbleBikeApplication) getApplication()).inject(this);
     }
 
 }
