@@ -20,8 +20,8 @@ Set Gradle bin to your exe path ``export PATH=$GRADLE_HOME/bin:$PATH``
 
 Update the submodules 
 ```
-git submodules init
-git submodules update
+git submodule init
+git submodule update
 ```
 Build the application and run the tests  
 ```
