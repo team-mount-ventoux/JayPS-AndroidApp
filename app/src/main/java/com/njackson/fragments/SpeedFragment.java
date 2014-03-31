@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.TextView;
 
 import com.njackson.R;
-import com.njackson.application.IPebbleBikeApplication;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSService.NewLocationEvent;
 import com.squareup.otto.Bus;

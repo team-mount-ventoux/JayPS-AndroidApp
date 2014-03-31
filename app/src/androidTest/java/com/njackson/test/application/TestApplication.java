@@ -1,10 +1,6 @@
 package com.njackson.test.application;
 
-import android.app.Application;
-
-import com.njackson.application.IPebbleBikeApplication;
 import com.njackson.application.PebbleBikeApplication;
-
 import dagger.ObjectGraph;
 
 /**
