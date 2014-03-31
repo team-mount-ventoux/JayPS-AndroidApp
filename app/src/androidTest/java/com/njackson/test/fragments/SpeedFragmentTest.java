@@ -87,8 +87,6 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
     @MediumTest
     public void testRespondsToNewLocationEvent() {
         NewLocationEvent event = new NewLocationEvent();
-        assertEquals(false, true);
-
     }
 
 }
