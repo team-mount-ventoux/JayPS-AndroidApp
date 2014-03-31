@@ -1,21 +1,31 @@
 package com.njackson.test.fragments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.Looper;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.TextView;
 
 import com.njackson.R;
+import com.njackson.application.ForApplication;
+import com.njackson.application.PebbleBikeModule;
 import com.njackson.events.GPSService.NewLocationEvent;
 import com.njackson.fragments.SpeedFragment;
 import com.njackson.test.application.TestApplication;
+import com.squareup.otto.Bus;
 
+import javax.inject.Inject;
+
+import dagger.Module;
 import dagger.ObjectGraph;
 
 /**
  * Created by server on 30/03/2014.
  */
 public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFragment> {
+
+    @Inject Bus _bus;
 
     private SpeedFragment _activity;
 
@@ -38,13 +48,26 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
         super(SpeedFragment.class);
     }
 
+    @Module(
+            includes = PebbleBikeModule.class,
+            injects = SpeedFragmentTest.class,
+            overrides = true
+    )
+    static class TestModule {
+        /*
+        @Provides @Singleton Heater provideHeater() {
+            return Mockito.mock(Heater.class);
+        }
+        */
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
 
         TestApplication app = (TestApplication)this.getInstrumentation().getTargetContext().getApplicationContext();
-        ObjectGraph graph = app.getObjectGraph();
-        //((PebbleBikeApplication) getApplication()).inject(this);
+        app.setObjectGraph(ObjectGraph.create(new TestModule()));
+        app.inject(this);
 
         setActivityInitialTouchMode(false);
 
@@ -85,8 +108,20 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
     }
 
     @MediumTest
-    public void testRespondsToNewLocationEvent() {
-        NewLocationEvent event = new NewLocationEvent();
+    public void testRespondsToNewLocationEvent() throws InterruptedException {
+        final NewLocationEvent event = new NewLocationEvent();
+        event.setSpeed(20.0f);
+
+        _activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                _bus.post(event);
+            }
+        });
+
+        Thread.sleep(100);
+
+        assertEquals("20.0", _speedText.getText());
     }
 
 }
