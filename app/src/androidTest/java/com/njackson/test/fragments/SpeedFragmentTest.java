@@ -1,7 +1,9 @@
 package com.njackson.test.fragments;
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Looper;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
@@ -14,6 +16,8 @@ import com.njackson.events.GPSService.NewLocationEvent;
 import com.njackson.fragments.SpeedFragment;
 import com.njackson.test.application.TestApplication;
 import com.squareup.otto.Bus;
+
+import org.mockito.Mockito;
 
 import javax.inject.Inject;
 
@@ -43,6 +47,7 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
     private TextView _avgspeedLabel;
     private TextView _avgspeedText;
     private TextView _avgspeedUnitsLabel;
+    private SharedPreferences _mock;
 
     public SpeedFragmentTest() {
         super(SpeedFragment.class);
@@ -65,7 +70,10 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
     protected void setUp() throws Exception {
         super.setUp();
 
+        setupMocks();
+        this.getInstrumentation().waitForIdleSync(); // this is needed for emulator versions 2.3 as the application is instantiated on a separate thread.
         TestApplication app = (TestApplication)this.getInstrumentation().getTargetContext().getApplicationContext();
+
         app.setObjectGraph(ObjectGraph.create(new TestModule()));
         app.inject(this);
 
@@ -87,6 +95,12 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
         _avgspeedLabel = (TextView)_activity.findViewById(R.id.avgspeed_label);
         _avgspeedText = (TextView)_activity.findViewById(R.id.avgspeed_text);
         _avgspeedUnitsLabel = (TextView)_activity.findViewById(R.id.avgspeed_units_label);
+    }
+
+    private void setupMocks() {
+        //Configure Mokito
+        System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath());
+        _mock = Mockito.mock(SharedPreferences.class);
     }
 
     @MediumTest

@@ -37,6 +37,8 @@ public class SpeedFragment extends FragmentActivity {
     public void onNewLocation(NewLocationEvent event) {
         TextView speedText = (TextView)findViewById(R.id.speed_text);
         speedText.setText(Float.toString(event.getSpeed()));
+
+
     }
 
 }
