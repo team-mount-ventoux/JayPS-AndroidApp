@@ -1,16 +1,11 @@
 package com.njackson.test.fragments;
 
-import android.app.Activity;
-import android.app.Instrumentation;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Looper;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.TextView;
 
 import com.njackson.R;
-import com.njackson.application.ForApplication;
 import com.njackson.application.PebbleBikeModule;
 import com.njackson.events.GPSService.NewLocationEvent;
 import com.njackson.fragments.SpeedFragment;
@@ -123,8 +118,12 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
 
     @MediumTest
     public void testRespondsToNewLocationEvent() throws InterruptedException {
+
         final NewLocationEvent event = new NewLocationEvent();
         event.setSpeed(20.0f);
+        event.setDistance(100.0f);
+        event.setAvgSpeed(25.4f);
+        event.setElapsedTimeSeconds((3600 + 240 + 34)); // "1:04:34"
 
         _activity.runOnUiThread(new Runnable() {
             @Override
@@ -136,6 +135,9 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
         Thread.sleep(100);
 
         assertEquals("20.0", _speedText.getText());
+        assertEquals("100.0", _distanceText.getText());
+        assertEquals("25.4", _avgspeedText.getText());
+        assertEquals("1:04:34", _timeText.getText());
     }
 
 }

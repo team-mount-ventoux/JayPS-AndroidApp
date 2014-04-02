@@ -2,6 +2,7 @@ package com.njackson.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.format.DateUtils;
 import android.widget.TextView;
 
 import com.njackson.R;
@@ -38,7 +39,15 @@ public class SpeedFragment extends FragmentActivity {
         TextView speedText = (TextView)findViewById(R.id.speed_text);
         speedText.setText(Float.toString(event.getSpeed()));
 
+        TextView avgSpeed = (TextView)findViewById(R.id.avgspeed_text);
+        avgSpeed.setText(Float.toString(event.getAvgSpeed()));
 
+        TextView distance = (TextView)findViewById(R.id.distance_text);
+        distance.setText(Float.toString(event.getDistance()));
+
+        TextView time = (TextView)findViewById(R.id.time_text);
+        String timeText = DateUtils.formatElapsedTime(event.getElapsedTimeSeconds());
+        time.setText(timeText);
     }
 
 }

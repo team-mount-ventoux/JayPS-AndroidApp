@@ -85,12 +85,12 @@ public class NewLocationEvent {
         this._accuracy = _accuracy;
     }
 
-    private long _time;
-    public long getTime() {
-        return _time;
+    private long _elapsedTimeSeconds;
+    public long getElapsedTimeSeconds() {
+        return _elapsedTimeSeconds;
     }
-    public void setTime(long _time) {
-        this._time = _time;
+    public void setElapsedTimeSeconds(long _time) {
+        this._elapsedTimeSeconds = _time;
     }
 
     private double _xpos;
