@@ -65,7 +65,7 @@ public class AltitudeFragmentTest extends ActivityInstrumentationTestCase2<Altit
     @MediumTest
     public void test_Activity_Responds_To_NewAltitudeEvent() {
 
-        final NewAltitiudeEvent event = new NewAltitiudeEvent();
+        final NewAltitiudeEvent event = new NewAltitiudeEvent(new float[14],0);
 
         _activity.runOnUiThread(new Runnable() {
             @Override
