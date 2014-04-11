@@ -18,11 +18,13 @@
 
     <fragment
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:name="com.njackson.fragments.AltitudeFragment"
         tools:layout="@layout/fragment_altitude"
         android:layout_above="@id/main_start_button"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"></fragment>
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_below="@id/main_speed"
+        android:layout_marginTop="@dimen/activity_vertical_margin"></fragment>
 
     <fragment
         android:id="@id/main_start_button"
