@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="backgroundblue">#131f2f</color>
+    <color name="altitude_orange_start">#df4e00</color>
 </resources>

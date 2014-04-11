@@ -15,4 +15,5 @@
     <item name="speed_container" type="id" />
     <item name="distance_container" type="id" />
     <item name="avgspeed_container" type="id" />
+    <item name="altitude_main_container" type="id" />
 </resources>

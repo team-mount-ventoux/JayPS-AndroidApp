@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:id="@id/altitude_main_container"
+    android:background="@color/backgroundblue">
+
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+    <ImageView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/altitude_bar_height" android:layout_gravity="center_horizontal|bottom"
+            android:src="@drawable/alitude_bar" android:layout_marginLeft="@dimen/altitude_bar_left_margin"
+            android:layout_weight="0.07">
+    </ImageView>
+
+</LinearLayout>

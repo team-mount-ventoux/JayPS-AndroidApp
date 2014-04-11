@@ -17,9 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".fragments.SpeedFragment">
-        </activity>
+        <activity android:name=".fragments.SpeedFragment"></activity>
+        <activity android:name=".fragments.AltitudeFragment"></activity>
     </application>
 
 </manifest>

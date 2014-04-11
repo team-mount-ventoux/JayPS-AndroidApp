@@ -13,25 +13,17 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-public class SpeedFragment extends FragmentActivity {
-
-    @Inject Bus _bus;
+public class SpeedFragment extends BaseFragmentActivity {
 
     public SpeedFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupInjection();
-        _bus.register(this);
 
         setContentView(R.layout.fragment_speed);
-    }
-
-    protected void setupInjection() {
-        ((PebbleBikeApplication) getApplication()).inject(this);
     }
 
     @Subscribe
