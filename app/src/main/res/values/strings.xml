@@ -16,5 +16,7 @@
     <string name="speedfragment_avgspeed_label">Average</string>
     <string name="speedfragment_avgspeed_value">0.0</string>
     <string name="speedfragment_avgspeed_units">KM/H</string>
+    <string name="startbuttonfragment_start">START</string>
+    <string name="startbuttonfragment_stop">STOP</string>
 
 </resources>

@@ -1,12 +1,8 @@
 package com.njackson.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -15,12 +11,9 @@ import android.widget.LinearLayout;
 
 import com.njackson.R;
 import com.njackson.events.GPSService.NewAltitiudeEvent;
-import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-
-import javax.inject.Inject;
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,7 +32,7 @@ public class AltitudeFragment extends BaseFragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.altitudefragment);
+        setContentView(R.layout.fragment_altitude);
         _prevValues = new float[] {1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f};
         _view = findViewById(R.id.altitude_main_container);
         Log.d(TAG,"Height:" + _view.getHeight());

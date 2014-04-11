@@ -16,4 +16,7 @@
     <item name="distance_container" type="id" />
     <item name="avgspeed_container" type="id" />
     <item name="altitude_main_container" type="id" />
+    <item name="start_button" type="id" />
+    <item name="main_start_button" type="id" />
+    <item name="main_altitude" type="id"/><item name="main_speed" type="id"/>
 </resources>
