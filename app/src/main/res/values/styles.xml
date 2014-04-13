@@ -20,4 +20,10 @@
         <item name="android:textSize">16dp</item>
     </style>
 
+    <style name="AltitudeStatus" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">#8eb7f5</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">14dp</item>
+    </style>
+
 </resources>

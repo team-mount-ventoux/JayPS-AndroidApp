@@ -18,5 +18,11 @@
     <item name="altitude_main_container" type="id" />
     <item name="start_button" type="id" />
     <item name="main_start_button" type="id" />
-    <item name="main_altitude" type="id"/><item name="main_speed" type="id"/>
+    <item name="main_altitude" type="id"/>
+    <item name="main_speed" type="id"/>
+    <item name="altitude_text" type="id"/>
+    <item name="altitude_graph" type="id" />
+    <item name="altitude_gps_status" type="id" />
+    <item name="altitude_title_section" type="id" />
+    <item name="altitude_status_value" type="id" />
 </resources>

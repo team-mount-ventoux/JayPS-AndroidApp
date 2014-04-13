@@ -16,5 +16,8 @@
     <string name="speedfragment_avgspeed_units">KM/H</string>
     <string name="startbuttonfragment_start">START</string>
     <string name="startbuttonfragment_stop">STOP</string>
+    <string name="altiudefragment_altitude">ALTITUDE</string>
+    <string name="altiudefragment_gpsstatus">GPS STATUS</string>
+    <string name="altitude_status_good">GOOD</string>
 
 </resources>
