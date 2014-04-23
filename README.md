@@ -7,6 +7,7 @@ Pebble Bike also has an innovative auto start feature which will auto start the 
 
 Pebble Bike has a Live Tracking function that sends your position every 30 seconds to the internet. If you're using it with your friends, it can receive theirs positions and display them with your own track, directly on your Pebble.
 
+Licensed under [MIT License](http://opensource.org/licenses/MIT)
 
 ## Contributors
 * JayPS (https://github.com/jay3)  
