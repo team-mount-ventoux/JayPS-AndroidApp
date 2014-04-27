@@ -1,17 +1,12 @@
 package com.njackson.test.fragments;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.LinearLayout;
 
 import com.njackson.R;
-import com.njackson.activities.TestActivity;
 import com.njackson.application.PebbleBikeModule;
 import com.njackson.events.GPSService.NewAltitiudeEvent;
 import com.njackson.fragments.AltitudeFragment;
-import com.njackson.fragments.SpeedFragment;
 import com.njackson.test.FragmentInstrumentTestCase2;
 import com.njackson.test.application.TestApplication;
 import com.squareup.otto.Bus;
