@@ -39,4 +39,4 @@ before_script:
     - ./wait_for_emulator
 
 script:
-  - TERM=dumb ./gradlew connectedCheck
+  - TERM=dumb ./gradlew connectedCheck --stacktrace
