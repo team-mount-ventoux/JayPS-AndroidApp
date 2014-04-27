@@ -1,7 +1,9 @@
 package com.njackson.activities;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -11,7 +13,7 @@ import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends FragmentActivity {
 
     @Inject Bus _bus;
 

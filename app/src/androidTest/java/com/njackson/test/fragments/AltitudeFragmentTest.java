@@ -1,13 +1,18 @@
 package com.njackson.test.fragments;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.LinearLayout;
 
 import com.njackson.R;
+import com.njackson.activities.TestActivity;
 import com.njackson.application.PebbleBikeModule;
 import com.njackson.events.GPSService.NewAltitiudeEvent;
 import com.njackson.fragments.AltitudeFragment;
+import com.njackson.fragments.SpeedFragment;
+import com.njackson.test.FragmentInstrumentTestCase2;
 import com.njackson.test.application.TestApplication;
 import com.squareup.otto.Bus;
 
@@ -19,9 +24,7 @@ import dagger.ObjectGraph;
 /**
  * Created by server on 04/04/2014.
  */
-public class AltitudeFragmentTest extends ActivityInstrumentationTestCase2<AltitudeFragment> {
-
-    private AltitudeFragment _activity;
+public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
 
     @Inject Bus _bus;
 
@@ -38,8 +41,6 @@ public class AltitudeFragmentTest extends ActivityInstrumentationTestCase2<Altit
         */
     }
 
-    public AltitudeFragmentTest() { super(AltitudeFragment.class); }
-
     @Override
     protected void setUp() throws Exception {
         super.setUp();
@@ -52,6 +53,7 @@ public class AltitudeFragmentTest extends ActivityInstrumentationTestCase2<Altit
         setActivityInitialTouchMode(false);
 
         _activity = getActivity();
+        startFragment(new AltitudeFragment());
     }
 
     @MediumTest

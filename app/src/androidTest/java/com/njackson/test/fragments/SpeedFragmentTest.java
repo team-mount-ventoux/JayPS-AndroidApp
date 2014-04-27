@@ -1,7 +1,6 @@
 package com.njackson.test.fragments;
 
 import android.content.SharedPreferences;
-import android.test.ActivityInstrumentationTestCase2;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.TextView;
 
@@ -9,6 +8,7 @@ import com.njackson.R;
 import com.njackson.application.PebbleBikeModule;
 import com.njackson.events.GPSService.NewLocationEvent;
 import com.njackson.fragments.SpeedFragment;
+import com.njackson.test.FragmentInstrumentTestCase2;
 import com.njackson.test.application.TestApplication;
 import com.squareup.otto.Bus;
 
@@ -22,11 +22,9 @@ import dagger.ObjectGraph;
 /**
  * Created by server on 30/03/2014.
  */
-public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFragment> {
+public class SpeedFragmentTest extends FragmentInstrumentTestCase2 {
 
     @Inject Bus _bus;
-
-    private SpeedFragment _activity;
 
     private TextView _speedLabel;
     private TextView _speedText;
@@ -43,10 +41,6 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
     private TextView _avgspeedText;
     private TextView _avgspeedUnitsLabel;
     private SharedPreferences _mock;
-
-    public SpeedFragmentTest() {
-        super(SpeedFragment.class);
-    }
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -75,6 +69,8 @@ public class SpeedFragmentTest extends ActivityInstrumentationTestCase2<SpeedFra
         setActivityInitialTouchMode(false);
 
         _activity = getActivity();
+
+        startFragment(new SpeedFragment());
 
         _speedLabel = (TextView)_activity.findViewById(R.id.speed_label);
         _speedText = (TextView)_activity.findViewById(R.id.speed_text);

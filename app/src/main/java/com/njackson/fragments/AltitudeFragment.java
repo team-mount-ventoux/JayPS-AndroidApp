@@ -1,8 +1,11 @@
 package com.njackson.fragments;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -22,20 +25,25 @@ import java.util.ArrayList;
  * Time: 20:59
  * To change this template use File | Settings | File Templates.
  */
-public class AltitudeFragment extends BaseFragmentActivity {
+public class AltitudeFragment extends BaseFragment {
 	
 	private static final String TAG = "PB-AltitudeFragment";
 
     private float[] _prevValues;
     private View _view;
 
+    public AltitudeFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_altitude);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+        super.onCreateView(inflater,container,savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_altitude, container, false);
         _prevValues = new float[] {1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f,1.0f};
-        _view = findViewById(R.id.altitude_main_container);
-        Log.d(TAG,"Height:" + _view.getHeight());
+        _view = view;
+        return view;
     }
 
     @Subscribe
@@ -90,7 +98,7 @@ public class AltitudeFragment extends BaseFragmentActivity {
     private ImageView[] findAltitudeBars() {
 
         ArrayList<ImageView> altitudeViews = new ArrayList<ImageView>();
-        LinearLayout layout = (LinearLayout)_view;
+        LinearLayout layout = (LinearLayout)_view.findViewById(R.id.altitude_main_container);
 
         for(int c=0; c< layout.getChildCount(); c++) {
 

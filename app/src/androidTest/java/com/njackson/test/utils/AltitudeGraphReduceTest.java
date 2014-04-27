@@ -1,4 +1,4 @@
-package com.njackson.test.uitls;
+package com.njackson.test.utils;
 
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
