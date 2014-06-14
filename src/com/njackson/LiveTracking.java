@@ -44,6 +44,7 @@ public class LiveTracking {
     private String _activity_id = "";
     private String _bufferPoints = "";
     private String _bufferAccuracies = "";
+    private String _bufferHeartRates = "";
     private String _login = "";
     private String _password = "";
     private String _url = "";
@@ -151,7 +152,7 @@ public class LiveTracking {
     	this._url = url;
     }
 
-    public boolean addPoint(Location firstLocation, Location location) {
+    public boolean addPoint(Location firstLocation, Location location, int heart_rate) {
         _firstLocation = firstLocation;
     	//Log.d(TAG, "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude() + "," + location.getTime() + "," + location.getAccuracy()+ ")");
     	if (location.getTime() - _prevTime < 5000) {
@@ -160,6 +161,9 @@ public class LiveTracking {
     	} 
     	_bufferPoints += (_bufferPoints != "" ? " " : "") + location.getLatitude() + " " + location.getLongitude() + " " + String.format(Locale.US, "%.1f", location.getAltitude()) + " " + String.format("%d", (int) (location.getTime()/1000));
     	_bufferAccuracies += (_bufferAccuracies != "" ? " " : "") + String.format(Locale.US, "%.1f", location.getAccuracy());
+    	if (heart_rate > 0) {
+    	    _bufferHeartRates += (_bufferHeartRates != "" ? " " : "") + heart_rate + " " + String.format("%d", (int) (location.getTime()/1000));
+    	}
     	if (location.getTime() - _prevTime < 30000) {
     		// too early (5s<dt<30s), save point to send it later
     	    if (MainActivity.debug) Log.d(TAG, "too early: skip addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getAltitude() + "," + location.getTime() + ")");
@@ -168,15 +172,17 @@ public class LiveTracking {
 		// ok
 		_prevTime = location.getTime();
 		this._lastLocation = location;
-		new SendLiveTask().execute(new SendLiveTaskParams(_bufferPoints, _bufferAccuracies));
+		new SendLiveTask().execute(new SendLiveTaskParams(_bufferPoints, _bufferAccuracies, _bufferHeartRates));
 		return true;
     }
     class SendLiveTaskParams {
         String points;
         String accuracies;
-        public SendLiveTaskParams(String points, String accuracies) {
+        String heartrates;
+        public SendLiveTaskParams(String points, String accuracies, String heartrates) {
             this.points = points;
             this.accuracies = accuracies;
+            this.heartrates = heartrates;
         }
     }
     private class SendLiveTask extends AsyncTask<SendLiveTaskParams, Void, Boolean> {
@@ -184,7 +190,7 @@ public class LiveTracking {
             int count = params.length;
             boolean result = false;
             for (int i = 0; i < count; i++) {
-                result = result || _send(params[i].points, params[i].accuracies);
+                result = result || _send(params[i].points, params[i].accuracies, params[i].heartrates);
             }
             return result;
         }
@@ -194,8 +200,8 @@ public class LiveTracking {
         }
     }
 
-    private boolean _send(String points, String accuracies) {
-        if (MainActivity.debug) Log.d(TAG, "send(" + points + ", " + accuracies + ")");
+    private boolean _send(String points, String accuracies, String heartrates) {
+        if (MainActivity.debug) Log.d(TAG, "send(" + points + ", " + accuracies + ", " + heartrates + ")");
         try {
         	String request = _activity_id == "" ? "start_activity" : "update_activity";
         	String postParameters = "";
@@ -222,7 +228,10 @@ public class LiveTracking {
         	if (accuracies != "") {
         		postParameters += "&jayps_accuracies="+accuracies;
     		}
-        	
+        	if (heartrates != "") {
+        		postParameters += "&hr="+heartrates;
+    		}
+    		
             URL url = new URL(_url != "" ? _url : "http://live.jayps.fr/api/mmt.php");
         	HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         	
@@ -341,7 +350,7 @@ public class LiveTracking {
             }
             
             
-            _bufferPoints = _bufferAccuracies = "";
+            _bufferPoints = _bufferAccuracies = _bufferHeartRates = "";
             
             return nbReceivedFriends > 0;
             

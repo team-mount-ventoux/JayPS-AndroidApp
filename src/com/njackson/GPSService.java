@@ -376,7 +376,7 @@ public class GPSService extends Service {
             }
 
             if (MainActivity._liveTracking && resultOnLocationChanged == AdvancedLocation.SAVED) {
-                _liveTracking.addPoint(firstLocation, location);
+                _liveTracking.addPoint(firstLocation, location, System.currentTimeMillis() - heart_rate_ts < 5000 ? heart_rate : 0);
             }
             
         }
