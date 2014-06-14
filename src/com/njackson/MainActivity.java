@@ -41,7 +41,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     private ActivityRecognitionClient _mActivityRecognitionClient;
 
     private static boolean _activityRecognition = false;
-    public static boolean _liveTracking = false;
+    public static boolean _liveTrackingJayps = false;
+    public static boolean _liveTrackingMmt = false;
     public static String oruxmaps_autostart = "disable";
     
     public static String hrm_name = "";
@@ -117,7 +118,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         if (debug) Log.d(TAG, "hrm_name:" + hrm_name + " " + hrm_address);
 
         _activityRecognition = prefs.getBoolean("ACTIVITY_RECOGNITION",false);
-        _liveTracking = prefs.getBoolean("LIVE_TRACKING",false);
+        _liveTrackingJayps = prefs.getBoolean("LIVE_TRACKING",false);
+        _liveTrackingMmt = prefs.getBoolean("LIVE_TRACKING_MMT",false);
         oruxmaps_autostart = prefs.getString("ORUXMAPS_AUTO", "disable");
 
         if(_activityRecognition)
@@ -197,7 +199,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
         Bundle bundle = new Bundle();
         bundle.putBoolean("ACTIVITY_RECOGNITION",_activityRecognition);
-        bundle.putBoolean("LIVE_TRACKING",_liveTracking);
+        bundle.putBoolean("LIVE_TRACKING",_liveTrackingJayps);
+        bundle.putBoolean("LIVE_TRACKING_MMT",_liveTrackingMmt);
         bundle.putInt("UNITS_OF_MEASURE",_units);
 
 
@@ -375,7 +378,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             data[0] = (byte) ((_units % 2) * (1<<0));
             data[0] += (byte) ((checkServiceRunning() ? 1 : 0) * (1<<1));
             data[0] += (byte) ((debug ? 1 : 0) * (1<<2));
-            data[0] += (byte) ((_liveTracking ? 1 : 0) * (1<<3));
+            data[0] += (byte) ((_liveTrackingJayps || _liveTrackingMmt ? 1 : 0) * (1<<3));
             
             int refresh_code = 1; // 1s
             if (_refresh_interval < 1000) {
@@ -389,7 +392,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             // unused bits
             data[0] += (byte) (0 * (1<<6));
             data[0] += (byte) (0 * (1<<7));
-            //Log.d(TAG, _units+"|"+checkServiceRunning()+"|debug:"+debug+"|"+_liveTracking+"|_refresh_interval="+_refresh_interval+"|refresh_code="+refresh_code+"|"+((256+data[0])%256));
+            //Log.d(TAG, _units+"|"+checkServiceRunning()+"|debug:"+debug+"|"+_liveTrackingJayps+"|_refresh_interval="+_refresh_interval+"|refresh_code="+refresh_code+"|"+((256+data[0])%256));
             
             data[1] = (byte) ((int)  Math.ceil(intent.getFloatExtra("ACCURACY", 0.0f)));
             data[2] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0.0f) * _distanceConversion) / 1)) % 256);

@@ -181,11 +181,16 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             Log.e(TAG, "Exception converting REFRESH_INTERVAL:" + e);
         }
     }
-    private void _setLoginSummary(SharedPreferences prefs) {
+    private void _setLoginJaypsSummary(SharedPreferences prefs) {
         String login = prefs.getString("LIVE_TRACKING_LOGIN", "");
         Preference loginPref = findPreference("LIVE_TRACKING_LOGIN");
         loginPref.setSummary(login);
     }
+    private void _setLoginMmtSummary(SharedPreferences prefs) {
+        String login = prefs.getString("LIVE_TRACKING_MMT_LOGIN", "");
+        Preference loginPref = findPreference("LIVE_TRACKING_MMT_LOGIN");
+        loginPref.setSummary(login);
+    }    
     private void _setOruxMapsSummary(SharedPreferences prefs) {
         ListPreference oruxPref = (ListPreference) findPreference("ORUXMAPS_AUTO");
         CharSequence listDesc = oruxPref.getEntry();
@@ -212,7 +217,8 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         
         _setUnitsSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
         _setRefreshSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
-        _setLoginSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+        _setLoginJaypsSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+        _setLoginMmtSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
         _setOruxMapsSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
     }
 
@@ -232,7 +238,10 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             _setRefreshSummary(sharedPreferences);
         }
         if (key.equals("LIVE_TRACKING_LOGIN")) {
-            _setLoginSummary(sharedPreferences);
+            _setLoginJaypsSummary(sharedPreferences);
+        }
+        if (key.equals("LIVE_TRACKING_MMT_LOGIN")) {
+            _setLoginMmtSummary(sharedPreferences);
         }
         if (key.equals("ORUXMAPS_AUTO")) {
             _setOruxMapsSummary(sharedPreferences);

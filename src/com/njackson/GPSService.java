@@ -62,7 +62,8 @@ public class GPSService extends Service {
     double ypos = 0;
     Location firstLocation = null;
     private AdvancedLocation _myLocation;
-    private LiveTracking _liveTracking;
+    private LiveTracking _liveTrackingJayps;
+    private LiveTracking _liveTrackingMmt;
     
     private static GPSService _this;
     
@@ -224,7 +225,8 @@ public class GPSService extends Service {
     private void handleCommand(Intent intent) {
         Log.d(TAG, "Started GPS Service");
         
-        _liveTracking = new LiveTracking(getApplicationContext());
+        _liveTrackingJayps = new LiveTracking(getApplicationContext(), LiveTracking.TYPE_JAYPS);
+        _liveTrackingMmt = new LiveTracking(getApplicationContext(), LiveTracking.TYPE_MMT);
 
         _myLocation = new AdvancedLocation(getApplicationContext());
         _myLocation.debugLevel = MainActivity.debug ? 2 : 0;
@@ -234,9 +236,13 @@ public class GPSService extends Service {
         
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         	 
-        _liveTracking.setLogin(prefs.getString("LIVE_TRACKING_LOGIN", ""));
-        _liveTracking.setPassword(prefs.getString("LIVE_TRACKING_PASSWORD", ""));
-        _liveTracking.setUrl(prefs.getString("LIVE_TRACKING_URL", ""));
+        _liveTrackingJayps.setLogin(prefs.getString("LIVE_TRACKING_LOGIN", ""));
+        _liveTrackingJayps.setPassword(prefs.getString("LIVE_TRACKING_PASSWORD", ""));
+        _liveTrackingJayps.setUrl(prefs.getString("LIVE_TRACKING_URL", ""));
+
+        _liveTrackingMmt.setLogin(prefs.getString("LIVE_TRACKING_MMT_LOGIN", ""));
+        _liveTrackingMmt.setPassword(prefs.getString("LIVE_TRACKING_MMT_PASSWORD", ""));
+        _liveTrackingMmt.setUrl(prefs.getString("LIVE_TRACKING_MMT_URL", ""));
 
         // check to see if GPS is enabled
         if(checkGPSEnabled(_locationMgr)) {
@@ -375,8 +381,13 @@ public class GPSService extends Service {
                 }
             }
 
-            if (MainActivity._liveTracking && resultOnLocationChanged == AdvancedLocation.SAVED) {
-                _liveTracking.addPoint(firstLocation, location, System.currentTimeMillis() - heart_rate_ts < 5000 ? heart_rate : 0);
+            if (resultOnLocationChanged == AdvancedLocation.SAVED) {
+                if (MainActivity._liveTrackingJayps) {
+                    _liveTrackingJayps.addPoint(firstLocation, location, System.currentTimeMillis() - heart_rate_ts < 5000 ? heart_rate : 0);
+                }
+                if (MainActivity._liveTrackingMmt) {
+                    _liveTrackingMmt.addPoint(firstLocation, location, System.currentTimeMillis() - heart_rate_ts < 5000 ? heart_rate : 0);
+                }
             }
             
         }

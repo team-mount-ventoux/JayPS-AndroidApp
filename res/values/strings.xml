@@ -4,7 +4,8 @@
     <string name="MAIN_TITLE">Pebble Bike v1.4.2</string>
     <string name="ACTIVITY_TYPE_TEXT">Activity Type</string>
     <string name="AUTO_START_TEXT">Auto Start</string>
-    <string name="LIVE_TRACKING_TEXT">Live Tracking with JayPS</string>
+    <string name="LIVE_TRACKING_TEXT_JAYPS">Live Tracking with JayPS</string>
+    <string name="LIVE_TRACKING_TEXT_MMT">Live Tracking with Map My Tracks</string>
     <string name="START_BUTTON_START">Start</string>
     <string name="START_BUTTON_STOP">Stop</string>
     <string name="UNITS_TEXT">Units</string>
@@ -56,14 +57,23 @@
     <string name="PREF_DEBUG_TITLE">Debug</string>
     <string name="PREF_DEBUG_SUMMARY">More logs for developers</string>
 
-    <string name="PREF_LIVE_TRACKING_CATEGORIE_TITLE">JayPS Live Tracking</string>
-    <string name="PREF_LIVE_TRACKING_CATEGORIE_SUMMARY"></string>
-    <string name="PREF_LIVE_TRACKING_TITLE">Live Tracking with JayPS</string>
-    <string name="PREF_LIVE_TRACKING_SUMMARY">Create your account: http://pebblebike.com/live</string>
-    <string name="PREF_LIVE_TRACKING_LOGIN_TITLE">Login</string>
-    <string name="PREF_LIVE_TRACKING_LOGIN_SUMMARY"></string>
-    <string name="PREF_LIVE_TRACKING_PASSWORD_TITLE">Password</string>
-    <string name="PREF_LIVE_TRACKING_PASSWORD_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_TITLE">JayPS Live Tracking</string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_TITLE">Live Tracking with JayPS</string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_SUMMARY">Create your account: http://pebblebike.com/live</string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_LOGIN_TITLE">Login</string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_LOGIN_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_PASSWORD_TITLE">Password</string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_PASSWORD_SUMMARY"></string>
+
+    <string name="PREF_LIVE_TRACKING_MMT_CATEGORIE_TITLE">Map My Tracks Live Tracking</string>
+    <string name="PREF_LIVE_TRACKING_MMT_CATEGORIE_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_MMT_TITLE">Live Tracking with Map My Tracks</string>
+    <string name="PREF_LIVE_TRACKING_MMT_SUMMARY">http://www.mapmytracks.com</string>
+    <string name="PREF_LIVE_TRACKING_MMT_LOGIN_TITLE">Login</string>
+    <string name="PREF_LIVE_TRACKING_MMT_LOGIN_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_MMT_PASSWORD_TITLE">Password</string>
+    <string name="PREF_LIVE_TRACKING_MMT_PASSWORD_SUMMARY"></string>
     
     <!-- BLE HRM items -->
     <string name="ble_unknown_device">Unknown device</string>

@@ -54,6 +54,10 @@ public class LiveTracking {
     
     final int maxNumberOfFriend = 5;
     
+    static final int TYPE_JAYPS = 1;
+    static final int TYPE_MMT = 2;
+    private int _type = TYPE_JAYPS;
+
     class LiveTrackingFriend {
         public int number = 0;
     	public String id = "";
@@ -122,11 +126,13 @@ public class LiveTracking {
     
     private HashMap<String, LiveTrackingFriend> _friends = new HashMap<String, LiveTrackingFriend>();
     
-    public LiveTracking() {
+    public LiveTracking(int type) {
         this._context = null;
+        this._type = type;
     }    
-    public LiveTracking(Context context) {
+    public LiveTracking(Context context, int type) {
         this._context = context;
+        this._type = type;
         this._lastLocation = new Location("PebbleBike");
         
         // Get current version code
@@ -213,7 +219,6 @@ public class LiveTracking {
             	Log.d(TAG, "Missing login or password");
         		return false;
         	}        	
-
         	
         	postParameters = "request=" + request;
         	if (_activity_id == "") {
@@ -225,14 +230,24 @@ public class LiveTracking {
         	if (points != "") {
         		postParameters += "&points="+points;
     		}
-        	if (accuracies != "") {
+        	if (accuracies != "" && _type == TYPE_JAYPS) {
         		postParameters += "&jayps_accuracies="+accuracies;
     		}
         	if (heartrates != "") {
         		postParameters += "&hr="+heartrates;
     		}
-    		
-            URL url = new URL(_url != "" ? _url : "http://live.jayps.fr/api/mmt.php");
+        	String tmp_url = "";
+        	if (_type == TYPE_JAYPS) {
+        	    tmp_url = _url != "" ? _url : "http://live.jayps.fr/api/mmt.php";
+        	} else if (_type == TYPE_MMT) {
+        	    tmp_url = _url != "" ? _url : "http://www.mapmytracks.com/api/";
+            } else {
+                Log.d(TAG, "Missing type");
+                return false;
+            }
+        	//if (MainActivity.debug) Log.d(TAG, "url="+tmp_url);
+        	URL url = new URL(tmp_url);
+            
         	HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
         	
         	if (authString != "") {
@@ -277,76 +292,80 @@ public class LiveTracking {
                 }
             }
 
-            expression = "//friend";
-            nodes = (NodeList)xpath.evaluate(expression, doc, XPathConstants.NODESET);
-            
             int nbReceivedFriends = 0;
-            
-            for( int i = 0; i < nodes.getLength(); i++ ) {
-            	// for each friends
-                node = nodes.item(i);
 
-            	LiveTrackingFriend friend = new LiveTrackingFriend();
-            	friend.setFromNodeList(node.getChildNodes());
-
-                if (friend.id != "" && friend.lat != null && friend.lon != null) {
-                	nbReceivedFriends++;
-                    
-                	LiveTrackingFriend f2;
-                	if (_friends.containsKey(friend.id)) {
-                    	//Log.d(TAG, "update friend "+friend.id);
-                    	f2 = _friends.get(friend.id);
-                    } else {
-                    	//Log.d(TAG, "new friend "+friend.id);
-                        friend.number = numberOfFriends;
-                        numberOfFriends++;
-                        f2 = friend;
-                    }
-                    f2.updateFromFriend(friend, _lastLocation);
-                    _friends.put(friend.id, f2);
-                }
-            }
-            //Iterator<Entry<String, LiveTrackingFriend>> iter = _friends.entrySet().iterator();
-			//while (iter.hasNext()) {
-				//LiveTrackingFriend f = iter.next().getValue();
-				//Log.d(TAG, "+++"+f.toString());
-			//}            
-
-            byte[] msgLiveShort = getMsgLiveShort(_firstLocation);
-            String[] names = getNames();
-            if (msgLiveShort.length > 1) {
-                String sending = "";
+            if (_type == TYPE_JAYPS) {
+                expression = "//friend";
+                nodes = (NodeList)xpath.evaluate(expression, doc, XPathConstants.NODESET);
                 
-                PebbleDictionary dic = new PebbleDictionary();
-                boolean forceSend = false;
-                if (_numberOfFriendsSentToPebble != msgLiveShort[0] || (5 * Math.random() <= 1)) {
-                    _numberOfFriendsSentToPebble = msgLiveShort[0];
+                
+                
+                for( int i = 0; i < nodes.getLength(); i++ ) {
+                	// for each friends
+                    node = nodes.item(i);
+    
+                	LiveTrackingFriend friend = new LiveTrackingFriend();
+                	friend.setFromNodeList(node.getChildNodes());
+    
+                    if (friend.id != "" && friend.lat != null && friend.lon != null) {
+                    	nbReceivedFriends++;
+                        
+                    	LiveTrackingFriend f2;
+                    	if (_friends.containsKey(friend.id)) {
+                        	//Log.d(TAG, "update friend "+friend.id);
+                        	f2 = _friends.get(friend.id);
+                        } else {
+                        	//Log.d(TAG, "new friend "+friend.id);
+                            friend.number = numberOfFriends;
+                            numberOfFriends++;
+                            f2 = friend;
+                        }
+                        f2.updateFromFriend(friend, _lastLocation);
+                        _friends.put(friend.id, f2);
+                    }
+                }
+                //Iterator<Entry<String, LiveTrackingFriend>> iter = _friends.entrySet().iterator();
+    			//while (iter.hasNext()) {
+    				//LiveTrackingFriend f = iter.next().getValue();
+    				//Log.d(TAG, "+++"+f.toString());
+    			//}            
+    
+                byte[] msgLiveShort = getMsgLiveShort(_firstLocation);
+                String[] names = getNames();
+                if (msgLiveShort.length > 1) {
+                    String sending = "";
                     
-                    if (names[0] != null) {
-                        dic.addString(Constants.MSG_LIVE_NAME0, names[0]);
+                    PebbleDictionary dic = new PebbleDictionary();
+                    boolean forceSend = false;
+                    if (_numberOfFriendsSentToPebble != msgLiveShort[0] || (5 * Math.random() <= 1)) {
+                        _numberOfFriendsSentToPebble = msgLiveShort[0];
+                        
+                        if (names[0] != null) {
+                            dic.addString(Constants.MSG_LIVE_NAME0, names[0]);
+                        }
+                        if (names[1] != null) {
+                            dic.addString(Constants.MSG_LIVE_NAME1, names[1]);
+                        }
+                        if (names[2] != null) {
+                            dic.addString(Constants.MSG_LIVE_NAME2, names[2]);
+                        }
+                        if (names[3] != null) {
+                            dic.addString(Constants.MSG_LIVE_NAME3, names[3]);
+                        }
+                        if (names[4] != null) {
+                            dic.addString(Constants.MSG_LIVE_NAME4, names[4]);
+                        }
+                        sending += " MSG_LIVE_NAMEx"+msgLiveShort[0];
+                        forceSend = true;
                     }
-                    if (names[1] != null) {
-                        dic.addString(Constants.MSG_LIVE_NAME1, names[1]);
+                    dic.addBytes(Constants.MSG_LIVE_SHORT, msgLiveShort);
+                    for( int i = 0; i < msgLiveShort.length; i++ ) {
+                        sending += " msgLiveShort["+i+"]: "   + ((256+msgLiveShort[i])%256);
                     }
-                    if (names[2] != null) {
-                        dic.addString(Constants.MSG_LIVE_NAME2, names[2]);
-                    }
-                    if (names[3] != null) {
-                        dic.addString(Constants.MSG_LIVE_NAME3, names[3]);
-                    }
-                    if (names[4] != null) {
-                        dic.addString(Constants.MSG_LIVE_NAME4, names[4]);
-                    }
-                    sending += " MSG_LIVE_NAMEx"+msgLiveShort[0];
-                    forceSend = true;
+                    if (MainActivity.debug) Log.d(TAG, sending);
+    
+                    VirtualPebble.sendDataToPebble(dic, forceSend);
                 }
-                dic.addBytes(Constants.MSG_LIVE_SHORT, msgLiveShort);
-                for( int i = 0; i < msgLiveShort.length; i++ ) {
-                    sending += " msgLiveShort["+i+"]: "   + ((256+msgLiveShort[i])%256);
-                }
-                if (MainActivity.debug) Log.d(TAG, sending);
-
-                VirtualPebble.sendDataToPebble(dic, forceSend);
             }
             
             
