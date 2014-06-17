@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="1.5.0-beta1" versioncode="28" >
+      <change>Live Tracking: Send HRM</change>
+      <change>Map My Tracks integration</change>
+      <change>Bugfix: distance calculation</change>
+  </release>
   <release version="1.4.2" versioncode="27" >
       <change>Improve battery level</change>
   </release>
