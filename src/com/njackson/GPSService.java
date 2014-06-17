@@ -383,10 +383,10 @@ public class GPSService extends Service {
 
             if (resultOnLocationChanged == AdvancedLocation.SAVED) {
                 if (MainActivity._liveTrackingJayps) {
-                    _liveTrackingJayps.addPoint(firstLocation, location, System.currentTimeMillis() - heart_rate_ts < 5000 ? heart_rate : 0);
+                    _liveTrackingJayps.addPoint(firstLocation, location, _myLocation.getAltitude(), System.currentTimeMillis() - heart_rate_ts < 5000 ? heart_rate : 0);
                 }
                 if (MainActivity._liveTrackingMmt) {
-                    _liveTrackingMmt.addPoint(firstLocation, location, System.currentTimeMillis() - heart_rate_ts < 5000 ? heart_rate : 0);
+                    _liveTrackingMmt.addPoint(firstLocation, location, _myLocation.getAltitude(), System.currentTimeMillis() - heart_rate_ts < 5000 ? heart_rate : 0);
                 }
             }
             
