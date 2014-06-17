@@ -166,9 +166,9 @@ public class HRMScanActivity extends ListActivity {
             }, SCAN_PERIOD);
 
             mScanning = true;
-            UUID[] uuids = { UUID.fromString(BLESampleGattAttributes.HEART_RATE_SERVICE)};
-            mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
-            //same with no filtering: mBluetoothAdapter.startLeScan(mLeScanCallback);
+            //UUID[] uuids = { UUID.fromString(BLESampleGattAttributes.HEART_RATE_SERVICE)};
+            //mBluetoothAdapter.startLeScan(uuids, mLeScanCallback);
+            mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
             mScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
