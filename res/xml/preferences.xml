@@ -112,7 +112,23 @@
         android:summary="@string/PREF_ABOUT_SUMMARY"
         >
             <intent android:action="android.intent.action.VIEW"
-            android:data="http://www.pebblebike.com" />
+            android:data="@string/PREF_ABOUT_URL" />
+    </Preference>
+    <Preference
+        android:key="uservoice"
+        android:title="@string/PREF_USERVOICE"
+        android:summary="@string/PREF_USERVOICE_SUMMARY"
+        >
+            <intent android:action="android.intent.action.VIEW"
+            android:data="@string/PREF_USERVOICE_URL" />
+    </Preference>
+    <Preference
+        android:key="twitter"
+        android:title="@string/PREF_TWITTER"
+        android:summary="@string/PREF_TWITTER_SUMMARY"
+        >
+            <intent android:action="android.intent.action.VIEW"
+            android:data="@string/PREF_TWITTER_URL" />
     </Preference>
     <CheckBoxPreference
             android:key="PREF_DEBUG"
