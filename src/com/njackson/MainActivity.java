@@ -73,8 +73,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
     public static VirtualPebble virtualPebble;
 
-    private boolean _batteryServiceRunning = false;
-
     enum RequestType {
         START,
         STOP
@@ -243,12 +241,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             pebbleFirmwareVersionInfo = null;
         }
         Log.d(TAG, "pebbleFirmwareVersion=" + pebbleFirmwareVersion);
-        
-        if (!_batteryServiceRunning) {
-            Intent intent = new Intent(getApplicationContext(), BatteryService.class);
-            startService(intent);
-            _batteryServiceRunning = true;
-        }
     }
 
     @Override
@@ -260,16 +252,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     protected void onPause() {
         super.onPause();
         if (debug) Log.d(TAG, "onPause");
-    }
-    @Override
-    public void onDestroy() {
-    	super.onDestroy();
-
-    	Intent intent = new Intent(getApplicationContext(), BatteryService.class);
-        stopService(intent);
-        _batteryServiceRunning = false;
-
-        System.exit(0);
     }
 
     public boolean onKeyUp(int keyCode, KeyEvent event) {

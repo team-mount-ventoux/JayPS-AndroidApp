@@ -81,6 +81,8 @@ public class GPSService extends Service {
     public int heart_rate = -1;
     private long heart_rate_ts = 0;
 
+    private boolean _batteryServiceRunning = false;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleCommand(intent);
@@ -138,6 +140,11 @@ public class GPSService extends Service {
             unbindService(mServiceConnection);
             mBluetoothLeService = null;
             unregisterReceiver(mGattUpdateReceiver);
+        }
+        if (_batteryServiceRunning) {
+            Intent batteryServiceIntent = new Intent(getApplicationContext(), BatteryService.class);
+	        stopService(batteryServiceIntent);
+	        _batteryServiceRunning = false;
         }
     }
 
@@ -295,7 +302,13 @@ public class GPSService extends Service {
 
             registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
         }
-        
+
+        if (!_batteryServiceRunning) {
+            Intent batteryServiceIntent = new Intent(getApplicationContext(), BatteryService.class);
+            startService(batteryServiceIntent);
+            _batteryServiceRunning = true;
+        }
+
         //PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
     }
     private void _requestLocationUpdates(int refresh_interval) {
