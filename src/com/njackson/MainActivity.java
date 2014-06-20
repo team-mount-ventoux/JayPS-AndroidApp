@@ -47,7 +47,6 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     
     public static String hrm_name = "";
     public static String hrm_address = "";
-
     public static int pebbleFirmwareVersion = 0;
     public static FirmwareVersionInfo pebbleFirmwareVersionInfo;
     
@@ -378,7 +377,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             data[0] = (byte) ((_units % 2) * (1<<0));
             data[0] += (byte) ((checkServiceRunning() ? 1 : 0) * (1<<1));
             data[0] += (byte) ((debug ? 1 : 0) * (1<<2));
-            data[0] += (byte) ((_liveTrackingJayps || _liveTrackingMmt ? 1 : 0) * (1<<3));
+            data[0] += (byte) ((_liveTrackingJayps ? 1 : 0) * (1<<3));
             
             int refresh_code = 1; // 1s
             if (_refresh_interval < 1000) {
