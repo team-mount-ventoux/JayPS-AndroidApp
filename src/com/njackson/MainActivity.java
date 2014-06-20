@@ -619,6 +619,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     }
 
     private void showGPSDisabledAlertToUser(){
+        VirtualPebble.showSimpleNotificationOnPebble("Pebble Bike", "GPS is disabled on your phone. Please enable it.");
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
                 .setCancelable(false)
