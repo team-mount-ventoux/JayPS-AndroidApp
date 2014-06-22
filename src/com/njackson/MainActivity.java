@@ -489,7 +489,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         }
     }
 
-    private void ResetSavedGPSStats() {
+    public void ResetSavedGPSStats() {
     	GPSService.resetGPSStats(getSharedPreferences(Constants.PREFS_NAME, 0));
         AltitudeGraphReduce.getInstance().restData();
         

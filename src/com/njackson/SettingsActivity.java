@@ -42,11 +42,14 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             public boolean onPreferenceClick(Preference preference) {
                 // TODO Auto-generated method stub
                 Log.d(TAG, "onPreferenceClick:" + preference.getKey());
-                if (preference.getKey().equals("pref_install")) {
-                    install_watchface(1);
-                }
                 if (preference.getKey().equals("pref_install_sdk2")) {
                     install_watchface(2);
+                }
+                if (preference.getKey().equals("pref_reset_data")) {
+                    MainActivity activity = MainActivity.getInstance();
+                    if (activity != null) {
+                        activity.ResetSavedGPSStats();
+                    }
                 }
                 if (preference.getKey().equals("PREF_HRM")) {
                     final Intent intent = new Intent(getApplicationContext(), HRMScanActivity.class);
@@ -59,10 +62,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         Preference pref;
         Preference pref2 = findPreference("pref_install_sdk2");
         pref2.setOnPreferenceClickListener(pref_install_click_listener);
-        if (MainActivity.pebbleFirmwareVersion == 2) {
-            pref2.setTitle(pref2.getTitle() + " [your version]");
-            pref2.setSummary(pref2.getSummary() + " This is the version compatible with your current Pebble firmware.");
-        }
+        Preference pref3 = findPreference("pref_reset_data");
+        pref3.setOnPreferenceClickListener(pref_install_click_listener);
+
 
         pref = findPreference("PREF_PRESSURE_INFO");
         SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);

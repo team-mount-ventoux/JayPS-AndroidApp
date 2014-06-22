@@ -15,6 +15,9 @@
     <string name="DISTANCE_LABEL_TEXT">DISTANCE</string>
     <string name="SPEED_LABEL_TEXT">SPEED</string>
     
+    <string name="PREF_RESET_DATA">Reset data</string>
+    <string name="PREF_RESET_DATA_SUMMARY">Reset distance, time, speed and ascent</string>
+
     <string name="PREF_OPTIONS_CATEGORY_TITLE">Options</string>
     <string name="PREF_ABOUT_CATEGORY_TITLE">About</string>
     
@@ -46,8 +49,7 @@
     <string name="AVG_SPEED_TEXT_METRIC">AVG. KM/H</string>
     <string name="GPS_STATUS_LABEL">GPS STATUS</string><string name="ALTITUDE_TEXT">ALTITUDE</string>
 
-    <string name="PREF_INSTALL_CATEGORY_TITLE">Install Watchface</string>
-    <string name="PREF_INSTALL_WATCHFACE_SDK2">For Pebble 2.x</string>
+    <string name="PREF_INSTALL_WATCHFACE_SDK2">Install Watchface</string>
     <string name="PREF_INSTALL_WATCHFACE_SDK2_SUMMARY">Download watchface and install it on your Pebble. For Pebble firmware 2.x only.</string>
 
 

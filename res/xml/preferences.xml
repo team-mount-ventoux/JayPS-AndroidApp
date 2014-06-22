@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
- <PreferenceCategory
-   android:key="pref_install_category"
-   android:title="@string/PREF_INSTALL_CATEGORY_TITLE"
- >
-    <Preference
-        android:key="pref_install_sdk2"
-        android:title="@string/PREF_INSTALL_WATCHFACE_SDK2"
-        android:summary="@string/PREF_INSTALL_WATCHFACE_SDK2_SUMMARY"
-        />            
- </PreferenceCategory> 
+  <Preference
+    android:key="pref_install_sdk2"
+    android:title="@string/PREF_INSTALL_WATCHFACE_SDK2"
+    android:summary="@string/PREF_INSTALL_WATCHFACE_SDK2_SUMMARY"
+  />
+  <Preference
+    android:key="pref_reset_data"
+    android:title="@string/PREF_RESET_DATA"
+    android:summary="@string/PREF_RESET_DATA_SUMMARY"
+ />
  <PreferenceCategory
    android:title="@string/PREF_OPTIONS_CATEGORY_TITLE"
  >
