@@ -8,9 +8,12 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.activities.MainActivity;
 import com.njackson.application.PebbleBikeModule;
+import com.njackson.events.GPSService.ChangeState;
+import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.gps.GPSService;
 import com.njackson.test.application.TestApplication;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,6 +35,7 @@ import static org.mockito.Mockito.verify;
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
     @Inject Bus _bus;
+    private MainActivity _activity;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -52,6 +56,13 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         }
     }
 
+    private ChangeState _stateEvent;
+
+    @Subscribe
+    public void onChangeStateEvent(ChangeState state) {
+        _stateEvent = state;
+    }
+
     public MainActivityTest(Class<MainActivity> activityClass) {
         super(activityClass);
     }
@@ -65,11 +76,15 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         TestApplication app = (TestApplication)getInstrumentation().getTargetContext().getApplicationContext();
         app.setObjectGraph(ObjectGraph.create(TestModule.class));
         app.inject(this);
+        _bus.register(this);
+        _activity = getActivity();
     }
 
     @SmallTest
-    public void whenStartButtonTouchedEventReceivedFiresStartGPS() {
-
+    public void testStartButtonTouchedEventReceivedFiresStartGPS() throws InterruptedException {
+        _bus.post(new StartButtonTouchedEvent());
+        Thread.sleep(100);
+        assertEquals(ChangeState.Command.START,_stateEvent.getState());
     }
 
 }
