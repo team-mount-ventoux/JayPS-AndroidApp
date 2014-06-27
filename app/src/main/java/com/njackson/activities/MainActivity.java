@@ -1,6 +1,7 @@
 package com.njackson.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 
 import com.njackson.R;
 import com.njackson.application.PebbleBikeApplication;
+import com.njackson.gps.GPSService;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -24,6 +26,12 @@ public class MainActivity extends FragmentActivity {
         ((PebbleBikeApplication) getApplication()).inject(this);
 
         setContentView(R.layout.activity_main);
+
+        startGPSService();
+    }
+
+    private void startGPSService() {
+        startService(new Intent(this,GPSService.class));
     }
 
 

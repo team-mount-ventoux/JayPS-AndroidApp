@@ -1,7 +1,10 @@
 package com.njackson.application;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.location.LocationManager;
+
+import com.njackson.gps.GPSService;
 
 import javax.inject.Singleton;
 
@@ -13,7 +16,7 @@ import static android.content.Context.LOCATION_SERVICE;
 /**
  * Created by server on 30/03/2014.
  */
-@Module(library = true)
+@Module(library = true,complete=false,injects = {GPSService.class})
 public class AndroidModule {
     private final PebbleBikeApplication application;
 
@@ -32,5 +35,9 @@ public class AndroidModule {
 
     @Provides @Singleton LocationManager provideLocationManager() {
         return (LocationManager) application.getSystemService(LOCATION_SERVICE);
+    }
+
+    @Provides @Singleton SharedPreferences provideSharedPreferences() {
+        return application.getSharedPreferences("default",1);
     }
 }

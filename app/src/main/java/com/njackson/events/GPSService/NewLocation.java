@@ -3,7 +3,7 @@ package com.njackson.events.GPSService;
 /**
  * Created by server on 21/03/2014.
  */
-public class NewLocationEvent {
+public class NewLocation {
 
     private float _speed;
     public float getSpeed() {
@@ -121,4 +121,7 @@ public class NewLocationEvent {
     public int getUnits() { return this._units; }
     public void setUnits(int units) { this._units = units;}
 
+    private long _time;
+    public void setTime(long time) { this._time = time; }
+    public long getTime() { return this._time; }
 }

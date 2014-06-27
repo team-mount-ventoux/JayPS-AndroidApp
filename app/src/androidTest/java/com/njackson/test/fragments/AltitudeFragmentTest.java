@@ -1,20 +1,26 @@
 package com.njackson.test.fragments;
 
+import android.content.SharedPreferences;
+import android.location.LocationManager;
 import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.LinearLayout;
 
 import com.njackson.R;
 import com.njackson.application.PebbleBikeModule;
-import com.njackson.events.GPSService.NewAltitiudeEvent;
+import com.njackson.events.GPSService.NewAltitiude;
 import com.njackson.fragments.AltitudeFragment;
 import com.njackson.test.FragmentInstrumentTestCase2;
 import com.njackson.test.application.TestApplication;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.ObjectGraph;
+import dagger.Provides;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * Created by server on 04/04/2014.
@@ -29,11 +35,18 @@ public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
             overrides = true
     )
     static class TestModule {
-        /*
-        @Provides @Singleton Heater provideHeater() {
-            return Mockito.mock(Heater.class);
+        @Provides
+        @Singleton
+        LocationManager provideLocationManager() {
+            return mock(LocationManager.class);
         }
-        */
+
+        @Provides
+        @Singleton
+        SharedPreferences provideSharedPreferences() {
+            return mock(SharedPreferences.class);
+        }
+
     }
 
     @Override
@@ -62,7 +75,7 @@ public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
     @MediumTest
     public void test_Activity_Responds_To_NewAltitudeEvent() {
 
-        final NewAltitiudeEvent event = new NewAltitiudeEvent(new float[14],0);
+        final NewAltitiude event = new NewAltitiude(new float[14],0);
 
         _activity.runOnUiThread(new Runnable() {
             @Override

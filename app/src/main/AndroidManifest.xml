@@ -17,6 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.TestActivity"></activity>
+        <service android:name=".gps.GPSService" android:label="GPSService"/>
     </application>
 
 </manifest>

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.njackson.R;
-import com.njackson.events.GPSService.NewLocationEvent;
+import com.njackson.events.GPSService.NewLocation;
 import com.squareup.otto.Subscribe;
 
 public class SpeedFragment extends BaseFragment {
@@ -26,7 +26,7 @@ public class SpeedFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void onNewLocation(NewLocationEvent event) {
+    public void onNewLocation(NewLocation event) {
         TextView speedText = (TextView)getActivity().findViewById(R.id.speed_text);
         speedText.setText(Float.toString(event.getSpeed()));
 

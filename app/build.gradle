@@ -2,14 +2,18 @@ apply plugin: 'android'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.3'
-
+    buildToolsVersion '19.1.0'
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 19
         versionCode 20
-        versionName "2.0"
-        testInstrumentationRunner "com.njackson.test.MyInstrumentationTestRunner"
+        versionName '2.0'
+        testInstrumentationRunner 'com.njackson.test.MyInstrumentationTestRunner'
+    }
+    sourceSets {
+        main {
+            java.srcDirs = ['src/main/java', '../submodules/AdvancedLocation/src']
+        }
     }
     buildTypes {
         release {
@@ -20,12 +24,14 @@ android {
     lintOptions {
         abortOnError false
     }
+    productFlavors {
+    }
 }
 
 dependencies {
     compile 'com.android.support:gridlayout-v7:19.0.1'
-    compile 'com.android.support:appcompat-v7:19.0.+'
-    compile 'com.android.support:support-v4:19.0.1'
+    compile 'com.android.support:appcompat-v7:19.1.+'
+    compile 'com.android.support:support-v4:19.1.+'
     compile 'com.squareup.dagger:dagger-compiler:+'
     compile 'com.squareup.dagger:dagger:+'
     compile 'com.squareup:otto:1.3.4'

@@ -1,7 +1,6 @@
 package com.njackson.fragments;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.njackson.R;
-import com.njackson.events.GPSService.NewAltitiudeEvent;
+import com.njackson.events.GPSService.NewAltitiude;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class AltitudeFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void onNewAltitudeEvent(NewAltitiudeEvent event) {
+    public void onNewAltitudeEvent(NewAltitiude event) {
         setAltitude(_prevValues,1,true);
     }
 
