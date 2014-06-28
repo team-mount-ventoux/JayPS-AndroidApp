@@ -14,6 +14,7 @@ import com.njackson.activities.MainActivity;
 import com.njackson.application.PebbleBikeModule;
 import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
+import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.gps.GPSService;
 import com.njackson.test.application.TestApplication;
 import com.squareup.otto.Bus;
@@ -109,6 +110,29 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         _bus.post(new StartButtonTouchedEvent());
         Thread.sleep(100);
         assertTrue ("GPSService should have been started", services.contains(GPSService.class.getName()));
+    }
+
+    @SmallTest
+    public void testStopButtonTouchedStopsGPS() throws InterruptedException {
+        final ArrayList<String> services = new ArrayList<String>();
+
+        setActivityContext(new ContextWrapper(getInstrumentation().getTargetContext()) {
+            @Override
+            public boolean stopService(Intent service) {
+                Log.v("mockcontext", "Stop service: " + service.toUri(0));
+                services.add(service.getComponent().getClassName());
+                return true;
+            }
+        });
+
+        setApplication(_app);
+
+        startActivity(new Intent(), null, null);
+        getInstrumentation().waitForIdleSync();
+
+        _bus.post(new StopButtonTouchedEvent());
+        Thread.sleep(100);
+        assertTrue ("GPSService should have been stopped", services.contains(GPSService.class.getName()));
     }
 
 }

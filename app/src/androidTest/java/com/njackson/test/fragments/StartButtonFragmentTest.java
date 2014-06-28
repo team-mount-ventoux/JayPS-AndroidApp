@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.njackson.R;
 import com.njackson.application.PebbleBikeModule;
 import com.njackson.events.UI.StartButtonTouchedEvent;
+import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.fragments.StartButtonFragment;
 import com.njackson.test.FragmentInstrumentTestCase2;
 import com.njackson.test.application.TestApplication;
@@ -35,6 +36,7 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
     private Button _button;
 
     private StartButtonTouchedEvent _startButtonEvent;
+    private StopButtonTouchedEvent _stopButtonEvent;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -79,15 +81,30 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
         _startButtonEvent = event;
     }
+    @Subscribe
+    public void onStopButtonTouched(StopButtonTouchedEvent event) {
+        _stopButtonEvent = event;
+    }
 
     @MediumTest
     @UiThreadTest
-    public void test_StartButtonFiresEventWhenTouched() throws InterruptedException {
+    public void test_StartButtonFiresStartEventWhenTouchedAndTextIsSTART() throws InterruptedException {
         Button button = (Button) _activity.findViewById(R.id.start_button);
         button.performClick();
 
         Thread.sleep(100);
         assertNotNull("Start button event should not be null",_startButtonEvent);
+    }
+
+    @MediumTest
+    @UiThreadTest
+    public void test_StartButtonFiresStartEventWhenTouchedAndTextIsSTOP() throws InterruptedException {
+        Button button = (Button) _activity.findViewById(R.id.start_button);
+        _button.setText(_activity.getString(R.string.startbuttonfragment_stop));
+        button.performClick();
+
+        Thread.sleep(100);
+        assertNotNull("Start button event should not be null",_stopButtonEvent);
     }
 
     @MediumTest

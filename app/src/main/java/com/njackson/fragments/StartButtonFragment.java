@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.njackson.R;
 import com.njackson.events.UI.StartButtonTouchedEvent;
+import com.njackson.events.UI.StopButtonTouchedEvent;
 
 import javax.inject.Inject;
 
@@ -37,14 +38,13 @@ public class StartButtonFragment extends BaseFragment {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if(startButton.getText() == getString(R.string.startbuttonfragment_start)) {
+                    _bus.post(new StartButtonTouchedEvent());
                     startButton.setText(getString(R.string.startbuttonfragment_stop));
                 } else {
+                    _bus.post(new StopButtonTouchedEvent());
                     startButton.setText(getString(R.string.startbuttonfragment_start));
                 }
-
-                _bus.post(new StartButtonTouchedEvent());
             }
         });
     }

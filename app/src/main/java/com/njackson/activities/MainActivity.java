@@ -10,6 +10,7 @@ import com.njackson.R;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
+import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.gps.GPSService;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -23,6 +24,11 @@ public class MainActivity extends FragmentActivity {
     @Subscribe
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
         startGPSService();
+    }
+
+    @Subscribe
+    public void onStopButtonTouched(StopButtonTouchedEvent event) {
+        stopGPSService();
     }
 
     @Override
@@ -43,6 +49,10 @@ public class MainActivity extends FragmentActivity {
 
     private void startGPSService() {
         startService(new Intent(this,GPSService.class));
+    }
+
+    private void stopGPSService() {
+        stopService(new Intent(this,GPSService.class));
     }
 
 

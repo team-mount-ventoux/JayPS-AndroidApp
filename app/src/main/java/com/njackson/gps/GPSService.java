@@ -263,6 +263,7 @@ public class GPSService extends Service {
         event.setBearing(_advancedLocation.getBearing());
 
         _bus.post(event);
+        Log.d("GPS","New Location");
     }
 
     private void makeServiceForeground(String title, String text) {
