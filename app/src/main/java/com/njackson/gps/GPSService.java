@@ -21,10 +21,10 @@ import android.util.Log;
 import com.njackson.*;
 import com.njackson.activities.MainActivity;
 import com.njackson.application.PebbleBikeApplication;
-import com.njackson.events.GPSService.ChangeState;
+import com.njackson.events.GPSService.ChangeRefreshInterval;
+import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.GPSService.CurrentState;
 import com.njackson.events.GPSService.NewLocation;
-import com.njackson.events.GPSService.RefreshChange;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -54,30 +54,21 @@ public class GPSService extends Service {
     private boolean _gpsStarted = false;
 
     @Subscribe
-    public void onGPSChangeStateEvent(ChangeState event) {
-        //start service requestLocationUpdates(intent.getIntExtra("REFRESH_INTERVAL", 1000));
+    public void onResetGPSStateEvent(ResetGPSState event) {
         //stop service stopLocationUpdates();
-        switch(event.getState()) {
-            case RESET:
-                resetGPSStats();
-                break;
-            case START:
-                requestLocationUpdates(_refresh_interval);
-                break;
-        }
-
+        resetGPSStats();
     }
 
     @Subscribe
-    public void onGPSRefreshChangeEvent(RefreshChange event) {
+    public void onGPSRefreshChangeEvent(ChangeRefreshInterval event) {
         changeRefreshInterval(event.getRefreshInterval());
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleCommand(intent);
-        //makeServiceForeground("Pebble Bike", "GPS started");
-        return START_STICKY;
+        // ensures that if the service is recycled then it is restarted with the same refresh interval
+        return START_REDELIVER_INTENT;
     }
 
     @Override
@@ -107,22 +98,21 @@ public class GPSService extends Service {
         _advancedLocation = new AdvancedLocation(getApplicationContext());
         _advancedLocation.debugTagPrefix = "PB-";
 
+        // the intent has an extra which relates to the refresh interval
         _refresh_interval = intent.getIntExtra("REFRESH_INTERVAL", 1000);
 
         loadGPSStats();
 
         // check to see if GPS is enabled
-        if(!checkGPSEnabled(_locationMgr)) {
+        if(checkGPSEnabled(_locationMgr)) {
+            requestLocationUpdates(_refresh_interval);
+        } else {
             _bus.post(new CurrentState(CurrentState.State.DISABLED)); // GPS DISABLED
         }
     }
 
     private boolean checkGPSEnabled(LocationManager locationMgr) {
-        if(!locationMgr.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            return false;
-        } else {
-            return true;
-        }
+        return locationMgr.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     // load the saved state

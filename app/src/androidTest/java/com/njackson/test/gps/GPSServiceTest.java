@@ -10,10 +10,10 @@ import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.application.PebbleBikeModule;
-import com.njackson.events.GPSService.ChangeState;
+import com.njackson.events.GPSService.ChangeRefreshInterval;
+import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.GPSService.CurrentState;
 import com.njackson.events.GPSService.NewLocation;
-import com.njackson.events.GPSService.RefreshChange;
 import com.njackson.events.GPSService.GPSResetEvent;
 import com.njackson.gps.GPSService;
 import com.njackson.test.application.TestApplication;
@@ -36,6 +36,7 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -124,6 +125,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
 
     @Override
     public void tearDown() throws Exception {
+        reset(_mockLocationManager);
         super.tearDown();
     }
 
@@ -132,14 +134,6 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
     }
-
-    /*
-    @SmallTest
-    public void testSetsAdvancedLocationDebugLevel() {
-        startService();
-        assertNotNull(null);
-    }
-    */
 
     @SmallTest
     public void testBroadcastEventOnLocationDisabled() throws InterruptedException {
@@ -156,8 +150,6 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
 
         startService();
-        _bus.post(new ChangeState(ChangeState.Command.START));
-        Thread.sleep(100);
 
         ArgumentCaptor<LocationListener> locationListenerCaptor = ArgumentCaptor.forClass(LocationListener.class);
         verify(_mockLocationManager).requestLocationUpdates(
@@ -178,7 +170,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
     public void testHandlesGPSLocationReset() throws InterruptedException {
         startService();
 
-        _bus.post(new ChangeState(ChangeState.Command.RESET));
+        _bus.post(new ResetGPSState());
 
         Thread.sleep(100);
         verify(_mockEditor, times(1)).putFloat("GPS_DISTANCE", 0.0f);
@@ -187,9 +179,8 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
 
     @SmallTest
     public void testHandlesGPSStartCommand() throws InterruptedException {
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
         startService();
-
-        _bus.post(new ChangeState(ChangeState.Command.START));
 
         Thread.sleep(100);
         verify(_mockLocationManager,times(1)).requestLocationUpdates(
@@ -204,7 +195,6 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
 
         startService();
-        _bus.post(new ChangeState(ChangeState.Command.START));
         Thread.sleep(100);
 
         ArgumentCaptor<LocationListener> locationListenerCaptor = ArgumentCaptor.forClass(LocationListener.class);
@@ -215,7 +205,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
                 locationListenerCaptor.capture());
 
         int refreshInterval = 200;
-        _bus.post(new RefreshChange(refreshInterval));
+        _bus.post(new ChangeRefreshInterval(refreshInterval));
 
         Thread.sleep(100);
         verify(_mockLocationManager, times(1)).removeUpdates((LocationListener) anyObject());

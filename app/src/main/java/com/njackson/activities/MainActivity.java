@@ -1,8 +1,6 @@
 package com.njackson.activities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -10,7 +8,7 @@ import android.view.MenuItem;
 
 import com.njackson.R;
 import com.njackson.application.PebbleBikeApplication;
-import com.njackson.events.GPSService.ChangeState;
+import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.gps.GPSService;
 import com.squareup.otto.Bus;
@@ -24,7 +22,7 @@ public class MainActivity extends FragmentActivity {
 
     @Subscribe
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
-        _bus.post(new ChangeState(ChangeState.Command.START)); // start GPS
+        startGPSService();
     }
 
     @Override
@@ -35,8 +33,6 @@ public class MainActivity extends FragmentActivity {
         _bus.register(this);
 
         setContentView(R.layout.activity_main);
-
-        startGPSService();
     }
 
     @Override
