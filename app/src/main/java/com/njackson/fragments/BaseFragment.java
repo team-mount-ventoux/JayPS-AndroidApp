@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.njackson.application.PebbleBikeApplication;
+import com.njackson.application.modules.PebbleBikeApplication;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;

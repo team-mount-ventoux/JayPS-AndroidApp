@@ -1,4 +1,4 @@
-package com.njackson.application;
+package com.njackson.application.modules;
 
 import android.content.Context;
 import android.content.SharedPreferences;

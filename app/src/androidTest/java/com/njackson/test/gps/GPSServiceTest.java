@@ -9,7 +9,7 @@ import android.location.LocationManager;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.njackson.application.PebbleBikeModule;
+import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.GPSService.ChangeRefreshInterval;
 import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.GPSService.CurrentState;
@@ -62,7 +62,8 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
     @Module(
             includes = PebbleBikeModule.class,
             injects = GPSServiceTest.class,
-            overrides = true
+            overrides = true,
+            complete = false
     )
     static class TestModule {
         @Provides

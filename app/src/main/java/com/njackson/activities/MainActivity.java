@@ -7,9 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.njackson.R;
-import com.njackson.application.PebbleBikeApplication;
+import com.njackson.application.modules.PebbleBikeApplication;
 import com.njackson.application.SettingsActivity;
-import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.gps.GPSService;

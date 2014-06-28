@@ -1,6 +1,5 @@
 package com.njackson.test.fragments;
 
-import android.app.NotificationManager;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.test.UiThreadTest;
@@ -8,7 +7,7 @@ import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.Button;
 
 import com.njackson.R;
-import com.njackson.application.PebbleBikeModule;
+import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.fragments.StartButtonFragment;
@@ -41,7 +40,8 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
     @Module(
             includes = PebbleBikeModule.class,
             injects = StartButtonFragmentTest.class,
-            overrides = true
+            overrides = true,
+            complete = false
     )
     static class TestModule {
         @Provides

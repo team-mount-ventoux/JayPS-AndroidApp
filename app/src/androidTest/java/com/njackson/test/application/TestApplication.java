@@ -1,6 +1,6 @@
 package com.njackson.test.application;
 
-import com.njackson.application.PebbleBikeApplication;
+import com.njackson.application.modules.PebbleBikeApplication;
 import dagger.ObjectGraph;
 
 /**

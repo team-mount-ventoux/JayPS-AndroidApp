@@ -20,7 +20,7 @@ import android.util.Log;
 
 import com.njackson.*;
 import com.njackson.activities.MainActivity;
-import com.njackson.application.PebbleBikeApplication;
+import com.njackson.application.modules.PebbleBikeApplication;
 import com.njackson.events.GPSService.ChangeRefreshInterval;
 import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.GPSService.CurrentState;

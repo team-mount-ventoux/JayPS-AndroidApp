@@ -6,7 +6,7 @@ import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.TextView;
 
 import com.njackson.R;
-import com.njackson.application.PebbleBikeModule;
+import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.fragments.SpeedFragment;
 import com.njackson.test.FragmentInstrumentTestCase2;
@@ -50,7 +50,8 @@ public class SpeedFragmentTest extends FragmentInstrumentTestCase2 {
     @Module(
             includes = PebbleBikeModule.class,
             injects = SpeedFragmentTest.class,
-            overrides = true
+            overrides = true,
+            complete = false
     )
     static class TestModule {
         @Provides

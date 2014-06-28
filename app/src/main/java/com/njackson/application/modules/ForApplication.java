@@ -1,4 +1,4 @@
-package com.njackson.application;
+package com.njackson.application.modules;
 
 /**
  * Created by server on 30/03/2014.

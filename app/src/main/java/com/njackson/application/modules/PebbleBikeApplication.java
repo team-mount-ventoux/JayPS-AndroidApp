@@ -1,4 +1,4 @@
-package com.njackson.application;
+package com.njackson.application.modules;
 
 import android.app.Application;
 
@@ -23,7 +23,8 @@ public class PebbleBikeApplication extends Application {
     protected List<Object> getModules() {
         return Arrays.asList(
                 new AndroidModule(this),
-                new PebbleBikeModule()
+                new PebbleBikeModule(),
+                new PebbleServiceModule()
         );
     }
 

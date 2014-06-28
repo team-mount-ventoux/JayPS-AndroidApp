@@ -6,7 +6,7 @@ import android.test.suitebuilder.annotation.MediumTest;
 import android.widget.LinearLayout;
 
 import com.njackson.R;
-import com.njackson.application.PebbleBikeModule;
+import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.GPSService.NewAltitiude;
 import com.njackson.fragments.AltitudeFragment;
 import com.njackson.test.FragmentInstrumentTestCase2;
@@ -32,7 +32,8 @@ public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
     @Module(
             includes = PebbleBikeModule.class,
             injects = AltitudeFragmentTest.class,
-            overrides = true
+            overrides = true,
+            complete = false
     )
     static class TestModule {
         @Provides
