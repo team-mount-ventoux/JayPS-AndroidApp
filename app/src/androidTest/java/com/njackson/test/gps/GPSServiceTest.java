@@ -14,7 +14,6 @@ import com.njackson.events.GPSService.ChangeRefreshInterval;
 import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.GPSService.CurrentState;
 import com.njackson.events.GPSService.NewLocation;
-import com.njackson.events.GPSService.GPSResetEvent;
 import com.njackson.gps.GPSService;
 import com.njackson.test.application.TestApplication;
 import com.squareup.otto.Bus;
