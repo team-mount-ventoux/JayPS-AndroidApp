@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-  <release version="1.5.0-beta2" versioncode="29" >
-      <change>Bugfix: Prevent crashes</change>
-      <change>Preferences: reset data from the phone</change>
-  </release>
-  <release version="1.5.0-beta1" versioncode="28" >
-      <change>Live Tracking: Send HRM</change>
+  <release version="1.5.0" versioncode="30" >
       <change>Map My Tracks integration</change>
+      <change>Live Tracking: send heart rate</change>
       <change>Bugfix: distance calculation</change>
+      <change>Heart rate monitor: support for more BLE devices</change>
+      <change>Pebble: bigger topbar</change>
+      <change>Preferences: reset data from the phone</change>
+      <change>Bugfix: prevent crashes</change>
   </release>
   <release version="1.4.2" versioncode="27" >
       <change>Improve battery level</change>
