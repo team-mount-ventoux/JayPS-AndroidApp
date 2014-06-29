@@ -29,9 +29,9 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:gridlayout-v7:19.+'
-    compile 'com.android.support:appcompat-v7:19.+'
-    compile 'com.android.support:support-v4:19.+'
+    compile 'com.android.support:gridlayout-v7:19.0.1'
+    compile 'com.android.support:appcompat-v7:19.1.+'
+    compile 'com.android.support:support-v4:19.1.+'
     compile 'com.squareup.dagger:dagger-compiler:+'
     compile 'com.squareup.dagger:dagger:+'
     compile 'com.squareup:otto:1.3.4'
