@@ -16,6 +16,7 @@ import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.gps.GPSService;
 import com.njackson.test.application.TestApplication;
+import com.njackson.virtualpebble.PebbleService;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -62,6 +63,8 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
     }
 
     private ResetGPSState _stateEvent;
+    private final ArrayList<String> _startedServices = new ArrayList<String>();
+    private final ArrayList<String> _stoppedServices = new ArrayList<String>();
 
     @Subscribe
     public void onChangeStateEvent(ResetGPSState state) {
@@ -82,52 +85,73 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         _app.setObjectGraph(ObjectGraph.create(TestModule.class));
         _app.inject(this);
         _bus.register(this);
+        setServiceContext();
+        setApplication(_app);
     }
 
-    @SmallTest
-    public void testStartButtonTouchedStartsGPS() throws InterruptedException {
-        final ArrayList<String> services = new ArrayList<String>();
+    @Override
+    protected void tearDown() throws Exception {
+        _stoppedServices.clear();
+        _startedServices.clear();
+        super.tearDown();
+    }
 
+    private void setServiceContext() {
         setActivityContext(new ContextWrapper(getInstrumentation().getTargetContext()) {
             @Override
             public ComponentName startService(Intent service) {
                 Log.v("mockcontext", "Start service: " + service.toUri(0));
-                services.add(service.getComponent().getClassName());
+                _startedServices.add(service.getComponent().getClassName());
                 return service.getComponent();
             }
+
+            @Override
+            public boolean stopService(Intent service) {
+                Log.v("mockcontext", "Stop service: " + service.toUri(0));
+                _stoppedServices.add(service.getComponent().getClassName());
+                return true;
+            }
         });
+    }
 
-        setApplication(_app);
-
+    @SmallTest
+    public void testStartButtonTouchedStartsGPS() throws InterruptedException {
         startActivity(new Intent(), null, null);
         getInstrumentation().waitForIdleSync();
 
         _bus.post(new StartButtonTouchedEvent());
         Thread.sleep(100);
-        assertTrue ("GPSService should have been started", services.contains(GPSService.class.getName()));
+        assertTrue ("GPSService should have been started", _startedServices.contains(GPSService.class.getName()));
     }
 
     @SmallTest
     public void testStopButtonTouchedStopsGPS() throws InterruptedException {
-        final ArrayList<String> services = new ArrayList<String>();
-
-        setActivityContext(new ContextWrapper(getInstrumentation().getTargetContext()) {
-            @Override
-            public boolean stopService(Intent service) {
-                Log.v("mockcontext", "Stop service: " + service.toUri(0));
-                services.add(service.getComponent().getClassName());
-                return true;
-            }
-        });
-
-        setApplication(_app);
-
         startActivity(new Intent(), null, null);
         getInstrumentation().waitForIdleSync();
 
         _bus.post(new StopButtonTouchedEvent());
         Thread.sleep(100);
-        assertTrue ("GPSService should have been stopped", services.contains(GPSService.class.getName()));
+        assertTrue ("GPSService should have been stopped", _stoppedServices.contains(GPSService.class.getName()));
+    }
+
+    @SmallTest
+    public void testStartButtonTouchedStartsPebbleBikeService() throws InterruptedException {
+        startActivity(new Intent(), null, null);
+        getInstrumentation().waitForIdleSync();
+
+        _bus.post(new StartButtonTouchedEvent());
+        Thread.sleep(100);
+        assertTrue ("GPSService should have been started", _startedServices.contains(PebbleService.class.getName()));
+    }
+
+    @SmallTest
+    public void testStopButtonTouchedStopsPebbleBikeService() throws InterruptedException {
+        startActivity(new Intent(), null, null);
+        getInstrumentation().waitForIdleSync();
+
+        _bus.post(new StopButtonTouchedEvent());
+        Thread.sleep(100);
+        assertTrue ("GPSService should have been stopped", _stoppedServices.contains(PebbleService.class.getName()));
     }
 
 }

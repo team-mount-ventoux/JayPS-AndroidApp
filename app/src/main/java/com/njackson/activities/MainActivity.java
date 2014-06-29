@@ -12,6 +12,7 @@ import com.njackson.application.SettingsActivity;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.gps.GPSService;
+import com.njackson.virtualpebble.PebbleService;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -24,11 +25,13 @@ public class MainActivity extends FragmentActivity {
     @Subscribe
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
         startGPSService();
+        startPebbleService();
     }
 
     @Subscribe
     public void onStopButtonTouched(StopButtonTouchedEvent event) {
         stopGPSService();
+        stopPebbleService();
     }
 
     @Override
@@ -55,6 +58,11 @@ public class MainActivity extends FragmentActivity {
         stopService(new Intent(this,GPSService.class));
     }
 
+    private void startPebbleService() { startService(new Intent(this, PebbleService.class)); }
+
+    private void stopPebbleService() {
+        stopService(new Intent(this,PebbleService.class));
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

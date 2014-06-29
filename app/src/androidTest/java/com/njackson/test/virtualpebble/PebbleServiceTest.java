@@ -1,12 +1,10 @@
 package com.njackson.test.virtualpebble;
 
-import android.app.Service;
 import android.content.Intent;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.GPSService.NewLocation;
-import com.njackson.gps.GPSService;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.LocationEventConverter;
 import com.njackson.virtualpebble.IMessageManager;
@@ -18,8 +16,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 
-import android.content.SharedPreferences;
-import android.location.LocationManager;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 

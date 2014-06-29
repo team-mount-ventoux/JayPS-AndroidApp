@@ -21,10 +21,7 @@ public class PebbleService extends Service {
     @Inject Bus _bus;
 
     private final String TAG = "PB-VirtualPebble";
-
-    public static Application app;
-
-    private BroadcastReceiver _broadcastReceiver;
+    private Thread _messageThread;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -41,6 +38,8 @@ public class PebbleService extends Service {
 
     @Override
     public void onDestroy (){
+        _bus.unregister(this);
+        super.onDestroy();
     }
 
     private void handleIntent(Intent intent) {
