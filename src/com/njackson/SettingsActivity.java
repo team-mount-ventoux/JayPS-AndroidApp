@@ -43,7 +43,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
                 // TODO Auto-generated method stub
                 Log.d(TAG, "onPreferenceClick:" + preference.getKey());
                 if (preference.getKey().equals("pref_install_sdk2")) {
-                    install_watchface(2);
+                    install_watchface();
                 }
                 if (preference.getKey().equals("pref_reset_data")) {
                     MainActivity activity = MainActivity.getInstance();
@@ -125,7 +125,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
            }
         }
     }
-    private boolean install_watchface(int sdkVersion) {
+    private boolean install_watchface() {
         int versionCode;
     
         // Get current version code and version name
@@ -138,12 +138,21 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
             versionCode = 0;
         }
         Log.d(TAG, "versionCode:" + versionCode);
-        Log.d(TAG, "sdkVersion:" + sdkVersion);
-        Log.d(TAG, "peebleFirmwareVersion:" + MainActivity.pebbleFirmwareVersion);
+
+        // Get current Pebble firmware version
+        String pebbleFwVersion = "";
+        if (MainActivity.pebbleFirmwareVersionInfo != null) {
+            pebbleFwVersion = MainActivity.pebbleFirmwareVersionInfo.getMajor()
+                    + "." + MainActivity.pebbleFirmwareVersionInfo.getMinor()
+                    + "." + MainActivity.pebbleFirmwareVersionInfo.getPoint()
+                    + "-" + MainActivity.pebbleFirmwareVersionInfo.getTag();
+        }
+        Log.d(TAG, "pebbleFwVersion:" + pebbleFwVersion);
         
         try {
             String uriString = "http://dl.pebblebike.com/p/pebblebike-1.5.0";
             uriString += ".pbw?and&v=" + versionCode;
+            uriString += "&p=" + pebbleFwVersion;
             Log.d(TAG, "uriString:" + uriString);
             Uri uri = Uri.parse(uriString);
             Intent startupIntent = new Intent();
