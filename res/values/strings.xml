@@ -96,4 +96,20 @@
     <string name="ble_stop">Stop</string>
     <string name="ble_unknown_characteristic">Unknown characteristic</string>
     <string name="ble_unknown_service">Unknown service</string>
+
+    <!-- Canvas Plugin -->
+    <string-array name="canvas_format_mask_descs">
+        <item>Distance</item>
+        <item>Altitude</item>
+        <item>Average speed</item>
+        <item>Ascent</item>
+        <item>Bearing</item>
+        <item>Elapsed time</item>
+        <item>Speed</item>
+        <item>Latitude</item>
+        <item>Longitude</item>
+        <item>Ascent rate</item>
+        <item>Slope</item>
+        <item>Accuracy</item>
+    </string-array>
 </resources>
