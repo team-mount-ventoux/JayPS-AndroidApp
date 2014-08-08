@@ -38,8 +38,8 @@ public class CanvasPluginReceiver extends BroadcastReceiver {
 		data.lat = String.format("%.3f", intent.getDoubleExtra("LAT", 0));
 		data.lon = String.format("%.3f", intent.getDoubleExtra("LON", 0));
 		data.ascentrate = String.format("%.0f m/h", intent.getFloatExtra("ASCENTRATE", 0) * 3600);
-		data.slope = String.format("%.1f", intent.getFloatExtra("SLOPE", 0));
-		data.accuracy = String.format("%.0f%%", intent.getFloatExtra("ACCURACY", 0));
+		data.slope = String.format("%.1f%%", intent.getFloatExtra("SLOPE", 0));
+		data.accuracy = String.format("%.0f", intent.getFloatExtra("ACCURACY", 0));
 
 		CanvasPlugin.set_gpsdata_details(data, context);
 	}
