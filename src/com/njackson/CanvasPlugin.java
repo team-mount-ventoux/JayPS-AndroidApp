@@ -72,7 +72,7 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
 	// send current text values to canvas when requested
 	@Override
 	protected String get_format_mask_value(int def_id, String format_mask, Context context, String param) {
-		Log.i(TAG, "get_format_mask_value def_id = " + def_id + " format_mask = '" + format_mask + "'");
+	    if (MainActivity.debug) Log.i(TAG, "get_format_mask_value def_id = " + def_id + " format_mask = '" + format_mask + "'");
 		
 		if (def_id == ID_CANVAS_PB) {
 			if (current_data == null) {
@@ -114,7 +114,7 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
 	// send bitmap value to canvas when requested
 	@Override
 	protected Bitmap get_bitmap_value(int def_id, Context context, String param) {
-		Log.i(TAG, "get_bitmap_value def_id = " + def_id);
+	    if (MainActivity.debug) Log.i(TAG, "get_bitmap_value def_id = " + def_id);
 		return null;
 	}
 
@@ -125,34 +125,19 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
 
 	// only notify canvas of an update if it has actually changed
 	public static void set_gpsdata_details(GPSData data, Context context) {
-		if (
-			   current_data.distance != data.distance
-			|| current_data.altitude != data.altitude
-			|| current_data.avgspeed != data.avgspeed
-			|| current_data.ascent != data.ascent
-			|| current_data.bearing != data.bearing
-			|| current_data.time != data.time
-			|| current_data.speed != data.speed
-		    || current_data.lat != data.lat
-			|| current_data.lon != data.lon
-			|| current_data.ascentrate != data.ascentrate
-			|| current_data.slope != data.slope
-			|| current_data.accuracy != data.accuracy
-		) {
-			Log.i(TAG, "set_gpsdata_details distance '" + data.distance);
-			current_data.distance = data.distance;
-			current_data.altitude = data.altitude;
-			current_data.avgspeed = data.avgspeed;
-			current_data.ascent = data.ascent;
-			current_data.bearing = data.bearing;
-			current_data.time = data.time;
-			current_data.speed = data.speed;
-			current_data.lat = data.lat;
-			current_data.lon = data.lon;
-			current_data.ascentrate = data.ascentrate;
-			current_data.slope = data.slope;
-			current_data.accuracy = data.accuracy;
-			notify_canvas_updates_available(ID_CANVAS_PB, context);
-		}
+	    if (MainActivity.debug) Log.i(TAG, "set_gpsdata_details distance='" + data.distance + " time=" + data.time + " avgspeed=" + data.avgspeed);
+		current_data.distance = data.distance;
+		current_data.altitude = data.altitude;
+		current_data.avgspeed = data.avgspeed;
+		current_data.ascent = data.ascent;
+		current_data.bearing = data.bearing;
+		current_data.time = data.time;
+		current_data.speed = data.speed;
+		current_data.lat = data.lat;
+		current_data.lon = data.lon;
+		current_data.ascentrate = data.ascentrate;
+		current_data.slope = data.slope;
+		current_data.accuracy = data.accuracy;
+		notify_canvas_updates_available(ID_CANVAS_PB, context);
 	}
 }

@@ -484,7 +484,7 @@ public class GPSService extends Service {
     private void broadcastLocation() {
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction(MainActivity.GPSServiceReceiver.ACTION_RESP);
-        broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
+        //broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
         broadcastIntent.putExtra("SPEED",       _myLocation.getSpeed());
         broadcastIntent.putExtra("DISTANCE",    _myLocation.getDistance());
         broadcastIntent.putExtra("AVGSPEED",    _myLocation.getAverageSpeed());

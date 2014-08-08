@@ -13,13 +13,12 @@ public class CanvasPluginReceiver extends BroadcastReceiver {
 	
 	@Override
 	public final void onReceive(Context context, Intent intent) {
-		Log.i(TAG, "onReceive: " + intent.getAction());
+	    if (MainActivity.debug) Log.i(TAG, "onReceive: " + intent.getAction());
 		process_intent(context, intent);
 	}
 	
 	public static void process_intent(Context context, Intent intent) {
-		Log.i(TAG, "process_intent");
-		dump_bundle(intent.getExtras());
+		if (MainActivity.debug) dump_bundle(intent.getExtras());
 
 		GPSData data = new GPSData();
 		
@@ -27,14 +26,20 @@ public class CanvasPluginReceiver extends BroadcastReceiver {
 		data.altitude = String.format("%.0f m", intent.getDoubleExtra("ALTITUDE", 0));
 		data.avgspeed = String.format("%.1f km/h", intent.getFloatExtra("AVGSPEED", 0) * 3.6);
 		data.ascent = String.format("%.0f m", intent.getDoubleExtra("ASCENT", 0));
-		data.bearing = String.format("%.0f m", intent.getFloatExtra("BEARING", 0.0f));
-		data.time = String.format("%d s", intent.getLongExtra("TIME", 0));
+		data.bearing = String.format("%.0f°", intent.getFloatExtra("BEARING", 0.0f));
+
+        int time = (int) (intent.getLongExtra("TIME",0) / 1000);
+        int s = time % 60;
+        int m = ((time-s) / 60) % 60;
+        int h = (time-s-60*m) / (60 * 60);
+        data.time = String.format("%d:%02d:%02d", h, m, s);
+
 		data.speed = String.format("%.1f km/h", intent.getFloatExtra("SPEED", 0) * 3.6);
 		data.lat = String.format("%.3f", intent.getDoubleExtra("LAT", 0));
 		data.lon = String.format("%.3f", intent.getDoubleExtra("LON", 0));
 		data.ascentrate = String.format("%.0f m/h", intent.getFloatExtra("ASCENTRATE", 0) * 3600);
 		data.slope = String.format("%.1f", intent.getFloatExtra("SLOPE", 0));
-		data.accuracy = String.format("%.0f", intent.getFloatExtra("ACCURACY", 0));
+		data.accuracy = String.format("%.0f%%", intent.getFloatExtra("ACCURACY", 0));
 
 		CanvasPlugin.set_gpsdata_details(data, context);
 	}

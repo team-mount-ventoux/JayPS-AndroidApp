@@ -570,7 +570,7 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
     private void registerGPSServiceIntentReceiver() {
         IntentFilter filterResponse = new IntentFilter(GPSServiceReceiver.ACTION_RESP);
-        filterResponse.addCategory(Intent.CATEGORY_DEFAULT);
+        //filterResponse.addCategory(Intent.CATEGORY_DEFAULT);
 
         IntentFilter filterDisabled = new IntentFilter(GPSServiceReceiver.ACTION_GPS_DISABLED);
         filterDisabled.addCategory(Intent.CATEGORY_DEFAULT);
