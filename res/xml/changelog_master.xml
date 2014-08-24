@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="1.6.0-beta1" versioncode="31" >
+      <change>Canvas plugin</change>
+  </release>
   <release version="1.5.0" versioncode="30" >
       <change>Map My Tracks integration</change>
       <change>Live Tracking: send heart rate</change>
