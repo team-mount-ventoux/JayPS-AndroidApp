@@ -37,7 +37,7 @@ public class CanvasPluginReceiver extends BroadcastReceiver {
 		data.speed = String.format("%.1f km/h", intent.getFloatExtra("SPEED", 0) * 3.6);
 		data.lat = String.format("%.3f", intent.getDoubleExtra("LAT", 0));
 		data.lon = String.format("%.3f", intent.getDoubleExtra("LON", 0));
-		data.ascentrate = String.format("%.0f m/h", intent.getFloatExtra("ASCENTRATE", 0) * 3600);
+		data.ascentrate = String.format("%.0f m/h", intent.getFloatExtra("ASCENTRATE", 0) / 3600);
 		data.slope = String.format("%.1f%%", intent.getFloatExtra("SLOPE", 0));
 		data.accuracy = String.format("%.0f", intent.getFloatExtra("ACCURACY", 0));
 
