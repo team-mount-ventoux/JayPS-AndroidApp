@@ -16,7 +16,7 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
 	
 	public static final int ID_CANVAS_PB = 1;
 	
-	private static final String[] MASKS = { "%D", "%A", "%S", "%a", "%B", "%T", "%b", "%L", "%l", "%c", "%d", "%e"};
+	private static final String[] MASKS = { "%DIST", "%ALT", "%AVG", "%ASCE", "%BEAR", "%TIME", "%SPD", "%LAT", "%LON", "%ASCR", "%SLOP", "%ACCU"};
 	private static final int MASK_DISTANCE = 0;
 	private static final int MASK_ALTITUDE = 1;
 	private static final int MASK_AVGSPEED = 2;
@@ -60,7 +60,7 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
 		examples.add(current_data.accuracy);
 		tplug.format_mask_examples = examples;
 		tplug.format_masks = new ArrayList<String>(Arrays.asList(MASKS));
-		tplug.default_format_string = "%D %A %S";
+		tplug.default_format_string = "%DIST %ALT %AVG";
 		plugins.add(tplug);
 		
 		return plugins;
