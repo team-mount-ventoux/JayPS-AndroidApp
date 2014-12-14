@@ -55,6 +55,7 @@
      android:key="LIVE_TRACKING_PASSWORD"
      android:title="@string/PREF_LIVE_TRACKING_JAYPS_PASSWORD_TITLE"
      android:summary="@string/PREF_LIVE_TRACKING_JAYPS_PASSWORD_SUMMARY"
+     android:inputType="textPassword"
   />
  </PreferenceCategory>
 <PreferenceCategory
@@ -75,6 +76,7 @@
      android:key="LIVE_TRACKING_MMT_PASSWORD"
      android:title="@string/PREF_LIVE_TRACKING_MMT_PASSWORD_TITLE"
      android:summary="@string/PREF_LIVE_TRACKING_MMT_PASSWORD_SUMMARY"
+     android:inputType="textPassword"
   />
  </PreferenceCategory>
 
