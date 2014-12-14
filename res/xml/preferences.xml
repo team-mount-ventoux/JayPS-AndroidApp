@@ -94,6 +94,24 @@
 </PreferenceCategory>
 
  <PreferenceCategory
+   android:title="Canvas Integration"
+ >
+    <ListPreference
+            android:key="CANVAS_MODE"
+            android:title="@string/CANVAS_MODE_TITLE"
+            android:dialogTitle="@string/CANVAS_MODE_DIALOG_TITLE"
+            android:entries="@array/CANVAS_MODE_ENTRIES"
+            android:entryValues="@array/CANVAS_MODE_ENTRY_VALUES"
+            android:defaultValue="@string/CANVAS_MODE_DEFAULT" />
+    <CheckBoxPreference
+            android:key="CANVAS_DISPLAY_UNITS"
+            android:title="@string/CANVAS_DISPLAY_UNITS_TITLE"
+            android:summary="@string/CANVAS_DISPLAY_UNITS_SUMMARY"
+            android:defaultValue="true" />
+
+</PreferenceCategory>
+
+ <PreferenceCategory
    android:title="@string/PREF_HRM_CATEGORY_TITLE"
  >
     <Preference

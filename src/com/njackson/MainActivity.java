@@ -44,6 +44,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     public static boolean _liveTrackingJayps = false;
     public static boolean _liveTrackingMmt = false;
     public static String oruxmaps_autostart = "disable";
+    public static String canvas_mode = "disable";
+    public static boolean canvas_display_units = true;
     
     public static String hrm_name = "";
     public static String hrm_address = "";
@@ -61,9 +63,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
     public static int batteryLevel = -1;
     public static boolean debug = false;
 
-    private static float _speedConversion = 0.0f;
-    private static float _distanceConversion = 0.0f;
-    private static float _altitudeConversion = 0.0f;
+    public float speedConversion = 0.0f;
+    public float distanceConversion = 0.0f;
+    public float altitudeConversion = 0.0f;
     
     private Date _lastCycling;
 
@@ -86,6 +88,10 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
 
     public Boolean activityRecognitionEnabled() {
         return _activityRecognition;
+    }
+    
+    public int getUnits() {
+        return _units;
     }
 
     // Listener for the fragment button press
@@ -118,6 +124,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         _liveTrackingJayps = prefs.getBoolean("LIVE_TRACKING",false);
         _liveTrackingMmt = prefs.getBoolean("LIVE_TRACKING_MMT",false);
         oruxmaps_autostart = prefs.getString("ORUXMAPS_AUTO", "disable");
+        canvas_mode = prefs.getString("CANVAS_MODE", "disable");
+        canvas_display_units = prefs.getBoolean("CANVAS_DISPLAY_UNITS", true);
+        
 
         if(_activityRecognition)
             initActivityRecognitionClient();
@@ -155,13 +164,13 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         _units = units;
         
         if(units == Constants.IMPERIAL) {
-            _speedConversion = (float)Constants.MS_TO_MPH;
-            _distanceConversion = (float)Constants.M_TO_MILES;
-            _altitudeConversion = (float)Constants.M_TO_FEET;
+            speedConversion = (float)Constants.MS_TO_MPH;
+            distanceConversion = (float)Constants.M_TO_MILES;
+            altitudeConversion = (float)Constants.M_TO_FEET;
         } else {
-            _speedConversion = (float)Constants.MS_TO_KPH;
-            _distanceConversion = (float)Constants.M_TO_KM;
-            _altitudeConversion = (float)Constants.M_TO_M;
+            speedConversion = (float)Constants.MS_TO_KPH;
+            distanceConversion = (float)Constants.M_TO_KM;
+            altitudeConversion = (float)Constants.M_TO_M;
         }
 
         // set the screen units
@@ -376,21 +385,21 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             //Log.d(TAG, _units+"|"+checkServiceRunning()+"|debug:"+debug+"|"+_liveTrackingJayps+"|_refresh_interval="+_refresh_interval+"|refresh_code="+refresh_code+"|"+((256+data[0])%256));
             
             data[1] = (byte) ((int)  Math.ceil(intent.getFloatExtra("ACCURACY", 0.0f)));
-            data[2] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0.0f) * _distanceConversion) / 1)) % 256);
-            data[3] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0.0f) * _distanceConversion) / 1)) / 256);
+            data[2] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0.0f) * distanceConversion) / 1)) % 256);
+            data[3] = (byte) (((int) (Math.floor(100 * intent.getFloatExtra("DISTANCE", 0.0f) * distanceConversion) / 1)) / 256);
             data[4] = (byte) (((int) intent.getLongExtra("TIME", 0) / 1000) % 256);
             data[5] = (byte) (((int) intent.getLongExtra("TIME", 0) / 1000) / 256);
 
-            data[6] = (byte) (((int) (intent.getDoubleExtra("ALTITUDE", 0) * _altitudeConversion)) % 256);
-            data[7] = (byte) (((int) (intent.getDoubleExtra("ALTITUDE", 0) * _altitudeConversion)) / 256);
+            data[6] = (byte) (((int) (intent.getDoubleExtra("ALTITUDE", 0) * altitudeConversion)) % 256);
+            data[7] = (byte) (((int) (intent.getDoubleExtra("ALTITUDE", 0) * altitudeConversion)) / 256);
 
-            data[8] = (byte) (((int) Math.abs(intent.getDoubleExtra("ASCENT", 0) * _altitudeConversion)) % 256);
-            data[9] = (byte) ((((int) Math.abs(intent.getDoubleExtra("ASCENT", 0) * _altitudeConversion)) / 256) % 128);
+            data[8] = (byte) (((int) Math.abs(intent.getDoubleExtra("ASCENT", 0) * altitudeConversion)) % 256);
+            data[9] = (byte) ((((int) Math.abs(intent.getDoubleExtra("ASCENT", 0) * altitudeConversion)) / 256) % 128);
             if (intent.getDoubleExtra("ASCENT", 0.0f) < 0) {
                 data[9] += 128;
             }
-            data[10] = (byte) (((int) Math.abs(intent.getFloatExtra("ASCENTRATE", 0.0f) * _altitudeConversion)) % 256);
-            data[11] = (byte) ((((int) Math.abs(intent.getFloatExtra("ASCENTRATE", 0.0f) * _altitudeConversion)) / 256) % 128);
+            data[10] = (byte) (((int) Math.abs(intent.getFloatExtra("ASCENTRATE", 0.0f) * altitudeConversion)) % 256);
+            data[11] = (byte) ((((int) Math.abs(intent.getFloatExtra("ASCENTRATE", 0.0f) * altitudeConversion)) / 256) % 128);
             if (intent.getFloatExtra("ASCENTRATE", 0.0f) < 0) {
                 data[11] += 128;
             }            
@@ -410,8 +419,8 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
                 data[16] += 128;
             }
 
-            data[17] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * _speedConversion) / 1)) % 256);
-            data[18] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * _speedConversion) / 1)) / 256);
+            data[17] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * speedConversion) / 1)) % 256);
+            data[18] = (byte) (((int) (Math.floor(10 * intent.getFloatExtra("SPEED", 0.0f) * speedConversion) / 1)) / 256);
             data[19] = (byte) (((int)  (intent.getFloatExtra("BEARING", 0.0f) / 360 * 256)) % 256);
             data[20] = (byte) ((intent.getIntExtra("HEARTRATE", 255)) % 256);
 
@@ -438,15 +447,15 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
         HomeActivity homeScreen = getHomeScreen();
 
         if (intent.hasExtra("SPEED")) {
-            String speed = String.format(Locale.US, "%.1f", intent.getFloatExtra("SPEED", 99) * _speedConversion);
+            String speed = String.format(Locale.US, "%.1f", intent.getFloatExtra("SPEED", 99) * speedConversion);
             homeScreen.setSpeed(speed);
         }
         if (intent.hasExtra("DISTANCE")) {
-            String distance = String.format(Locale.US, "%.1f", Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * _distanceConversion) / 10);
+            String distance = String.format(Locale.US, "%.1f", Math.floor(10 * intent.getFloatExtra("DISTANCE", 99) * distanceConversion) / 10);
             homeScreen.setDistance(distance);
         }
         if (intent.hasExtra("AVGSPEED")) {
-            String avgSpeed = String.format(Locale.US, "%.1f", intent.getFloatExtra("AVGSPEED", 99) * _speedConversion);
+            String avgSpeed = String.format(Locale.US, "%.1f", intent.getFloatExtra("AVGSPEED", 99) * speedConversion);
             homeScreen.setAvgSpeed(avgSpeed);
         }
         if (intent.hasExtra("ACCURACY")) {
@@ -549,7 +558,9 @@ public class MainActivity extends SherlockFragmentActivity  implements  GooglePl
             registerGPSServiceIntentReceiver();
             startService(intent);
             
-            PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+            if (!MainActivity.canvas_mode.equals("canvas_only")) {
+                PebbleKit.startAppOnPebble(getApplicationContext(), Constants.WATCH_UUID);
+            }
         }
         // in all cases
         resendLastDataToPebble();

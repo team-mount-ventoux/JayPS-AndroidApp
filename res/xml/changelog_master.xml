@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+  <release version="1.6.0-beta2" versioncode="32" >
+      <change>Canvas: add heart rate</change>
+      <change>Canvas: add units</change>
+      <change>Security fix (hide passwords)</change>
+  </release>
   <release version="1.6.0-beta1" versioncode="31" >
       <change>Canvas plugin</change>
   </release>

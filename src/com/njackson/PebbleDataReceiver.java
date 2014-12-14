@@ -22,7 +22,7 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     	//int live_max_name = -99;
     	boolean  start = false;
     	if (data.contains(Constants.CMD_BUTTON_PRESS)) {
-	        button = data.getUnsignedInteger(Constants.CMD_BUTTON_PRESS).intValue();
+	        button = data.getUnsignedIntegerAsLong(Constants.CMD_BUTTON_PRESS).intValue();
 	        Log.d(TAG, "Constants.CMD_BUTTON_PRESS, button: " + button);
 	        if (button == Constants.ORUXMAPS_START_RECORD_CONTINUE_PRESS) {
 	            OruxMaps.startRecordNewSegment(context);

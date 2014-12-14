@@ -38,4 +38,15 @@
             <item>new_track</item>
             <item>auto</item> 
     </string-array> 
+    
+    <string-array name="CANVAS_MODE_ENTRIES">
+            <item>Disable</item>
+            <item>Canvas only</item>
+            <item>Canvas + Pebble Bike Watchface</item>
+    </string-array>
+    <string-array name="CANVAS_MODE_ENTRY_VALUES">
+            <item>disable</item>
+            <item>canvas_only</item>
+            <item>canvas_and_pbw</item>
+    </string-array> 
 </resources>

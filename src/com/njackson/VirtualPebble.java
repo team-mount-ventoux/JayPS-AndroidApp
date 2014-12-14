@@ -36,6 +36,9 @@ public class VirtualPebble {
         MainActivity.virtualPebble.messageManager.offerIfLow(data, 5);
     }
     public static void sendDataToPebble(PebbleDictionary data, boolean forceSend) {
+        if (MainActivity.canvas_mode.equals("canvas_only")) {
+            return;
+        }
         if (forceSend) {
             sendDataToPebble(data);
         } else {

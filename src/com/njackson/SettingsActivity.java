@@ -202,6 +202,11 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         CharSequence listDesc = oruxPref.getEntry();
         oruxPref.setSummary(listDesc);
     }
+    private void _setCanvasSummary(SharedPreferences prefs) {
+        ListPreference canvasPref = (ListPreference) findPreference("CANVAS_MODE");
+        CharSequence listDesc = canvasPref.getEntry();
+        canvasPref.setSummary(listDesc);
+    }
     private void _setHrmSummary() {
         String summary = MainActivity.hrm_name;
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -226,6 +231,7 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         _setLoginJaypsSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
         _setLoginMmtSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
         _setOruxMapsSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
+        _setCanvasSummary(PreferenceManager.getDefaultSharedPreferences(getApplicationContext()));
     }
 
     @Override
@@ -251,6 +257,9 @@ public class SettingsActivity extends PreferenceActivity implements OnSharedPref
         }
         if (key.equals("ORUXMAPS_AUTO")) {
             _setOruxMapsSummary(sharedPreferences);
+        }
+        if (key.equals("CANVAS_MODE")) {
+            _setCanvasSummary(sharedPreferences);
         }
 
         MainActivity activity = MainActivity.getInstance();
