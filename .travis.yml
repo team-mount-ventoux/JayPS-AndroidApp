@@ -3,10 +3,12 @@ android:
   components:
     - build-tools-21.1.2
     - android-21
+
 before_script:
-    # Make sure the emulator has started before running tests
+    - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+    - emulator -avd test -no-skin -no-audio -no-window &
+    - android-wait-for-emulator
     - chmod +x gradlew
-    - chmod +x wait_for_emulator
-    - ./wait_for_emulator
+
 script:
   - ./gradlew connectedCheck
