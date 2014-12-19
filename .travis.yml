@@ -3,6 +3,9 @@ android:
   components:
     - build-tools-21.1.2
     - android-21
+    - extra-android-support
+    - extra-google-google_play_services
+    - extra-google-m2repository
 
 before_script:
     - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
