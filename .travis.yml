@@ -17,4 +17,4 @@ before_script:
     - android-wait-for-emulator
 
 script:
-  - gradle connectedCheck
+  - ./gradlew connectedCheck
