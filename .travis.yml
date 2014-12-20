@@ -12,10 +12,10 @@ licenses:
     - android-sdk-license-5be876d5
 
 before_script:
+    - ./gradlew assemble
     - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
     - emulator -avd test -no-skin -no-audio -no-window &
     - android-wait-for-emulator
-    - ./gradlew assemble
 
 script:
   - ./gradlew connectedCheck
