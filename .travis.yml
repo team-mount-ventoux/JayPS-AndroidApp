@@ -23,6 +23,7 @@ before_script:
     - android-wait-for-emulator
 
 script:
+  - adb logcat -c
   - ./gradlew connectedCheck --stacktrace
 
 after_success:
