@@ -124,7 +124,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void testStartButtonTouchedStartsGPS() throws Exception {
         _bus.post(new StartButtonTouchedEvent());
 
-        boolean serviceStarted = waitForServiceToStart(GPSService.class, 2000);
+        boolean serviceStarted = waitForServiceToStart(GPSService.class, 20000);
         assertTrue("GPSService should have been started", serviceStarted);
     }
 
@@ -134,7 +134,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         _bus.post(new StopButtonTouchedEvent());
 
-        boolean serviceStopped = waitForServiceToStop(GPSService.class, 2000);
+        boolean serviceStopped = waitForServiceToStop(GPSService.class, 20000);
         assertTrue ("GPSService should have been stopped", serviceStopped);
     }
 
@@ -142,7 +142,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void testStartButtonTouchedStartsPebbleBikeService() throws Exception {
         _bus.post(new StartButtonTouchedEvent());
 
-        boolean serviceStarted = waitForServiceToStart(PebbleService.class, 2000);
+        boolean serviceStarted = waitForServiceToStart(PebbleService.class, 20000);
         assertTrue ("PebbleBikeService should have been started", serviceStarted);
     }
 
@@ -152,7 +152,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         _bus.post(new StopButtonTouchedEvent());
 
-        boolean serviceStopped = waitForServiceToStop(PebbleService.class, 2000);
+        boolean serviceStopped = waitForServiceToStop(PebbleService.class, 20000);
         assertTrue ("PebbleBikeService should have been stopped", serviceStopped);
     }
 
@@ -172,7 +172,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     private void startServiceAndWaitForReady(Class clazz) throws Exception {
         _activity.startService(new Intent(_activity,clazz));
-        boolean serviceStarted = waitForServiceToStart(clazz, 2000);
+        boolean serviceStarted = waitForServiceToStart(clazz, 20000);
     }
 
     private boolean waitForServiceToStop(Class serviceClass, int timeout) throws Exception {
