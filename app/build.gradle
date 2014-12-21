@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.github.kt3k.coveralls'
+
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -17,11 +19,15 @@ android {
     }
 
     buildTypes {
+        debug {
+            testCoverageEnabled true
+        }
         release {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
+
 dependencies {
     compile project(':advancedlocation-library')
     compile 'com.android.support:support-v4:21.0.3'

@@ -1,3 +1,7 @@
+env:
+  global:
+    - COVERALLS_REPO_TOKEN=lxx619dvGocpkXgHNx0jrPiyJD5hlwSSX
+
 sudo: false
 language: android
 android:
@@ -20,3 +24,6 @@ before_script:
 
 script:
   - ./gradlew connectedCheck --stacktrace
+
+after_success:
+  - ./gradlew coveralls --stacktrace
