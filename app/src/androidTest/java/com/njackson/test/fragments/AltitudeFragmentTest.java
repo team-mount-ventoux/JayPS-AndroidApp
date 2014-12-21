@@ -75,7 +75,6 @@ public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
 
     @MediumTest
     public void test_Activity_Responds_To_NewAltitudeEvent() {
-
         final NewAltitiude event = new NewAltitiude(new float[14],0);
 
         _activity.runOnUiThread(new Runnable() {
@@ -84,7 +83,6 @@ public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
                 _bus.post(event);
             }
         });
-
     }
 
 }

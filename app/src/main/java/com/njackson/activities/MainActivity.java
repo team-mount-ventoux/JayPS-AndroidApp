@@ -50,7 +50,7 @@ public class MainActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-    private void startGPSService() {
+    protected void startGPSService() {
         startService(new Intent(this,GPSService.class));
     }
 
