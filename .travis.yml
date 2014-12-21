@@ -17,9 +17,9 @@ licenses:
     - android-sdk-license-5be876d5
 
 before_script:
-    - ./gradlew assemble
     - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
     - emulator -avd test -no-skin -no-audio -no-window &
+    - ./gradlew assemble
     - android-wait-for-emulator
 
 script:
@@ -31,3 +31,6 @@ after_success:
   - mkdir ./app/build/reports/jacoco/test
   - mv ./app/build/outputs/reports/coverage/debug/report.xml ./app/build/reports/jacoco/test/jacocoTestReport.xml
   - ./gradlew coveralls --stacktrace
+
+after_failure:
+  - adb logcat -d E
