@@ -72,7 +72,7 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
     @Subscribe
     public void onChangeStateEvent(ResetGPSState state) {
         _stateEvent = state;
-        _countDownLatch.countDown();
+        //_countDownLatch.countDown();
     }
 
     public MainActivityTest(Class<MainActivity> activityClass) {
@@ -120,54 +120,73 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
 
     @SmallTest
     public void testStartButtonTouchedStartsGPS() throws InterruptedException {
-        _countDownLatch = new CountDownLatch(1);
-
         startActivity(new Intent(), null, null);
         getInstrumentation().waitForIdleSync();
 
         _bus.post(new StartButtonTouchedEvent());
 
-        _countDownLatch.await(1000, TimeUnit.MILLISECONDS);
-        assertTrue("GPSService should have been started", _startedServices.contains(GPSService.class.getName()));
+        boolean serviceStarted = waitForServiceToStart(GPSService.class, 2000);
+        assertTrue("GPSService should have been started", serviceStarted);
     }
 
     @SmallTest
     public void testStopButtonTouchedStopsGPS() throws InterruptedException {
-        _countDownLatch = new CountDownLatch(1);
-
         startActivity(new Intent(), null, null);
         getInstrumentation().waitForIdleSync();
 
         _bus.post(new StopButtonTouchedEvent());
 
-        _countDownLatch.await(1000, TimeUnit.MILLISECONDS);
-        assertTrue ("GPSService should have been stopped", _stoppedServices.contains(GPSService.class.getName()));
+        boolean serviceStarted = waitForServiceToStop(GPSService.class, 2000);
+        assertTrue ("GPSService should have been stopped", serviceStarted);
     }
 
     @SmallTest
     public void testStartButtonTouchedStartsPebbleBikeService() throws InterruptedException {
-        _countDownLatch = new CountDownLatch(1);
-
         startActivity(new Intent(), null, null);
         getInstrumentation().waitForIdleSync();
 
         _bus.post(new StartButtonTouchedEvent());
 
-        _countDownLatch.await(1000, TimeUnit.MILLISECONDS);
-        assertTrue ("GPSService should have been started", _startedServices.contains(PebbleService.class.getName()));
+        boolean serviceStarted = waitForServiceToStart(PebbleService.class, 2000);
+        assertTrue ("PebbleBikeService should have been started", serviceStarted);
     }
 
     @SmallTest
     public void testStopButtonTouchedStopsPebbleBikeService() throws InterruptedException {
-        _countDownLatch = new CountDownLatch(1);
-
         startActivity(new Intent(), null, null);
         getInstrumentation().waitForIdleSync();
 
         _bus.post(new StopButtonTouchedEvent());
 
-        _countDownLatch.await(1000, TimeUnit.MILLISECONDS);
-        assertTrue ("GPSService should have been stopped", _stoppedServices.contains(PebbleService.class.getName()));
+        boolean serviceStopped = waitForServiceToStop(PebbleService.class, 2000);
+        assertTrue ("PebbleBikeService should have been stopped", serviceStopped);
     }
 
+    private boolean waitForServiceToStart(Class serviceClass, int timeout) throws InterruptedException {
+        int timer = 0;
+        while(timer < timeout) {
+            if(_startedServices.contains(GPSService.class.getName())) {
+                return true;
+            }
+
+            Thread.sleep(100);
+            timer += 100;
+        }
+
+        return false;
+    }
+
+    private boolean waitForServiceToStop(Class serviceClass, int timeout) throws InterruptedException {
+        int timer = 0;
+        while(timer < timeout) {
+            if(_stoppedServices.contains(GPSService.class.getName())) {
+                return true;
+            }
+
+            Thread.sleep(100);
+            timer += 100;
+        }
+
+        return false;
+    }
 }
