@@ -120,7 +120,7 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         getInstrumentation().waitForIdleSync();
 
         _bus.post(new StartButtonTouchedEvent());
-        Thread.sleep(100);
+        Thread.sleep(200);
         assertTrue ("GPSService should have been started", _startedServices.contains(GPSService.class.getName()));
     }
 
@@ -130,7 +130,7 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         getInstrumentation().waitForIdleSync();
 
         _bus.post(new StopButtonTouchedEvent());
-        Thread.sleep(100);
+        Thread.sleep(200);
         assertTrue ("GPSService should have been stopped", _stoppedServices.contains(GPSService.class.getName()));
     }
 
@@ -140,7 +140,7 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         getInstrumentation().waitForIdleSync();
 
         _bus.post(new StartButtonTouchedEvent());
-        Thread.sleep(100);
+        Thread.sleep(200);
         assertTrue ("GPSService should have been started", _startedServices.contains(PebbleService.class.getName()));
     }
 
@@ -150,7 +150,7 @@ public class MainActivityTest extends ActivityUnitTestCase<MainActivity> {
         getInstrumentation().waitForIdleSync();
 
         _bus.post(new StopButtonTouchedEvent());
-        Thread.sleep(100);
+        Thread.sleep(200);
         assertTrue ("GPSService should have been stopped", _stoppedServices.contains(PebbleService.class.getName()));
     }
 
