@@ -77,9 +77,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     private ResetGPSState _stateEvent;
-    private final ArrayList<String> _startedServices = new ArrayList<String>();
-    private final ArrayList<String> _stoppedServices = new ArrayList<String>();
-    private CountDownLatch _countDownLatch = null;
 
     @Subscribe
     public void onChangeStateEvent(ResetGPSState state) {
@@ -113,15 +110,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        _stoppedServices.clear();
-        _startedServices.clear();
-        super.tearDown();
-    }
-
     @SmallTest
     public void testStartButtonTouchedStartsGPS() throws Exception {
+        Log.d("TEST", "Started GPS Test");
         _bus.post(new StartButtonTouchedEvent());
 
         boolean serviceStarted = waitForServiceToStart(GPSService.class, 20000);

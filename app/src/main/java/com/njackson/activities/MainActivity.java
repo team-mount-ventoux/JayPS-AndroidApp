@@ -3,6 +3,7 @@ package com.njackson.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,10 +21,12 @@ import javax.inject.Inject;
 
 public class MainActivity extends FragmentActivity {
 
+    private static final String TAG = "MainActivity";
     @Inject Bus _bus;
 
     @Subscribe
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
+        Log.d(TAG, "Button Clicked");
         startGPSService();
         startPebbleService();
     }
@@ -41,6 +44,7 @@ public class MainActivity extends FragmentActivity {
         ((PebbleBikeApplication) getApplication()).inject(this);
         _bus.register(this);
 
+        Log.d(TAG, "Bus registered");
         setContentView(R.layout.activity_main);
     }
 
