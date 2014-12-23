@@ -2,6 +2,7 @@ PebbleBike-AndroidApp
 =====================
 
 [![Build Status](https://travis-ci.org/pebble-bike/PebbleBike-AndroidApp.svg?branch=v2)](https://travis-ci.org/pebble-bike/PebbleBike-AndroidApp)
+[![Coverage Status](https://coveralls.io/repos/pebble-bike/PebbleBike-AndroidApp/badge.png?branch=v2)](https://coveralls.io/r/pebble-bike/PebbleBike-AndroidApp?branch=v2)
 
 ##Info
 Pebble bike v2 is pretty much a complete re-write to implement best practice in terms of coding.  In an attempt to improve stability and reduce crashes when we develop the application futher we decided that we needed to re-architect the appliction.  
