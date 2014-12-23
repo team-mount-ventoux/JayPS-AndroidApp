@@ -4,8 +4,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.preference.Preference;
 import android.test.ActivityUnitTestCase;
+import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.application.SettingsActivity;
+import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.test.application.TestApplication;
+import com.njackson.utils.IInstallWatchFace;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import dagger.Module;
+import dagger.ObjectGraph;
+import dagger.Provides;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by server on 28/06/2014.
@@ -19,9 +35,29 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         super(SettingsActivity.class);
     }
 
+    @Inject IInstallWatchFace _watchFaceMock;
+
+    @Module(
+            includes = PebbleBikeModule.class,
+            injects = SettingsActivityTest.class,
+            overrides = true,
+            complete = false
+    )
+    static class TestModule {
+        @Provides @Singleton
+        IInstallWatchFace providesWatchFaceInstall() {
+            return mock(IInstallWatchFace.class);
+        }
+    }
+
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+
+        TestApplication app = new TestApplication();
+        app.setObjectGraph(ObjectGraph.create(TestModule.class));
+        app.inject(this);
+        setApplication(app);
 
         //setActivityInitialTouchMode(false);
         _targetContext = getInstrumentation().getTargetContext();
@@ -35,8 +71,17 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         assertNotNull(_installPreference);
     }
 
+    @SmallTest
     public void testInstallListener() {
         Preference.OnPreferenceClickListener onPreferenceClickListener = _installPreference.getOnPreferenceClickListener();
         assertNotNull(onPreferenceClickListener);
+    }
+
+    @SmallTest
+    public void testOnPreferenceClickExecutesInstallWatchFace(){
+        Preference.OnPreferenceClickListener onPreferenceClickListener = _installPreference.getOnPreferenceClickListener();
+        boolean b = onPreferenceClickListener.onPreferenceClick(new Preference(_targetContext));
+
+        verify(_watchFaceMock, times(1)).execute(any(Context.class));
     }
 }

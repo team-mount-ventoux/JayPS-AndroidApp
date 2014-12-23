@@ -79,17 +79,17 @@ public class GPSService extends Service {
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public void onDestroy (){
         Log.d("MAINTEST", "Stopped GPS Service");
         saveGPSStats();
         //removeServiceForeground();
 
         stopLocationUpdates();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     private void handleCommand(Intent intent) {
@@ -266,6 +266,7 @@ public class GPSService extends Service {
         Log.d(TAG,"New Location");
     }
 
+    /*
     private void makeServiceForeground(String title, String text) {
         final int myID = 1000;
 
@@ -287,5 +288,6 @@ public class GPSService extends Service {
     private void removeServiceForeground() {
         stopForeground(true);
     }
+    */
 
 }

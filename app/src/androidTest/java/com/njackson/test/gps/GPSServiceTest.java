@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.IBinder;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -146,6 +147,14 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
     private void setupMocks() {
         _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
+    }
+
+    @SmallTest
+    public void testOnBindReturnsNull() throws Exception {
+        startService();
+        IBinder binder = _service.onBind(new Intent());
+
+        assertNull(binder);
     }
 
     @SmallTest

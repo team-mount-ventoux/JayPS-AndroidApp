@@ -1,4 +1,4 @@
-package com.njackson.utils;
+package com.njackson.utils.pebble;
 
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
@@ -10,12 +10,14 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.njackson.utils.IInstallWatchFace;
+
 /**
  * Created by server on 28/06/2014.
  */
-public class InstallWatchFace {
+public class InstallWatchFace implements IInstallWatchFace{
 
-    public static void execute(Context context) {
+    public void execute(Context context) {
         int versionCode;
 
         // Get current version code and version name
