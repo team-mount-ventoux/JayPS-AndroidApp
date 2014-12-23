@@ -102,7 +102,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         setupMocks();
 
         _activity = getActivity();
-        getInstrumentation().waitForIdleSync();
+        //getInstrumentation().wait(1000);
+        Log.d("MAINTEST", "Setup Complete");
     }
 
     private void setupMocks() {
@@ -111,16 +112,17 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
-    public void testStartButtonTouchedStartsGPS() throws Exception {
-        Log.d("TEST", "Started GPS Test");
+    public void testRespondsToStartButtonTouchedEventStartsGPS() throws Exception {
+        Log.d("MAINTEST", "Started GPS Test");
         _bus.post(new StartButtonTouchedEvent());
 
         boolean serviceStarted = waitForServiceToStart(GPSService.class, 20000);
         assertTrue("GPSService should have been started", serviceStarted);
+        Log.d("MAINTEST", "Finished GPS Test");
     }
 
     @SmallTest
-    public void testStopButtonTouchedStopsGPS() throws Exception {
+    public void testRespondsToStopButtonTouchedEventStopsGPS() throws Exception {
         startServiceAndWaitForReady(GPSService.class);
 
         _bus.post(new StopButtonTouchedEvent());
@@ -130,7 +132,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
-    public void testStartButtonTouchedStartsPebbleBikeService() throws Exception {
+    public void testRespondsToStartButtonTouchedEventStartsPebbleBikeService() throws Exception {
         _bus.post(new StartButtonTouchedEvent());
 
         boolean serviceStarted = waitForServiceToStart(PebbleService.class, 20000);
@@ -138,7 +140,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
-    public void testStopButtonTouchedStopsPebbleBikeService() throws Exception {
+    public void testRespondsToStopButtonTouchedEventStopsPebbleBikeService() throws Exception {
         startServiceAndWaitForReady(PebbleService.class);
 
         _bus.post(new StopButtonTouchedEvent());
@@ -157,7 +159,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
             Thread.sleep(100);
             timer += 100;
         }
-
+        Log.d("MAINTEST", "Timeout waiting for service: " + serviceClass.getName());
         throw new Exception("Timeout waiting for Service to Start");
     }
 

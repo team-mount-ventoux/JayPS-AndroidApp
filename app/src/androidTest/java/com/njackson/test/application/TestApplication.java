@@ -1,5 +1,7 @@
 package com.njackson.test.application;
 
+import android.util.Log;
+
 import com.njackson.application.modules.PebbleBikeApplication;
 import dagger.ObjectGraph;
 
@@ -11,6 +13,9 @@ public class TestApplication extends PebbleBikeApplication {
     public ObjectGraph getObjectGraph() {
         return graph;
     }
-    public void setObjectGraph(ObjectGraph graph) { this.graph = graph; }
+    public void setObjectGraph(ObjectGraph graph) {
+        Log.d("MAINTEST","set object graph");
+        this.graph = graph;
+    }
 
 }

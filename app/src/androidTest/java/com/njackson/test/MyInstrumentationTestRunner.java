@@ -4,6 +4,7 @@ import android.app.Application;
 import android.app.Instrumentation;
 import android.content.Context;
 import android.test.InstrumentationTestRunner;
+import android.util.Log;
 
 import com.njackson.test.application.TestApplication;
 
@@ -14,6 +15,7 @@ public class MyInstrumentationTestRunner extends InstrumentationTestRunner{
 
     @Override
     public Application newApplication(ClassLoader cl, String className, Context context) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        Log.d("MAINTEST", "Created Application");
         return Instrumentation.newApplication(TestApplication.class, context);
     }
 

@@ -26,7 +26,7 @@ public class MainActivity extends FragmentActivity {
 
     @Subscribe
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
-        Log.d(TAG, "Button Clicked");
+        Log.d("MAINTEST", "Button Clicked");
         startGPSService();
         startPebbleService();
     }
@@ -44,12 +44,13 @@ public class MainActivity extends FragmentActivity {
         ((PebbleBikeApplication) getApplication()).inject(this);
         _bus.register(this);
 
-        Log.d(TAG, "Bus registered");
+        Log.d("MAINTEST", "Bus registered");
         setContentView(R.layout.activity_main);
     }
 
     @Override
     protected void onDestroy() {
+        Log.d("MAINTEST", "Bus un-registered");
         _bus.unregister(this);
         super.onDestroy();
     }

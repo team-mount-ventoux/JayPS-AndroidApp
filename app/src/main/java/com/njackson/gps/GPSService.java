@@ -85,7 +85,7 @@ public class GPSService extends Service {
 
     @Override
     public void onDestroy (){
-        Log.d(TAG, "Stopped GPS Service");
+        Log.d("MAINTEST", "Stopped GPS Service");
         saveGPSStats();
         //removeServiceForeground();
 
@@ -93,7 +93,7 @@ public class GPSService extends Service {
     }
 
     private void handleCommand(Intent intent) {
-        Log.d(TAG, "Started GPS Service");
+        Log.d("MAINTEST", "Started GPS Service");
 
         _advancedLocation = new AdvancedLocation(getApplicationContext());
         _advancedLocation.debugTagPrefix = "PB-";
@@ -117,7 +117,7 @@ public class GPSService extends Service {
 
     // load the saved state
     private void loadGPSStats() {
-        Log.d(TAG, "loadGPSStats()");
+        Log.d("MAINTEST", "loadGPSStats()");
 
         _advancedLocation.setDistance(_sharedPreferences.getFloat("GPS_DISTANCE",0.0f));
         _advancedLocation.setElapsedTime(_sharedPreferences.getLong("GPS_ELAPSEDTIME", 0));

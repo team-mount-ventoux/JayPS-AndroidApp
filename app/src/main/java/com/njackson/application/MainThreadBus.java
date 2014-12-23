@@ -2,6 +2,7 @@ package com.njackson.application;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import com.squareup.otto.Bus;
 
@@ -21,6 +22,7 @@ public class MainThreadBus extends Bus {
 
     @Override
     public void register(Object obj) {
+        Log.d("MAINTEST","Registered: " + this.hashCode() + " " + obj.getClass().getName());
         mBus.register(obj);
     }
 
@@ -31,6 +33,7 @@ public class MainThreadBus extends Bus {
 
     @Override
     public void post(final Object event) {
+        Log.d("MAINTEST", "POSTMESSAGE: " + this.hashCode() + " " + event.getClass().getName());
         if (Looper.myLooper() == Looper.getMainLooper()) {
             mBus.post(event);
         } else {
