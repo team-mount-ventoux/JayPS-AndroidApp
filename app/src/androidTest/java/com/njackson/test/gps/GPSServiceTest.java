@@ -20,6 +20,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.mockito.ArgumentCaptor;
+import org.mockito.verification.Timeout;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +40,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -182,8 +184,8 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
 
         _bus.post(new ResetGPSState());
 
-        verify(_mockEditor, times(1)).putFloat("GPS_DISTANCE", 0.0f);
-        verify(_mockEditor, times(1)).commit();
+        verify(_mockEditor, timeout(200).times(1)).putFloat("GPS_DISTANCE", 0.0f);
+        verify(_mockEditor,timeout(200).times(1)).commit();
     }
 
     @SmallTest
@@ -214,8 +216,8 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         int refreshInterval = 200;
         _bus.post(new ChangeRefreshInterval(refreshInterval));
 
-        verify(_mockLocationManager, times(1)).removeUpdates((LocationListener) anyObject());
-        verify(_mockLocationManager, times(1)).requestLocationUpdates(
+        verify(_mockLocationManager, timeout(200).times(1)).removeUpdates((LocationListener) anyObject());
+        verify(_mockLocationManager, timeout(200).times(1)).requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
                 refreshInterval,
                 2,
