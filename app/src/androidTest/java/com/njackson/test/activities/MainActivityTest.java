@@ -19,6 +19,7 @@ import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.gps.GPSService;
 import com.njackson.test.application.TestApplication;
+import com.njackson.test.testUtils.Services;
 import com.njackson.virtualpebble.IMessageManager;
 import com.njackson.virtualpebble.MessageManager;
 import com.njackson.virtualpebble.PebbleService;
@@ -116,18 +117,18 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         Log.d("MAINTEST", "Started GPS Test");
         _bus.post(new StartButtonTouchedEvent());
 
-        boolean serviceStarted = waitForServiceToStart(GPSService.class, 20000);
+        boolean serviceStarted = Services.waitForServiceToStart(GPSService.class, _activity, 20000);
         assertTrue("GPSService should have been started", serviceStarted);
         Log.d("MAINTEST", "Finished GPS Test");
     }
 
     @SmallTest
     public void testRespondsToStopButtonTouchedEventStopsGPS() throws Exception {
-        startServiceAndWaitForReady(GPSService.class);
+        Services.startServiceAndWaitForReady(GPSService.class, _activity);
 
         _bus.post(new StopButtonTouchedEvent());
 
-        boolean serviceStopped = waitForServiceToStop(GPSService.class, 20000);
+        boolean serviceStopped = Services.waitForServiceToStop(GPSService.class, _activity, 20000);
         assertTrue ("GPSService should have been stopped", serviceStopped);
     }
 
@@ -135,60 +136,17 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void testRespondsToStartButtonTouchedEventStartsPebbleBikeService() throws Exception {
         _bus.post(new StartButtonTouchedEvent());
 
-        boolean serviceStarted = waitForServiceToStart(PebbleService.class, 20000);
+        boolean serviceStarted = Services.waitForServiceToStart(PebbleService.class, _activity, 20000);
         assertTrue ("PebbleBikeService should have been started", serviceStarted);
     }
 
     @SmallTest
     public void testRespondsToStopButtonTouchedEventStopsPebbleBikeService() throws Exception {
-        startServiceAndWaitForReady(PebbleService.class);
+        Services.startServiceAndWaitForReady(PebbleService.class, _activity);
 
         _bus.post(new StopButtonTouchedEvent());
 
-        boolean serviceStopped = waitForServiceToStop(PebbleService.class, 20000);
+        boolean serviceStopped = Services.waitForServiceToStop(PebbleService.class, _activity, 20000);
         assertTrue ("PebbleBikeService should have been stopped", serviceStopped);
-    }
-
-    private boolean waitForServiceToStart(Class serviceClass, int timeout) throws Exception {
-        int timer = 0;
-        while(timer < timeout) {
-            if(serviceRunning(serviceClass)) {
-                return true;
-            }
-
-            Thread.sleep(100);
-            timer += 100;
-        }
-        Log.d("MAINTEST", "Timeout waiting for service: " + serviceClass.getName());
-        throw new Exception("Timeout waiting for Service to Start");
-    }
-
-    private void startServiceAndWaitForReady(Class clazz) throws Exception {
-        _activity.startService(new Intent(_activity,clazz));
-        boolean serviceStarted = waitForServiceToStart(clazz, 20000);
-    }
-
-    private boolean waitForServiceToStop(Class serviceClass, int timeout) throws Exception {
-        int timer = 0;
-        while(timer < timeout) {
-            if(!serviceRunning(serviceClass)) {
-                return true;
-            }
-
-            Thread.sleep(100);
-            timer += 100;
-        }
-
-        throw new Exception("Timeout waiting for Service to Stop");
-    }
-
-    private boolean serviceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) _activity.getSystemService(_activity.getApplicationContext().ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 }

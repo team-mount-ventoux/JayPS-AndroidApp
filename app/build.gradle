@@ -37,4 +37,5 @@ dependencies {
     compile 'com.squareup.dagger:dagger-compiler:1.2.2'
     androidTestCompile 'com.google.dexmaker:dexmaker:1.1+'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.1+'
+    androidTestCompile 'org.threadly:threadly:3.3.0'
 }

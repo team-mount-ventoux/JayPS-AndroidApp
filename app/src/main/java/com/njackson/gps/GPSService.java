@@ -106,6 +106,7 @@ public class GPSService extends Service {
         // check to see if GPS is enabled
         if(checkGPSEnabled(_locationMgr)) {
             requestLocationUpdates(_refresh_interval);
+            _bus.post(new CurrentState(CurrentState.State.STARTED));
         } else {
             _bus.post(new CurrentState(CurrentState.State.DISABLED)); // GPS DISABLED
         }
@@ -119,7 +120,7 @@ public class GPSService extends Service {
     private void loadGPSStats() {
         Log.d("MAINTEST", "loadGPSStats()");
 
-        _advancedLocation.setDistance(_sharedPreferences.getFloat("GPS_DISTANCE",0.0f));
+        _advancedLocation.setDistance(_sharedPreferences.getFloat("GPS_DISTANCE", 0.0f));
         _advancedLocation.setElapsedTime(_sharedPreferences.getLong("GPS_ELAPSEDTIME", 0));
 
         try {
