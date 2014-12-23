@@ -8,6 +8,7 @@ import android.os.IBinder;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.application.modules.PebbleBikeApplication;
 import com.njackson.events.GPSService.NewLocation;
+import com.njackson.events.PebbleService.CurrentState;
 import com.njackson.utils.LocationEventConverter;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -44,7 +45,10 @@ public class PebbleService extends Service {
 
     private void handleIntent(Intent intent) {
         _messageManager.setContext(getApplicationContext());
-        new Thread(_messageManager).start();
+        _messageThread = new Thread(_messageManager);
+        _messageThread.start();
+
+        _bus.post(new CurrentState(CurrentState.State.STARTED));
     }
 
     @Subscribe

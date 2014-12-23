@@ -30,16 +30,12 @@ import dagger.Provides;
 public class PebbleBikeModule {
     // TODO put your application-specific providers here!
 
-    @Provides @Singleton Bus providesBus() {
-        return new MainThreadBus(new Bus(ThreadEnforcer.ANY));
-    }
+    @Provides @Singleton Bus providesBus() { return new MainThreadBus(new Bus(ThreadEnforcer.ANY)); }
 
     @Provides @Singleton IAnalytics providesAnalytics() {
         return new Parse();
     }
 
-    @Provides @Singleton IInstallWatchFace providesWatchFaceInstall() {
-        return new InstallWatchFace();
-    }
+    @Provides @Singleton IInstallWatchFace providesWatchFaceInstall() { return new InstallWatchFace(); }
 
 }
