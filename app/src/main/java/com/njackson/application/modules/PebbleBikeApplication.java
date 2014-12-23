@@ -3,6 +3,9 @@ package com.njackson.application.modules;
 import android.app.Application;
 import android.util.Log;
 
+import com.parse.Parse;
+import com.parse.ParseCrashReporting;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,6 +20,9 @@ public class PebbleBikeApplication extends Application {
 
     @Override public void onCreate() {
         super.onCreate();
+
+        ParseCrashReporting.enable(this);
+        Parse.initialize(this, "NIwEkYlaiestozg1sel0U9cDQk0AR5qLi8sSouxn", "5FzfXeSMyWnaXmy41zVzatF1dwdjLfP11gtLi5jf");
     }
 
     protected List<Object> getModules() {

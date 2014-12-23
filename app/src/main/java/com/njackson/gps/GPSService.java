@@ -152,7 +152,6 @@ public class GPSService extends Service {
         // reninit all properties
         _advancedLocation = new AdvancedLocation(getApplicationContext());
         _advancedLocation.debugTagPrefix = "PB-";
-        //_advancedLocation.debugLevel = MainActivity.debug ? 2 : 0;
 
         loadGPSStats();
     }

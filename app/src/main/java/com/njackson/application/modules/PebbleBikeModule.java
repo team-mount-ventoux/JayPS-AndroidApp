@@ -4,6 +4,8 @@ package com.njackson.application.modules;
  * Created by server on 30/03/2014.
  */
 import com.njackson.activities.MainActivity;
+import com.njackson.analytics.IAnalytics;
+import com.njackson.analytics.Parse;
 import com.njackson.application.MainThreadBus;
 import com.njackson.fragments.AltitudeFragment;
 import com.njackson.fragments.SpeedFragment;
@@ -28,5 +30,9 @@ public class PebbleBikeModule {
     @Provides @Singleton Bus providesBus() {
         return new MainThreadBus(new Bus(ThreadEnforcer.ANY));
     }
+
+    @Provides @Singleton IAnalytics providesAnalytics() {
+        return new Parse();
+    };
 
 }

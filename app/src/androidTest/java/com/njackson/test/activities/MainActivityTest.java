@@ -12,6 +12,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
 
 import com.njackson.activities.MainActivity;
+import com.njackson.analytics.IAnalytics;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.application.modules.PebbleServiceModule;
 import com.njackson.events.GPSService.ResetGPSState;
@@ -40,6 +41,7 @@ import dagger.Provides;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -50,6 +52,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @Inject Bus _bus;
     @Inject SharedPreferences _mockPreferences;
+    @Inject IAnalytics _mockAnalytics;
 
     private MainActivity _activity;
     private TestApplication _app;
@@ -75,6 +78,10 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         @Provides
         public IMessageManager providesMessageManager() { return mock(IMessageManager.class); }
+
+        @Provides
+        @Singleton
+        public IAnalytics providesAnalytics() { return mock(IAnalytics.class); }
     }
 
     private ResetGPSState _stateEvent;
@@ -103,13 +110,17 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         setupMocks();
 
         _activity = getActivity();
-        //getInstrumentation().wait(1000);
         Log.d("MAINTEST", "Setup Complete");
     }
 
     private void setupMocks() {
         _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
+    }
+
+    @SmallTest
+    public void testSendsTrackAppOpenedAnalyticsOnCreate() {
+        verify(_mockAnalytics,times(1)).trackAppOpened(any(Intent.class));
     }
 
     @SmallTest

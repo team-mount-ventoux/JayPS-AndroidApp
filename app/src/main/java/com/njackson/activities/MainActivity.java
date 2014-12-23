@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.njackson.R;
+import com.njackson.analytics.IAnalytics;
 import com.njackson.application.SettingsActivity;
 import com.njackson.application.modules.PebbleBikeApplication;
 import com.njackson.events.UI.StartButtonTouchedEvent;
@@ -23,6 +24,7 @@ public class MainActivity extends FragmentActivity {
 
     private static final String TAG = "MainActivity";
     @Inject Bus _bus;
+    @Inject IAnalytics _analytics;
 
     @Subscribe
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
@@ -46,6 +48,8 @@ public class MainActivity extends FragmentActivity {
 
         Log.d("MAINTEST", "Bus registered");
         setContentView(R.layout.activity_main);
+
+        _analytics.trackAppOpened(getIntent());
     }
 
     @Override
