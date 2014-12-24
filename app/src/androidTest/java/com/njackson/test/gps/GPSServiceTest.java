@@ -3,6 +3,9 @@ package com.njackson.test.gps;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,6 +18,7 @@ import com.njackson.events.GPSService.ChangeRefreshInterval;
 import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.GPSService.CurrentState;
 import com.njackson.events.GPSService.NewLocation;
+import com.njackson.gps.GPSSensorEventListener;
 import com.njackson.gps.GPSService;
 import com.njackson.test.application.TestApplication;
 import com.squareup.otto.Bus;
@@ -35,6 +39,7 @@ import dagger.Provides;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyFloat;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
@@ -53,6 +58,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
 
     @Inject Bus _bus = new Bus();
     @Inject LocationManager _mockLocationManager;
+    @Inject SensorManager _mockSensorManager;
     @Inject SharedPreferences _mockPreferences;
 
     private GPSService _service;
@@ -79,6 +85,10 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         LocationManager provideLocationManager() {
             return mock(LocationManager.class);
         }
+
+        @Provides
+        @Singleton
+        SensorManager provideSensorManager() { return mock(SensorManager.class); }
 
         @Provides
         @Singleton
@@ -238,6 +248,41 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
     public void testSavesStateOnDestroy() throws Exception {
         startService();
         _service.onDestroy();
+
         verify(_mockEditor, times(1)).commit();
+    }
+
+    @SmallTest
+    public void testRegistersNmeaListenerOnCreate() throws Exception {
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
+
+        verify(_mockLocationManager,timeout(2000).times(1)).addNmeaListener(any(GpsStatus.NmeaListener.class));
+    }
+
+    @SmallTest
+    public void testRemovesNmeaListenerOnDestroy() throws Exception {
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
+        _service.onDestroy();
+
+        verify(_mockLocationManager,timeout(2000).times(1)).removeNmeaListener(any(GpsStatus.NmeaListener.class));
+    }
+
+    @SmallTest
+    public void testRegistersSensorOnCreate() throws Exception {
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
+
+        verify(_mockSensorManager,timeout(2000).times(1)).registerListener(any(GPSSensorEventListener.class),any(Sensor.class),anyInt());
+    }
+
+    @SmallTest
+    public void testRemovesSensorOnDestroy() throws Exception {
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
+        _service.onDestroy();
+
+        verify(_mockSensorManager,timeout(2000).times(1)).unregisterListener(any(GPSSensorEventListener.class));
     }
 }

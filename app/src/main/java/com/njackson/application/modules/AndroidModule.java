@@ -2,6 +2,7 @@ package com.njackson.application.modules;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 import android.location.LocationManager;
 
 import com.njackson.gps.GPSService;
@@ -12,6 +13,7 @@ import dagger.Module;
 import dagger.Provides;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static android.content.Context.SENSOR_SERVICE;
 
 /**
  * Created by server on 30/03/2014.
@@ -35,6 +37,10 @@ public class AndroidModule {
 
     @Provides @Singleton LocationManager provideLocationManager() {
         return (LocationManager) application.getSystemService(LOCATION_SERVICE);
+    }
+
+    @Provides @Singleton SensorManager provideSensorManager() {
+        return (SensorManager) application.getSystemService(SENSOR_SERVICE);
     }
 
     @Provides @Singleton SharedPreferences provideSharedPreferences() {

@@ -28,6 +28,8 @@ import com.njackson.events.GPSService.NewLocation;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.concurrent.Callable;
+
 import javax.inject.Inject;
 
 import fr.jayps.android.AdvancedLocation;
@@ -44,11 +46,16 @@ public class GPSService extends Service {
     private static final String TAG = "PB-GPSService";
 
     @Inject LocationManager _locationMgr;
+    @Inject SensorManager _sensorManager;
+
     @Inject SharedPreferences _sharedPreferences;
     @Inject Bus _bus;
 
-    Location firstLocation = null;
+    //Location firstLocation = null;
+
     private AdvancedLocation _advancedLocation;
+    private ServiceNmeaListener _nmeaListener;
+    private GPSSensorEventListener _sensorListener;
 
     private int _refresh_interval = 1000;
     private boolean _gpsStarted = false;
@@ -106,6 +113,9 @@ public class GPSService extends Service {
         // check to see if GPS is enabled
         if(checkGPSEnabled(_locationMgr)) {
             requestLocationUpdates(_refresh_interval);
+            registerNmeaListener();
+            registerSensorListener();
+
             _bus.post(new CurrentState(CurrentState.State.STARTED));
         } else {
             _bus.post(new CurrentState(CurrentState.State.DISABLED)); // GPS DISABLED
@@ -128,7 +138,6 @@ public class GPSService extends Service {
         } catch (ClassCastException e) {
             _advancedLocation.setAscent(0.0);
         }
-
     }
 
     // save the state
@@ -157,7 +166,6 @@ public class GPSService extends Service {
     }
 
     private void requestLocationUpdates(int refresh_interval) {
-
         _refresh_interval = refresh_interval;
 
         if (_gpsStarted) {
@@ -168,9 +176,27 @@ public class GPSService extends Service {
         _gpsStarted = true;
     }
 
+    private void registerNmeaListener() {
+        _nmeaListener = new ServiceNmeaListener(_advancedLocation);
+        _locationMgr.addNmeaListener(_nmeaListener);
+    }
+
+    private void registerSensorListener() {
+        _sensorListener = new GPSSensorEventListener(_advancedLocation,_sensorManager,new Callable() {
+            @Override
+            public Object call() throws Exception {
+                broadcastLocation();
+                return null;
+            }
+        });
+
+        _sensorManager.registerListener(_sensorListener,_sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
     private void stopLocationUpdates() {
         _locationMgr.removeUpdates(_locationListener);
-        _locationMgr.removeNmeaListener(mNmeaListener);
+        _locationMgr.removeNmeaListener(_nmeaListener);
+        _sensorManager.unregisterListener(_sensorListener);
     }
 
     private void changeRefreshInterval(int refresh_interval) {
@@ -200,48 +226,6 @@ public class GPSService extends Service {
 
         }
 
-    };
-
-    NmeaListener mNmeaListener = new NmeaListener() {
-        @Override
-        public void onNmeaReceived(long timestamp, String nmea) {
-            if (nmea.startsWith("$GPGGA")) {
-
-                String[] strValues = nmea.split(",");
-
-                try {
-                    // Height of geoid above WGS84 ellipsoid
-                    double geoid_height = Double.parseDouble(strValues[11]);
-                    _advancedLocation.setGeoidHeight(geoid_height);
-                    _locationMgr.removeNmeaListener(mNmeaListener);
-                } catch (Exception e) {
-                }
-            }
-        }
-    };
-
-    private SensorEventListener mSensorListener = new SensorEventListener() {
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-
-            float pressure_value = 0.0f;
-            double altitude = 0.0f;
-
-            // we register to TYPE_PRESSURE, so we don't really need this test
-            if( Sensor.TYPE_PRESSURE == event.sensor.getType()) {
-                pressure_value = event.values[0];
-                altitude = SensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure_value);
-                _advancedLocation.onAltitudeChanged(altitude);
-
-                broadcastLocation();
-            }
-        }
     };
 
     private void broadcastLocation() {

@@ -24,6 +24,12 @@ public class PebbleService extends Service {
     private final String TAG = "PB-VirtualPebble";
     private Thread _messageThread;
 
+    @Subscribe
+    public void onNewLocationEvent(NewLocation newLocation) {
+        PebbleDictionary dictionary = LocationEventConverter.convert(newLocation, false, false, false, 1000, 0);
+        sendDataToPebble(dictionary);
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleIntent(intent);
@@ -49,12 +55,6 @@ public class PebbleService extends Service {
         _messageThread.start();
 
         _bus.post(new CurrentState(CurrentState.State.STARTED));
-    }
-
-    @Subscribe
-    public void onNewLocationEvent(NewLocation newLocation) {
-        PebbleDictionary dictionary = LocationEventConverter.convert(newLocation, false, false, false, 1000, 0);
-        sendDataToPebble(dictionary);
     }
 
     private void sendDataToPebble(PebbleDictionary data) {
