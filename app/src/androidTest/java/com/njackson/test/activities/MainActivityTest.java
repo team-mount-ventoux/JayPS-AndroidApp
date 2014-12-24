@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.ActivityUnitTestCase;
@@ -82,6 +83,10 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         @Provides
         @Singleton
         public IAnalytics providesAnalytics() { return mock(IAnalytics.class); }
+
+        @Provides
+        @Singleton
+        SensorManager provideSensorManager() { return mock(SensorManager.class); }
     }
 
     private ResetGPSState _stateEvent;
