@@ -1,0 +1,75 @@
+package com.njackson.test.utils.pebble;
+
+import android.content.ActivityNotFoundException;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.test.AndroidTestCase;
+import android.test.suitebuilder.annotation.SmallTest;
+import android.widget.Toast;
+
+import com.njackson.utils.IMessageMaker;
+import com.njackson.utils.pebble.InstallWatchFace;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+/**
+ * Created by njackson on 24/12/14.
+ */
+public class InstallWatchFaceTest extends AndroidTestCase {
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
+    }
+
+    @SmallTest
+    public void testGetDownloadUrlReturnsValidUri() {
+        InstallWatchFace _install = new InstallWatchFace();
+        Uri uri = _install.getDownloadUrl();
+
+        assertEquals(uri.getHost(),"dl.pebblebike.com");
+    }
+
+    @SmallTest
+    public void testCreateIntentReturnsValidIntent() {
+        InstallWatchFace _install = new InstallWatchFace();
+        Intent intent = _install.createIntent();
+
+        assertEquals(intent.getComponent().getClassName(),"com.getpebble.android.ui.UpdateActivity");
+        assertEquals(intent.getComponent().getPackageName(),"com.getpebble.android");
+    }
+
+    @SmallTest
+    public void testExecuteWhenApplicationInstalledStartsActivity() {
+        Context mockContext = mock(Context.class);
+
+        InstallWatchFace _install = new InstallWatchFace();
+        _install.execute(mockContext, null);
+
+        verify(mockContext,times(1)).startActivity(any(Intent.class));
+    }
+
+    @SmallTest
+    public void testExecuteWhenApplicationNotInstalledCreatesToast() {
+        Context mockContext = mock(Context.class);
+        IMessageMaker mockToast = mock(IMessageMaker.class);
+
+        doThrow(new ActivityNotFoundException()).when(mockContext).startActivity(any(Intent.class));
+
+        InstallWatchFace _install = new InstallWatchFace();
+        _install.execute(mockContext, mockToast);
+
+        verify(mockToast, times(1)).showMessage(eq(mockContext), anyString());
+    }
+
+}
+

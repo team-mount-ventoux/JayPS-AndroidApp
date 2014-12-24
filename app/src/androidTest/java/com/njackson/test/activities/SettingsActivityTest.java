@@ -10,6 +10,7 @@ import com.njackson.application.SettingsActivity;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.IInstallWatchFace;
+import com.njackson.utils.IMessageMaker;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -82,6 +83,6 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         Preference.OnPreferenceClickListener onPreferenceClickListener = _installPreference.getOnPreferenceClickListener();
         boolean b = onPreferenceClickListener.onPreferenceClick(new Preference(_targetContext));
 
-        verify(_watchFaceMock, times(1)).execute(any(Context.class));
+        verify(_watchFaceMock, times(1)).execute(any(Context.class), any(IMessageMaker.class));
     }
 }

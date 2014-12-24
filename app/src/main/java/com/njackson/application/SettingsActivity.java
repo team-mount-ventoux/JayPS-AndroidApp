@@ -4,10 +4,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.widget.Toast;
 
 import com.njackson.R;
 import com.njackson.application.modules.PebbleBikeApplication;
 import com.njackson.utils.IInstallWatchFace;
+import com.njackson.utils.ToastMessageMaker;
 import com.njackson.utils.pebble.InstallWatchFace;
 
 import javax.inject.Inject;
@@ -31,7 +33,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         installPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                _installWatchFace.execute(getApplicationContext());
+                _installWatchFace.execute(getApplicationContext(), new ToastMessageMaker());
                 return true;
             }
         });
