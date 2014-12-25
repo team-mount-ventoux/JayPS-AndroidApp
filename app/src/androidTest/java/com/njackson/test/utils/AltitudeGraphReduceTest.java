@@ -5,6 +5,10 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.utils.AltitudeGraphReduce;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * This is a simple framework for a test of an Application.  See
  * {@link android.test.ApplicationTestCase ApplicationTestCase} for more information on
@@ -93,6 +97,19 @@ public class AltitudeGraphReduceTest extends AndroidTestCase {
 
         int[] graphData = _graphReduce.getGraphData();
         assertTrue("Graph contains 14 bins", graphData.length == 14);
+    }
 
+    @SmallTest
+    public void testResetData() {
+        ArrayList<Integer> cache = new ArrayList<>(Arrays.asList(1,2,3));
+        _graphReduce.setCache(cache);
+        _graphReduce.setMin(1000);
+        _graphReduce.setMax(2000);
+
+        _graphReduce.resetData();
+
+        assertEquals(_graphReduce.getMax(),0);
+        assertEquals(_graphReduce.getMin(),99999);
+        assertEquals(_graphReduce.getCache().size(),0);
     }
 }

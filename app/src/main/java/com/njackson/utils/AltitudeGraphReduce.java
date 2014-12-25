@@ -30,9 +30,15 @@ public class AltitudeGraphReduce {
     public int getMax() {
         return _altitudeMax;
     }
+    public void setMax(int value) {
+         _altitudeMax = value;
+    }
 
     public int getMin() {
         return _altitudeMin;
+    }
+    public void setMin(int value) {
+        _altitudeMin = value;
     }
 
     public ArrayList<Integer> getCache() {
