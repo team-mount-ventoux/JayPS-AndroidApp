@@ -3,6 +3,7 @@ package com.njackson.test.fragments;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.TextView;
 
 import com.njackson.R;
@@ -106,7 +107,7 @@ public class SpeedFragmentTest extends FragmentInstrumentTestCase2 {
         _mock = Mockito.mock(SharedPreferences.class);
     }
 
-    @MediumTest
+    @SmallTest
     public void testElementsExist() {
         assertNotNull(_speedLabel);
         assertNotNull(_speedText);
@@ -124,28 +125,54 @@ public class SpeedFragmentTest extends FragmentInstrumentTestCase2 {
         assertNotNull(_avgspeedUnitsLabel);
     }
 
-    @MediumTest
+    @SmallTest
     public void testRespondsToNewLocationEvent() throws InterruptedException {
-
         final NewLocation event = new NewLocation();
         event.setSpeed(20.0f);
         event.setDistance(100.0f);
         event.setAvgSpeed(25.4f);
         event.setElapsedTimeSeconds((3600 + 240 + 34)); // "1:04:34"
 
-        _activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                _bus.post(event);
-            }
-        });
-
-        Thread.sleep(100);
+        _bus.post(event);
+        Thread.sleep(200);
 
         assertEquals("20.0", _speedText.getText());
         assertEquals("100.0", _distanceText.getText());
         assertEquals("25.4", _avgspeedText.getText());
         assertEquals("1:04:34", _timeText.getText());
+    }
+
+    @SmallTest
+    public void testFormatsDistanceTo1DP() throws InterruptedException {
+        final NewLocation event = new NewLocation();
+        event.setDistance(24.1234f);
+
+        _bus.post(event);
+        Thread.sleep(200);
+
+        assertEquals("24.1", _distanceText.getText());
+    }
+
+    @SmallTest
+    public void testFormatsAvgSpeedTo1DP() throws InterruptedException {
+        final NewLocation event = new NewLocation();
+        event.setAvgSpeed(29.1234f);
+
+        _bus.post(event);
+        Thread.sleep(200);
+
+        assertEquals("29.1", _avgspeedText.getText());
+    }
+
+    @SmallTest
+    public void testFormatsSpeedTo1DP() throws InterruptedException {
+        final NewLocation event = new NewLocation();
+        event.setSpeed(20.1234f);
+
+        _bus.post(event);
+        Thread.sleep(200);
+
+        assertEquals("20.1", _speedText.getText());
     }
 
 }

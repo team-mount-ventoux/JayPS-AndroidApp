@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.njackson.R;
 import com.njackson.events.GPSService.NewLocation;
+import com.njackson.utils.NumberConverter;
 import com.squareup.otto.Subscribe;
 
 public class SpeedFragment extends BaseFragment {
@@ -27,14 +28,16 @@ public class SpeedFragment extends BaseFragment {
 
     @Subscribe
     public void onNewLocation(NewLocation event) {
+        NumberConverter converter = new NumberConverter();
+
         TextView speedText = (TextView)getActivity().findViewById(R.id.speed_text);
-        speedText.setText(Float.toString(event.getSpeed()));
+        speedText.setText(converter.converFloatToString(event.getSpeed(),1));
 
         TextView avgSpeed = (TextView)getActivity().findViewById(R.id.avgspeed_text);
-        avgSpeed.setText(Float.toString(event.getAvgSpeed()));
+        avgSpeed.setText(converter.converFloatToString(event.getAvgSpeed(),1));
 
         TextView distance = (TextView)getActivity().findViewById(R.id.distance_text);
-        distance.setText(Float.toString(event.getDistance()));
+        distance.setText(converter.converFloatToString(event.getDistance(),1));
 
         TextView time = (TextView)getActivity().findViewById(R.id.time_text);
         String timeText = DateUtils.formatElapsedTime(event.getElapsedTimeSeconds());
