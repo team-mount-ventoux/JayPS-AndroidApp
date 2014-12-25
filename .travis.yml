@@ -1,22 +1,25 @@
 sudo: false
+
 language: android
+
 android:
   components:
-    - build-tools-21.1.2
-    - android-21
-    - sys-img-armeabi-v7a-android-21
-    - extra-google-google_play_services
-    - extra-android-support
-    - extra-android-m2repository
-    - extra-google-m2repository
+  - build-tools-21.1.2
+  - android-21
+  - sys-img-armeabi-v7a-android-21
+  - extra-google-google_play_services
+  - extra-android-support
+  - extra-android-m2repository
+  - extra-google-m2repository
+
 licenses:
-    - android-sdk-license-5be876d5
+  - android-sdk-license-5be876d5
 
 before_script:
-    - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
-    - emulator -avd test -no-skin -no-audio -no-window &
-    - ./gradlew assemble
-    - android-wait-for-emulator
+  - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
+  - emulator -avd test -no-skin -no-audio -no-window &
+  - ./gradlew assemble
+  - android-wait-for-emulator
 
 script:
   - adb logcat -c
@@ -31,3 +34,13 @@ after_success:
 
 after_failure:
   - adb logcat -d E
+
+deploy:
+  provider: releases
+  api-key:
+    secure: bkWePIKomwz1uXrhg9Tqj9Ch7DS627K39eFTjNuwtn01kX7pEcxwt8wnSwlAhZP1M/NwTMxHtepc6H5cUKRAWOITuiRA6YVHYgZk6kcET2gsee4eGfWQhSz95/ANmQz1lr2EitHLp+nwAK2cmfiwA+eq3PhViYbrE9IkIx0+38o=
+  file: ./app/build/outputs/apk/app-debug.apk
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
