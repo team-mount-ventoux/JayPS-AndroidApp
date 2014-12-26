@@ -78,8 +78,8 @@ public class LocationEventConverter {
         data[BYTE_DISTANCE1] = (byte) (((int) (Math.floor(100 * event.getDistance() * _distanceConversion) / 1)) % 256);
         data[BYTE_DISTANCE2] = (byte) (((int) (Math.floor(100 * event.getDistance() * _distanceConversion) / 1)) / 256);
 
-        data[BYTE_TIME1] = (byte) ((event.getTime() / 1000) % 256);
-        data[BYTE_TIME2] = (byte) ((event.getTime() / 1000) / 256);
+        data[BYTE_TIME1] = (byte) ((event.getElapsedTimeSeconds() / 1000) % 256);
+        data[BYTE_TIME2] = (byte) ((event.getElapsedTimeSeconds() / 1000) / 256);
 
         data[BYTE_ALTITUDE1] = (byte) ((event.getAltitude() * _altitudeConversion) % 256);
         data[BYTE_ALTITUDE2] = (byte) ((event.getAltitude() * _altitudeConversion) / 256);

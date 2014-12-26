@@ -241,7 +241,8 @@ public class GPSService extends Service {
         event.setAscentRate(3600f * _advancedLocation.getAscentRate()); // in m/h
         event.setSlope(100f * _advancedLocation.getSlope()); // in %
         event.setAccuracy(_advancedLocation.getAccuracy()); // m
-        event.setTime(_advancedLocation.getElapsedTime());
+        event.setTime(_advancedLocation.getTime());
+        event.setElapsedTimeSeconds(_advancedLocation.getElapsedTime());
         //event.setXpos(_advancedLocation.get);
         //event.setYpos(ypos);
         event.setBearing(_advancedLocation.getBearing());
