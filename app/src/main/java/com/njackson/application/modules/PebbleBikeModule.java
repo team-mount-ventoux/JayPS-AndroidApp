@@ -12,6 +12,7 @@ import com.njackson.fragments.AltitudeFragment;
 import com.njackson.fragments.SpeedFragment;
 import com.njackson.fragments.StartButtonFragment;
 import com.njackson.gps.GPSService;
+import com.njackson.live.LiveService;
 import com.njackson.utils.IInstallWatchFace;
 import com.njackson.utils.pebble.InstallWatchFace;
 import com.njackson.virtualpebble.PebbleService;
@@ -24,7 +25,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class},
+        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class, LiveService.class},
         library = true, complete = false
 )
 public class PebbleBikeModule {
