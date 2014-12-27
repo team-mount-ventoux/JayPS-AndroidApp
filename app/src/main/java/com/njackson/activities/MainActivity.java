@@ -76,8 +76,7 @@ public class MainActivity extends FragmentActivity {
         stopService(new Intent(this,PebbleService.class));
     }
 
-    private void startLiveService() {
-        startService(new Intent(this, LiveService.class)); }
+    private void startLiveService() { startService(new Intent(this, LiveService.class)); }
 
     private void stopLiveService() {
         stopService(new Intent(this,LiveService.class));
