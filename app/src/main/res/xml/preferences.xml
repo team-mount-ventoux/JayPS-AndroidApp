@@ -37,49 +37,54 @@
             android:defaultValue="false" />
 
     </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/PREF_LIVE_TRACKING_JAYPS_CATEGORIE_TITLE"
-        android:summary="@string/PREF_LIVE_TRACKING_JAYPS_CATEGORIE_SUMMARY"
-        >
-        <CheckBoxPreference
-            android:key="LIVE_TRACKING"
-            android:title="@string/PREF_LIVE_TRACKING_JAYPS_TITLE"
-            android:summary="@string/PREF_LIVE_TRACKING_JAYPS_SUMMARY"
-            android:defaultValue="false" />
-        <EditTextPreference
-            android:key="LIVE_TRACKING_LOGIN"
-            android:title="@string/PREF_LIVE_TRACKING_JAYPS_LOGIN_TITLE"
-            android:summary="@string/PREF_LIVE_TRACKING_JAYPS_LOGIN_SUMMARY"
-            />
-        <EditTextPreference
-            android:key="LIVE_TRACKING_PASSWORD"
-            android:title="@string/PREF_LIVE_TRACKING_JAYPS_PASSWORD_TITLE"
-            android:summary="@string/PREF_LIVE_TRACKING_JAYPS_PASSWORD_SUMMARY"
-            android:inputType="textPassword"
-            />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:title="@string/PREF_LIVE_TRACKING_MMT_CATEGORIE_TITLE"
-        android:summary="@string/PREF_LIVE_TRACKING_MMT_CATEGORIE_SUMMARY"
-        >
-        <CheckBoxPreference
-            android:key="LIVE_TRACKING_MMT"
-            android:title="@string/PREF_LIVE_TRACKING_MMT_TITLE"
-            android:summary="@string/PREF_LIVE_TRACKING_MMT_SUMMARY"
-            android:defaultValue="false" />
-        <EditTextPreference
-            android:key="LIVE_TRACKING_MMT_LOGIN"
-            android:title="@string/PREF_LIVE_TRACKING_MMT_LOGIN_TITLE"
-            android:summary="@string/PREF_LIVE_TRACKING_MMT_LOGIN_SUMMARY"
-            />
-        <EditTextPreference
-            android:key="LIVE_TRACKING_MMT_PASSWORD"
-            android:title="@string/PREF_LIVE_TRACKING_MMT_PASSWORD_TITLE"
-            android:summary="@string/PREF_LIVE_TRACKING_MMT_PASSWORD_SUMMARY"
-            android:inputType="textPassword"
-            />
-    </PreferenceCategory>
 
+    <PreferenceScreen
+        android:key="live_screen"
+        android:title="Live tracking"
+        android:persistent="false">
+        <PreferenceCategory
+            android:title="@string/PREF_LIVE_TRACKING_JAYPS_CATEGORIE_TITLE"
+            android:summary="@string/PREF_LIVE_TRACKING_JAYPS_CATEGORIE_SUMMARY"
+            >
+            <CheckBoxPreference
+                android:key="LIVE_TRACKING"
+                android:title="@string/PREF_LIVE_TRACKING_JAYPS_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_JAYPS_SUMMARY"
+                android:defaultValue="false" />
+            <EditTextPreference
+                android:key="LIVE_TRACKING_LOGIN"
+                android:title="@string/PREF_LIVE_TRACKING_JAYPS_LOGIN_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_JAYPS_LOGIN_SUMMARY"
+                />
+            <EditTextPreference
+                android:key="LIVE_TRACKING_PASSWORD"
+                android:title="@string/PREF_LIVE_TRACKING_JAYPS_PASSWORD_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_JAYPS_PASSWORD_SUMMARY"
+                android:inputType="textPassword"
+                />
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/PREF_LIVE_TRACKING_MMT_CATEGORIE_TITLE"
+            android:summary="@string/PREF_LIVE_TRACKING_MMT_CATEGORIE_SUMMARY"
+            >
+            <CheckBoxPreference
+                android:key="LIVE_TRACKING_MMT"
+                android:title="@string/PREF_LIVE_TRACKING_MMT_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_MMT_SUMMARY"
+                android:defaultValue="false" />
+            <EditTextPreference
+                android:key="LIVE_TRACKING_MMT_LOGIN"
+                android:title="@string/PREF_LIVE_TRACKING_MMT_LOGIN_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_MMT_LOGIN_SUMMARY"
+                />
+            <EditTextPreference
+                android:key="LIVE_TRACKING_MMT_PASSWORD"
+                android:title="@string/PREF_LIVE_TRACKING_MMT_PASSWORD_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_MMT_PASSWORD_SUMMARY"
+                android:inputType="textPassword"
+                />
+        </PreferenceCategory>
+    </PreferenceScreen>
     <PreferenceCategory
         android:title="OruxMaps Integration"
         >
