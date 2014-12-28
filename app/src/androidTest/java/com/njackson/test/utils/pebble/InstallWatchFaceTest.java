@@ -34,7 +34,7 @@ public class InstallWatchFaceTest extends AndroidTestCase {
     @SmallTest
     public void testGetDownloadUrlReturnsValidUri() {
         InstallWatchFace _install = new InstallWatchFace();
-        Uri uri = _install.getDownloadUrl();
+        Uri uri = _install.getDownloadUrl("21", "2.1.1");
 
         assertEquals(uri.getHost(),"dl.pebblebike.com");
     }
@@ -42,7 +42,7 @@ public class InstallWatchFaceTest extends AndroidTestCase {
     @SmallTest
     public void testCreateIntentReturnsValidIntent() {
         InstallWatchFace _install = new InstallWatchFace();
-        Intent intent = _install.createIntent();
+        Intent intent = _install.createIntent(null);
 
         assertEquals(intent.getComponent().getClassName(),"com.getpebble.android.ui.UpdateActivity");
         assertEquals(intent.getComponent().getPackageName(),"com.getpebble.android");
