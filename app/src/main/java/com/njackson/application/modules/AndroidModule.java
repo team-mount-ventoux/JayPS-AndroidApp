@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
 
+import com.njackson.application.SettingsActivity;
 import com.njackson.gps.GPSService;
 
 import javax.inject.Singleton;
@@ -18,7 +19,7 @@ import static android.content.Context.SENSOR_SERVICE;
 /**
  * Created by server on 30/03/2014.
  */
-@Module(library = true,complete=false,injects = {GPSService.class})
+@Module(library = true,complete=false,injects = {GPSService.class, SettingsActivity.class})
 public class AndroidModule {
     private final PebbleBikeApplication application;
 

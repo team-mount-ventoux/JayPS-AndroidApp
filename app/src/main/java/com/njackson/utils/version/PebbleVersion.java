@@ -1,39 +1,18 @@
-package com.njackson.utils;
+package com.njackson.utils.version;
 
 import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.util.Log;
 
 import com.getpebble.android.kit.PebbleKit;
 
 /**
- * Created by jay on 28/12/14.
+ * Created by njackson on 29/12/14.
  */
-public class Version {
-    private static final String TAG = "PB-Version";
+public class PebbleVersion implements IWatchFaceVersion{
 
-    public static String getVersionCode(Context context) {
-        if (context == null) {
-            return "";
-        }
+    private final String TAG = "PB-Version";
 
-        int versionCode;
-
-        // Get current version code and version name
-        try {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(
-                    context.getPackageName(), 0);
-
-            versionCode = packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            versionCode = 0;
-        }
-        Log.d(TAG, "versionCode:" + versionCode);
-        return String.format("%d", versionCode);
-    }
-
-    public static String getPebbleFirmwareVersion(Context context) {
+    public String getFirmwareVersion(Context context) {
         if (context == null) {
             return "";
         }
@@ -73,4 +52,5 @@ public class Version {
 
         return pebbleFwVersion;
     }
+
 }

@@ -4,23 +4,28 @@ import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.getpebble.android.kit.PebbleKit;
 import com.njackson.utils.IInstallWatchFace;
 import com.njackson.utils.IMessageMaker;
-import com.njackson.utils.Version;
+import com.njackson.utils.version.AndroidVersion;
+import com.njackson.utils.version.IAndroidVersion;
+import com.njackson.utils.version.IWatchFaceVersion;
 
 /**
  * Created by server on 28/06/2014.
  */
 public class InstallWatchFace implements IInstallWatchFace{
 
-    private static final String TAG = "PB-InstallWatchFace";
+    private final String TAG = "PB-InstallWatchFace";
+    private IAndroidVersion _androidVersion;
+    private IWatchFaceVersion _watchFaceVersion;
+
+    public InstallWatchFace(IAndroidVersion androidVersion, IWatchFaceVersion watchFaceVersion) {
+        _androidVersion = androidVersion;
+        _watchFaceVersion = watchFaceVersion;
+    }
 
     public void execute(Context context, IMessageMaker messageMaker) {
         try {
@@ -40,7 +45,7 @@ public class InstallWatchFace implements IInstallWatchFace{
     }
 
     public Intent createIntent(Context context) {
-        Uri uri = getDownloadUrl(Version.getVersionCode(context), Version.getPebbleFirmwareVersion(context));
+        Uri uri = getDownloadUrl(_androidVersion.getVersionCode(context), _watchFaceVersion.getFirmwareVersion(context));
 
         Intent startupIntent = new Intent();
         startupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -10,6 +10,8 @@ import android.widget.Toast;
 
 import com.njackson.utils.IMessageMaker;
 import com.njackson.utils.pebble.InstallWatchFace;
+import com.njackson.utils.version.IAndroidVersion;
+import com.njackson.utils.version.IWatchFaceVersion;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -25,15 +27,18 @@ import static org.mockito.Mockito.when;
  */
 public class InstallWatchFaceTest extends AndroidTestCase {
 
+    InstallWatchFace _install;
+
     @Override
     public void setUp() throws Exception {
         super.setUp();
         System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
+
+        _install = new InstallWatchFace(mock(IAndroidVersion.class), mock(IWatchFaceVersion.class));
     }
 
     @SmallTest
     public void testGetDownloadUrlReturnsValidUri() {
-        InstallWatchFace _install = new InstallWatchFace();
         Uri uri = _install.getDownloadUrl("21", "2.1.1");
 
         assertEquals(uri.getHost(),"dl.pebblebike.com");
@@ -41,7 +46,6 @@ public class InstallWatchFaceTest extends AndroidTestCase {
 
     @SmallTest
     public void testCreateIntentReturnsValidIntent() {
-        InstallWatchFace _install = new InstallWatchFace();
         Intent intent = _install.createIntent(null);
 
         assertEquals(intent.getComponent().getClassName(),"com.getpebble.android.ui.UpdateActivity");
@@ -52,7 +56,6 @@ public class InstallWatchFaceTest extends AndroidTestCase {
     public void testExecuteWhenApplicationInstalledStartsActivity() {
         Context mockContext = mock(Context.class);
 
-        InstallWatchFace _install = new InstallWatchFace();
         _install.execute(mockContext, null);
 
         verify(mockContext,times(1)).startActivity(any(Intent.class));
@@ -65,7 +68,6 @@ public class InstallWatchFaceTest extends AndroidTestCase {
 
         doThrow(new ActivityNotFoundException()).when(mockContext).startActivity(any(Intent.class));
 
-        InstallWatchFace _install = new InstallWatchFace();
         _install.execute(mockContext, mockToast);
 
         verify(mockToast, times(1)).showMessage(eq(mockContext), anyString());

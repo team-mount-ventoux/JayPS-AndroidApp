@@ -2,6 +2,7 @@ package com.njackson.test.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.test.ActivityUnitTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
@@ -49,6 +50,12 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         IInstallWatchFace providesWatchFaceInstall() {
             return mock(IInstallWatchFace.class);
         }
+
+        @Provides
+        @Singleton
+        SharedPreferences provideSharedPreferences() {
+            return mock(SharedPreferences.class);
+        }
     }
 
     @Override
@@ -60,6 +67,8 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         app.inject(this);
         setApplication(app);
 
+        setupMocks();
+
         //setActivityInitialTouchMode(false);
         _targetContext = getInstrumentation().getTargetContext();
         Intent intent = new Intent(_targetContext, SettingsActivity.class);
@@ -70,6 +79,10 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
 
         _installPreference = _activity.findPreference("pref_install");
         assertNotNull(_installPreference);
+    }
+
+    private void setupMocks() {
+
     }
 
     @SmallTest
