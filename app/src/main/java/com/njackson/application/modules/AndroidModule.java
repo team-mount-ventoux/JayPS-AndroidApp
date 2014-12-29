@@ -45,6 +45,6 @@ public class AndroidModule {
     }
 
     @Provides @Singleton SharedPreferences provideSharedPreferences() {
-        return application.getSharedPreferences("default",1);
+        return application.getSharedPreferences("com.njackson_preferences", Context.MODE_PRIVATE);
     }
 }
