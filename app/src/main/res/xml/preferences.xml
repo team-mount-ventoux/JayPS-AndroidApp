@@ -1,14 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="INSTALL_WATCHFACE"
+        android:title="@string/PREF_INSTALL_WATCHFACE_SDK2"
+        android:summary="@string/PREF_INSTALL_WATCHFACE_SDK2_SUMMARY"
+        />
+    <Preference
+        android:key="RESET_DATA"
+        android:title="@string/PREF_RESET_DATA"
+        android:summary="@string/PREF_RESET_DATA_SUMMARY"
+        />
     <PreferenceCategory
-        android:key="pref_install_category"
-        android:title="@string/PREF_INSTALL_CATEGORY_TITLE"
+        android:title="@string/PREF_OPTIONS_CATEGORY_TITLE"
+        >
+        <ListPreference
+            android:key="UNITS_OF_MEASURE"
+            android:title="@string/PREF_UNITS_TITLE"
+            android:dialogTitle="@string/PREF_UNITS_DIALOG_TITLE"
+            android:entries="@array/PREF_UNITS_ENTRIES"
+            android:entryValues="@array/PREF_UNITS_ENTRY_VALUES"
+            android:defaultValue="@string/PREF_UNITS_DEFAULT" />
+
+        <ListPreference
+            android:key="REFRESH_INTERVAL"
+            android:title="@string/REFRESH_INTERVAL_TITLE"
+            android:dialogTitle="@string/REFRESH_INTERVAL_DIALOG_TITLE"
+            android:entries="@array/REFRESH_INTERVAL_ENTRIES"
+            android:entryValues="@array/REFRESH_INTERVAL_ENTRY_VALUES"
+            android:defaultValue="@string/REFRESH_INTERVAL_DEFAULT" />
+
+        <CheckBoxPreference
+            android:key="ACTIVITY_RECOGNITION"
+            android:title="@string/PREF_AUTOSTART_TITLE"
+            android:summary="@string/PREF_AUTOSTART_SUMMARY"
+            android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceScreen
+        android:key="live_screen"
+        android:title="Live tracking"
+        android:persistent="false">
+        <PreferenceCategory
+            android:title="@string/PREF_LIVE_TRACKING_JAYPS_CATEGORIE_TITLE"
+            android:summary="@string/PREF_LIVE_TRACKING_JAYPS_CATEGORIE_SUMMARY"
+            >
+            <CheckBoxPreference
+                android:key="LIVE_TRACKING"
+                android:title="@string/PREF_LIVE_TRACKING_JAYPS_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_JAYPS_SUMMARY"
+                android:defaultValue="false" />
+            <EditTextPreference
+                android:key="LIVE_TRACKING_LOGIN"
+                android:title="@string/PREF_LIVE_TRACKING_JAYPS_LOGIN_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_JAYPS_LOGIN_SUMMARY"
+                />
+            <EditTextPreference
+                android:key="LIVE_TRACKING_PASSWORD"
+                android:title="@string/PREF_LIVE_TRACKING_JAYPS_PASSWORD_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_JAYPS_PASSWORD_SUMMARY"
+                android:inputType="textPassword"
+                />
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/PREF_LIVE_TRACKING_MMT_CATEGORIE_TITLE"
+            android:summary="@string/PREF_LIVE_TRACKING_MMT_CATEGORIE_SUMMARY"
+            >
+            <CheckBoxPreference
+                android:key="LIVE_TRACKING_MMT"
+                android:title="@string/PREF_LIVE_TRACKING_MMT_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_MMT_SUMMARY"
+                android:defaultValue="false" />
+            <EditTextPreference
+                android:key="LIVE_TRACKING_MMT_LOGIN"
+                android:title="@string/PREF_LIVE_TRACKING_MMT_LOGIN_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_MMT_LOGIN_SUMMARY"
+                />
+            <EditTextPreference
+                android:key="LIVE_TRACKING_MMT_PASSWORD"
+                android:title="@string/PREF_LIVE_TRACKING_MMT_PASSWORD_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_MMT_PASSWORD_SUMMARY"
+                android:inputType="textPassword"
+                />
+        </PreferenceCategory>
+    </PreferenceScreen>
+    <PreferenceCategory
+        android:title="OruxMaps Integration"
+        >
+        <ListPreference
+            android:key="ORUXMAPS_AUTO"
+            android:title="@string/ORUXMAPS_AUTO_TITLE"
+            android:dialogTitle="@string/ORUXMAPS_AUTO_DIALOG_TITLE"
+            android:entries="@array/ORUXMAPS_AUTO_ENTRIES"
+            android:entryValues="@array/ORUXMAPS_AUTO_ENTRY_VALUES"
+            android:defaultValue="@string/ORUXMAPS_AUTO_DEFAULT" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Canvas Integration"
+        >
+        <ListPreference
+            android:key="CANVAS_MODE"
+            android:title="@string/CANVAS_MODE_TITLE"
+            android:dialogTitle="@string/CANVAS_MODE_DIALOG_TITLE"
+            android:entries="@array/CANVAS_MODE_ENTRIES"
+            android:entryValues="@array/CANVAS_MODE_ENTRY_VALUES"
+            android:defaultValue="@string/CANVAS_MODE_DEFAULT" />
+        <CheckBoxPreference
+            android:key="CANVAS_DISPLAY_UNITS"
+            android:title="@string/CANVAS_DISPLAY_UNITS_TITLE"
+            android:summary="@string/CANVAS_DISPLAY_UNITS_SUMMARY"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/PREF_HRM_CATEGORY_TITLE"
         >
         <Preference
-            android:key="pref_install"
-            android:title="@string/PREF_INSTALL_WATCHFACE_SDK2"
-            android:summary="@string/PREF_INSTALL_WATCHFACE_SDK2_SUMMARY"
+            android:key="PREF_HRM"
+            android:title="@string/PREF_HRM_TITLE"
+            android:summary=""
             />
+
     </PreferenceCategory>
+
+
+    <PreferenceCategory
+        android:title="@string/PREF_ABOUT_CATEGORY_TITLE"
+        >
+        <Preference
+            android:key="about"
+            android:title="@string/PREF_ABOUT_TITLE"
+            android:summary="@string/PREF_ABOUT_SUMMARY"
+            >
+            <intent android:action="android.intent.action.VIEW"
+                android:data="@string/PREF_ABOUT_URL" />
+        </Preference>
+        <Preference
+            android:key="uservoice"
+            android:title="@string/PREF_USERVOICE"
+            android:summary="@string/PREF_USERVOICE_SUMMARY"
+            >
+            <intent android:action="android.intent.action.VIEW"
+                android:data="@string/PREF_USERVOICE_URL" />
+        </Preference>
+        <Preference
+            android:key="twitter"
+            android:title="@string/PREF_TWITTER"
+            android:summary="@string/PREF_TWITTER_SUMMARY"
+            >
+            <intent android:action="android.intent.action.VIEW"
+                android:data="@string/PREF_TWITTER_URL" />
+        </Preference>
+        <CheckBoxPreference
+            android:key="PREF_DEBUG"
+            android:title="@string/PREF_DEBUG_TITLE"
+            android:summary="@string/PREF_DEBUG_SUMMARY"
+            android:defaultValue="false" />
+
+        <Preference
+            android:key="PREF_PRESSURE_INFO"
+            android:title="Altimeter Pressure sensor"
+            android:summary=""
+            />
+
+        <Preference
+            android:key="PREF_GEOID_HEIGHT_INFO"
+            android:title="Altitude correction (WGS84)"
+            android:summary=""
+            />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>

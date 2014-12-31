@@ -2,9 +2,11 @@ package com.njackson.application.modules;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
 
+import com.njackson.application.SettingsActivity;
 import com.njackson.gps.GPSService;
 
 import javax.inject.Singleton;
@@ -18,7 +20,7 @@ import static android.content.Context.SENSOR_SERVICE;
 /**
  * Created by server on 30/03/2014.
  */
-@Module(library = true,complete=false,injects = {GPSService.class})
+@Module(library = true,complete=false,injects = {GPSService.class, SettingsActivity.class})
 public class AndroidModule {
     private final PebbleBikeApplication application;
 
@@ -44,6 +46,6 @@ public class AndroidModule {
     }
 
     @Provides @Singleton SharedPreferences provideSharedPreferences() {
-        return application.getSharedPreferences("default",1);
+        return application.getSharedPreferences("com.njackson_preferences", Context.MODE_PRIVATE);
     }
 }

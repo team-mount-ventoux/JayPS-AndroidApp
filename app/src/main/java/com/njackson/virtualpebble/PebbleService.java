@@ -21,7 +21,7 @@ public class PebbleService extends Service {
     @Inject IMessageManager _messageManager;
     @Inject Bus _bus;
 
-    private final String TAG = "PB-VirtualPebble";
+    private final String TAG = "PB-PebbleService";
     private Thread _messageThread;
 
     @Subscribe

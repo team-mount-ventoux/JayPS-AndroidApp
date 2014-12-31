@@ -46,8 +46,9 @@ public class Services {
     public static boolean serviceRunning(Class<?> serviceClass, Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            //Log.d("SHIZ", service.service.getClassName());
+            //Log.d("SHIZ", service.service.getClassName() + " " + serviceClass.getName());
             if (serviceClass.getName().equals(service.service.getClassName())) {
+                //Log.d("SHIZ", "SERVICE RUNNING");
                 return true;
             }
         }

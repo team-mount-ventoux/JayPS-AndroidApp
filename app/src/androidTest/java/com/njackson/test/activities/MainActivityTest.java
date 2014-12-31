@@ -20,6 +20,8 @@ import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.gps.GPSService;
+import com.njackson.live.LiveService;
+import com.njackson.live.LiveTracking;
 import com.njackson.test.application.TestApplication;
 import com.njackson.test.testUtils.Services;
 import com.njackson.virtualpebble.IMessageManager;
@@ -164,5 +166,23 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         boolean serviceStopped = Services.waitForServiceToStop(PebbleService.class, _activity, 20000);
         assertTrue ("PebbleBikeService should have been stopped", serviceStopped);
+    }
+
+    @SmallTest
+    public void testRespondsToStartButtonTouchedEventStartsLiveTrackingService() throws Exception {
+        _bus.post(new StartButtonTouchedEvent());
+
+        boolean serviceStarted = Services.waitForServiceToStart(LiveService.class, _activity, 20000);
+        assertTrue ("LiveTrackingService should have been started", serviceStarted);
+    }
+
+    @SmallTest
+    public void testRespondsToStopButtonTouchedEventStopsLiveTrackingService() throws Exception {
+        Services.startServiceAndWaitForReady(LiveService.class, _activity);
+
+        _bus.post(new StopButtonTouchedEvent());
+
+        boolean serviceStopped = Services.waitForServiceToStop(LiveService.class, _activity, 20000);
+        assertTrue ("LiveTrackingService should have been stopped", serviceStopped);
     }
 }

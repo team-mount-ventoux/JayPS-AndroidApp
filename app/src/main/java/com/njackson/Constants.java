@@ -26,6 +26,8 @@ public class Constants {
     public static final int IMPERIAL = 0x0;
     public static final int METRIC = 0x1;
 
+    public static final int REFRESH_INTERVAL_DEFAULT = 500;
+
     public static final double MS_TO_KPH = 3.6;
     public static final double MS_TO_MPH = 2.23693629;
     public static final double M_TO_KM = 0.001;

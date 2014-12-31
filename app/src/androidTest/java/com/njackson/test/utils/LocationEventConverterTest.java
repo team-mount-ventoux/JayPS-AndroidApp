@@ -19,7 +19,7 @@ public class LocationEventConverterTest extends TestCase{
         event.setBearing(190.1);
         event.setYpos(2.2);
         event.setXpos(3.3);
-        event.setTime(423223);
+        event.setElapsedTimeSeconds(423223);
         event.setAvgSpeed(5.5f);
         event.setAccuracy(6.6f);
         event.setAltitude(700.7);

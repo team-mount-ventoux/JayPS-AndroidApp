@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">PebbleBike</string>
+    <string name="MAIN_TITLE">Pebble Bike v2.0.0-alpha</string>
     <string name="action_settings">Settings</string>
     <string name="speedfragment_time_label">TIME</string>
     <string name="speedfragment_time_value">00:00:00</string>
@@ -22,5 +23,98 @@
     <string name="PREF_INSTALL_CATEGORY_TITLE">Install Watchface</string>
     <string name="PREF_INSTALL_WATCHFACE_SDK2">Install</string>
     <string name="PREF_INSTALL_WATCHFACE_SDK2_SUMMARY">Installs the watchface for the SDK2 version of PebbleBike</string>
+    <string name="PREF_RESET_DATA">Reset data</string>
+    <string name="PREF_RESET_DATA_SUMMARY">Reset distance, time, speed and ascent</string>
 
+    <string name="PREF_OPTIONS_CATEGORY_TITLE">Options</string>
+    <string name="PREF_ABOUT_CATEGORY_TITLE">About</string>
+
+    <string name="PREF_AUTOSTART_TITLE">Auto Start</string>
+    <string name="PREF_AUTOSTART_SUMMARY">Select this item if you would like pebble bike to autostart everytime you
+        start cycling
+    </string>
+    <string name="PREF_UNITS_TITLE">Units</string>
+    <string name="PREF_UNITS_DIALOG_TITLE">Units</string>
+    <string name="PREF_UNITS_DEFAULT">1</string>
+    <string name="PREF_UNITS_UNIT_IMPERIAL">Imperial (miles)</string>
+    <string name="PREF_UNITS_UNIT_METRIC">Metric (km/h)</string>
+
+
+    <string name="REFRESH_INTERVAL_TITLE">GPS Minimum time</string>
+    <string name="REFRESH_INTERVAL_DIALOG_TITLE">GPS Minimum time</string>
+    <string name="REFRESH_INTERVAL_DEFAULT">1000</string>
+
+    <string name="ORUXMAPS_AUTO_TITLE">Link OruxMaps start</string>
+    <string name="ORUXMAPS_AUTO_DIALOG_TITLE">Link OruxMaps start</string>
+    <string name="ORUXMAPS_AUTO_DEFAULT">disable</string>
+
+    <string name="CANVAS_MODE_TITLE">Canvas mode</string>
+    <string name="CANVAS_MODE_DIALOG_TITLE">Canvas Mode</string>
+    <string name="CANVAS_MODE_DEFAULT">disable</string>
+    <string name="CANVAS_DISPLAY_UNITS_TITLE">Display units</string>
+    <string name="CANVAS_DISPLAY_UNITS_SUMMARY">Display units in Canvas</string>
+
+    <string name="PREF_HRM_CATEGORY_TITLE">BLE Heart Rate Monitor</string>
+    <string name="PREF_HRM_TITLE">Sensor</string>
+
+    <string name="PREF_ABOUT_TITLE">@string/MAIN_TITLE</string>
+    <string name="PREF_ABOUT_SUMMARY">http://www.pebblebike.com</string>
+    <string name="PREF_ABOUT_URL">http://www.pebblebike.com/?utm_source=PebbleBikeApp</string>
+
+    <string name="PREF_USERVOICE">New features</string>
+    <string name="PREF_USERVOICE_SUMMARY">Create and vote for new features</string>
+    <string name="PREF_USERVOICE_URL">http://pebblebike.uservoice.com/?utm_source=PebbleBikeApp</string>
+
+    <string name="PREF_TWITTER">Twitter</string>
+    <string name="PREF_TWITTER_SUMMARY">Share on twitter</string>
+    <string name="PREF_TWITTER_URL">https://twitter.com/intent/tweet?text=I\'m+using+@PebbleBike&amp;url=http://www.pebblebike.com</string>
+
+    <string name="PREF_DEBUG_TITLE">Debug</string>
+    <string name="PREF_DEBUG_SUMMARY">More logs for developers</string>
+
+    <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_TITLE">JayPS Live Tracking</string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_TITLE">Live Tracking with JayPS</string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_SUMMARY">Create your account: http://pebblebike.com/live</string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_LOGIN_TITLE">Login</string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_LOGIN_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_PASSWORD_TITLE">Password</string>
+    <string name="PREF_LIVE_TRACKING_JAYPS_PASSWORD_SUMMARY"></string>
+
+    <string name="PREF_LIVE_TRACKING_MMT_CATEGORIE_TITLE">Map My Tracks Live Tracking</string>
+    <string name="PREF_LIVE_TRACKING_MMT_CATEGORIE_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_MMT_TITLE">Live Tracking with Map My Tracks</string>
+    <string name="PREF_LIVE_TRACKING_MMT_SUMMARY">http://www.mapmytracks.com</string>
+    <string name="PREF_LIVE_TRACKING_MMT_LOGIN_TITLE">Login</string>
+    <string name="PREF_LIVE_TRACKING_MMT_LOGIN_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_MMT_PASSWORD_TITLE">Password</string>
+    <string name="PREF_LIVE_TRACKING_MMT_PASSWORD_SUMMARY"></string>
+
+    <!-- BLE HRM items -->
+    <string name="ble_unknown_device">Unknown device</string>
+    <string name="ble_error_bluetooth_not_supported">Bluetooth not supported.</string>
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="ble_connect">Connect</string>
+    <string name="ble_disconnect">Disconnect</string>
+    <string name="ble_scan">Scan</string>
+    <string name="ble_stop">Stop</string>
+    <string name="ble_unknown_characteristic">Unknown characteristic</string>
+    <string name="ble_unknown_service">Unknown service</string>
+
+    <!-- Canvas Plugin -->
+    <string-array name="canvas_format_mask_descs">
+        <item>Distance</item>
+        <item>Altitude</item>
+        <item>Average speed</item>
+        <item>Ascent</item>
+        <item>Bearing</item>
+        <item>Elapsed time</item>
+        <item>Speed</item>
+        <item>Latitude</item>
+        <item>Longitude</item>
+        <item>Ascent rate</item>
+        <item>Slope</item>
+        <item>Accuracy</item>
+        <item>Heart rate</item>
+    </string-array>
 </resources>

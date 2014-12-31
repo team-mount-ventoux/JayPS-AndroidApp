@@ -12,8 +12,11 @@ import com.njackson.fragments.AltitudeFragment;
 import com.njackson.fragments.SpeedFragment;
 import com.njackson.fragments.StartButtonFragment;
 import com.njackson.gps.GPSService;
+import com.njackson.live.LiveService;
 import com.njackson.utils.IInstallWatchFace;
 import com.njackson.utils.pebble.InstallWatchFace;
+import com.njackson.utils.version.AndroidVersion;
+import com.njackson.utils.version.PebbleVersion;
 import com.njackson.virtualpebble.PebbleService;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
@@ -24,18 +27,15 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class},
+        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class, LiveService.class},
         library = true, complete = false
 )
 public class PebbleBikeModule {
-    // TODO put your application-specific providers here!
-
     @Provides @Singleton Bus providesBus() { return new MainThreadBus(new Bus(ThreadEnforcer.ANY)); }
 
     @Provides @Singleton IAnalytics providesAnalytics() {
         return new Parse();
     }
 
-    @Provides @Singleton IInstallWatchFace providesWatchFaceInstall() { return new InstallWatchFace(); }
-
+    @Provides IInstallWatchFace providesWatchFaceInstall() { return new InstallWatchFace(new AndroidVersion(), new PebbleVersion()); }
 }
