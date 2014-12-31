@@ -24,6 +24,7 @@ import dagger.Provides;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -110,13 +111,74 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
     }
 
     private void setupMocks() {
-
+        when(_preferences.getString("UNITS_OF_MEASURE","0")).thenReturn("0");
+        when(_preferences.getString("REFRESH_INTERVAL","500")).thenReturn("20");
+        when(_preferences.getString("LIVE_TRACKING_LOGIN","")).thenReturn("abcdefg");
+        when(_preferences.getString("LIVE_TRACKING_MMT_LOGIN","")).thenReturn("abcdefghi");
+        when(_preferences.getString("ORUXMAPS_AUTO","")).thenReturn("continue");
+        when(_preferences.getString("CANVAS_MODE","")).thenReturn("canvas_only");
     }
 
     @SmallTest
     public void testInstallListener() {
         Preference.OnPreferenceClickListener onPreferenceClickListener = _installPreference.getOnPreferenceClickListener();
         assertNotNull(onPreferenceClickListener);
+    }
+
+    @SmallTest
+    public void testOnPauseRemovesListener() {
+        getInstrumentation().callActivityOnPause(_activity);
+
+        verify(_preferences,times(1)).unregisterOnSharedPreferenceChangeListener(any(SharedPreferences.OnSharedPreferenceChangeListener.class));
+    }
+
+    @SmallTest
+    public void testOnResumeSetsListener() {
+        getInstrumentation().callActivityOnResume(_activity);
+
+        verify(_preferences,times(1)).registerOnSharedPreferenceChangeListener(any(SettingsActivity.class));
+    }
+
+    @SmallTest
+    public void testOnResumeSetsUnits() {
+        getInstrumentation().callActivityOnResume(_activity);
+
+        assertEquals(_unitsOfMeasure.getSummary(),_activity.getString(R.string.PREF_UNITS_UNIT_IMPERIAL));
+    }
+
+    @SmallTest
+    public void testOnResumeSetsRefresh() {
+        getInstrumentation().callActivityOnResume(_activity);
+
+        assertEquals("20 ms", _refreshPref.getSummary());
+    }
+
+    @SmallTest
+    public void testOnResumeSetsJayPSLogin() {
+        getInstrumentation().callActivityOnResume(_activity);
+
+        assertEquals("abcdefg", _loginPref.getSummary());
+    }
+
+    @SmallTest
+    public void testOnResumeSetsMMTLogin() {
+        getInstrumentation().callActivityOnResume(_activity);
+
+        assertEquals("abcdefghi", _loginMntPref.getSummary());
+    }
+
+    @SmallTest
+    public void testOnResumeSetsOruxMaps() {
+        getInstrumentation().callActivityOnResume(_activity);
+
+        assertEquals("Continue record", _oruxMaps.getSummary());
+    }
+
+    @SmallTest
+    public void testOnResumeSetsCanvas() {
+        getInstrumentation().callActivityOnResume(_activity);
+
+        assertEquals("Canvas only", _canvas.getSummary());
     }
 
     @SmallTest
@@ -145,6 +207,7 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
 
     @SmallTest
     public void testOnPreferenceChangedWithInvalidIntervalSetsRefreshIntervalToDefault(){
+        reset(_preferences);
         when(_preferences.getString("REFRESH_INTERVAL","0")).thenReturn("abcdse");
         _activity.onSharedPreferenceChanged(_preferences, "REFRESH_INTERVAL");
 

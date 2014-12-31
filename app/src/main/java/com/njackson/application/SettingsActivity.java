@@ -47,9 +47,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 	@Override
     protected void onResume() {
         super.onResume();
-        // Set up a listener whenever a key changes
-        getPreferenceScreen().getSharedPreferences()
-                .registerOnSharedPreferenceChangeListener(this);
+
+        _sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         setUnitsSummary();
         setRefreshSummary();
@@ -61,10 +60,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     protected void onPause() {
+        _sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+
         super.onPause();
-        // Unregister the listener whenever a key changes
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
