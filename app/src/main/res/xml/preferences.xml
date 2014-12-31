@@ -2,12 +2,12 @@
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <Preference
-        android:key="pref_install"
+        android:key="INSTALL_WATCHFACE"
         android:title="@string/PREF_INSTALL_WATCHFACE_SDK2"
         android:summary="@string/PREF_INSTALL_WATCHFACE_SDK2_SUMMARY"
         />
     <Preference
-        android:key="pref_reset_data"
+        android:key="RESET_DATA"
         android:title="@string/PREF_RESET_DATA"
         android:summary="@string/PREF_RESET_DATA_SUMMARY"
         />

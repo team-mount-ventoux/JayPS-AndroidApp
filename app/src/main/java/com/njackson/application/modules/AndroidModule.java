@@ -2,6 +2,7 @@ package com.njackson.application.modules;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
 
