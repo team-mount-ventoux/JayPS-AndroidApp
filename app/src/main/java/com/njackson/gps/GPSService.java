@@ -138,6 +138,7 @@ public class GPSService extends Service {
         } catch (ClassCastException e) {
             _advancedLocation.setAscent(0.0);
         }
+        _advancedLocation.setGeoidHeight(_sharedPreferences.getFloat("GEOID_HEIGHT", 0));
     }
 
     // save the state
@@ -146,6 +147,7 @@ public class GPSService extends Service {
         editor.putFloat("GPS_DISTANCE",_advancedLocation.getDistance());
         editor.putLong("GPS_ELAPSEDTIME", _advancedLocation.getElapsedTime());
         editor.putFloat("GPS_ASCENT", (float) _advancedLocation.getAscent());
+        editor.putFloat("GEOID_HEIGHT", (float) _advancedLocation.getGeoidHeight());
         editor.commit();
     }
 

@@ -42,6 +42,13 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 return true;
             }
         });
+
+        Preference pref = findPreference("PREF_GEOID_HEIGHT_INFO");
+        if (_sharedPreferences.getFloat("GEOID_HEIGHT", 0) != 0) {
+            pref.setSummary("Correction: " + _sharedPreferences.getFloat("GEOID_HEIGHT", 0) + "m");
+        } else {
+            pref.setSummary("No correction");
+        }
     }
 
 	@Override
