@@ -80,14 +80,14 @@ public class ActivityRecognitionIntentServiceTest extends ServiceTestCase<Activi
         startWithType(DetectedActivity.ON_BICYCLE);
 
         _latch.await(2000, TimeUnit.MILLISECONDS);
-        //assertEquals(_event.getActivityType(), DetectedActivity.ON_BICYCLE);
+        assertEquals(_event.getActivityType(), DetectedActivity.ON_BICYCLE);
     }
 
     public void testRecieveOnFoot() throws InterruptedException {
         startWithType(DetectedActivity.ON_FOOT);
 
         _latch.await(2000, TimeUnit.MILLISECONDS);
-        //assertEquals(_event.getActivityType(), DetectedActivity.ON_FOOT);
+        assertEquals(_event.getActivityType(), DetectedActivity.ON_FOOT);
     }
 
     private void startWithType(int activityType) throws InterruptedException {
@@ -96,8 +96,8 @@ public class ActivityRecognitionIntentServiceTest extends ServiceTestCase<Activi
 
         Intent startIntent = new Intent();
         startIntent.putExtra(ActivityRecognitionResult.EXTRA_ACTIVITY_RESULT,result);
-        startIntent.setClass(getContext(), ActivityRecognitionIntentService.class);
+        startIntent.setClass(getSystemContext(), ActivityRecognitionIntentService.class);
 
-        getSystemContext().startService(startIntent);
+        startService(startIntent);
     }
 }
