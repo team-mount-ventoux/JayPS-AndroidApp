@@ -89,9 +89,10 @@ public class GPSService extends Service {
     public void onDestroy (){
         Log.d("MAINTEST", "Stopped GPS Service");
         saveGPSStats();
-        //removeServiceForeground();
-
         stopLocationUpdates();
+
+        _bus.unregister(this);
+        super.onDestroy();
     }
 
     @Override

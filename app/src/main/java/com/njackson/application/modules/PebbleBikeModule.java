@@ -5,6 +5,7 @@ package com.njackson.application.modules;
  */
 import com.njackson.activities.MainActivity;
 import com.njackson.activityrecognition.ActivityRecognitionIntentService;
+import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.analytics.Parse;
 import com.njackson.application.MainThreadBus;
@@ -28,7 +29,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class, LiveService.class, ActivityRecognitionIntentService.class},
+        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class, LiveService.class, ActivityRecognitionService.class, ActivityRecognitionIntentService.class},
         library = true, complete = false
 )
 public class PebbleBikeModule {
