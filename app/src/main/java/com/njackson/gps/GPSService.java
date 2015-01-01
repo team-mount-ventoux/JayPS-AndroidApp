@@ -230,7 +230,11 @@ public class GPSService extends Service {
 
     private void broadcastLocation() {
         NewLocation event = new NewLocation();
-
+        try {
+            event.setUnits(Integer.valueOf(_sharedPreferences.getString("UNITS_OF_MEASURE", "0")));
+        } catch (NumberFormatException e) {
+            event.setUnits(0);
+        }
         event.setSpeed(_advancedLocation.getSpeed());
         event.setDistance(_advancedLocation.getDistance());
         event.setAvgSpeed(_advancedLocation.getAverageSpeed());
