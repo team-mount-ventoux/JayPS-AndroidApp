@@ -8,6 +8,9 @@ import java.math.RoundingMode;
  */
 public class NumberConverter {
     public String converFloatToString(float number, int decimalPlaces) {
+        if(Float.compare(number,Float.NaN) == 0)
+            return "NaN";
+
         BigDecimal bd = new BigDecimal(number).setScale(decimalPlaces, RoundingMode.HALF_EVEN);
         return bd.toPlainString();
     }

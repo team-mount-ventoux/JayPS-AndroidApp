@@ -30,6 +30,12 @@ public class BaseFragment extends Fragment {
         return null;
     }
 
+    @Override
+    public void onDestroy() {
+        _bus.unregister(this);
+        super.onDestroy();
+    }
+
     protected void setupInjection() {
         ((PebbleBikeApplication) getActivity().getApplication()).inject(this);
     }

@@ -41,4 +41,5 @@ dependencies {
     androidTestCompile 'com.google.dexmaker:dexmaker:1.1+'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.1+'
     androidTestCompile 'org.threadly:threadly:3.3.0'
+    compile 'com.google.android.gms:play-services:6.5.87'
 }
