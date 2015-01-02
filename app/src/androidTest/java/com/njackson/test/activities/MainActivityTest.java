@@ -9,6 +9,7 @@ import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.ActivityUnitTestCase;
+import android.test.UiThreadTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
 
@@ -117,7 +118,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         setupMocks();
 
-        _activity = getActivity();
         Log.d("MAINTEST", "Setup Complete");
     }
 
@@ -128,21 +128,40 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @SmallTest
     public void testSendsTrackAppOpenedAnalyticsOnCreate() {
+        _activity = getActivity();
+
         verify(_mockAnalytics,times(1)).trackAppOpened(any(Intent.class));
     }
 
     @SmallTest
+    public void testRegistersForSharedPreferencesUpdatesOnCreate() {
+        _activity = getActivity();
+
+        verify(_mockPreferences,times(1)).registerOnSharedPreferenceChangeListener(any(MainActivity.class));
+    }
+
+    @UiThreadTest
+    public void testUnRegistersForSharedPreferencesUpdatesOnDestroy() {
+        _activity = getActivity();
+
+        getInstrumentation().callActivityOnDestroy(_activity);
+        verify(_mockPreferences, times(1)).unregisterOnSharedPreferenceChangeListener(any(MainActivity.class));
+    }
+
+    @SmallTest
     public void testRespondsToStartButtonTouchedEventStartsGPS() throws Exception {
-        Log.d("MAINTEST", "Started GPS Test");
+        _activity = getActivity();
+
         _bus.post(new StartButtonTouchedEvent());
 
         boolean serviceStarted = Services.waitForServiceToStart(GPSService.class, _activity, 20000);
         assertTrue("GPSService should have been started", serviceStarted);
-        Log.d("MAINTEST", "Finished GPS Test");
     }
 
     @SmallTest
     public void testRespondsToStopButtonTouchedEventStopsGPS() throws Exception {
+        _activity = getActivity();
+
         Services.startServiceAndWaitForReady(GPSService.class, _activity);
 
         _bus.post(new StopButtonTouchedEvent());
@@ -153,6 +172,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @SmallTest
     public void testRespondsToStartButtonTouchedEventStartsPebbleBikeService() throws Exception {
+        _activity = getActivity();
+
         _bus.post(new StartButtonTouchedEvent());
 
         boolean serviceStarted = Services.waitForServiceToStart(PebbleService.class, _activity, 20000);
@@ -161,6 +182,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @SmallTest
     public void testRespondsToStopButtonTouchedEventStopsPebbleBikeService() throws Exception {
+        _activity = getActivity();
+
         Services.startServiceAndWaitForReady(PebbleService.class, _activity);
 
         _bus.post(new StopButtonTouchedEvent());
@@ -171,6 +194,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @SmallTest
     public void testRespondsToStartButtonTouchedEventStartsLiveTrackingService() throws Exception {
+        _activity = getActivity();
+
         _bus.post(new StartButtonTouchedEvent());
 
         boolean serviceStarted = Services.waitForServiceToStart(LiveService.class, _activity, 20000);
@@ -179,6 +204,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @SmallTest
     public void testRespondsToStopButtonTouchedEventStopsLiveTrackingService() throws Exception {
+        _activity = getActivity();
+
         Services.startServiceAndWaitForReady(LiveService.class, _activity);
 
         _bus.post(new StopButtonTouchedEvent());
@@ -188,8 +215,22 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
-    public void testStartsActivityRecognitionService() throws Exception {
+    public void testStartsActivityRecognitionServiceWhenPreferenceSet() throws Exception {
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
+
+        _activity = getActivity();
+
         boolean serviceStarted = Services.waitForServiceToStart(ActivityRecognitionService.class, _activity, 20000);
         assertTrue ("ActivityRecognitionService should have been started", serviceStarted);
+    }
+
+    @SmallTest
+    public void testDoesNotStartActivityRecognitionServiceWhenPreferenceSet() throws Exception {
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
+
+        _activity = getActivity();
+
+        boolean serviceStarted = Services.waitForServiceToStop(ActivityRecognitionService.class, _activity, 20000);
+        assertTrue ("ActivityRecognitionService should not have been started", serviceStarted);
     }
 }

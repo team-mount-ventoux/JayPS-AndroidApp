@@ -1,6 +1,7 @@
 package com.njackson.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -22,11 +23,12 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "MainActivity";
     @Inject Bus _bus;
     @Inject IAnalytics _analytics;
+    @Inject SharedPreferences _sharedPreferences;
 
     @Subscribe
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
@@ -52,15 +54,20 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(R.layout.activity_main);
 
-        _analytics.trackAppOpened(getIntent());
+        if(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)) {
+            startActivityRecognitionService();
+        }
 
-        startActivityRecognitionService();
+        _sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+
+        _analytics.trackAppOpened(getIntent());
     }
 
     @Override
     protected void onDestroy() {
         Log.d("MAINTEST", "Bus un-registered");
         _bus.unregister(this);
+        _sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
         super.onDestroy();
     }
 
@@ -107,4 +114,10 @@ public class MainActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.compareTo("ACTIVITY_RECOGNITION") == 0) {
+
+        }
+    }
 }
