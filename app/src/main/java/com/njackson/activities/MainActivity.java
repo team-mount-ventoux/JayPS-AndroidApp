@@ -91,9 +91,9 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
         stopService(new Intent(this,LiveService.class));
     }
 
-    private void startActivityRecognitionService() {
-        startService(new Intent(this, ActivityRecognitionService.class));
-    }
+    private void startActivityRecognitionService() { startService(new Intent(this, ActivityRecognitionService.class)); }
+
+    private void stopActivityRecognitionService() { stopService(new Intent(this, ActivityRecognitionService.class)); }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -117,7 +117,12 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.compareTo("ACTIVITY_RECOGNITION") == 0) {
-
+            boolean start = sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
+            if(start) {
+                startActivityRecognitionService();
+            } else {
+                stopActivityRecognitionService();
+            }
         }
     }
 }

@@ -27,6 +27,7 @@ import com.njackson.live.LiveService;
 import com.njackson.live.LiveTracking;
 import com.njackson.test.application.TestApplication;
 import com.njackson.test.testUtils.Services;
+import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.virtualpebble.IMessageManager;
 import com.njackson.virtualpebble.MessageManager;
 import com.njackson.virtualpebble.PebbleService;
@@ -91,6 +92,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         @Provides @Singleton
         GoogleApiClient provideActivityRecognitionClient() { return mock(GoogleApiClient.class); }
+
+        @Provides
+        IGooglePlayServices providesGooglePlayServices() { return mock(IGooglePlayServices.class); }
     }
 
     private ResetGPSState _stateEvent;
@@ -231,6 +235,36 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         _activity = getActivity();
 
         boolean serviceStarted = Services.waitForServiceToStop(ActivityRecognitionService.class, _activity, 20000);
-        assertTrue ("ActivityRecognitionService should not have been started", serviceStarted);
+        assertTrue("ActivityRecognitionService should not have been started", serviceStarted);
+    }
+
+    @SmallTest
+    public void testStopsActivityRecognitionServiceWhenPreferenceChanged() throws Exception {
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
+
+        _activity = getActivity();
+
+        boolean serviceStarted = Services.waitForServiceToStart(ActivityRecognitionService.class, _activity, 20000);
+
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
+
+        _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
+
+        serviceStarted = Services.waitForServiceToStop(ActivityRecognitionService.class, _activity, 20000);
+        assertTrue("ActivityRecognitionService should have been stoppped", serviceStarted);
+    }
+
+    @SmallTest
+    public void testStartsActivityRecognitionServiceWhenPreferenceChanged() throws Exception {
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
+
+        _activity = getActivity();
+
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
+
+        _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
+
+        boolean serviceStarted = Services.waitForServiceToStart(ActivityRecognitionService.class, _activity, 20000);
+        assertTrue ("ActivityRecognitionService should have been started", serviceStarted);
     }
 }
