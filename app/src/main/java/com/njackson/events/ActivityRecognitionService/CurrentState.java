@@ -8,7 +8,7 @@ public class CurrentState {
     public enum State {
         STARTED,
         STOPPED,
-        DISABLED
+        PLAY_SERVICES_NOT_AVAILABLE, DISABLED
     }
 
     public State _state;

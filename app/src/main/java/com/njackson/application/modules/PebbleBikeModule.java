@@ -15,8 +15,10 @@ import com.njackson.fragments.SpeedFragment;
 import com.njackson.fragments.StartButtonFragment;
 import com.njackson.gps.GPSService;
 import com.njackson.live.LiveService;
-import com.njackson.utils.IInstallWatchFace;
-import com.njackson.utils.pebble.InstallWatchFace;
+import com.njackson.utils.googleplay.GooglePlayServices;
+import com.njackson.utils.googleplay.IGooglePlayServices;
+import com.njackson.utils.watchface.IInstallWatchFace;
+import com.njackson.utils.watchface.InstallPebbleWatchFace;
 import com.njackson.utils.version.AndroidVersion;
 import com.njackson.utils.version.PebbleVersion;
 import com.njackson.virtualpebble.PebbleService;
@@ -39,5 +41,7 @@ public class PebbleBikeModule {
         return new Parse();
     }
 
-    @Provides IInstallWatchFace providesWatchFaceInstall() { return new InstallWatchFace(new AndroidVersion(), new PebbleVersion()); }
+    @Provides IInstallWatchFace providesWatchFaceInstall() { return new InstallPebbleWatchFace(new AndroidVersion(), new PebbleVersion()); }
+
+    @Provides IGooglePlayServices providesGooglePlayServices() { return new GooglePlayServices(); }
 }

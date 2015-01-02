@@ -1,7 +1,8 @@
-package com.njackson.utils;
+package com.njackson.utils.watchface;
 
 import android.content.Context;
-import android.widget.Toast;
+
+import com.njackson.utils.messages.IMessageMaker;
 
 /**
  * Created by njackson on 23/12/14.

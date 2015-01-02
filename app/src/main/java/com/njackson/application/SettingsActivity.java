@@ -11,8 +11,8 @@ import android.util.Log;
 import com.njackson.Constants;
 import com.njackson.R;
 import com.njackson.application.modules.PebbleBikeApplication;
-import com.njackson.utils.IInstallWatchFace;
-import com.njackson.utils.ToastMessageMaker;
+import com.njackson.utils.watchface.IInstallWatchFace;
+import com.njackson.utils.messages.ToastMessageMaker;
 
 import javax.inject.Inject;
 

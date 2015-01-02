@@ -12,8 +12,8 @@ import com.njackson.R;
 import com.njackson.application.SettingsActivity;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.test.application.TestApplication;
-import com.njackson.utils.IInstallWatchFace;
-import com.njackson.utils.IMessageMaker;
+import com.njackson.utils.watchface.IInstallWatchFace;
+import com.njackson.utils.messages.IMessageMaker;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
