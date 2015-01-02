@@ -1,12 +1,17 @@
 package com.njackson.test.activityrecognition;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognition;
+import com.google.android.gms.location.ActivityRecognitionApi;
 import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.ActivityRecognitionService.CurrentState;
@@ -19,13 +24,17 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -34,6 +43,8 @@ import static org.mockito.Mockito.when;
 public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityRecognitionService> {
 
     @Inject Bus _bus;
+    @Inject GoogleApiClient _googleApiClient;
+
     static IGooglePlayServices _playServices;
 
     private CurrentState _activityStatusEvent;
@@ -48,6 +59,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     )
     static class TestModule {
         @Provides IGooglePlayServices providesGooglePlayServices() { return _playServices; }
+        @Provides @Singleton GoogleApiClient provideActivityRecognitionClient() { return mock(GoogleApiClient.class); }
     }
 
     /**
@@ -117,6 +129,66 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         startService();
 
         assertEquals(CurrentState.State.STARTED, _activityStatusEvent.getState());
+    }
+
+    @SmallTest
+    public void testRegistersActivityRecogntionConnectedEvent() throws Exception {
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        startService();
+
+        verify(_googleApiClient,times(1)).registerConnectionCallbacks(any(ActivityRecognitionService.class));
+    }
+
+    @SmallTest
+    public void testRegistersActivityRecogntionFailedEvent() throws Exception {
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        startService();
+
+        verify(_googleApiClient,times(1)).registerConnectionFailedListener(any(ActivityRecognitionService.class));
+    }
+
+    @SmallTest
+    public void testUnRegistersActivityRecogntionConnectedEvent() throws Exception {
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        startService();
+        shutdownService();
+        verify(_googleApiClient,times(1)).unregisterConnectionCallbacks(any(ActivityRecognitionService.class));
+    }
+
+    @SmallTest
+    public void testUnRegistersActivityRecogntionFailedEvent() throws Exception {
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        startService();
+        shutdownService();
+        verify(_googleApiClient,times(1)).unregisterConnectionFailedListener(any(ActivityRecognitionService.class));
+    }
+
+    @SmallTest
+    public void testRegistersActivityRecognitionUpdatesOnConnect() throws Exception {
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        startService();
+        _service.onConnected(new Bundle());
+
+        verify(_playServices,times(1)).requestActivityUpdates(any(GoogleApiClient.class), anyLong(), any(PendingIntent.class));
+    }
+
+    /*
+    @SmallTest
+    public void testRegistersActivityRecognitionUpdatesOnDisconnect() throws Exception {
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        startService();
+
+
+        verify(_playServices, times(1)).removeActivityUpdates(any(GoogleApiClient.class), any(PendingIntent.class));
+    }
+    */
+    @SmallTest
+    public void testRegistersActivityRecognitionUpdatesOnDestroy() throws Exception {
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        startService();
+        shutdownService();
+
+        verify(_playServices,times(1)).removeActivityUpdates(any(GoogleApiClient.class), any(PendingIntent.class));
     }
 
 }
