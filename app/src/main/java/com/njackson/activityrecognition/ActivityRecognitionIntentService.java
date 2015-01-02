@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
-import com.njackson.application.modules.PebbleBikeApplication;
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.squareup.otto.Bus;
 

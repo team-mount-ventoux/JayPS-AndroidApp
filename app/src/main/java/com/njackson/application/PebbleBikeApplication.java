@@ -1,8 +1,11 @@
-package com.njackson.application.modules;
+package com.njackson.application;
 
 import android.app.Application;
 import android.util.Log;
 
+import com.njackson.application.modules.AndroidModule;
+import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.application.modules.PebbleServiceModule;
 import com.parse.Parse;
 import com.parse.ParseCrashReporting;
 

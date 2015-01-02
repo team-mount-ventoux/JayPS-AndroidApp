@@ -8,9 +8,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.njackson.R;
+import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.analytics.IAnalytics;
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.SettingsActivity;
-import com.njackson.application.modules.PebbleBikeApplication;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.gps.GPSService;
@@ -49,10 +50,11 @@ public class MainActivity extends FragmentActivity {
         ((PebbleBikeApplication) getApplication()).inject(this);
         _bus.register(this);
 
-        Log.d("MAINTEST", "Bus registered");
         setContentView(R.layout.activity_main);
 
         _analytics.trackAppOpened(getIntent());
+
+        startActivityRecognitionService();
     }
 
     @Override
@@ -80,6 +82,10 @@ public class MainActivity extends FragmentActivity {
 
     private void stopLiveService() {
         stopService(new Intent(this,LiveService.class));
+    }
+
+    private void startActivityRecognitionService() {
+        startService(new Intent(this, ActivityRecognitionService.class));
     }
 
     @Override

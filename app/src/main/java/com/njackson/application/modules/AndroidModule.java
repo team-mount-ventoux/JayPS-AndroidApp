@@ -2,27 +2,14 @@ package com.njackson.application.modules;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
-import android.os.Looper;
-import android.support.v4.app.FragmentActivity;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.Api;
-import com.google.android.gms.common.api.BaseImplementation;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.Result;
-import com.google.android.gms.common.api.Scope;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.common.api.d;
 import com.google.android.gms.location.ActivityRecognition;
-import com.google.android.gms.location.ActivityRecognitionApi;
+import com.njackson.activityrecognition.ActivityRecognitionService;
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.SettingsActivity;
 import com.njackson.gps.GPSService;
-
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
 
@@ -35,7 +22,7 @@ import static android.content.Context.SENSOR_SERVICE;
 /**
  * Created by server on 30/03/2014.
  */
-@Module(library = true,complete=false,injects = {GPSService.class, SettingsActivity.class})
+@Module(library = true,complete=false,injects = {GPSService.class, ActivityRecognitionService.class, SettingsActivity.class})
 public class AndroidModule {
     private final PebbleBikeApplication application;
 

@@ -12,7 +12,9 @@ import android.test.ActivityUnitTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.njackson.activities.MainActivity;
+import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.application.modules.PebbleServiceModule;
@@ -69,26 +71,25 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
             complete = false
     )
     static class TestModule {
-        @Provides
-        @Singleton
+        @Provides @Singleton
         LocationManager provideLocationManager() {
             return mock(LocationManager.class);
         }
 
-        @Provides
-        @Singleton
+        @Provides @Singleton
         SharedPreferences provideSharedPreferences() { return mock(SharedPreferences.class); }
 
         @Provides
         public IMessageManager providesMessageManager() { return mock(IMessageManager.class); }
 
-        @Provides
-        @Singleton
+        @Provides @Singleton
         public IAnalytics providesAnalytics() { return mock(IAnalytics.class); }
 
-        @Provides
-        @Singleton
+        @Provides @Singleton
         SensorManager provideSensorManager() { return mock(SensorManager.class); }
+
+        @Provides @Singleton
+        GoogleApiClient provideActivityRecognitionClient() { return mock(GoogleApiClient.class); }
     }
 
     private ResetGPSState _stateEvent;
@@ -184,5 +185,11 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         boolean serviceStopped = Services.waitForServiceToStop(LiveService.class, _activity, 20000);
         assertTrue ("LiveTrackingService should have been stopped", serviceStopped);
+    }
+
+    @SmallTest
+    public void testStartsActivityRecognitionService() throws Exception {
+        boolean serviceStarted = Services.waitForServiceToStart(ActivityRecognitionService.class, _activity, 20000);
+        assertTrue ("ActivityRecognitionService should have been started", serviceStarted);
     }
 }

@@ -2,7 +2,7 @@ package com.njackson.test.application;
 
 import android.util.Log;
 
-import com.njackson.application.modules.PebbleBikeApplication;
+import com.njackson.application.PebbleBikeApplication;
 import dagger.ObjectGraph;
 
 /**

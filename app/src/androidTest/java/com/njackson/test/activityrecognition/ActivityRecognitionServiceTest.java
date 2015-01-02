@@ -172,16 +172,6 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         verify(_playServices,times(1)).requestActivityUpdates(any(GoogleApiClient.class), anyLong(), any(PendingIntent.class));
     }
 
-    /*
-    @SmallTest
-    public void testRegistersActivityRecognitionUpdatesOnDisconnect() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
-        startService();
-
-
-        verify(_playServices, times(1)).removeActivityUpdates(any(GoogleApiClient.class), any(PendingIntent.class));
-    }
-    */
     @SmallTest
     public void testRegistersActivityRecognitionUpdatesOnDestroy() throws Exception {
         when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);

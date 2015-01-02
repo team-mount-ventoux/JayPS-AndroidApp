@@ -8,10 +8,8 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.ActivityRecognitionApi;
-import com.njackson.application.modules.PebbleBikeApplication;
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.ActivityRecognitionService.CurrentState;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.squareup.otto.Bus;
@@ -37,7 +35,9 @@ public class ActivityRecognitionService  extends Service implements
     @Override
     public void onCreate() {
         super.onCreate();
+
         ((PebbleBikeApplication)getApplication()).inject(this);
+
         _bus.register(this);
 
         if(!checkGooglePlayServices()) {
@@ -75,7 +75,7 @@ public class ActivityRecognitionService  extends Service implements
     public void onConnected(Bundle bundle) {
         Intent i = new Intent(this, ActivityRecognitionIntentService.class);
         _activityRecognitionPendingIntent = PendingIntent.getService(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-        _googlePlay.requestActivityUpdates(_recognitionClient,DETECTION_INTERVAL_MILLISECONDS,_activityRecognitionPendingIntent);
+        _googlePlay.requestActivityUpdates(_recognitionClient, DETECTION_INTERVAL_MILLISECONDS, _activityRecognitionPendingIntent);
     }
 
     @Override

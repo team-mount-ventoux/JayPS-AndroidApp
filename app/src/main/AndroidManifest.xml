@@ -5,7 +5,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:name=".application.modules.PebbleBikeApplication">
+        android:name=".application.PebbleBikeApplication">
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <activity
@@ -22,10 +22,11 @@
         <service android:name=".virtualpebble.PebbleService" android:label="PebbleService"/>
         <service android:name=".live.LiveService" android:label="LiveService"/>
         <service
-            android:name="com.njackson.activityrecognition.ActivityRecognitionIntentService"
-            android:label="@string/app_name"
+            android:name=".activityrecognition.ActivityRecognitionIntentService"
+            android:label="ActivityRecognitionIntentService"
             android:exported="false">
         </service>
+        <service android:name=".activityrecognition.ActivityRecognitionService" android:label="ActivityRecognitionService"/>
     </application>
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>

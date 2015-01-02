@@ -48,7 +48,7 @@ public class Services {
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             //Log.d("SHIZ", service.service.getClassName() + " " + serviceClass.getName());
             if (serviceClass.getName().equals(service.service.getClassName())) {
-                //Log.d("SHIZ", "SERVICE RUNNING");
+                Log.d("SHIZ", "SERVICE RUNNING: " + serviceClass.getName());
                 return true;
             }
         }
