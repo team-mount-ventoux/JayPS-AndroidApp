@@ -223,6 +223,14 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     }
 
     @SmallTest
+    public void testCancelsTimerWhenActivityDetected() throws Exception {
+        startService();
+        _bus.post(new NewActivityEvent(DetectedActivity.ON_FOOT));
+
+        verify(_mockTimer,timeout(2000).times(1)).cancel();
+    }
+
+    @SmallTest
     public void testTimeoutHandlerStopsLocation() throws Exception {
         startService();
         _service.handleTimeout();

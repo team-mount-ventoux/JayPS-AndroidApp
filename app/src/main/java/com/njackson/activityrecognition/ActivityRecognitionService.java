@@ -46,6 +46,7 @@ public class ActivityRecognitionService  extends Service implements
     public void onNewActivityEvent(NewActivityEvent event) {
         if(event.getActivityType() != DetectedActivity.STILL) {
             _serviceStarter.startLocationServices();
+            _timer.cancel();
         } else {
             if(!_timer.getActive()) {
                 _timer.setTimer(Constants.ACTIVITY_RECOGNITON_STILL_TIME, this);
