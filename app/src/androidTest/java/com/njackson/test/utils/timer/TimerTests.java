@@ -6,38 +6,36 @@ import android.test.suitebuilder.annotation.SmallTest;
 import com.njackson.utils.timer.ITimerHandler;
 import com.njackson.utils.timer.Timer;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by njackson on 03/01/15.
  */
-public class TimerTests extends AndroidTestCase implements ITimerHandler{
+public class TimerTests extends AndroidTestCase {
 
     private Timer _timer;
-    private CountDownLatch _latch;
-    private boolean _handlerCalled;
+    private ITimerHandler _mockHandler;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
 
+        _mockHandler = mock(ITimerHandler.class);
         _timer = new Timer();
-        _latch = new CountDownLatch(1);
-        _handlerCalled = false;
     }
 
     @SmallTest
     public void testWhenTimeoutHandlerCalled() throws InterruptedException {
-        _timer.setTimer(500,this);
+        _timer.setTimer(500, _mockHandler);
 
-        _latch.await(2000, TimeUnit.MILLISECONDS);
-        assertTrue(_handlerCalled);
+        verify(_mockHandler, timeout(2000).times(1)).handleTimeout();
     }
 
     @SmallTest
     public void testWhenCanceledAndTimerSetReturnsTrue() throws InterruptedException {
-        _timer.setTimer(500,this);
+        _timer.setTimer(500, _mockHandler);
         boolean canceled = _timer.cancel();
 
         assertTrue(canceled);
@@ -52,14 +50,14 @@ public class TimerTests extends AndroidTestCase implements ITimerHandler{
 
     @SmallTest
     public void testWhenStartedSetsActiveToTrue() throws InterruptedException {
-        _timer.setTimer(500,this);
+        _timer.setTimer(500, _mockHandler);
 
         assertTrue(_timer.getActive());
     }
 
     @SmallTest
     public void testWhenCanceledSetsActiveToFalse() throws InterruptedException {
-        _timer.setTimer(500,this);
+        _timer.setTimer(500, _mockHandler);
         boolean canceled = _timer.cancel();
 
         assertFalse(_timer.getActive());
@@ -67,15 +65,8 @@ public class TimerTests extends AndroidTestCase implements ITimerHandler{
 
     @SmallTest
     public void testWhenTimeoutSetsActiveToFalse() throws InterruptedException {
-        _timer.setTimer(500,this);
-        _latch.await(2000, TimeUnit.MILLISECONDS);
+        _timer.setTimer(500, _mockHandler);
 
-        assertFalse(_timer.getActive());
-    }
-
-    @Override
-    public void handleTimeout() {
-        _latch.countDown();
-        _handlerCalled = true;
+        verify(_mockHandler,timeout(2000).times(1)).handleTimeout();
     }
 }

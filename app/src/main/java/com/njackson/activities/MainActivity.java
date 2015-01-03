@@ -74,7 +74,6 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
     @Override
     protected void onPause() {
         _bus.unregister(this);
-
         super.onPause();
     }
 

@@ -151,12 +151,12 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
-    public void testUnRegistersForSharedPreferencesUpdatesOnPause() {
+    public void testUnRegistersForSharedPreferencesUpdatesOnDestroy() throws InterruptedException {
         _activity = getActivity();
 
         _activity.finish();
-        
-        getInstrumentation().waitForIdleSync();
+        Thread.sleep(500);
+
         verify(_mockPreferences, times(1)).unregisterOnSharedPreferenceChangeListener(any(MainActivity.class));
     }
 
