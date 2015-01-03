@@ -144,11 +144,12 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         verify(_mockPreferences,times(1)).registerOnSharedPreferenceChangeListener(any(MainActivity.class));
     }
 
-    @UiThreadTest
-    public void testUnRegistersForSharedPreferencesUpdatesOnDestroy() {
+    @SmallTest
+    public void testUnRegistersForSharedPreferencesUpdatesOnPause() {
         _activity = getActivity();
 
-        getInstrumentation().callActivityOnDestroy(_activity);
+        _activity.finish();
+        getInstrumentation().waitForIdleSync();
         verify(_mockPreferences, times(1)).unregisterOnSharedPreferenceChangeListener(any(MainActivity.class));
     }
 

@@ -50,6 +50,14 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
         super.onCreate(savedInstanceState);
 
         ((PebbleBikeApplication) getApplication()).inject(this);
+
+        _analytics.trackAppOpened(getIntent());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         _bus.register(this);
 
         setContentView(R.layout.activity_main);
@@ -59,16 +67,14 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
         }
 
         _sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
-        _analytics.trackAppOpened(getIntent());
     }
 
     @Override
-    protected void onDestroy() {
-        Log.d("MAINTEST", "Bus un-registered");
+    protected void onPause() {
         _bus.unregister(this);
         _sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-        super.onDestroy();
+
+        super.onPause();
     }
 
     protected void startGPSService() {
