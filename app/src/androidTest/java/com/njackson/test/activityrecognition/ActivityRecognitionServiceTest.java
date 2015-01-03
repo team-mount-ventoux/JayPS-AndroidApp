@@ -17,6 +17,7 @@ import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
+import com.njackson.utils.timer.ITimer;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -52,6 +53,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     private CurrentState _activityStatusEvent;
     private CountDownLatch _stateLatch;
     private ActivityRecognitionService _service;
+    private static ITimer _mockTimer;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -63,6 +65,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         @Provides IGooglePlayServices providesGooglePlayServices() { return _playServices; }
         @Provides @Singleton GoogleApiClient provideActivityRecognitionClient() { return mock(GoogleApiClient.class); }
         @Provides @Singleton IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
+        @Provides ITimer providesTimer() { return _mockTimer; }
     }
 
     /**
@@ -91,6 +94,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         System.setProperty("dexmaker.dexcache", getSystemContext().getCacheDir().getPath());
 
         _playServices = mock(IGooglePlayServices.class);
+        _mockTimer = mock(ITimer.class);
 
         TestApplication app = new TestApplication();
         app.setObjectGraph(ObjectGraph.create(TestModule.class));
@@ -201,9 +205,27 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     }
 
     @SmallTest
-    public void testRespondsToNewActivityEventStopsLocation() throws Exception {
+    public void testRespondsToNewActivityEventStartsTimer() throws Exception {
         startService();
         _bus.post(new NewActivityEvent(DetectedActivity.STILL));
+
+        verify(_mockTimer,timeout(2000).times(1)).setTimer(anyLong(),any(ActivityRecognitionService.class));
+    }
+
+    @SmallTest
+    public void testRespondsToNewActivityEventDoesNotStartTimerIfTimerActive() throws Exception {
+        startService();
+
+        when(_mockTimer.getActive()).thenReturn(true);
+        _bus.post(new NewActivityEvent(DetectedActivity.STILL));
+
+        verify(_mockTimer,timeout(2000).times(0)).setTimer(anyLong(),any(ActivityRecognitionService.class));
+    }
+
+    @SmallTest
+    public void testTimeoutHandlerStopsLocation() throws Exception {
+        startService();
+        _service.handleTimeout();
 
         verify(_serviceStarter,timeout(2000).times(1)).stopLocationServices();
     }

@@ -17,6 +17,8 @@ import com.njackson.gps.GPSService;
 import com.njackson.live.LiveService;
 import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGooglePlayServices;
+import com.njackson.utils.timer.ITimer;
+import com.njackson.utils.timer.Timer;
 import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.watchface.InstallPebbleWatchFace;
 import com.njackson.utils.version.AndroidVersion;
@@ -44,4 +46,6 @@ public class PebbleBikeModule {
     @Provides IInstallWatchFace providesWatchFaceInstall() { return new InstallPebbleWatchFace(new AndroidVersion(), new PebbleVersion()); }
 
     @Provides IGooglePlayServices providesGooglePlayServices() { return new GooglePlayServices(); }
+
+    @Provides ITimer providesTimer() { return new Timer(); }
 }

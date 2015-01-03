@@ -8,11 +8,14 @@ import android.os.IBinder;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
+import com.njackson.Constants;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.ActivityRecognitionService.CurrentState;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
+import com.njackson.utils.timer.ITimer;
+import com.njackson.utils.timer.ITimerHandler;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -22,12 +25,13 @@ import javax.inject.Inject;
  * Created by njackson on 01/01/15.
  */
 public class ActivityRecognitionService  extends Service implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ITimerHandler {
 
     @Inject Bus _bus;
     @Inject IGooglePlayServices _googlePlay;
     @Inject GoogleApiClient _recognitionClient;
     @Inject IServiceStarter _serviceStarter;
+    @Inject ITimer _timer;
 
     public static final int MILLISECONDS_PER_SECOND = 1000;
     public static final int DETECTION_INTERVAL_SECONDS = 20;
@@ -40,7 +44,9 @@ public class ActivityRecognitionService  extends Service implements
         if(event.getActivityType() != DetectedActivity.STILL) {
             _serviceStarter.startLocationServices();
         } else {
-            _serviceStarter.stopLocationServices();
+            if(!_timer.getActive()) {
+                _timer.setTimer(Constants.ACTIVITY_RECOGNITON_STILL_TIME, this);
+            }
         }
     }
 
@@ -107,5 +113,10 @@ public class ActivityRecognitionService  extends Service implements
     private boolean checkGooglePlayServices() {
         return (_googlePlay.
                 isGooglePlayServicesAvailable(this) == ConnectionResult.SUCCESS);
+    }
+
+    @Override
+    public void handleTimeout() {
+        _serviceStarter.stopLocationServices();
     }
 }

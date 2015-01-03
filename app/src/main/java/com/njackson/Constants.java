@@ -34,4 +34,5 @@ public class Constants {
     public static final double M_TO_MILES = 0.000621371192;
     public static final double M_TO_M = 1;
     public static final double M_TO_FEET = 3.2808399;
+    public static final long ACTIVITY_RECOGNITON_STILL_TIME = 30000;
 }
