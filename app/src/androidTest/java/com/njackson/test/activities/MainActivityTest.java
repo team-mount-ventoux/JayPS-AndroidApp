@@ -155,6 +155,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         _activity = getActivity();
 
         _activity.finish();
+        
         getInstrumentation().waitForIdleSync();
         verify(_mockPreferences, times(1)).unregisterOnSharedPreferenceChangeListener(any(MainActivity.class));
     }
