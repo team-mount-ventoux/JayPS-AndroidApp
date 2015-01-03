@@ -11,6 +11,8 @@ import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.SettingsActivity;
 import com.njackson.gps.GPSService;
+import com.njackson.utils.services.IServiceStarter;
+import com.njackson.utils.services.ServiceStarter;
 
 import javax.inject.Singleton;
 
@@ -56,4 +58,7 @@ public class AndroidModule {
     GoogleApiClient provideActivityRecognitionClient() {
         return new GoogleApiClient.Builder(application).addApi(ActivityRecognition.API).build();
     }
+
+    @Provides @Singleton
+    IServiceStarter provideServiceStarter() { return new ServiceStarter(application); }
 }

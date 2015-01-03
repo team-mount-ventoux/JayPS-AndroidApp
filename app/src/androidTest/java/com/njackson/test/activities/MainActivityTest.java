@@ -28,6 +28,7 @@ import com.njackson.live.LiveTracking;
 import com.njackson.test.application.TestApplication;
 import com.njackson.test.testUtils.Services;
 import com.njackson.utils.googleplay.IGooglePlayServices;
+import com.njackson.utils.services.IServiceStarter;
 import com.njackson.virtualpebble.IMessageManager;
 import com.njackson.virtualpebble.MessageManager;
 import com.njackson.virtualpebble.PebbleService;
@@ -48,6 +49,7 @@ import dagger.Provides;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -59,6 +61,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @Inject Bus _bus;
     @Inject SharedPreferences _mockPreferences;
+    @Inject IServiceStarter _mockServiceStarter;
     @Inject IAnalytics _mockAnalytics;
 
     private MainActivity _activity;
@@ -95,6 +98,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         @Provides
         IGooglePlayServices providesGooglePlayServices() { return mock(IGooglePlayServices.class); }
+
+        @Provides @Singleton
+        IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
     }
 
     private ResetGPSState _stateEvent;
@@ -154,69 +160,21 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
-    public void testRespondsToStartButtonTouchedEventStartsGPS() throws Exception {
+    public void testRespondsToStartButtonTouchedEventStartsServices() throws Exception {
         _activity = getActivity();
 
         _bus.post(new StartButtonTouchedEvent());
 
-        boolean serviceStarted = Services.waitForServiceToStart(GPSService.class, _activity, 20000);
-        assertTrue("GPSService should have been started", serviceStarted);
+        verify(_mockServiceStarter, timeout(2000).times(1)).startLocationServices();
     }
 
     @SmallTest
-    public void testRespondsToStopButtonTouchedEventStopsGPS() throws Exception {
+    public void testRespondsToStopButtonTouchedEventStopsServices() throws Exception {
         _activity = getActivity();
-
-        Services.startServiceAndWaitForReady(GPSService.class, _activity);
 
         _bus.post(new StopButtonTouchedEvent());
 
-        boolean serviceStopped = Services.waitForServiceToStop(GPSService.class, _activity, 20000);
-        assertTrue ("GPSService should have been stopped", serviceStopped);
-    }
-
-    @SmallTest
-    public void testRespondsToStartButtonTouchedEventStartsPebbleBikeService() throws Exception {
-        _activity = getActivity();
-
-        _bus.post(new StartButtonTouchedEvent());
-
-        boolean serviceStarted = Services.waitForServiceToStart(PebbleService.class, _activity, 20000);
-        assertTrue ("PebbleBikeService should have been started", serviceStarted);
-    }
-
-    @SmallTest
-    public void testRespondsToStopButtonTouchedEventStopsPebbleBikeService() throws Exception {
-        _activity = getActivity();
-
-        Services.startServiceAndWaitForReady(PebbleService.class, _activity);
-
-        _bus.post(new StopButtonTouchedEvent());
-
-        boolean serviceStopped = Services.waitForServiceToStop(PebbleService.class, _activity, 20000);
-        assertTrue ("PebbleBikeService should have been stopped", serviceStopped);
-    }
-
-    @SmallTest
-    public void testRespondsToStartButtonTouchedEventStartsLiveTrackingService() throws Exception {
-        _activity = getActivity();
-
-        _bus.post(new StartButtonTouchedEvent());
-
-        boolean serviceStarted = Services.waitForServiceToStart(LiveService.class, _activity, 20000);
-        assertTrue ("LiveTrackingService should have been started", serviceStarted);
-    }
-
-    @SmallTest
-    public void testRespondsToStopButtonTouchedEventStopsLiveTrackingService() throws Exception {
-        _activity = getActivity();
-
-        Services.startServiceAndWaitForReady(LiveService.class, _activity);
-
-        _bus.post(new StopButtonTouchedEvent());
-
-        boolean serviceStopped = Services.waitForServiceToStop(LiveService.class, _activity, 20000);
-        assertTrue ("LiveTrackingService should have been stopped", serviceStopped);
+        verify(_mockServiceStarter, timeout(2000).times(1)).stopLocationServices();
     }
 
     @SmallTest
@@ -225,8 +183,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         _activity = getActivity();
 
-        boolean serviceStarted = Services.waitForServiceToStart(ActivityRecognitionService.class, _activity, 20000);
-        assertTrue ("ActivityRecognitionService should have been started", serviceStarted);
+        verify(_mockServiceStarter,timeout(2000).times(1)).startRecognitionServices();
     }
 
     @SmallTest
@@ -235,8 +192,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         _activity = getActivity();
 
-        boolean serviceStarted = Services.waitForServiceToStop(ActivityRecognitionService.class, _activity, 20000);
-        assertTrue("ActivityRecognitionService should not have been started", serviceStarted);
+        verify(_mockServiceStarter,timeout(2000).times(0)).startRecognitionServices();
     }
 
     @SmallTest
@@ -245,14 +201,11 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         _activity = getActivity();
 
-        boolean serviceStarted = Services.waitForServiceToStart(ActivityRecognitionService.class, _activity, 20000);
-
         when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
 
         _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
 
-        serviceStarted = Services.waitForServiceToStop(ActivityRecognitionService.class, _activity, 20000);
-        assertTrue("ActivityRecognitionService should have been stoppped", serviceStarted);
+        verify(_mockServiceStarter,times(1)).stopRecognitionServices();
     }
 
     @SmallTest
@@ -265,7 +218,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
 
-        boolean serviceStarted = Services.waitForServiceToStart(ActivityRecognitionService.class, _activity, 20000);
-        assertTrue ("ActivityRecognitionService should have been started", serviceStarted);
+        verify(_mockServiceStarter,times(1)).startRecognitionServices();
     }
 }

@@ -44,6 +44,7 @@ public class PebbleService extends Service {
     @Override
     public void onDestroy (){
         _bus.unregister(this);
+        _messageManager.hideWatchFace();
         super.onDestroy();
     }
 
@@ -53,6 +54,7 @@ public class PebbleService extends Service {
         _messageThread.start();
 
         _bus.post(new CurrentState(CurrentState.State.STARTED));
+        _messageManager.showWatchFace();
     }
 
     private void sendDataToPebble(PebbleDictionary data) {

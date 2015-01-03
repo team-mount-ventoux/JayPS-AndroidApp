@@ -31,7 +31,6 @@ public class ActivityRecognitionIntentService extends IntentService {
 
     public ActivityRecognitionIntentService(String name) {
         super(name);
-        Log.d(TAG, "Start: " + name);
     }
 
     @Override
@@ -40,8 +39,6 @@ public class ActivityRecognitionIntentService extends IntentService {
 
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
-
-            Log.d(TAG, "Handle Intent");
 
             switch(result.getMostProbableActivity().getType()) {
 
@@ -58,6 +55,7 @@ public class ActivityRecognitionIntentService extends IntentService {
                     break;
                 case DetectedActivity.STILL:
                     Log.d(TAG, "STILL");
+                    sendReply(result.getMostProbableActivity().getType());
             }
 
         }

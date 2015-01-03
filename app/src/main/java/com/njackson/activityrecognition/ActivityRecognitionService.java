@@ -5,14 +5,16 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.DetectedActivity;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.ActivityRecognitionService.CurrentState;
+import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.utils.googleplay.IGooglePlayServices;
+import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
@@ -25,12 +27,22 @@ public class ActivityRecognitionService  extends Service implements
     @Inject Bus _bus;
     @Inject IGooglePlayServices _googlePlay;
     @Inject GoogleApiClient _recognitionClient;
+    @Inject IServiceStarter _serviceStarter;
 
     public static final int MILLISECONDS_PER_SECOND = 1000;
     public static final int DETECTION_INTERVAL_SECONDS = 20;
     public static final int DETECTION_INTERVAL_MILLISECONDS = MILLISECONDS_PER_SECOND * DETECTION_INTERVAL_SECONDS;
 
     private PendingIntent _activityRecognitionPendingIntent;
+
+    @Subscribe
+    public void onNewActivityEvent(NewActivityEvent event) {
+        if(event.getActivityType() != DetectedActivity.STILL) {
+            _serviceStarter.startLocationServices();
+        } else {
+            _serviceStarter.stopLocationServices();
+        }
+    }
 
     @Override
     public void onCreate() {
@@ -46,8 +58,13 @@ public class ActivityRecognitionService  extends Service implements
         }
 
         registerRecognitionCallbacks();
+        connectToGooglePlayServices();
 
         _bus.post(new CurrentState(CurrentState.State.STARTED));
+    }
+
+    private void connectToGooglePlayServices() {
+        _recognitionClient.connect();
     }
 
     private void registerRecognitionCallbacks() {
@@ -57,7 +74,6 @@ public class ActivityRecognitionService  extends Service implements
 
     @Override
     public void onDestroy (){
-        Log.d("MAINTEST", "Stopped Activity Recognition Service");
         _bus.unregister(this);
         _recognitionClient.unregisterConnectionCallbacks(this);
         _recognitionClient.unregisterConnectionFailedListener(this);

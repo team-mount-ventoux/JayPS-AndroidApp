@@ -1,7 +1,6 @@
 package com.njackson.test.activityrecognition;
 
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -10,13 +9,14 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.ActivityRecognition;
-import com.google.android.gms.location.ActivityRecognitionApi;
+import com.google.android.gms.location.DetectedActivity;
 import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.ActivityRecognitionService.CurrentState;
+import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGooglePlayServices;
+import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -33,6 +33,7 @@ import dagger.Provides;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,6 +45,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
 
     @Inject Bus _bus;
     @Inject GoogleApiClient _googleApiClient;
+    @Inject IServiceStarter _serviceStarter;
 
     static IGooglePlayServices _playServices;
 
@@ -60,6 +62,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     static class TestModule {
         @Provides IGooglePlayServices providesGooglePlayServices() { return _playServices; }
         @Provides @Singleton GoogleApiClient provideActivityRecognitionClient() { return mock(GoogleApiClient.class); }
+        @Provides @Singleton IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
     }
 
     /**
@@ -132,6 +135,14 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     }
 
     @SmallTest
+    public void testServiceConnectsToGooglePlayOnStart() throws Exception {
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        startService();
+
+        verify(_googleApiClient,times(1)).connect();
+    }
+
+    @SmallTest
     public void testRegistersActivityRecogntionConnectedEvent() throws Exception {
         when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
         startService();
@@ -179,6 +190,22 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         shutdownService();
 
         verify(_playServices,times(1)).removeActivityUpdates(any(GoogleApiClient.class), any(PendingIntent.class));
+    }
+
+    @SmallTest
+    public void testRespondsToNewActivityEventStartsLocation() throws Exception {
+        startService();
+        _bus.post(new NewActivityEvent(DetectedActivity.ON_FOOT));
+
+        verify(_serviceStarter,timeout(2000).times(1)).startLocationServices();
+    }
+
+    @SmallTest
+    public void testRespondsToNewActivityEventStopsLocation() throws Exception {
+        startService();
+        _bus.post(new NewActivityEvent(DetectedActivity.STILL));
+
+        verify(_serviceStarter,timeout(2000).times(1)).stopLocationServices();
     }
 
 }
