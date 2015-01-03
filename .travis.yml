@@ -4,8 +4,9 @@ language: android
 
 android:
   components:
-  - platform-tools
   - tools
+  - platform-tools
+  - build-tools-21.1.2
   - android-21
   - sys-img-armeabi-v7a-android-21
   - extra-google-google_play_services
