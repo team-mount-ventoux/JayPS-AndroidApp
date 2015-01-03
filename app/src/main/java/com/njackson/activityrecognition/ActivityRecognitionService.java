@@ -128,6 +128,8 @@ public class ActivityRecognitionService  extends Service implements
 
     @Override
     public void handleTimeout() {
+        Log.d(TAG,"Stopping location");
         _serviceStarter.stopLocationServices();
+
     }
 }
