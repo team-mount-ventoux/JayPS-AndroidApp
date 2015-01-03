@@ -21,11 +21,7 @@
         <service android:name=".gps.GPSService" android:label="GPSService"/>
         <service android:name=".virtualpebble.PebbleService" android:label="PebbleService"/>
         <service android:name=".live.LiveService" android:label="LiveService"/>
-        <service
-            android:name=".activityrecognition.ActivityRecognitionIntentService"
-            android:label="ActivityRecognitionIntentService"
-            android:exported="false">
-        </service>
+        <service android:name=".activityrecognition.ActivityRecognitionIntentService" android:label="ActivityRecognitionIntentService"/>
         <service android:name=".activityrecognition.ActivityRecognitionService" android:label="ActivityRecognitionService"/>
     </application>
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>

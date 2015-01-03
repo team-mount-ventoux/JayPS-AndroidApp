@@ -5,6 +5,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
@@ -27,6 +29,7 @@ import javax.inject.Inject;
 public class ActivityRecognitionService  extends Service implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ITimerHandler {
 
+    private static final String TAG = "PB-ActivityRecognitionService";
     @Inject Bus _bus;
     @Inject IGooglePlayServices _googlePlay;
     @Inject GoogleApiClient _recognitionClient;
@@ -34,7 +37,7 @@ public class ActivityRecognitionService  extends Service implements
     @Inject ITimer _timer;
 
     public static final int MILLISECONDS_PER_SECOND = 1000;
-    public static final int DETECTION_INTERVAL_SECONDS = 20;
+    public static final int DETECTION_INTERVAL_SECONDS = 2;
     public static final int DETECTION_INTERVAL_MILLISECONDS = MILLISECONDS_PER_SECOND * DETECTION_INTERVAL_SECONDS;
 
     private PendingIntent _activityRecognitionPendingIntent;
@@ -64,9 +67,15 @@ public class ActivityRecognitionService  extends Service implements
         }
 
         registerRecognitionCallbacks();
+        createIntentService();
         connectToGooglePlayServices();
 
         _bus.post(new CurrentState(CurrentState.State.STARTED));
+    }
+
+    private void createIntentService() {
+        Intent i = new Intent(this, ActivityRecognitionIntentService.class);
+        _activityRecognitionPendingIntent = PendingIntent.getService(getApplicationContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private void connectToGooglePlayServices() {
@@ -80,6 +89,8 @@ public class ActivityRecognitionService  extends Service implements
 
     @Override
     public void onDestroy (){
+        Log.d(TAG,"Service Destroy");
+
         _bus.unregister(this);
         _recognitionClient.unregisterConnectionCallbacks(this);
         _recognitionClient.unregisterConnectionFailedListener(this);
@@ -95,19 +106,19 @@ public class ActivityRecognitionService  extends Service implements
 
     @Override
     public void onConnected(Bundle bundle) {
-        Intent i = new Intent(this, ActivityRecognitionIntentService.class);
-        _activityRecognitionPendingIntent = PendingIntent.getService(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        Log.d(TAG,"Connected to Activity Service");
         _googlePlay.requestActivityUpdates(_recognitionClient, DETECTION_INTERVAL_MILLISECONDS, _activityRecognitionPendingIntent);
+        _recognitionClient.disconnect();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.d(TAG,"Connection suspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        Log.d(TAG,"Connection failed");
     }
 
     private boolean checkGooglePlayServices() {

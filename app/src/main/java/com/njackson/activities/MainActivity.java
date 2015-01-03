@@ -12,6 +12,7 @@ import com.njackson.R;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.SettingsActivity;
+import com.njackson.events.ActivityRecognitionService.CurrentState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.utils.services.IServiceStarter;
@@ -30,13 +31,20 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
 
     @Subscribe
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
-        Log.d("MAINTEST", "Button Clicked");
         _serviceStarter.startLocationServices();
     }
 
     @Subscribe
     public void onStopButtonTouched(StopButtonTouchedEvent event) {
         _serviceStarter.stopLocationServices();
+    }
+
+    @Subscribe
+    public void onRecognitionState(CurrentState event) {
+        if(event.getState().compareTo(CurrentState.State.PLAY_SERVICES_NOT_AVAILABLE) == 0)
+            Log.d(TAG, "PLAY_NOT_AVIALABLE");
+        else
+            Log.d(TAG, "STARTED");
     }
 
     @Override
@@ -66,9 +74,14 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
     @Override
     protected void onPause() {
         _bus.unregister(this);
-        _sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        _sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+        super.onDestroy();
     }
 
     @Override

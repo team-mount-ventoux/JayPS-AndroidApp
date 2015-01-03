@@ -26,7 +26,6 @@ public class ActivityRecognitionIntentService extends IntentService {
 
     public ActivityRecognitionIntentService() {
         super("ActivityRecognitionIntentService");
-        Log.d(TAG, "Start");
     }
 
     public ActivityRecognitionIntentService(String name) {
