@@ -45,6 +45,8 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
 
         ((PebbleBikeApplication) getApplication()).inject(this);
 
+        setContentView(R.layout.activity_main);
+
         _analytics.trackAppOpened(getIntent());
     }
 
@@ -53,8 +55,6 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
         super.onResume();
 
         _bus.register(this);
-
-        setContentView(R.layout.activity_main);
 
         if(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)) {
             _serviceStarter.startRecognitionServices();
