@@ -6,6 +6,7 @@ import android.location.LocationListener;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.gps.GPSService;
@@ -48,11 +49,11 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(3)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,GPSService.class));
+        assertTrue(checkComponentInCaptor(intents, GPSService.class));
     }
 
     @SmallTest
-    public void testRespondsToStopButtonTouchedEventStopsGPS() throws Exception {
+    public void testStopsGPSService() throws Exception {
         _serviceStarter.stopLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
@@ -63,7 +64,7 @@ public class ServiceStarterTest extends AndroidTestCase {
     }
 
     @SmallTest
-    public void testRespondsToStartButtonTouchedEventStartsPebbleBikeService() throws Exception {
+    public void testStartsPebbleBikeService() throws Exception {
         _serviceStarter.startLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
@@ -74,7 +75,7 @@ public class ServiceStarterTest extends AndroidTestCase {
     }
 
     @SmallTest
-    public void testRespondsToStopButtonTouchedEventStopsPebbleBikeService() throws Exception {
+    public void testStopsPebbleBikeService() throws Exception {
         _serviceStarter.stopLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
@@ -85,7 +86,7 @@ public class ServiceStarterTest extends AndroidTestCase {
     }
 
     @SmallTest
-    public void testRespondsToStartButtonTouchedEventStartsLiveTrackingService() throws Exception {
+    public void testStartsLiveTrackingService() throws Exception {
         _serviceStarter.startLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
@@ -96,7 +97,7 @@ public class ServiceStarterTest extends AndroidTestCase {
     }
 
     @SmallTest
-    public void testRespondsToStopButtonTouchedEventStopsLiveTrackingService() throws Exception {
+    public void testStopsLiveTrackingService() throws Exception {
         _serviceStarter.stopLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
@@ -104,6 +105,28 @@ public class ServiceStarterTest extends AndroidTestCase {
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,LiveService.class));
+    }
+
+    @SmallTest
+    public void testStartsRecognitionService() throws Exception {
+        _serviceStarter.startRecognitionServices();
+        ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
+
+        verify(_mockContext,times(1)).startService(intentArgumentCaptor.capture());
+
+        List<Intent> intents = intentArgumentCaptor.getAllValues();
+        assertTrue(checkComponentInCaptor(intents,ActivityRecognitionService.class));
+    }
+
+    @SmallTest
+    public void testStopsRecognitionService() throws Exception {
+        _serviceStarter.stopRecognitionServices();
+        ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
+
+        verify(_mockContext,times(1)).stopService(intentArgumentCaptor.capture());
+
+        List<Intent> intents = intentArgumentCaptor.getAllValues();
+        assertTrue(checkComponentInCaptor(intents,ActivityRecognitionService.class));
     }
 
     private boolean checkComponentInCaptor(List<Intent> intents, Class<?> serviceClass) {
