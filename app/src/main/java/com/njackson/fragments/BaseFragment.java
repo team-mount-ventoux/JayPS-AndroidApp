@@ -26,14 +26,19 @@ public class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         setupInjection();
-        _bus.register(this);
         return null;
     }
 
     @Override
-    public void onDestroy() {
+    public void onResume() {
+        _bus.register(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onPause() {
         _bus.unregister(this);
-        super.onDestroy();
+        super.onPause();
     }
 
     protected void setupInjection() {

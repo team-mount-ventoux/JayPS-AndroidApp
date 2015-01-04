@@ -18,6 +18,7 @@ public class FragmentInstrumentTestCase2 extends ActivityInstrumentationTestCase
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath());
     }
 
     protected Fragment startFragment(Fragment fragment) {
