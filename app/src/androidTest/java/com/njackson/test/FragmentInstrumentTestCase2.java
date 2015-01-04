@@ -22,7 +22,7 @@ public class FragmentInstrumentTestCase2 extends ActivityInstrumentationTestCase
     }
 
     protected Fragment startFragment(Fragment fragment) {
-        FragmentTransaction transaction = _activity.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.activity_test_fragment_linearlayout, fragment, "tag");
         transaction.commit();
         getInstrumentation().waitForIdleSync();

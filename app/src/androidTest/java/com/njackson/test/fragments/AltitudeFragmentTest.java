@@ -29,6 +29,7 @@ import static org.mockito.Mockito.mock;
 public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
 
     @Inject Bus _bus;
+    private LinearLayout _mainContainer;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -64,12 +65,14 @@ public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
 
         _activity = getActivity();
         startFragment(new AltitudeFragment());
+
+        _mainContainer = (LinearLayout)_activity.findViewById(R.id.altitude_main_container);
+        assertNotNull(_mainContainer);
     }
 
     @SmallTest
     public void test_Element_Exists() {
-        LinearLayout layout = (LinearLayout)_activity.findViewById(R.id.altitude_main_container);
-        int elements = layout.getChildCount();
+        int elements = _mainContainer.getChildCount();
 
         assertEquals("Expected 14 altitude bars",14,elements);
     }
