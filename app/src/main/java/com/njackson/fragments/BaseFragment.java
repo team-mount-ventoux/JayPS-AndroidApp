@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.njackson.application.modules.PebbleBikeApplication;
+import com.njackson.application.PebbleBikeApplication;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -26,8 +26,19 @@ public class BaseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         setupInjection();
-        _bus.register(this);
         return null;
+    }
+
+    @Override
+    public void onResume() {
+        _bus.register(this);
+        super.onPause();
+    }
+
+    @Override
+    public void onPause() {
+        _bus.unregister(this);
+        super.onPause();
     }
 
     protected void setupInjection() {

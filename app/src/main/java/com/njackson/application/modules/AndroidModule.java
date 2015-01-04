@@ -2,12 +2,17 @@ package com.njackson.application.modules;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
-
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognition;
+import com.njackson.activities.MainActivity;
+import com.njackson.activityrecognition.ActivityRecognitionService;
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.SettingsActivity;
 import com.njackson.gps.GPSService;
+import com.njackson.utils.services.IServiceStarter;
+import com.njackson.utils.services.ServiceStarter;
 
 import javax.inject.Singleton;
 
@@ -20,7 +25,7 @@ import static android.content.Context.SENSOR_SERVICE;
 /**
  * Created by server on 30/03/2014.
  */
-@Module(library = true,complete=false,injects = {GPSService.class, SettingsActivity.class})
+@Module(library = true,complete=false,injects = {GPSService.class, ActivityRecognitionService.class, MainActivity.class, SettingsActivity.class})
 public class AndroidModule {
     private final PebbleBikeApplication application;
 
@@ -48,4 +53,12 @@ public class AndroidModule {
     @Provides @Singleton SharedPreferences provideSharedPreferences() {
         return application.getSharedPreferences("com.njackson_preferences", Context.MODE_PRIVATE);
     }
+
+    @Provides @Singleton
+    GoogleApiClient provideActivityRecognitionClient() {
+        return new GoogleApiClient.Builder(application).addApi(ActivityRecognition.API).build();
+    }
+
+    @Provides @Singleton
+    IServiceStarter provideServiceStarter() { return new ServiceStarter(application, provideSharedPreferences()); }
 }

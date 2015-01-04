@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.njackson.application.modules.PebbleBikeApplication;
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.events.PebbleService.CurrentState;
 import com.squareup.otto.Bus;

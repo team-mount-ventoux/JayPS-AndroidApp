@@ -1,6 +1,7 @@
 package com.njackson.activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -9,37 +10,41 @@ import android.view.MenuItem;
 
 import com.njackson.R;
 import com.njackson.analytics.IAnalytics;
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.SettingsActivity;
-import com.njackson.application.modules.PebbleBikeApplication;
+import com.njackson.events.ActivityRecognitionService.CurrentState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
-import com.njackson.gps.GPSService;
-import com.njackson.live.LiveService;
-import com.njackson.virtualpebble.PebbleService;
+import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "MainActivity";
     @Inject Bus _bus;
     @Inject IAnalytics _analytics;
+    @Inject SharedPreferences _sharedPreferences;
+    @Inject IServiceStarter _serviceStarter;
 
     @Subscribe
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
-        Log.d("MAINTEST", "Button Clicked");
-        startGPSService();
-        startPebbleService();
-        startLiveService();
+        _serviceStarter.startLocationServices();
     }
 
     @Subscribe
     public void onStopButtonTouched(StopButtonTouchedEvent event) {
-        stopGPSService();
-        stopPebbleService();
-        stopLiveService();
+        _serviceStarter.stopLocationServices();
+    }
+
+    @Subscribe
+    public void onRecognitionState(CurrentState event) {
+        if(event.getState().compareTo(CurrentState.State.PLAY_SERVICES_NOT_AVAILABLE) == 0)
+            Log.d(TAG, "PLAY_NOT_AVIALABLE");
+        else
+            Log.d(TAG, "STARTED");
     }
 
     @Override
@@ -47,39 +52,35 @@ public class MainActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         ((PebbleBikeApplication) getApplication()).inject(this);
-        _bus.register(this);
 
-        Log.d("MAINTEST", "Bus registered");
         setContentView(R.layout.activity_main);
 
         _analytics.trackAppOpened(getIntent());
     }
 
     @Override
-    protected void onDestroy() {
-        Log.d("MAINTEST", "Bus un-registered");
+    protected void onResume() {
+        super.onResume();
+
+        _bus.register(this);
+
+        if(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)) {
+            _serviceStarter.startRecognitionServices();
+        }
+
+        _sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
         _bus.unregister(this);
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        _sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
         super.onDestroy();
-    }
-
-    protected void startGPSService() {
-        startService(new Intent(this,GPSService.class));
-    }
-
-    private void stopGPSService() {
-        stopService(new Intent(this,GPSService.class));
-    }
-
-    private void startPebbleService() { startService(new Intent(this, PebbleService.class)); }
-
-    private void stopPebbleService() {
-        stopService(new Intent(this,PebbleService.class));
-    }
-
-    private void startLiveService() { startService(new Intent(this, LiveService.class)); }
-
-    private void stopLiveService() {
-        stopService(new Intent(this,LiveService.class));
     }
 
     @Override
@@ -101,4 +102,15 @@ public class MainActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.compareTo("ACTIVITY_RECOGNITION") == 0) {
+            boolean start = sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
+            if(start) {
+                _serviceStarter.startRecognitionServices();
+            } else {
+                _serviceStarter.stopRecognitionServices();
+            }
+        }
+    }
 }

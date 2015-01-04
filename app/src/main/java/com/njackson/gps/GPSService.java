@@ -1,15 +1,11 @@
 package com.njackson.gps;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
+
 import android.hardware.SensorManager;
-import android.location.GpsStatus.NmeaListener;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -18,9 +14,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.njackson.*;
-import com.njackson.activities.MainActivity;
-import com.njackson.application.modules.PebbleBikeApplication;
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSService.ChangeRefreshInterval;
 import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.GPSService.CurrentState;
@@ -89,9 +83,10 @@ public class GPSService extends Service {
     public void onDestroy (){
         Log.d("MAINTEST", "Stopped GPS Service");
         saveGPSStats();
-        //removeServiceForeground();
-
         stopLocationUpdates();
+
+        _bus.unregister(this);
+        super.onDestroy();
     }
 
     @Override

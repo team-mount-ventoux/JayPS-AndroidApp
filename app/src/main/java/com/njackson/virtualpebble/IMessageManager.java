@@ -13,4 +13,6 @@ public interface IMessageManager extends Runnable {
     public boolean offer(final PebbleDictionary data);
     public boolean offerIfLow(final PebbleDictionary data, int sizeMax);
 
+    public void showWatchFace();
+    public void hideWatchFace();
 }

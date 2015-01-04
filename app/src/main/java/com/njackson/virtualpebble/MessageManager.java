@@ -156,4 +156,14 @@ public class MessageManager implements IMessageManager, Runnable {
         return success;
     }
 
+    @Override
+    public void showWatchFace() {
+        PebbleKit.startAppOnPebble(_applicationContext,Constants.WATCH_UUID);
+    }
+
+    @Override
+    public void hideWatchFace() {
+        PebbleKit.closeAppOnPebble(_applicationContext,Constants.WATCH_UUID);
+    }
+
 }

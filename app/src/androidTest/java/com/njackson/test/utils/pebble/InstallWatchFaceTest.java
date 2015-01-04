@@ -6,10 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
-import android.widget.Toast;
 
-import com.njackson.utils.IMessageMaker;
-import com.njackson.utils.pebble.InstallWatchFace;
+import com.njackson.utils.messages.IMessageMaker;
+import com.njackson.utils.watchface.InstallPebbleWatchFace;
 import com.njackson.utils.version.IAndroidVersion;
 import com.njackson.utils.version.IWatchFaceVersion;
 
@@ -20,21 +19,20 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by njackson on 24/12/14.
  */
 public class InstallWatchFaceTest extends AndroidTestCase {
 
-    InstallWatchFace _install;
+    InstallPebbleWatchFace _install;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
         System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
 
-        _install = new InstallWatchFace(mock(IAndroidVersion.class), mock(IWatchFaceVersion.class));
+        _install = new InstallPebbleWatchFace(mock(IAndroidVersion.class), mock(IWatchFaceVersion.class));
     }
 
     @SmallTest

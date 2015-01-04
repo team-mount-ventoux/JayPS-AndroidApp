@@ -247,7 +247,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
     @SmallTest
     public void testSavesStateOnDestroy() throws Exception {
         startService();
-        _service.onDestroy();
+        shutdownService();
 
         verify(_mockEditor, times(1)).commit();
     }
@@ -264,7 +264,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
     public void testRemovesNmeaListenerOnDestroy() throws Exception {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
         startService();
-        _service.onDestroy();
+        shutdownService();
 
         verify(_mockLocationManager,timeout(2000).times(1)).removeNmeaListener(any(GpsStatus.NmeaListener.class));
     }
@@ -281,7 +281,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
     public void testRemovesSensorOnDestroy() throws Exception {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
         startService();
-        _service.onDestroy();
+        shutdownService();
 
         verify(_mockSensorManager,timeout(2000).times(1)).unregisterListener(any(GPSSensorEventListener.class));
     }

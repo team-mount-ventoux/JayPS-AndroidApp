@@ -1,4 +1,4 @@
-package com.njackson.utils;
+package com.njackson.utils.messages;
 
 import android.content.Context;
 

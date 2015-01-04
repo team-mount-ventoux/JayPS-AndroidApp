@@ -3,6 +3,7 @@ package com.njackson.test.fragments;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.LinearLayout;
 
 import com.njackson.R;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.mock;
 public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
 
     @Inject Bus _bus;
+    private LinearLayout _mainContainer;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -53,7 +55,7 @@ public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        this.getInstrumentation().waitForIdleSync(); // this is needed for emulator versions 2.3 as the application is instantiated on a separate thread.
+
         TestApplication app = (TestApplication)this.getInstrumentation().getTargetContext().getApplicationContext();
 
         app.setObjectGraph(ObjectGraph.create(new TestModule()));
@@ -63,26 +65,22 @@ public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
 
         _activity = getActivity();
         startFragment(new AltitudeFragment());
+
+        _mainContainer = (LinearLayout)_activity.findViewById(R.id.altitude_main_container);
+        assertNotNull(_mainContainer);
     }
 
-    @MediumTest
+    @SmallTest
     public void test_Element_Exists() {
-        LinearLayout layout = (LinearLayout)_activity.findViewById(R.id.altitude_main_container);
-        int elements = layout.getChildCount();
+        int elements = _mainContainer.getChildCount();
 
         assertEquals("Expected 14 altitude bars",14,elements);
     }
 
     @MediumTest
     public void test_Activity_Responds_To_NewAltitudeEvent() {
-        final NewAltitiude event = new NewAltitiude(new float[14],0);
+        _bus.post(new NewAltitiude(new float[14],0));
 
-        _activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                _bus.post(event);
-            }
-        });
     }
 
 }

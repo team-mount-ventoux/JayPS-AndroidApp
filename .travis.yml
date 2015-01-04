@@ -4,6 +4,8 @@ language: android
 
 android:
   components:
+  - tools
+  - platform-tools
   - build-tools-21.1.2
   - android-21
   - sys-img-armeabi-v7a-android-21
@@ -18,19 +20,19 @@ licenses:
 before_script:
   - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
   - emulator -avd test -no-skin -no-audio -no-window &
-  - ./gradlew assemble
   - android-wait-for-emulator
+  - adb shell input keyevent 82 &
 
 script:
   - adb logcat -c
-  - ./gradlew connectedCheck
+  - gradle connectedCheck
 
 after_success:
   - mkdir ./app/build/reports/
   - mkdir ./app/build/reports/jacoco
   - mkdir ./app/build/reports/jacoco/test
   - mv ./app/build/outputs/reports/coverage/debug/report.xml ./app/build/reports/jacoco/test/jacocoTestReport.xml
-  - ./gradlew coveralls
+  - gradle coveralls
 
 after_failure:
   - adb logcat -d E

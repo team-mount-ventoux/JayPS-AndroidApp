@@ -18,10 +18,11 @@ public class FragmentInstrumentTestCase2 extends ActivityInstrumentationTestCase
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath());
     }
 
     protected Fragment startFragment(Fragment fragment) {
-        FragmentTransaction transaction = _activity.getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.activity_test_fragment_linearlayout, fragment, "tag");
         transaction.commit();
         getInstrumentation().waitForIdleSync();

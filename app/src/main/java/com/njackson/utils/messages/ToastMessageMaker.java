@@ -1,7 +1,9 @@
-package com.njackson.utils;
+package com.njackson.utils.messages;
 
 import android.content.Context;
 import android.widget.Toast;
+
+import com.njackson.utils.messages.IMessageMaker;
 
 /**
  * Created by njackson on 24/12/14.

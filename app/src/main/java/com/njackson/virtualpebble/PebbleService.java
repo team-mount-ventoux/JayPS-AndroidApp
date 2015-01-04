@@ -1,12 +1,10 @@
 package com.njackson.virtualpebble;
 
-import android.app.Application;
 import android.app.Service;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.IBinder;
 import com.getpebble.android.kit.util.PebbleDictionary;
-import com.njackson.application.modules.PebbleBikeApplication;
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.events.PebbleService.CurrentState;
 import com.njackson.utils.LocationEventConverter;
@@ -46,6 +44,7 @@ public class PebbleService extends Service {
     @Override
     public void onDestroy (){
         _bus.unregister(this);
+        _messageManager.hideWatchFace();
         super.onDestroy();
     }
 
@@ -55,6 +54,7 @@ public class PebbleService extends Service {
         _messageThread.start();
 
         _bus.post(new CurrentState(CurrentState.State.STARTED));
+        _messageManager.showWatchFace();
     }
 
     private void sendDataToPebble(PebbleDictionary data) {

@@ -9,10 +9,13 @@ import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.test.ActivityInstrumentationTestCase2;
 import android.test.ActivityUnitTestCase;
+import android.test.UiThreadTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.njackson.activities.MainActivity;
+import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.application.modules.PebbleServiceModule;
@@ -24,6 +27,8 @@ import com.njackson.live.LiveService;
 import com.njackson.live.LiveTracking;
 import com.njackson.test.application.TestApplication;
 import com.njackson.test.testUtils.Services;
+import com.njackson.utils.googleplay.IGooglePlayServices;
+import com.njackson.utils.services.IServiceStarter;
 import com.njackson.virtualpebble.IMessageManager;
 import com.njackson.virtualpebble.MessageManager;
 import com.njackson.virtualpebble.PebbleService;
@@ -44,6 +49,7 @@ import dagger.Provides;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -55,6 +61,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @Inject Bus _bus;
     @Inject SharedPreferences _mockPreferences;
+    @Inject IServiceStarter _mockServiceStarter;
     @Inject IAnalytics _mockAnalytics;
 
     private MainActivity _activity;
@@ -69,26 +76,31 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
             complete = false
     )
     static class TestModule {
-        @Provides
-        @Singleton
+        @Provides @Singleton
         LocationManager provideLocationManager() {
             return mock(LocationManager.class);
         }
 
-        @Provides
-        @Singleton
+        @Provides @Singleton
         SharedPreferences provideSharedPreferences() { return mock(SharedPreferences.class); }
 
         @Provides
         public IMessageManager providesMessageManager() { return mock(IMessageManager.class); }
 
-        @Provides
-        @Singleton
+        @Provides @Singleton
         public IAnalytics providesAnalytics() { return mock(IAnalytics.class); }
 
-        @Provides
-        @Singleton
+        @Provides @Singleton
         SensorManager provideSensorManager() { return mock(SensorManager.class); }
+
+        @Provides @Singleton
+        GoogleApiClient provideActivityRecognitionClient() { return mock(GoogleApiClient.class); }
+
+        @Provides
+        IGooglePlayServices providesGooglePlayServices() { return mock(IGooglePlayServices.class); }
+
+        @Provides @Singleton
+        IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
     }
 
     private ResetGPSState _stateEvent;
@@ -116,7 +128,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         setupMocks();
 
-        _activity = getActivity();
         Log.d("MAINTEST", "Setup Complete");
     }
 
@@ -127,62 +138,86 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     @SmallTest
     public void testSendsTrackAppOpenedAnalyticsOnCreate() {
+        _activity = getActivity();
+
         verify(_mockAnalytics,times(1)).trackAppOpened(any(Intent.class));
     }
 
     @SmallTest
-    public void testRespondsToStartButtonTouchedEventStartsGPS() throws Exception {
-        Log.d("MAINTEST", "Started GPS Test");
-        _bus.post(new StartButtonTouchedEvent());
+    public void testRegistersForSharedPreferencesUpdatesOnCreate() {
+        _activity = getActivity();
 
-        boolean serviceStarted = Services.waitForServiceToStart(GPSService.class, _activity, 20000);
-        assertTrue("GPSService should have been started", serviceStarted);
-        Log.d("MAINTEST", "Finished GPS Test");
+        verify(_mockPreferences,times(1)).registerOnSharedPreferenceChangeListener(any(MainActivity.class));
     }
 
     @SmallTest
-    public void testRespondsToStopButtonTouchedEventStopsGPS() throws Exception {
-        Services.startServiceAndWaitForReady(GPSService.class, _activity);
+    public void testUnRegistersForSharedPreferencesUpdatesOnDestroy() throws InterruptedException {
+        _activity = getActivity();
+
+        _activity.finish();
+
+        verify(_mockPreferences, timeout(2000).times(1)).unregisterOnSharedPreferenceChangeListener(any(MainActivity.class));
+    }
+
+    @SmallTest
+    public void testRespondsToStartButtonTouchedEventStartsServices() throws Exception {
+        _activity = getActivity();
+
+        _bus.post(new StartButtonTouchedEvent());
+
+        verify(_mockServiceStarter, timeout(2000).times(1)).startLocationServices();
+    }
+
+    @SmallTest
+    public void testRespondsToStopButtonTouchedEventStopsServices() throws Exception {
+        _activity = getActivity();
 
         _bus.post(new StopButtonTouchedEvent());
 
-        boolean serviceStopped = Services.waitForServiceToStop(GPSService.class, _activity, 20000);
-        assertTrue ("GPSService should have been stopped", serviceStopped);
+        verify(_mockServiceStarter, timeout(2000).times(1)).stopLocationServices();
     }
 
     @SmallTest
-    public void testRespondsToStartButtonTouchedEventStartsPebbleBikeService() throws Exception {
-        _bus.post(new StartButtonTouchedEvent());
+    public void testStartsActivityRecognitionServiceWhenPreferenceSet() throws Exception {
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
 
-        boolean serviceStarted = Services.waitForServiceToStart(PebbleService.class, _activity, 20000);
-        assertTrue ("PebbleBikeService should have been started", serviceStarted);
+        _activity = getActivity();
+
+        verify(_mockServiceStarter,timeout(2000).times(1)).startRecognitionServices();
     }
 
     @SmallTest
-    public void testRespondsToStopButtonTouchedEventStopsPebbleBikeService() throws Exception {
-        Services.startServiceAndWaitForReady(PebbleService.class, _activity);
+    public void testDoesNotStartActivityRecognitionServiceWhenPreferenceSet() throws Exception {
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
 
-        _bus.post(new StopButtonTouchedEvent());
+        _activity = getActivity();
 
-        boolean serviceStopped = Services.waitForServiceToStop(PebbleService.class, _activity, 20000);
-        assertTrue ("PebbleBikeService should have been stopped", serviceStopped);
+        verify(_mockServiceStarter,timeout(2000).times(0)).startRecognitionServices();
     }
 
     @SmallTest
-    public void testRespondsToStartButtonTouchedEventStartsLiveTrackingService() throws Exception {
-        _bus.post(new StartButtonTouchedEvent());
+    public void testStopsActivityRecognitionServiceWhenPreferenceChanged() throws Exception {
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
 
-        boolean serviceStarted = Services.waitForServiceToStart(LiveService.class, _activity, 20000);
-        assertTrue ("LiveTrackingService should have been started", serviceStarted);
+        _activity = getActivity();
+
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
+
+        _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
+
+        verify(_mockServiceStarter,times(1)).stopRecognitionServices();
     }
 
     @SmallTest
-    public void testRespondsToStopButtonTouchedEventStopsLiveTrackingService() throws Exception {
-        Services.startServiceAndWaitForReady(LiveService.class, _activity);
+    public void testStartsActivityRecognitionServiceWhenPreferenceChanged() throws Exception {
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
 
-        _bus.post(new StopButtonTouchedEvent());
+        _activity = getActivity();
 
-        boolean serviceStopped = Services.waitForServiceToStop(LiveService.class, _activity, 20000);
-        assertTrue ("LiveTrackingService should have been stopped", serviceStopped);
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
+
+        _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
+
+        verify(_mockServiceStarter,times(1)).startRecognitionServices();
     }
 }

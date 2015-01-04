@@ -1,4 +1,4 @@
-package com.njackson.utils.pebble;
+package com.njackson.utils.watchface;
 
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
@@ -7,22 +7,20 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 
-import com.njackson.utils.IInstallWatchFace;
-import com.njackson.utils.IMessageMaker;
-import com.njackson.utils.version.AndroidVersion;
+import com.njackson.utils.messages.IMessageMaker;
 import com.njackson.utils.version.IAndroidVersion;
 import com.njackson.utils.version.IWatchFaceVersion;
 
 /**
  * Created by server on 28/06/2014.
  */
-public class InstallWatchFace implements IInstallWatchFace{
+public class InstallPebbleWatchFace implements IInstallWatchFace{
 
     private final String TAG = "PB-InstallWatchFace";
     private IAndroidVersion _androidVersion;
     private IWatchFaceVersion _watchFaceVersion;
 
-    public InstallWatchFace(IAndroidVersion androidVersion, IWatchFaceVersion watchFaceVersion) {
+    public InstallPebbleWatchFace(IAndroidVersion androidVersion, IWatchFaceVersion watchFaceVersion) {
         _androidVersion = androidVersion;
         _watchFaceVersion = watchFaceVersion;
     }
