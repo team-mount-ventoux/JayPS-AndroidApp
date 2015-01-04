@@ -97,6 +97,7 @@ public class ActivityRecognitionService  extends Service implements
         _recognitionClient.unregisterConnectionFailedListener(this);
 
         _googlePlay.removeActivityUpdates(_recognitionClient,_activityRecognitionPendingIntent);
+        _recognitionClient.disconnect();
         super.onDestroy();
     }
 
@@ -109,7 +110,6 @@ public class ActivityRecognitionService  extends Service implements
     public void onConnected(Bundle bundle) {
         Log.d(TAG,"Connected to Activity Service");
         _googlePlay.requestActivityUpdates(_recognitionClient, DETECTION_INTERVAL_MILLISECONDS, _activityRecognitionPendingIntent);
-        _recognitionClient.disconnect();
     }
 
     @Override
