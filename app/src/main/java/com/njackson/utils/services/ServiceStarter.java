@@ -2,6 +2,7 @@ package com.njackson.utils.services;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.gps.GPSService;
@@ -14,9 +15,11 @@ import com.njackson.virtualpebble.PebbleService;
 public class ServiceStarter implements IServiceStarter {
 
     Context _context;
+    SharedPreferences _sharedPreferences;
 
-    public ServiceStarter(Context context) {
+    public ServiceStarter(Context context, SharedPreferences preferences) {
         _context = context;
+        _sharedPreferences = preferences;
     }
 
     @Override
@@ -44,7 +47,11 @@ public class ServiceStarter implements IServiceStarter {
     }
 
     protected void startGPSService() {
-        _context.startService(new Intent(_context, GPSService.class));
+        int refreshInterval = Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000"));
+        Intent intent = new Intent(_context, GPSService.class);
+        intent.putExtra("REFRESH_INTERVAL",refreshInterval);
+
+        _context.startService(intent);
     }
 
     private void stopGPSService() {

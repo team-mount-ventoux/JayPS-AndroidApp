@@ -60,5 +60,5 @@ public class AndroidModule {
     }
 
     @Provides @Singleton
-    IServiceStarter provideServiceStarter() { return new ServiceStarter(application); }
+    IServiceStarter provideServiceStarter() { return new ServiceStarter(application, provideSharedPreferences()); }
 }

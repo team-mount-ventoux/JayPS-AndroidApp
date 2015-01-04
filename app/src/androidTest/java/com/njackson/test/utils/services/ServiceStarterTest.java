@@ -2,6 +2,7 @@ package com.njackson.test.utils.services;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.LocationListener;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
@@ -22,6 +23,7 @@ import java.util.List;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by njackson on 03/01/15.
@@ -30,15 +32,23 @@ public class ServiceStarterTest extends AndroidTestCase {
 
     Context _mockContext;
     private ServiceStarter _serviceStarter;
+    private SharedPreferences _mockPreferences;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
 
         System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
+        setupMocks();
 
+        _serviceStarter = new ServiceStarter(_mockContext, _mockPreferences);
+    }
+
+    private void setupMocks() {
         _mockContext = mock(Context.class);
-        _serviceStarter = new ServiceStarter(_mockContext);
+        _mockPreferences = mock(SharedPreferences.class);
+
+        when(_mockPreferences.getString("REFRESH_INTERVAL","1000")).thenReturn("1500");
     }
 
     @SmallTest
@@ -50,6 +60,20 @@ public class ServiceStarterTest extends AndroidTestCase {
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents, GPSService.class));
+    }
+
+    @SmallTest
+    public void testStartsGPSServiceWithRefreshInterval() throws Exception {
+        _serviceStarter.startLocationServices();
+        ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
+
+        verify(_mockContext,times(3)).startService(intentArgumentCaptor.capture());
+
+        List<Intent> intents = intentArgumentCaptor.getAllValues();
+        Intent startIntent = getIntentFromCaptor(intents,GPSService.class);
+
+        int refreshInterval = startIntent.getIntExtra("REFRESH_INTERVAL",1000);
+        assertEquals(1500,refreshInterval);
     }
 
     @SmallTest
@@ -129,14 +153,18 @@ public class ServiceStarterTest extends AndroidTestCase {
         assertTrue(checkComponentInCaptor(intents,ActivityRecognitionService.class));
     }
 
-    private boolean checkComponentInCaptor(List<Intent> intents, Class<?> serviceClass) {
+    private Intent getIntentFromCaptor(List<Intent> intents, Class<?> serviceClass) {
         for(Intent intent : intents) {
             if(intent.getComponent().getClassName().compareTo(serviceClass.getName()) == 0) {
-                return true;
+                return intent;
             }
         }
 
-        return false;
+        return null;
+    }
+
+    private boolean checkComponentInCaptor(List<Intent> intents, Class<?> serviceClass) {
+        return (getIntentFromCaptor(intents,serviceClass) != null);
     }
 
 }
