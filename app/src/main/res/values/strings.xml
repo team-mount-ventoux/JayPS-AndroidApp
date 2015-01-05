@@ -100,6 +100,8 @@
     <string name="ble_stop">Stop</string>
     <string name="ble_unknown_characteristic">Unknown characteristic</string>
     <string name="ble_unknown_service">Unknown service</string>
+    <string name="PREF_GOOGLE_FIT_TITLE">Google Fit</string>
+    <string name="PREF_GOOGLE_FIT_SUMMARY">Enable Google Fit recording for all your Pebble Bike activity</string>
 
     <!-- Canvas Plugin -->
     <string-array name="canvas_format_mask_descs">

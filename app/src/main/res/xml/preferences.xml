@@ -36,6 +36,12 @@
             android:summary="@string/PREF_AUTOSTART_SUMMARY"
             android:defaultValue="false" />
 
+        <CheckBoxPreference
+            android:key="GOOGLE_FIT"
+            android:title="@string/PREF_GOOGLE_FIT_TITLE"
+            android:summary="@string/PREF_GOOGLE_FIT_SUMMARY"
+            android:defaultValue="true" />
+
     </PreferenceCategory>
 
     <PreferenceScreen
