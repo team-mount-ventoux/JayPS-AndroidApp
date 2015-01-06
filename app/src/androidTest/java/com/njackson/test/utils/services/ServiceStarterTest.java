@@ -56,7 +56,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         _serviceStarter.startLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).startService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(2)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents, GPSService.class));
@@ -67,7 +67,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         _serviceStarter.startLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).startService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(2)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         Intent startIntent = getIntentFromCaptor(intents,GPSService.class);
@@ -81,29 +81,29 @@ public class ServiceStarterTest extends AndroidTestCase {
         _serviceStarter.stopLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).stopService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(2)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,GPSService.class));
     }
 
     @SmallTest
-    public void testStartsPebbleBikeService() throws Exception {
-        _serviceStarter.startLocationServices();
+    public void testStartsPebbleService() throws Exception {
+        _serviceStarter.startPebbleService();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).startService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(1)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,PebbleService.class));
     }
 
     @SmallTest
-    public void testStopsPebbleBikeService() throws Exception {
-        _serviceStarter.stopLocationServices();
+    public void testStopsPebbleService() throws Exception {
+        _serviceStarter.stopPebbleService();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).stopService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(1)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,PebbleService.class));
@@ -114,7 +114,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         _serviceStarter.startLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).startService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(2)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,LiveService.class));
@@ -125,7 +125,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         _serviceStarter.stopLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).stopService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(2)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,LiveService.class));

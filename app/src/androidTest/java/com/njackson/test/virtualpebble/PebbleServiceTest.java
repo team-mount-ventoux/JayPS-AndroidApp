@@ -100,12 +100,6 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
     }
 
     @SmallTest
-    public void testserviceSetsApplicationContext() throws InterruptedException {
-        startService();
-        Mockito.verify(_mockMessageManager,times(1)).setContext(any(Context.class));
-    }
-
-    @SmallTest
     public void testServiceShowsWatchFaceOnStart() throws InterruptedException {
         startService();
         shutdownService();

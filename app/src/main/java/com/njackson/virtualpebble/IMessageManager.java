@@ -8,11 +8,11 @@ import com.getpebble.android.kit.util.PebbleDictionary;
  */
 public interface IMessageManager extends Runnable {
 
-    public void setContext(Context context);
-
     public boolean offer(final PebbleDictionary data);
     public boolean offerIfLow(final PebbleDictionary data, int sizeMax);
 
     public void showWatchFace();
     public void hideWatchFace();
+
+    public void showSimpleNotificationOnWatch(String title, String text);
 }

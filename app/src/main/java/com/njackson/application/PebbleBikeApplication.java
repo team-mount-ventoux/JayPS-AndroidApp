@@ -32,7 +32,7 @@ public class PebbleBikeApplication extends Application {
         return Arrays.asList(
                 new AndroidModule(this),
                 new PebbleBikeModule(),
-                new PebbleServiceModule()
+                new PebbleServiceModule(getApplicationContext())
         );
     }
 

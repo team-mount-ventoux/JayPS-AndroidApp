@@ -49,7 +49,6 @@ public class PebbleService extends Service {
     }
 
     private void handleIntent(Intent intent) {
-        _messageManager.setContext(getApplicationContext());
         _messageThread = new Thread(_messageManager);
         _messageThread.start();
 
