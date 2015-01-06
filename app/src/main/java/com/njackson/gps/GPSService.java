@@ -1,5 +1,7 @@
 package com.njackson.gps;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,8 +14,11 @@ import android.location.LocationManager;
 
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.njackson.R;
+import com.njackson.activities.MainActivity;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSService.ChangeRefreshInterval;
 import com.njackson.events.GPSService.ResetGPSState;
@@ -41,6 +46,7 @@ public class GPSService extends Service {
 
     @Inject LocationManager _locationMgr;
     @Inject SensorManager _sensorManager;
+    @Inject IGPSServiceStarterForeground _serviceStarter;
 
     @Inject SharedPreferences _sharedPreferences;
     @Inject Bus _bus;
@@ -53,6 +59,9 @@ public class GPSService extends Service {
 
     private int _refresh_interval = 1000;
     private boolean _gpsStarted = false;
+
+    /** JUNIT - this is for testing purposes only */
+    public static boolean isJUnit = false;
 
     @Subscribe
     public void onResetGPSStateEvent(ResetGPSState event) {
@@ -68,7 +77,11 @@ public class GPSService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleCommand(intent);
+
+        _serviceStarter.startServiceForeground(this, "Pebble Bike", "GPS started");
+
         // ensures that if the service is recycled then it is restarted with the same refresh interval
+        // onStartCommand will always be called with a non-null intent
         return START_REDELIVER_INTENT;
     }
 
@@ -84,6 +97,7 @@ public class GPSService extends Service {
         Log.d("MAINTEST", "Stopped GPS Service");
         saveGPSStats();
         stopLocationUpdates();
+        _serviceStarter.stopServiceForeground(this);
 
         _bus.unregister(this);
         super.onDestroy();
@@ -251,29 +265,5 @@ public class GPSService extends Service {
         _bus.post(event);
         Log.d(TAG,"New Location");
     }
-
-    /*
-    private void makeServiceForeground(String title, String text) {
-        final int myID = 1000;
-
-        //The intent to launch when the user clicks the expanded notification
-        Intent i = new Intent(this, MainActivity.class);
-
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendIntent = PendingIntent.getActivity(this, 0, i, 0);
-
-        // The following code is deprecated since API 11 (Android 3.x). Notification.Builder could be used instead, but without Android 2.x compatibility 
-        Notification notification = new Notification(R.drawable.ic_launcher, "Pebble Bike", System.currentTimeMillis());
-        notification.setLatestEventInfo(this, title, text, pendIntent);
-
-        notification.flags |= Notification.FLAG_NO_CLEAR;
-
-        startForeground(myID, notification);
-    }
-
-    private void removeServiceForeground() {
-        stopForeground(true);
-    }
-    */
 
 }
