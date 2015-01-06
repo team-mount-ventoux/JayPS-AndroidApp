@@ -32,7 +32,7 @@ public class NumberConvertorTest extends AndroidTestCase {
     public void testReturnsNaNWhenNotANumber() {
         String convertedValue = _numberConverter.converFloatToString(Float.NaN,0);
 
-        assertEquals(convertedValue,"NaN");
+        assertEquals(convertedValue,".");
     }
 
 }
