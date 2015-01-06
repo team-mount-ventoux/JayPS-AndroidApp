@@ -46,6 +46,7 @@ public class GPSService extends Service {
 
     @Inject LocationManager _locationMgr;
     @Inject SensorManager _sensorManager;
+    @Inject IGPSServiceStarterForeground _serviceStarter;
 
     @Inject SharedPreferences _sharedPreferences;
     @Inject Bus _bus;
@@ -77,7 +78,7 @@ public class GPSService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleCommand(intent);
 
-        makeServiceForeground("Pebble Bike", "GPS started");
+        _serviceStarter.startServiceForeground(this, "Pebble Bike", "GPS started");
 
         // ensures that if the service is recycled then it is restarted with the same refresh interval
         // onStartCommand will always be called with a non-null intent
@@ -95,9 +96,8 @@ public class GPSService extends Service {
     public void onDestroy (){
         Log.d("MAINTEST", "Stopped GPS Service");
         saveGPSStats();
-        removeServiceForeground();
-
         stopLocationUpdates();
+        _serviceStarter.stopServiceForeground(this);
 
         _bus.unregister(this);
         super.onDestroy();
@@ -264,39 +264,6 @@ public class GPSService extends Service {
 
         _bus.post(event);
         Log.d(TAG,"New Location");
-    }
-
-    private void makeServiceForeground(String title, String text) {
-        // http://stackoverflow.com/questions/3687200/implement-startforeground-method-in-android
-        final int myID = 1000;
-
-        //The intent to launch when the user clicks the expanded notification
-        Intent i = new Intent(this, MainActivity.class);
-
-        i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent pendIntent = PendingIntent.getActivity(this, 0, i, 0);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setContentTitle(title).setContentText(text)
-               .setSmallIcon(R.drawable.ic_launcher)
-               .setWhen(System.currentTimeMillis())
-               .setAutoCancel(false)
-               .setOngoing(true)
-               .setContentIntent(pendIntent);
-        Notification notification = builder.build();
-
-        // http://developer.android.com/reference/android/test/ServiceTestCase.html#setupService()
-        // in mService.attach():  mocked services don't talk with the activity manager
-        // http://stackoverflow.com/questions/13358386/service-startforeground-throws-nullpointerexception-when-run-with-servicetestc#answer-13359680
-        if (!isJUnit) {
-            startForeground(myID, notification);
-        }
-    }
-
-    private void removeServiceForeground() {
-        if (!isJUnit) {
-            stopForeground(true);
-        }
     }
 
 }

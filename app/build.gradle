@@ -42,5 +42,4 @@ dependencies {
     compile fileTree(dir: 'libs', include: 'ParseCrashReporting-*.jar')
     androidTestCompile 'com.google.dexmaker:dexmaker:1.1+'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.1+'
-    androidTestCompile 'org.threadly:threadly:3.3.0'
 }

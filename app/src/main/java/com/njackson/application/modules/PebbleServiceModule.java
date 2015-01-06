@@ -1,5 +1,7 @@
 package com.njackson.application.modules;
 
+import com.njackson.gps.GPSServerStarterForeground;
+import com.njackson.gps.IGPSServiceStarterForeground;
 import com.njackson.virtualpebble.IMessageManager;
 import com.njackson.virtualpebble.MessageManager;
 import com.njackson.virtualpebble.PebbleService;
@@ -20,5 +22,8 @@ public class PebbleServiceModule {
     public IMessageManager providesMessageManager() {
         return new MessageManager();
     }
+
+    @Provides
+    IGPSServiceStarterForeground providesForegroundServiceStarter() { return new GPSServerStarterForeground(); }
 
 }
