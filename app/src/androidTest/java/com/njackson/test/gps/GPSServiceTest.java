@@ -134,6 +134,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         setApplication(app);
 
         setupMocks();
+        GPSService.isJUnit = true;
 
         _locationEventResults = null; // reset the event results
         _stateLatch = new CountDownLatch(1);

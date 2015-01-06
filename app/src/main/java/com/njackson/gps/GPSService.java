@@ -1,5 +1,7 @@
 package com.njackson.gps;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,8 +14,11 @@ import android.location.LocationManager;
 
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.njackson.R;
+import com.njackson.activities.MainActivity;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSService.ChangeRefreshInterval;
 import com.njackson.events.GPSService.ResetGPSState;
@@ -54,6 +59,9 @@ public class GPSService extends Service {
     private int _refresh_interval = 1000;
     private boolean _gpsStarted = false;
 
+    /** JUNIT - this is for testing purposes only */
+    public static boolean isJUnit = false;
+
     @Subscribe
     public void onResetGPSStateEvent(ResetGPSState event) {
         //stop service stopLocationUpdates();
@@ -68,7 +76,11 @@ public class GPSService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleCommand(intent);
+
+        makeServiceForeground("Pebble Bike", "GPS started");
+
         // ensures that if the service is recycled then it is restarted with the same refresh interval
+        // onStartCommand will always be called with a non-null intent
         return START_REDELIVER_INTENT;
     }
 
@@ -83,6 +95,8 @@ public class GPSService extends Service {
     public void onDestroy (){
         Log.d("MAINTEST", "Stopped GPS Service");
         saveGPSStats();
+        removeServiceForeground();
+
         stopLocationUpdates();
 
         _bus.unregister(this);
@@ -252,8 +266,8 @@ public class GPSService extends Service {
         Log.d(TAG,"New Location");
     }
 
-    /*
     private void makeServiceForeground(String title, String text) {
+        // http://stackoverflow.com/questions/3687200/implement-startforeground-method-in-android
         final int myID = 1000;
 
         //The intent to launch when the user clicks the expanded notification
@@ -262,18 +276,27 @@ public class GPSService extends Service {
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendIntent = PendingIntent.getActivity(this, 0, i, 0);
 
-        // The following code is deprecated since API 11 (Android 3.x). Notification.Builder could be used instead, but without Android 2.x compatibility 
-        Notification notification = new Notification(R.drawable.ic_launcher, "Pebble Bike", System.currentTimeMillis());
-        notification.setLatestEventInfo(this, title, text, pendIntent);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setContentTitle(title).setContentText(text)
+               .setSmallIcon(R.drawable.ic_launcher)
+               .setWhen(System.currentTimeMillis())
+               .setAutoCancel(false)
+               .setOngoing(true)
+               .setContentIntent(pendIntent);
+        Notification notification = builder.build();
 
-        notification.flags |= Notification.FLAG_NO_CLEAR;
-
-        startForeground(myID, notification);
+        // http://developer.android.com/reference/android/test/ServiceTestCase.html#setupService()
+        // in mService.attach():  mocked services don't talk with the activity manager
+        // http://stackoverflow.com/questions/13358386/service-startforeground-throws-nullpointerexception-when-run-with-servicetestc#answer-13359680
+        if (!isJUnit) {
+            startForeground(myID, notification);
+        }
     }
 
     private void removeServiceForeground() {
-        stopForeground(true);
+        if (!isJUnit) {
+            stopForeground(true);
+        }
     }
-    */
 
 }
