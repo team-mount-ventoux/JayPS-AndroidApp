@@ -116,7 +116,6 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            _messageManager.showSimpleNotificationOnWatch("Pebble Bike", "test");
             startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
         }
         return super.onOptionsItemSelected(item);
