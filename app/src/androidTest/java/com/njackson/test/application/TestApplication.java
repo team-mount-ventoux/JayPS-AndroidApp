@@ -10,11 +10,13 @@ import dagger.ObjectGraph;
  */
 public class TestApplication extends PebbleBikeApplication {
 
+    private static final String TAG = "PB-TestApplication";
+
     public ObjectGraph getObjectGraph() {
         return graph;
     }
     public void setObjectGraph(ObjectGraph graph) {
-        Log.d("MAINTEST","set object graph");
+        Log.d(TAG, "set object graph");
         this.graph = graph;
     }
 

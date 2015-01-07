@@ -19,6 +19,8 @@ import dagger.ObjectGraph;
  */
 public class PebbleBikeApplication extends Application {
 
+    private static final String TAG = "PB-PebbleBikeApplication";
+
     protected ObjectGraph graph;
 
     @Override public void onCreate() {
@@ -44,7 +46,7 @@ public class PebbleBikeApplication extends Application {
     }
 
     private void createObjectGraph() {
-        Log.d("MAINTEST", "Create object graph");
+        Log.d(TAG, "Create object graph");
         graph = ObjectGraph.create(getModules().toArray());
     }
 

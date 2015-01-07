@@ -109,7 +109,7 @@ public class GPSService extends Service {
     }
 
     private void handleCommand(Intent intent) {
-        Log.d("MAINTEST", "Started GPS Service");
+        Log.d(TAG, "Started GPS Service");
 
         _advancedLocation = new AdvancedLocation(getApplicationContext());
         _advancedLocation.debugTagPrefix = "PB-";
@@ -149,7 +149,7 @@ public class GPSService extends Service {
 
     // load the saved state
     private void loadGPSStats() {
-        Log.d("MAINTEST", "loadGPSStats()");
+        Log.d(TAG, "loadGPSStats()");
 
         _advancedLocation.setDistance(_sharedPreferences.getFloat("GPS_DISTANCE", 0.0f));
         _advancedLocation.setElapsedTime(_sharedPreferences.getLong("GPS_ELAPSEDTIME", 0));

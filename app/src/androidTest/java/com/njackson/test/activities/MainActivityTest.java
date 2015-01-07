@@ -59,6 +59,8 @@ import static org.mockito.Mockito.when;
  */
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
 
+    private static final String TAG = "PB-MainActivityTest";
+
     @Inject Bus _bus;
     @Inject SharedPreferences _mockPreferences;
     @Inject IServiceStarter _mockServiceStarter;
@@ -128,7 +130,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         setupMocks();
 
-        Log.d("MAINTEST", "Setup Complete");
+        Log.d(TAG, "Setup Complete");
     }
 
     private void setupMocks() {
