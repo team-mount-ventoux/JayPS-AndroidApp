@@ -3,7 +3,9 @@ package com.njackson.virtualpebble;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 import com.getpebble.android.kit.util.PebbleDictionary;
+import com.njackson.Constants;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.events.PebbleService.CurrentState;
@@ -13,18 +15,27 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
+import static com.njackson.events.GPSService.CurrentState.State.STARTED;
+
 
 public class PebbleService extends Service {
 
     @Inject IMessageManager _messageManager;
     @Inject Bus _bus;
 
-    private final String TAG = "PB-PebbleService";
+    private static final String TAG = "PB-PebbleService";
     private Thread _messageThread;
 
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
-        PebbleDictionary dictionary = LocationEventConverter.convert(newLocation, false, false, false, 1000, 0);
+        PebbleDictionary dictionary = LocationEventConverter.convert(
+                newLocation,
+                true /* serviceRunning */, // TODO(nic)
+                false /* debug */,
+                false/* liveTrackingEnabled */, // TODO(nic)
+                1000 /* refreshInterval */, // TODO(nic)
+                255 /* heartRate */
+        );
         sendDataToPebble(dictionary);
     }
 
@@ -32,6 +43,18 @@ public class PebbleService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         handleIntent(intent);
         return START_STICKY;
+    }
+
+    @Subscribe
+    public void onGPSServiceState(com.njackson.events.GPSService.CurrentState event) {
+
+        if (event.getState().compareTo(com.njackson.events.GPSService.CurrentState.State.STOPPED) == 0) {
+            Log.d(TAG, "onGPSServiceState STOPPED");
+            PebbleDictionary dictionary = new PebbleDictionary();
+            dictionary.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
+            //Log.d(TAG, " STATE_CHANGED: "   + dictionary.getInteger(Constants.STATE_CHANGED));
+            sendDataToPebble(dictionary);
+        }
     }
 
     @Override

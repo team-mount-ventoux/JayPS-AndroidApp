@@ -26,7 +26,7 @@ import javax.inject.Inject;
 
 public class MainActivity extends FragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "PB-MainActivity";
     @Inject Bus _bus;
     @Inject IAnalytics _analytics;
     @Inject SharedPreferences _sharedPreferences;
@@ -65,7 +65,7 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
         if (getIntent().getExtras() != null) {
             if (getIntent().getExtras().containsKey("button")) {
                 Log.d(TAG, "onCreate() button:" + getIntent().getExtras().getInt("button"));
-                // TODO(nic) changeState(getIntent().getExtras().getInt("button"));
+                changeState(getIntent().getExtras().getInt("button"));
             }
             if (getIntent().getExtras().containsKey("version")) {
                 Log.d(TAG, "onCreate() version:" + getIntent().getExtras().getInt("version"));
@@ -143,7 +143,7 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
             if (intent.getExtras().containsKey("button")) {
                 Log.d(TAG, "onNewIntent() button:" + intent.getExtras().getInt("button"));
 
-                // TODO(nic) changeState(intent.getExtras().getInt("button"));
+                changeState(intent.getExtras().getInt("button"));
             }
             if (intent.getExtras().containsKey("version")) {
                 Log.d(TAG, "onNewIntent() version:" + intent.getExtras().getInt("version"));
@@ -160,6 +160,22 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
             if (version < Constants.MIN_VERSION_PEBBLE) {
                 _messageManager.showSimpleNotificationOnWatch("Pebble Bike", msg);
             }
+        }
+    }
+    private void changeState(int button) {
+        Log.d(TAG, "changeState(button:" + button + ")");
+        switch (button) {
+            case Constants.STOP_PRESS:
+                _serviceStarter.stopLocationServices();
+                // TODO(nic) setStartButtonText("Start"); // + color
+                break;
+            case Constants.PLAY_PRESS:
+                _serviceStarter.startLocationServices();
+                // TODO(nic) setStartButtonText("Stop"); // + color
+                break;
+            case Constants.REFRESH_PRESS:
+                // TODO(nic) ResetSavedGPSStats();
+                break;
         }
     }
 

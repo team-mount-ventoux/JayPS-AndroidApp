@@ -94,9 +94,12 @@ public class GPSService extends Service {
 
     @Override
     public void onDestroy (){
-        Log.d("MAINTEST", "Stopped GPS Service");
+        Log.d(TAG, "Stopped GPS Service");
         saveGPSStats();
         stopLocationUpdates();
+
+        _bus.post(new CurrentState(CurrentState.State.STOPPED));
+
         _serviceStarter.stopServiceForeground(this);
 
         _bus.unregister(this);
@@ -126,6 +129,18 @@ public class GPSService extends Service {
             registerSensorListener();
 
             _bus.post(new CurrentState(CurrentState.State.STARTED));
+
+            // broadcast the saved values directly
+            NewLocation event = new NewLocation();
+            try {
+                event.setUnits(Integer.valueOf(_sharedPreferences.getString("UNITS_OF_MEASURE", "0")));
+            } catch (NumberFormatException e) {
+                event.setUnits(0);
+            }
+            event.setDistance(_advancedLocation.getDistance());
+            event.setAvgSpeed(_advancedLocation.getAverageSpeed());
+            event.setAscent(_advancedLocation.getAscent()); // m
+            _bus.post(event);
         } else {
             _bus.post(new CurrentState(CurrentState.State.DISABLED)); // GPS DISABLED
         }
