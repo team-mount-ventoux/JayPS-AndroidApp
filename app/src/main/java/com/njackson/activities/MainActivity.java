@@ -171,9 +171,9 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
                 _serviceStarter.startLocationServices();
                 break;
             case Constants.REFRESH_PRESS:
-                // TODO(nic) ResetSavedGPSStats();
+                // TODO(nic): works only if GPS is running
+                _bus.post(new com.njackson.events.GPSService.ResetGPSState());
                 break;
         }
     }
-
 }
