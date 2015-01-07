@@ -60,9 +60,6 @@ public class GPSService extends Service {
     private int _refresh_interval = 1000;
     private boolean _gpsStarted = false;
 
-    /** JUNIT - this is for testing purposes only */
-    public static boolean isJUnit = false;
-
     @Subscribe
     public void onResetGPSStateEvent(ResetGPSState event) {
         //stop service stopLocationUpdates();
