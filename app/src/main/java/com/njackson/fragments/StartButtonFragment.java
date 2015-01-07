@@ -41,9 +41,11 @@ public class StartButtonFragment extends BaseFragment {
                 if(startButton.getText() == getString(R.string.startbuttonfragment_start)) {
                     _bus.post(new StartButtonTouchedEvent());
                     startButton.setText(getString(R.string.startbuttonfragment_stop));
+                    startButton.setBackgroundColor(getResources().getColor(R.color.startbuttonfragment_button_stop));
                 } else {
                     _bus.post(new StopButtonTouchedEvent());
                     startButton.setText(getString(R.string.startbuttonfragment_start));
+                    startButton.setBackgroundColor(getResources().getColor(R.color.startbuttonfragment_button_start));
                 }
             }
         });

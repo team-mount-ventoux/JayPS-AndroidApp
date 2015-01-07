@@ -8,7 +8,7 @@
     android:layout_height="wrap_content"
     android:id="@id/start_button"
     android:text="@string/startbuttonfragment_start"
-    android:background="@color/startbuttonfragment_button"
+    android:background="@color/startbuttonfragment_button_start"
     android:textColor="@color/startbuttonfragment_white"
     />
 </LinearLayout>

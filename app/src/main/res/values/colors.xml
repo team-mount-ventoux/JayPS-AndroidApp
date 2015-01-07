@@ -2,7 +2,8 @@
 <resources>
     <color name="backgroundblue">#131f2f</color>
     <color name="altitude_orange_start">#df4e00</color>
-    <color name="startbuttonfragment_button">#0ba824</color>
+    <color name="startbuttonfragment_button_start">#0ba824</color>
+    <color name="startbuttonfragment_button_stop">#ed145b</color>
     <color name="startbuttonfragment_white">#eaf8ed</color>
     <color name="main_background">#070b11</color>
     <color name="altitude_orange_end">#f0aa00</color>
