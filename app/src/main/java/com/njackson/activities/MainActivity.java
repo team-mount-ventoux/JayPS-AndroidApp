@@ -167,11 +167,9 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
         switch (button) {
             case Constants.STOP_PRESS:
                 _serviceStarter.stopLocationServices();
-                // TODO(nic) setStartButtonText("Start"); // + color
                 break;
             case Constants.PLAY_PRESS:
                 _serviceStarter.startLocationServices();
-                // TODO(nic) setStartButtonText("Stop"); // + color
                 break;
             case Constants.REFRESH_PRESS:
                 // TODO(nic) ResetSavedGPSStats();
