@@ -24,6 +24,7 @@ import com.njackson.events.GPSService.ChangeRefreshInterval;
 import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.GPSService.CurrentState;
 import com.njackson.events.GPSService.NewLocation;
+import com.njackson.oruxmaps.OruxMaps;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -93,6 +94,10 @@ public class GPSService extends Service {
     public void onDestroy (){
         Log.d(TAG, "Stopped GPS Service");
         saveGPSStats();
+
+        if (!_sharedPreferences.getString("ORUXMAPS_AUTO", "disable").equals("disable")) {
+            OruxMaps.stopRecord(getApplicationContext());
+        }
         stopLocationUpdates();
 
         _bus.post(new CurrentState(CurrentState.State.STOPPED));
@@ -126,6 +131,27 @@ public class GPSService extends Service {
             registerSensorListener();
 
             _bus.post(new CurrentState(CurrentState.State.STARTED));
+
+            String oruxmaps_auto = _sharedPreferences.getString("ORUXMAPS_AUTO", "disable");
+            if (oruxmaps_auto.equals("continue")) {
+                OruxMaps.startRecordContinue(getApplicationContext());
+            } else if (oruxmaps_auto.equals("new_segment")) {
+                OruxMaps.startRecordNewSegment(getApplicationContext());
+            } else if (oruxmaps_auto.equals("new_track")) {
+                OruxMaps.startRecordNewTrack(getApplicationContext());
+            } else if (oruxmaps_auto.equals("auto")) {
+                long last_start = _sharedPreferences.getLong("GPS_LAST_START", 0);
+                //Log.d(TAG, "GPS_LAST_START:" + last_start + " ts:" + System.currentTimeMillis());
+                if (System.currentTimeMillis() - last_start > 12 * 3600 * 1000) { // 12 hours
+                    OruxMaps.startRecordNewTrack(getApplicationContext());
+                } else {
+                    OruxMaps.startRecordNewSegment(getApplicationContext());
+                }
+            }
+
+            SharedPreferences.Editor editor = _sharedPreferences.edit();
+            editor.putLong("GPS_LAST_START", System.currentTimeMillis());
+            editor.commit();
 
             // broadcast the saved values directly
             NewLocation event = new NewLocation();
