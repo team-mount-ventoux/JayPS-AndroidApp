@@ -13,11 +13,14 @@ import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.RecordingApi;
 import com.google.android.gms.fitness.data.DataType;
+import com.google.android.gms.fitness.data.Session;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.status.GoogleFitStatus;
 import com.njackson.fit.GoogleFitService;
 import com.njackson.gps.GPSService;
 import com.njackson.test.application.TestApplication;
+import com.njackson.utils.googleplay.GooglePlayServices;
+import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -52,6 +55,8 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
     private GoogleFitStatus _state;
     private static RecordingApi _mockRecordingApi;
     private PendingResult<com.google.android.gms.common.api.Status> _pendingResultMock;
+    private static Session.Builder _mockSessionBuilder;
+    private static IGooglePlayServices _mockPlayServices;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -60,6 +65,7 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
             complete = false
     )
     static class TestModule {
+
         @Provides
         @Singleton
         @Named("GoogleFit")
@@ -67,6 +73,9 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
 
         @Provides
         RecordingApi providesGoogleFitRecordingApi() { return _mockRecordingApi; }
+
+        @Provides
+        IGooglePlayServices providesGooglePlayServices() { return _mockPlayServices; }
     }
 
 
@@ -95,10 +104,7 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
 
         System.setProperty("dexmaker.dexcache", getSystemContext().getCacheDir().getPath());
 
-        _mockRecordingApi = mock(RecordingApi.class);
-        _pendingResultMock = mock(PendingResult.class);
-        when(_mockRecordingApi.subscribe(any(GoogleApiClient.class),any(com.google.android.gms.fitness.data.DataType.class)))
-                .thenReturn(_pendingResultMock);
+        setupMocks();
 
         TestApplication app = new TestApplication();
         app.setObjectGraph(ObjectGraph.create(TestModule.class));
@@ -108,6 +114,18 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         setApplication(app);
 
         _stateLatch = new CountDownLatch(1);
+    }
+
+    private void setupMocks() {
+        _mockRecordingApi = mock(RecordingApi.class);
+        _pendingResultMock = mock(PendingResult.class);
+        when(_mockRecordingApi.subscribe(any(GoogleApiClient.class),any(DataType.class)))
+                .thenReturn(_pendingResultMock);
+
+        _mockSessionBuilder = mock(Session.Builder.class);
+
+        _mockPlayServices = mock(IGooglePlayServices.class);
+        when(_mockPlayServices.newSessionBuilder()).thenReturn(_mockSessionBuilder);
     }
 
     private void startService() throws Exception {

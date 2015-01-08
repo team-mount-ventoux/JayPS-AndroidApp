@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.fitness.data.Session;
 import com.google.android.gms.location.ActivityRecognition;
 
 /**
@@ -25,5 +26,10 @@ public class GooglePlayServices implements IGooglePlayServices {
     @Override
     public void removeActivityUpdates(GoogleApiClient client, PendingIntent intent) {
         ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(client,intent);
+    }
+
+    @Override
+    public Session.Builder newSessionBuilder() {
+        return new Session.Builder();
     }
 }

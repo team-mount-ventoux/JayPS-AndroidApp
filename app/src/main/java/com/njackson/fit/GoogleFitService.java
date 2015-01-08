@@ -14,8 +14,10 @@ import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.google.android.gms.fitness.RecordingApi;
 import com.google.android.gms.fitness.data.DataType;
+import com.google.android.gms.fitness.data.Session;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.status.GoogleFitStatus;
+import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
@@ -30,6 +32,7 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
     @Inject Bus _bus;
     @Inject @Named("GoogleFit") GoogleApiClient _googleAPIClient;
     @Inject RecordingApi _recordingApi;
+    @Inject IGooglePlayServices _playServices;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -74,6 +77,7 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
     @Override
     public void onConnected(Bundle bundle) {
         setupRecordingApi();
+        startRecordingSession();
     }
 
     @Override
@@ -103,5 +107,9 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
                 }
             }
         });
+    }
+
+    private void startRecordingSession() {
+        //Session session = Session.Builder()
     }
 }

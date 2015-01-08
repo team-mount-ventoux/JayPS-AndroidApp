@@ -5,6 +5,7 @@ package com.njackson.application.modules;
  */
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.RecordingApi;
+import com.google.android.gms.fitness.data.Session;
 import com.njackson.activities.MainActivity;
 import com.njackson.activityrecognition.ActivityRecognitionIntentService;
 import com.njackson.activityrecognition.ActivityRecognitionService;
