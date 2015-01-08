@@ -12,6 +12,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.RecordingApi;
+import com.google.android.gms.fitness.SessionsApi;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Session;
 import com.njackson.application.modules.PebbleBikeModule;
@@ -37,6 +38,8 @@ import dagger.Provides;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
@@ -54,6 +57,7 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
 
     private GoogleFitStatus _state;
     private static RecordingApi _mockRecordingApi;
+    private static SessionsApi _mockSessionsApi;
     private PendingResult<com.google.android.gms.common.api.Status> _pendingResultMock;
     private static Session.Builder _mockSessionBuilder;
     private static IGooglePlayServices _mockPlayServices;
@@ -73,6 +77,9 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
 
         @Provides
         RecordingApi providesGoogleFitRecordingApi() { return _mockRecordingApi; }
+
+        @Provides
+        SessionsApi providesGoogleFitSessionsApi() { return _mockSessionsApi; }
 
         @Provides
         IGooglePlayServices providesGooglePlayServices() { return _mockPlayServices; }
@@ -122,7 +129,12 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         when(_mockRecordingApi.subscribe(any(GoogleApiClient.class),any(DataType.class)))
                 .thenReturn(_pendingResultMock);
 
+        _mockSessionsApi = mock(SessionsApi.class);
+
         _mockSessionBuilder = mock(Session.Builder.class);
+        when(_mockSessionBuilder.setName(anyString())).thenReturn(_mockSessionBuilder);
+        when(_mockSessionBuilder.setIdentifier(anyString())).thenReturn(_mockSessionBuilder);
+        when(_mockSessionBuilder.setStartTime(anyLong(),any(TimeUnit.class))).thenReturn(_mockSessionBuilder);
 
         _mockPlayServices = mock(IGooglePlayServices.class);
         when(_mockPlayServices.newSessionBuilder()).thenReturn(_mockSessionBuilder);
@@ -209,5 +221,59 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         shutdownService();
 
         verify(_mockRecordingApi, timeout(2000).times(1)).unsubscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA);
+    }
+
+    @SmallTest
+    public void testOnConnectedCreatesNewSessionBuilder() throws Exception {
+        startService();
+        _service.onConnected(new Bundle());
+
+        verify(_mockPlayServices,timeout(2000).times(1)).newSessionBuilder();
+    }
+
+    @SmallTest
+    public void testOnConnectedSetSessionBuilderSessionIdentifier() throws Exception {
+        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
+
+        startService();
+        _service.onConnected(new Bundle());
+
+        verify(_mockSessionBuilder,timeout(2000).times(1)).setIdentifier("MockSessionIdentifier");
+    }
+
+    @SmallTest
+    public void testOnConnectedSetSessionBuilderSessionName() throws Exception {
+        when(_mockPlayServices.generateSessionName()).thenReturn("MockSessionName");
+
+        startService();
+        _service.onConnected(new Bundle());
+
+        verify(_mockSessionBuilder,timeout(2000).times(1)).setName("MockSessionName");
+    }
+
+    @SmallTest
+    public void testOnConnectedSetSessionBuilderStartTime() throws Exception {
+        startService();
+        _service.onConnected(new Bundle());
+
+        verify(_mockSessionBuilder,timeout(2000).times(1)).setStartTime(anyLong(),any(TimeUnit.class));
+    }
+
+    @SmallTest
+    public void testOnConnectedSetsSession() throws Exception {
+        startService();
+        _service.onConnected(new Bundle());
+
+        verify(_mockSessionsApi,timeout(2000).times(1)).startSession(any(GoogleApiClient.class),any(Session.class));
+    }
+
+    @SmallTest
+    public void testOnDestroyStopsSession() throws Exception {
+        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
+        startService();
+        _service.onConnected(new Bundle());
+        shutdownService();
+
+        verify(_mockSessionsApi,timeout(2000).times(1)).stopSession(_googleAPIClient,"MockSessionIdentifier");
     }
 }

@@ -7,6 +7,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.data.Session;
 import com.google.android.gms.location.ActivityRecognition;
+import com.njackson.Constants;
 
 /**
  * Created by njackson on 02/01/15.
@@ -31,5 +32,15 @@ public class GooglePlayServices implements IGooglePlayServices {
     @Override
     public Session.Builder newSessionBuilder() {
         return new Session.Builder();
+    }
+
+    @Override
+    public String generateSessionIdentifier(long currentTimeMilliseconds) {
+        return Constants.GOOGLE_FIT_SESSION_IDENTIFIER_PREFIX + currentTimeMilliseconds;
+    }
+
+    @Override
+    public String generateSessionName() {
+        return Constants.GOOGLE_FIT_SESSION_NAME;
     }
 }

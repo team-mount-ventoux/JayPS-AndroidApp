@@ -5,6 +5,7 @@ package com.njackson.application.modules;
  */
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.RecordingApi;
+import com.google.android.gms.fitness.SessionsApi;
 import com.google.android.gms.fitness.data.Session;
 import com.njackson.activities.MainActivity;
 import com.njackson.activityrecognition.ActivityRecognitionIntentService;
@@ -52,6 +53,8 @@ public class PebbleBikeModule {
     @Provides IGooglePlayServices providesGooglePlayServices() { return new GooglePlayServices(); }
 
     @Provides RecordingApi providesGoogleFitRecordingApi() { return Fitness.RecordingApi; }
+
+    @Provides SessionsApi providesGoogleFitSessionsApi() { return Fitness.SessionsApi; }
 
     @Provides ITimer providesTimer() { return new Timer(); }
 }
