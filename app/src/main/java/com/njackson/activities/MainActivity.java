@@ -44,7 +44,7 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
         if(event.getState().compareTo(CurrentState.State.PLAY_SERVICES_NOT_AVAILABLE) == 0)
             Log.d(TAG, "PLAY_NOT_AVIALABLE");
         else
-            Log.d(TAG, "STARTED");
+            Log.d(TAG, "SERVICE_STARTED");
     }
 
     @Override

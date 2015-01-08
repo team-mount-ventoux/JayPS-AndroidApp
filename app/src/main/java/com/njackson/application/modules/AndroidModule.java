@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.location.ActivityRecognition;
 import com.njackson.activities.MainActivity;
 import com.njackson.activityrecognition.ActivityRecognitionService;
@@ -14,6 +15,7 @@ import com.njackson.gps.GPSService;
 import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.services.ServiceStarter;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -54,9 +56,18 @@ public class AndroidModule {
         return application.getSharedPreferences("com.njackson_preferences", Context.MODE_PRIVATE);
     }
 
-    @Provides @Singleton
+    @Provides @Singleton @Named("GoogleActivity")
     GoogleApiClient provideActivityRecognitionClient() {
         return new GoogleApiClient.Builder(application).addApi(ActivityRecognition.API).build();
+    }
+
+    @Provides @Singleton @Named("GoogleFit")
+    GoogleApiClient provideFitnessAPIClient() {
+        return new GoogleApiClient.Builder(application)
+                .addApi(Fitness.API)
+                .addScope(Fitness.SCOPE_ACTIVITY_READ)
+                .addScope(Fitness.SCOPE_BODY_READ_WRITE)
+                .build();
     }
 
     @Provides @Singleton

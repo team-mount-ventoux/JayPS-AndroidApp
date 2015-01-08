@@ -25,6 +25,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -45,7 +46,7 @@ import static org.mockito.Mockito.when;
 public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityRecognitionService> {
 
     @Inject Bus _bus;
-    @Inject GoogleApiClient _googleApiClient;
+    @Inject @Named("GoogleActivity") GoogleApiClient _googleApiClient;
     @Inject IServiceStarter _serviceStarter;
 
     static IGooglePlayServices _playServices;
@@ -63,7 +64,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     )
     static class TestModule {
         @Provides IGooglePlayServices providesGooglePlayServices() { return _playServices; }
-        @Provides @Singleton GoogleApiClient provideActivityRecognitionClient() { return mock(GoogleApiClient.class); }
+        @Provides @Singleton @Named("GoogleActivity") GoogleApiClient provideActivityRecognitionClient() { return mock(GoogleApiClient.class); }
         @Provides @Singleton IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
         @Provides ITimer providesTimer() { return _mockTimer; }
     }

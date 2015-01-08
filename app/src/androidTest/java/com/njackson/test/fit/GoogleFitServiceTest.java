@@ -1,15 +1,13 @@
 package com.njackson.test.fit;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.hardware.SensorManager;
-import android.location.LocationManager;
 import android.os.IBinder;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.events.GoogleFitService.CurrentState;
+import com.njackson.events.status.GoogleFitStatus;
 import com.njackson.fit.GoogleFitService;
 import com.njackson.gps.GPSService;
 import com.njackson.test.application.TestApplication;
@@ -20,13 +18,17 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by njackson on 05/01/15.
@@ -36,7 +38,9 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
     private CountDownLatch _stateLatch;
 
     @Inject Bus _bus;
-    private CurrentState _state;
+    @Inject @Named("GoogleFit") GoogleApiClient _googleAPIClient;
+
+    private GoogleFitStatus _state;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -45,12 +49,15 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
             complete = false
     )
     static class TestModule {
-
+        @Provides
+        @Singleton
+        @Named("GoogleFit")
+        GoogleApiClient provideFitnessAPIClient() { return mock(GoogleApiClient.class); }
     }
 
 
     @Subscribe
-    public void onChangeStateEvent(CurrentState state) {
+    public void onChangeStateEvent(GoogleFitStatus state) {
         _state = state;
         _stateLatch.countDown();
     }
@@ -97,5 +104,49 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         IBinder binder = _service.onBind(new Intent());
 
         assertNull(binder);
+    }
+
+    @SmallTest
+    public void testOnStartSendsServiceStarted() throws Exception {
+        startService();
+
+        assertEquals(GoogleFitStatus.State.SERVICE_STARTED,_state.getState());
+    }
+
+    @SmallTest
+    public void testOnStartedConnectsToGoogleFit() throws Exception {
+        startService();
+
+        verify(_googleAPIClient,timeout(2000).times(1)).connect();
+    }
+
+    @SmallTest
+    public void testOnStartRegistersGoogleClientConnectedHandlers() throws Exception {
+        startService();
+
+        verify(_googleAPIClient,timeout(2000).times(1)).registerConnectionCallbacks(any(GoogleFitService.class));
+    }
+
+    @SmallTest
+    public void testOnStartRegistersGoogleClientConnectionFailedHandlers() throws Exception {
+        startService();
+
+        verify(_googleAPIClient,timeout(2000).times(1)).registerConnectionFailedListener(any(GoogleFitService.class));
+    }
+
+    @SmallTest
+    public void testOnDestroyRemovesGoogleClientConnectedHandlers() throws Exception {
+        startService();
+        shutdownService();
+
+        verify(_googleAPIClient,timeout(2000).times(1)).unregisterConnectionCallbacks(any(GoogleFitService.class));
+    }
+
+    @SmallTest
+    public void testOnStartRemovesGoogleClientConnectionFailedHandlers() throws Exception {
+        startService();
+        shutdownService();
+
+        verify(_googleAPIClient,timeout(2000).times(1)).unregisterConnectionFailedListener(any(GoogleFitService.class));
     }
 }

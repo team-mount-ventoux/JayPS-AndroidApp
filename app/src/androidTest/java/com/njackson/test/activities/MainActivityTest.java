@@ -40,6 +40,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -93,7 +94,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         @Provides @Singleton
         SensorManager provideSensorManager() { return mock(SensorManager.class); }
 
-        @Provides @Singleton
+        @Provides @Singleton @Named("GoogleActivity")
         GoogleApiClient provideActivityRecognitionClient() { return mock(GoogleApiClient.class); }
 
         @Provides

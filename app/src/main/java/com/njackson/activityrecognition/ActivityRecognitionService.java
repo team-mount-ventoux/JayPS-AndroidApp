@@ -22,6 +22,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by njackson on 01/01/15.
@@ -32,7 +33,7 @@ public class ActivityRecognitionService  extends Service implements
     private static final String TAG = "PB-ActivityRecognitionService";
     @Inject Bus _bus;
     @Inject IGooglePlayServices _googlePlay;
-    @Inject GoogleApiClient _recognitionClient;
+    @Inject @Named("GoogleActivity") GoogleApiClient _recognitionClient;
     @Inject IServiceStarter _serviceStarter;
     @Inject ITimer _timer;
 
