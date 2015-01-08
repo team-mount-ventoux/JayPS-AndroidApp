@@ -3,6 +3,8 @@ package com.njackson.application.modules;
 /**
  * Created by server on 30/03/2014.
  */
+import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.RecordingApi;
 import com.njackson.activities.MainActivity;
 import com.njackson.activityrecognition.ActivityRecognitionIntentService;
 import com.njackson.activityrecognition.ActivityRecognitionService;
@@ -47,6 +49,8 @@ public class PebbleBikeModule {
     @Provides IInstallWatchFace providesWatchFaceInstall() { return new InstallPebbleWatchFace(new AndroidVersion(), new PebbleVersion()); }
 
     @Provides IGooglePlayServices providesGooglePlayServices() { return new GooglePlayServices(); }
+
+    @Provides RecordingApi providesGoogleFitRecordingApi() { return Fitness.RecordingApi; }
 
     @Provides ITimer providesTimer() { return new Timer(); }
 }

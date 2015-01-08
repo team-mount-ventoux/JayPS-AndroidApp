@@ -4,9 +4,16 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.FitnessStatusCodes;
+import com.google.android.gms.fitness.RecordingApi;
+import com.google.android.gms.fitness.data.DataType;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.status.GoogleFitStatus;
 import com.squareup.otto.Bus;
@@ -19,8 +26,10 @@ import javax.inject.Named;
  */
 public class GoogleFitService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
+    private static final String TAG = "GoogleFitService";
     @Inject Bus _bus;
     @Inject @Named("GoogleFit") GoogleApiClient _googleAPIClient;
+    @Inject RecordingApi _recordingApi;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -47,6 +56,8 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
         _googleAPIClient.unregisterConnectionFailedListener(this);
         _googleAPIClient.unregisterConnectionCallbacks(this);
 
+        _recordingApi.unsubscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA);
+
         super.onDestroy();
     }
 
@@ -62,7 +73,7 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
     /* GOOOGLE CLIENT DELEGATE METHODS */
     @Override
     public void onConnected(Bundle bundle) {
-
+        setupRecordingApi();
     }
 
     @Override
@@ -75,4 +86,22 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
 
     }
     /* END GOOGLE CLIENT DELEGATE METHODS */
+
+    private void setupRecordingApi() {
+        _recordingApi.subscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(Status status) {
+                if (status.isSuccess()) {
+                    if (status.getStatusCode()
+                            == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED) {
+                        Log.i(TAG, "Existing subscription for activity detected.");
+                    } else {
+                        Log.i(TAG, "Successfully subscribed!");
+                    }
+                } else {
+                    Log.i(TAG, "There was a problem subscribing.");
+                }
+            }
+        });
+    }
 }
