@@ -52,10 +52,6 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
         super.onCreate();
         ((PebbleBikeApplication)getApplication()).inject(this);
         _bus.register(this);
-
-        _googleAPIClient.registerConnectionCallbacks(this);
-        _googleAPIClient.registerConnectionFailedListener(this);
-        _googleAPIClient.connect();
     }
 
     @Override
@@ -77,24 +73,28 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
     }
 
     private void handleCommand(Intent intent) {
+        _googleAPIClient.registerConnectionCallbacks(this);
+        _googleAPIClient.registerConnectionFailedListener(this);
+        _googleAPIClient.connect();
         _bus.post(new GoogleFitStatus(GoogleFitStatus.State.SERVICE_STARTED));
     }
 
     /* GOOOGLE CLIENT DELEGATE METHODS */
     @Override
     public void onConnected(Bundle bundle) {
+        Log.d(TAG,"Connected");
         setupRecordingApi();
         startRecordingSession();
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Log.d(TAG,"Connection Suspended");
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        Log.d(TAG,"Connection Failed");
     }
     /* END GOOGLE CLIENT DELEGATE METHODS */
 

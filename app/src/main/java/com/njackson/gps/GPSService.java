@@ -51,7 +51,7 @@ public class GPSService extends Service {
     private ServiceNmeaListener _nmeaListener;
     private GPSSensorEventListener _sensorListener;
 
-    private int _refresh_interval = 1000;
+    private long _refresh_interval = 1000;
     private boolean _gpsStarted = false;
 
     @Subscribe
@@ -133,6 +133,7 @@ public class GPSService extends Service {
         } catch (ClassCastException e) {
             _advancedLocation.setAscent(0.0);
         }
+
         _advancedLocation.setGeoidHeight(_sharedPreferences.getFloat("GEOID_HEIGHT", 0));
     }
 
@@ -162,19 +163,19 @@ public class GPSService extends Service {
         loadGPSStats();
     }
 
-    private void requestLocationUpdates(int refresh_interval) {
+    private void requestLocationUpdates(long refresh_interval) {
         _refresh_interval = refresh_interval;
 
         if (_gpsStarted) {
             _locationMgr.removeUpdates(_locationListener);
         }
-        _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long)_refresh_interval, 2.0f, _locationListener);
+        _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, _refresh_interval, 2.0f, _locationListener);
 
         _gpsStarted = true;
     }
 
     private void registerNmeaListener() {
-        _nmeaListener = new ServiceNmeaListener(_advancedLocation);
+        _nmeaListener = new ServiceNmeaListener(_advancedLocation,_locationMgr, _sharedPreferences);
         _locationMgr.addNmeaListener(_nmeaListener);
     }
 

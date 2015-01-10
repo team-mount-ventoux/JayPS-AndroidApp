@@ -17,12 +17,14 @@ public class ServiceNmeaListener implements GpsStatus.NmeaListener {
 
     private static final String TAG = "PB-ServiceNmeaListener";
 
-    @Inject SharedPreferences _sharedPreferences;
-
+    private LocationManager _locationManager;
+    private SharedPreferences _sharedPreferences;
     private AdvancedLocation _advancedLocation;
 
-    public ServiceNmeaListener(AdvancedLocation _advancedLocation) {
-        this._advancedLocation = _advancedLocation;
+    public ServiceNmeaListener(AdvancedLocation advancedLocation, LocationManager locationmanager, SharedPreferences preferences) {
+        _advancedLocation = advancedLocation;
+        _locationManager = locationmanager;
+        _sharedPreferences = preferences;
     }
 
     @Override
@@ -45,8 +47,7 @@ public class ServiceNmeaListener implements GpsStatus.NmeaListener {
                 editor.commit();
 
                 // no longer need Nmea updates
-                // TODO(nic) FIXME!
-				//_locationManager.addNmeaListener(this);
+                _locationManager.removeNmeaListener(this);
             } catch (Exception e) {
             }
         }
