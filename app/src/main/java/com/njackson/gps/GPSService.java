@@ -55,6 +55,9 @@ public class GPSService extends Service {
     //Location firstLocation = null;
 
     private AdvancedLocation _advancedLocation;
+    private double xpos = 0;
+    private double ypos = 0;
+    private Location firstLocation = null;
     private ServiceNmeaListener _nmeaListener;
     private GPSSensorEventListener _sensorListener;
 
@@ -186,6 +189,14 @@ public class GPSService extends Service {
             _advancedLocation.setAscent(0.0);
         }
         _advancedLocation.setGeoidHeight(_sharedPreferences.getFloat("GEOID_HEIGHT", 0));
+
+        if (_sharedPreferences.contains("GPS_FIRST_LOCATION_LAT") && _sharedPreferences.contains("GPS_FIRST_LOCATION_LON")) {
+            firstLocation = new Location("PebbleBike");
+            firstLocation.setLatitude(_sharedPreferences.getFloat("GPS_FIRST_LOCATION_LAT", 0.0f));
+            firstLocation.setLongitude(_sharedPreferences.getFloat("GPS_FIRST_LOCATION_LON", 0.0f));
+        } else {
+            firstLocation = null;
+        }
     }
 
     // save the state
@@ -195,6 +206,10 @@ public class GPSService extends Service {
         editor.putLong("GPS_ELAPSEDTIME", _advancedLocation.getElapsedTime());
         editor.putFloat("GPS_ASCENT", (float) _advancedLocation.getAscent());
         editor.putFloat("GEOID_HEIGHT", (float) _advancedLocation.getGeoidHeight());
+        if (firstLocation != null) {
+            editor.putFloat("GPS_FIRST_LOCATION_LAT", (float) firstLocation.getLatitude());
+            editor.putFloat("GPS_FIRST_LOCATION_LON", (float) firstLocation.getLongitude());
+        }
         editor.commit();
     }
 
@@ -257,6 +272,16 @@ public class GPSService extends Service {
         @Override
         public void onLocationChanged(Location location) {
             _advancedLocation.onLocationChanged(location);
+            if (firstLocation == null) {
+                firstLocation = location;
+            }
+
+            xpos = firstLocation.distanceTo(location) * Math.sin(firstLocation.bearingTo(location)/180*3.1415);
+            ypos = firstLocation.distanceTo(location) * Math.cos(firstLocation.bearingTo(location)/180*3.1415);
+
+            xpos = Math.floor(xpos/10);
+            ypos = Math.floor(ypos/10);
+            Log.d(TAG,  "xpos="+xpos+"-ypos="+ypos);
             broadcastLocation();
         }
 
@@ -296,8 +321,8 @@ public class GPSService extends Service {
         event.setAccuracy(_advancedLocation.getAccuracy()); // m
         event.setTime(_advancedLocation.getTime());
         event.setElapsedTimeSeconds(_advancedLocation.getElapsedTime());
-        //event.setXpos(_advancedLocation.get);
-        //event.setYpos(ypos);
+        event.setXpos(xpos);
+        event.setYpos(ypos);
         event.setBearing(_advancedLocation.getBearing());
 
         _bus.post(event);
