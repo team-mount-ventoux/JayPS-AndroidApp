@@ -183,7 +183,7 @@ public class GPSService extends Service {
         _sensorListener = new GPSSensorEventListener(_advancedLocation,_sensorManager,new Callable() {
             @Override
             public Object call() throws Exception {
-                broadcastLocation();
+                //broadcastLocation();
                 return null;
             }
         });

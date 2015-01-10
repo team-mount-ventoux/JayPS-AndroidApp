@@ -50,6 +50,7 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG,"Create GoogleFit Service");
         ((PebbleBikeApplication)getApplication()).inject(this);
         _bus.register(this);
     }
@@ -63,6 +64,8 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
 
         _recordingApi.unsubscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA);
         _sessionsApi.stopSession(_googleAPIClient, _sessionIdentifier);
+
+        Log.d(TAG,"Destroy GoogleFit Service");
 
         super.onDestroy();
     }
