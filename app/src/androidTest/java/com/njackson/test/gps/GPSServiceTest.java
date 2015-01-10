@@ -117,7 +117,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
     @Subscribe
     public void onNewLocationEvent(NewLocation event) {
         _locationEventResults = event;
-        _newLocationLatch.countDown();
+        if (_newLocationLatch != null) _newLocationLatch.countDown();
     }
 
     @Subscribe
