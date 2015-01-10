@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.IBinder;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.util.Log;
 
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.GPSService.ChangeRefreshInterval;
@@ -56,6 +57,8 @@ import static org.mockito.Mockito.when;
  * Created by server on 28/04/2014.
  */
 public class GPSServiceTest extends ServiceTestCase<GPSService>{
+
+    private static final String TAG = "PB-GPSServiceTest";
 
     @Inject Bus _bus = new Bus();
     @Inject LocationManager _mockLocationManager;
@@ -121,7 +124,10 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
     public void onGPSStatusEvent(CurrentState event) {
         _gpsStatusEvent = event;
 
-        _stateLatch.countDown();
+        if (event.getState().compareTo(com.njackson.events.GPSService.CurrentState.State.STARTED) == 0) {
+            Log.d(TAG, "onGPSStatusEvent STARTED");
+            _stateLatch.countDown();
+        }
     }
 
     @Override
