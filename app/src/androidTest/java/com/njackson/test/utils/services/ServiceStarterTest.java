@@ -10,6 +10,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
+import com.njackson.fit.GoogleFitService;
 import com.njackson.gps.GPSService;
 import com.njackson.live.LiveService;
 import com.njackson.test.testUtils.Services;
@@ -56,7 +57,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         _serviceStarter.startLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).startService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(4)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents, GPSService.class));
@@ -67,7 +68,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         _serviceStarter.startLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).startService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(4)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         Intent startIntent = getIntentFromCaptor(intents,GPSService.class);
@@ -81,7 +82,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         _serviceStarter.stopLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).stopService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(4)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,GPSService.class));
@@ -92,7 +93,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         _serviceStarter.startLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).startService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(4)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,PebbleService.class));
@@ -103,7 +104,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         _serviceStarter.stopLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).stopService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(4)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,PebbleService.class));
@@ -114,7 +115,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         _serviceStarter.startLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).startService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(4)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,LiveService.class));
@@ -125,7 +126,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         _serviceStarter.stopLocationServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(3)).stopService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(4)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,LiveService.class));
@@ -151,6 +152,28 @@ public class ServiceStarterTest extends AndroidTestCase {
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,ActivityRecognitionService.class));
+    }
+
+    @SmallTest
+    public void testStartsGoogleFitService() throws Exception {
+        _serviceStarter.startLocationServices();
+        ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
+
+        verify(_mockContext,times(4)).startService(intentArgumentCaptor.capture());
+
+        List<Intent> intents = intentArgumentCaptor.getAllValues();
+        assertTrue(checkComponentInCaptor(intents,GoogleFitService.class));
+    }
+
+    @SmallTest
+    public void testStopsGoogleFitService() throws Exception {
+        _serviceStarter.stopLocationServices();
+        ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
+
+        verify(_mockContext,times(4)).stopService(intentArgumentCaptor.capture());
+
+        List<Intent> intents = intentArgumentCaptor.getAllValues();
+        assertTrue(checkComponentInCaptor(intents,GoogleFitService.class));
     }
 
     private Intent getIntentFromCaptor(List<Intent> intents, Class<?> serviceClass) {

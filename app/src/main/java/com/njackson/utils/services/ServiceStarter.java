@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.njackson.activityrecognition.ActivityRecognitionService;
+import com.njackson.fit.GoogleFitService;
 import com.njackson.gps.GPSService;
 import com.njackson.live.LiveService;
 import com.njackson.virtualpebble.PebbleService;
@@ -27,6 +28,7 @@ public class ServiceStarter implements IServiceStarter {
         startPebbleService();
         startGPSService();
         startLiveService();
+        startGoogleFitService();
     }
 
     @Override
@@ -34,6 +36,7 @@ public class ServiceStarter implements IServiceStarter {
         stopGPSService();
         stopLiveService();
         stopPebbleService();
+        stopGoogleFitService();
     }
 
     @Override
@@ -69,5 +72,9 @@ public class ServiceStarter implements IServiceStarter {
     private void startActivityRecognitionService() { _context.startService(new Intent(_context, ActivityRecognitionService.class)); }
 
     private void stopActivityRecognitionService() { _context.stopService(new Intent(_context, ActivityRecognitionService.class)); }
+
+    private void startGoogleFitService() { _context.startService(new Intent(_context, GoogleFitService.class)); }
+
+    private void stopGoogleFitService() { _context.stopService(new Intent(_context, GoogleFitService.class)); }
 
 }
