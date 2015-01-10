@@ -162,6 +162,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         _mockServiceStarter = mock(IGPSServiceStarterForeground.class);
         _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
+        when(_mockPreferences.getString("ORUXMAPS_AUTO","disable")).thenReturn("new_track");
     }
 
     @SmallTest
