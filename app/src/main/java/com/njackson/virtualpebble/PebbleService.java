@@ -2,6 +2,7 @@ package com.njackson.virtualpebble;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.util.Log;
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -22,6 +23,7 @@ import static com.njackson.events.GPSService.CurrentState.State.STARTED;
 public class PebbleService extends Service {
 
     @Inject IMessageManager _messageManager;
+    @Inject SharedPreferences _sharedPreferences;
     @Inject Bus _bus;
 
     private static final String TAG = "PB-PebbleService";
@@ -34,9 +36,9 @@ public class PebbleService extends Service {
         PebbleDictionary dictionary = LocationEventConverter.convert(
                 newLocation,
                 true /* serviceRunning */, // TODO(nic)
-                false /* debug */,
-                false/* liveTrackingEnabled */, // TODO(nic)
-                1000 /* refreshInterval */, // TODO(nic)
+                _sharedPreferences.getBoolean("PREF_DEBUG", false) /* debug */,
+                _sharedPreferences.getBoolean("LIVE_TRACKING", false) /* liveTrackingEnabled */,
+                Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000")) /* refreshInterval */,
                 255 /* heartRate */
         );
         sendDataToPebble(dictionary);

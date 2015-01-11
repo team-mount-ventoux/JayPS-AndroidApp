@@ -19,6 +19,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 
+import android.content.SharedPreferences;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -36,6 +37,7 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
 
     @Inject Bus _bus;
     @Inject IMessageManager _mockMessageManager;
+    @Inject SharedPreferences _mockPreferences;
 
     private PebbleService _service;
     private TestApplication _app;
@@ -57,6 +59,12 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
         @Singleton
         public IMessageManager providesMessageManager() {
             return mock(IMessageManager.class);
+        }
+
+        @Provides
+        @Singleton
+        SharedPreferences provideSharedPreferences() {
+            return mock(SharedPreferences.class);
         }
     }
 
@@ -82,6 +90,8 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
 
         setApplication(_app);
 
+        setupMocks();
+
         _stateLatch = new CountDownLatch(1);
     }
 
@@ -89,6 +99,11 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
     public void tearDown() throws Exception {
         reset(_mockMessageManager);
         super.tearDown();
+    }
+    private void setupMocks() {
+        when(_mockPreferences.getBoolean("PREF_DEBUG", false)).thenReturn(true);
+        when(_mockPreferences.getBoolean("LIVE_TRACKING", false)).thenReturn(true);
+        when(_mockPreferences.getString("REFRESH_INTERVAL", "1000")).thenReturn("1000");
     }
 
     private void startService() throws InterruptedException {
