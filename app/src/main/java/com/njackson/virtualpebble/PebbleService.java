@@ -8,6 +8,7 @@ import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSService.NewLocation;
+import com.njackson.events.LiveService.LiveMessage;
 import com.njackson.events.PebbleService.CurrentState;
 import com.njackson.utils.LocationEventConverter;
 import com.squareup.otto.Bus;
@@ -25,6 +26,8 @@ public class PebbleService extends Service {
 
     private static final String TAG = "PB-PebbleService";
     private Thread _messageThread;
+
+    private int _numberOfFriendsSentToPebble = 0;
 
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
@@ -57,6 +60,42 @@ public class PebbleService extends Service {
         }
     }
 
+    @Subscribe public void onLiveMessage(LiveMessage msg) {
+        Log.d(TAG, "onLiveMessage");
+
+        PebbleDictionary dic = new PebbleDictionary();
+        byte[] msgLiveShort = msg.getLive();
+        boolean forceSend = false;
+        String sending = "";
+        if (_numberOfFriendsSentToPebble != msgLiveShort[0] || (5 * Math.random() <= 1)) {
+            _numberOfFriendsSentToPebble = msgLiveShort[0];
+            if (msg.getName0() != null) {
+                dic.addString(Constants.MSG_LIVE_NAME0, msg.getName0());
+            }
+            if (msg.getName1() != null) {
+                dic.addString(Constants.MSG_LIVE_NAME1, msg.getName1());
+            }
+            if (msg.getName2() != null) {
+                dic.addString(Constants.MSG_LIVE_NAME2, msg.getName2());
+            }
+            if (msg.getName3() != null) {
+                dic.addString(Constants.MSG_LIVE_NAME3, msg.getName3());
+            }
+            if (msg.getName4() != null) {
+                dic.addString(Constants.MSG_LIVE_NAME4, msg.getName4());
+            }
+            sending += " MSG_LIVE_NAMEx"+msgLiveShort[0];
+            forceSend = true;
+        }
+        dic.addBytes(Constants.MSG_LIVE_SHORT, msgLiveShort);
+        for( int i = 0; i < msgLiveShort.length; i++ ) {
+            sending += " msgLiveShort["+i+"]: "   + ((256+msgLiveShort[i])%256);
+        }
+        Log.d(TAG, sending);
+
+        sendDataToPebble(dic, forceSend);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -84,6 +123,17 @@ public class PebbleService extends Service {
     }
     private void sendDataToPebbleIfPossible(PebbleDictionary data) {
         _messageManager.offerIfLow(data, 5);
+    }
+    private void sendDataToPebble(PebbleDictionary data, boolean forceSend) {
+        //TODO(jay)
+        //if (MainActivity.canvas_mode.equals("canvas_only")) {
+        //    return;
+        //}
+        if (forceSend) {
+            sendDataToPebble(data);
+        } else {
+            sendDataToPebbleIfPossible(data);
+        }
     }
 
     @Override

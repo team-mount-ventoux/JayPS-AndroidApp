@@ -3,6 +3,7 @@ package com.njackson.live;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -24,16 +25,23 @@ public class LiveService extends Service {
 
     private LiveTracking _liveTrackingJayps;
     private LiveTracking _liveTrackingMmt;
-    NewLocation firstLocation = null;
+    Location firstLocation = null;
 
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
         if (_sharedPreferences.getBoolean("LIVE_TRACKING", false)) {
             Log.i(TAG, "onNewLocationEvent time=" + newLocation.getTime());
+            Location location = new Location("PebbleBike");
+            location.setAccuracy(newLocation.getAccuracy());
+            location.setLatitude(newLocation.getLatitude());
+            location.setLongitude(newLocation.getLongitude());
+            location.setTime(newLocation.getTime());
+
             if (firstLocation == null) {
-                firstLocation = newLocation;
+                firstLocation = location;
             }
-            _liveTrackingJayps.addPoint(firstLocation, newLocation, newLocation.getAltitude(), 0);
+
+            _liveTrackingJayps.addPoint(firstLocation, location, location.getAltitude(), 0);
         }
     }
 
@@ -61,8 +69,8 @@ public class LiveService extends Service {
     private void handleIntent(Intent intent) {
         Log.i(TAG, "handleIntent");
 
-        _liveTrackingJayps = new LiveTracking(getApplicationContext(), LiveTracking.TYPE_JAYPS);
-        _liveTrackingMmt = new LiveTracking(getApplicationContext(), LiveTracking.TYPE_MMT);
+        _liveTrackingJayps = new LiveTracking(getApplicationContext(), LiveTracking.TYPE_JAYPS, _bus);
+        _liveTrackingMmt = new LiveTracking(getApplicationContext(), LiveTracking.TYPE_MMT, _bus);
 
         _liveTrackingJayps.setLogin(_sharedPreferences.getString("LIVE_TRACKING_LOGIN", ""));
         _liveTrackingJayps.setPassword(_sharedPreferences.getString("LIVE_TRACKING_PASSWORD", ""));
