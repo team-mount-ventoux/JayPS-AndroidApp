@@ -136,6 +136,7 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
         NewLocation event = new NewLocation();
         event.setUnits(0);
         event.setSpeed(45.4f);
+        event.setTime(1420988759);
 
         _bus.post(event);
 

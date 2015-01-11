@@ -33,15 +33,19 @@ public class PebbleService extends Service {
 
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
-        PebbleDictionary dictionary = LocationEventConverter.convert(
-                newLocation,
-                true /* serviceRunning */, // TODO(nic)
-                _sharedPreferences.getBoolean("PREF_DEBUG", false) /* debug */,
-                _sharedPreferences.getBoolean("LIVE_TRACKING", false) /* liveTrackingEnabled */,
-                Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000")) /* refreshInterval */,
-                255 /* heartRate */
-        );
-        sendDataToPebble(dictionary);
+        if (newLocation.getTime() > 0) {
+            // location.getTime() == 0 if altitude is obtained through pressure sensor before first gps pos
+
+            PebbleDictionary dictionary = LocationEventConverter.convert(
+                    newLocation,
+                    true /* serviceRunning */, // TODO(nic)
+                    _sharedPreferences.getBoolean("PREF_DEBUG", false) /* debug */,
+                    _sharedPreferences.getBoolean("LIVE_TRACKING", false) /* liveTrackingEnabled */,
+                    Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000")) /* refreshInterval */,
+                    255 /* heartRate */
+            );
+            sendDataToPebble(dictionary);
+        }
     }
 
     @Override

@@ -37,11 +37,15 @@ public class LiveService extends Service {
             location.setLongitude(newLocation.getLongitude());
             location.setTime(newLocation.getTime());
 
-            if (firstLocation == null) {
-                firstLocation = location;
-            }
+            if (location.getTime() > 0) {
+                // location.getTime() == 0 if altitude is obtained through pressure sensor before first gps pos
 
-            _liveTrackingJayps.addPoint(firstLocation, location, location.getAltitude(), 0);
+                if (firstLocation == null) {
+                    firstLocation = location;
+                }
+
+                _liveTrackingJayps.addPoint(firstLocation, location, location.getAltitude(), 0);
+            }
         }
     }
 
