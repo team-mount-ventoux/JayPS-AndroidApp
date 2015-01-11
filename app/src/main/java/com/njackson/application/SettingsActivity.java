@@ -1,7 +1,10 @@
 package com.njackson.application;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -42,7 +45,15 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        Preference pref = findPreference("PREF_GEOID_HEIGHT_INFO");
+        Preference pref = findPreference("PREF_PRESSURE_INFO");
+        SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
+            pref.setSummary("Pressure sensor available");
+        } else {
+            pref.setSummary("No pressure sensor");
+        }
+
+        pref = findPreference("PREF_GEOID_HEIGHT_INFO");
         if (_sharedPreferences.getFloat("GEOID_HEIGHT", 0) != 0) {
             pref.setSummary("Correction: " + _sharedPreferences.getFloat("GEOID_HEIGHT", 0) + "m");
         } else {
