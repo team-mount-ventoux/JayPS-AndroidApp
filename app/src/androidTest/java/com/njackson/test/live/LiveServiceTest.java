@@ -1,26 +1,23 @@
 package com.njackson.test.live;
 
 import android.content.Intent;
+
+import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.events.GPSService.CurrentState;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.live.LiveService;
 import com.njackson.test.application.TestApplication;
 import com.njackson.virtualpebble.IMessageManager;
-import com.njackson.virtualpebble.PebbleService;
 
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import static org.mockito.Mockito.*;
 
 import android.content.SharedPreferences;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
-import android.util.Log;
+import org.mockito.ArgumentCaptor;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,7 +26,7 @@ import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 
-public class LiveServiceTest extends ServiceTestCase<PebbleService>{
+public class LiveServiceTest extends ServiceTestCase<LiveService>{
 
     private static final String TAG = "PB-LiveServiceTest";
 
@@ -37,13 +34,13 @@ public class LiveServiceTest extends ServiceTestCase<PebbleService>{
     @Inject IMessageManager _mockMessageManager;
     @Inject SharedPreferences _mockPreferences;
 
-    private PebbleService _service;
+    private LiveService _service;
     private TestApplication _app;
     //private CurrentState _pebbleStatusEvent;
     //private CountDownLatch _stateLatch;
 
     public LiveServiceTest() {
-        super(PebbleService.class);
+        super(LiveService.class);
     }
 
     @Module(
@@ -65,18 +62,12 @@ public class LiveServiceTest extends ServiceTestCase<PebbleService>{
             return mock(SharedPreferences.class);
         }
     }
-    @Subscribe
-    public void onNewLocationEvent(NewLocation newLocation) {
-        if (_mockPreferences.getBoolean("LIVE_TRACKING", false)) {
-            Log.i(TAG, "onNewLocationEvent time=" + newLocation.getTime());
-        }
-    }
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
 
-        _service = new PebbleService();
+        _service = new LiveService();
 
         System.setProperty("dexmaker.dexcache", getSystemContext().getCacheDir().getPath());
 
@@ -98,14 +89,15 @@ public class LiveServiceTest extends ServiceTestCase<PebbleService>{
         super.tearDown();
     }
     private void setupMocks() {
+        when(_mockPreferences.getString("REFRESH_INTERVAL", "1000")).thenReturn("1000");
         when(_mockPreferences.getBoolean("LIVE_TRACKING", false)).thenReturn(true);
         when(_mockPreferences.getBoolean("PREF_DEBUG", false)).thenReturn(true);
         when(_mockPreferences.getString("LIVE_TRACKING_LOGIN", "")).thenReturn("test");
         when(_mockPreferences.getString("LIVE_TRACKING_PASSWORD", "")).thenReturn("test");
-        when(_mockPreferences.getString("LIVE_TRACKING_URL", "")).thenReturn("url");
-        when(_mockPreferences.getString("LIVE_TRACKING_MMT_LOGIN", "")).thenReturn("test");
-        when(_mockPreferences.getString("LIVE_TRACKING_MMT_PASSWORD", "")).thenReturn("test");
-        when(_mockPreferences.getString("LIVE_TRACKING_MMT_URL", "")).thenReturn("url");
+        when(_mockPreferences.getString("LIVE_TRACKING_URL", "")).thenReturn("");
+        when(_mockPreferences.getString("LIVE_TRACKING_MMT_LOGIN", "")).thenReturn("");
+        when(_mockPreferences.getString("LIVE_TRACKING_MMT_PASSWORD", "")).thenReturn("");
+        when(_mockPreferences.getString("LIVE_TRACKING_MMT_URL", "")).thenReturn("");
     }
 
     private void startService() throws InterruptedException {
@@ -113,18 +105,30 @@ public class LiveServiceTest extends ServiceTestCase<PebbleService>{
         startService(startIntent);
         _service = getService();
 
-        //_stateLatch.await(2000, TimeUnit.MILLISECONDS);
+        //_stateLatch.await(2000,  TimeUnit.MILLISECONDS);
     }
     @SmallTest
     public void testEventOnNewLocationEvent() throws Exception {
 
         startService();
 
+        ArgumentCaptor<PebbleDictionary> captor = new ArgumentCaptor<PebbleDictionary>();
+
         NewLocation event = new NewLocation();
-        event.setUnits(0);
-        event.setSpeed(45.4f);
-        event.setTime(1420988759);
+        event.setLatitude(45.0);
+        event.setLongitude(8.0);
+        event.setTime(1420980000);
 
         _bus.post(event);
+        timeout(2000).times(1);
+
+        event.setLatitude(45.1);
+        event.setLongitude(8.2);
+        event.setTime(1420980060);
+
+        _bus.post(event);
+
+//        verify(_mockMessageManager, timeout(2000).times(1)).offer(captor.capture());
+
     }
 }
