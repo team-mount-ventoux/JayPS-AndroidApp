@@ -13,7 +13,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.njackson.Constants;
 import com.njackson.application.PebbleBikeApplication;
-import com.njackson.events.ActivityRecognitionService.CurrentState;
+import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
@@ -70,7 +70,7 @@ public class ActivityRecognitionService  extends Service implements
         _bus.register(this);
 
         if(!checkGooglePlayServices()) {
-            _bus.post(new CurrentState(CurrentState.State.PLAY_SERVICES_NOT_AVAILABLE));
+            _bus.post(new ActivityRecognitionStatus(ActivityRecognitionStatus.State.PLAY_SERVICES_NOT_AVAILABLE));
             return;
         }
 
@@ -78,7 +78,7 @@ public class ActivityRecognitionService  extends Service implements
         createIntentService();
         connectToGooglePlayServices();
 
-        _bus.post(new CurrentState(CurrentState.State.STARTED));
+        _bus.post(new ActivityRecognitionStatus(ActivityRecognitionStatus.State.STARTED));
     }
 
     private void createIntentService() {

@@ -1,0 +1,191 @@
+package com.njackson.test.utils.googleplay;
+
+import android.content.Context;
+import android.test.AndroidTestCase;
+import android.test.suitebuilder.annotation.SmallTest;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.fitness.SessionsApi;
+import com.google.android.gms.fitness.data.Session;
+import com.google.android.gms.fitness.result.SessionStopResult;
+import com.google.android.gms.location.DetectedActivity;
+import com.njackson.utils.googleplay.GoogleFitSessionManager;
+import com.njackson.utils.googleplay.IGooglePlayServices;
+
+import org.mockito.ArgumentCaptor;
+
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+/**
+ * Created by njackson on 11/01/15.
+ */
+public class GoogleFitSessionManagerTest extends AndroidTestCase {
+
+    IGooglePlayServices _playServices;
+    private SessionsApi _mockSessionsApi;
+    private Session.Builder _mockSessionBuilder;
+    private IGooglePlayServices _mockPlayServices;
+    private GoogleFitSessionManager _sessionManager;
+    private GoogleApiClient _mockGoogleApiClient;
+    private Context _mockContext;
+    private PendingResult<SessionStopResult> _mockResult;
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+
+        System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
+
+        setupMocks();
+
+        _sessionManager = new GoogleFitSessionManager(_mockContext,_mockPlayServices, _mockSessionsApi);
+    }
+
+    private void setupMocks() {
+
+        _mockContext = mock(Context.class);
+        when(_mockContext.getPackageName()).thenReturn("com.somepackage.or.other");
+
+        _mockGoogleApiClient = mock(GoogleApiClient.class);
+        _mockSessionsApi = mock(SessionsApi.class);
+
+        _mockSessionBuilder = mock(Session.Builder.class);
+        when(_mockSessionBuilder.setName(anyString())).thenReturn(_mockSessionBuilder);
+        when(_mockSessionBuilder.setIdentifier(anyString())).thenReturn(_mockSessionBuilder);
+        when(_mockSessionBuilder.setStartTime(anyLong(),any(TimeUnit.class))).thenReturn(_mockSessionBuilder);
+
+        _mockPlayServices = mock(IGooglePlayServices.class);
+        when(_mockPlayServices.newSessionBuilder()).thenReturn(_mockSessionBuilder);
+
+        _mockResult = mock(PendingResult.class);
+        when(_mockSessionsApi.stopSession(any(GoogleApiClient.class),anyString())).thenReturn(_mockResult);
+    }
+
+    @SmallTest
+    public void testStartSessionClearsSessionData() throws Exception {
+        _sessionManager.startSession(1000, _mockGoogleApiClient);
+
+        assertEquals(0,_sessionManager.getSessionData().size());
+    }
+
+    @SmallTest
+    public void testStartSessionCreatesNewSessionBuilder() throws Exception {
+        _sessionManager.startSession(1000, _mockGoogleApiClient);
+
+        verify(_mockPlayServices, timeout(2000).times(1)).newSessionBuilder();
+    }
+
+    @SmallTest
+    public void testStartSessionSetSessionBuilderSessionIdentifier() throws Exception {
+        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
+
+        _sessionManager.startSession(1000, _mockGoogleApiClient);
+
+        verify(_mockSessionBuilder,timeout(2000).times(1)).setIdentifier("MockSessionIdentifier");
+    }
+
+    @SmallTest
+    public void testStartSessionSetSessionBuilderSessionName() throws Exception {
+        when(_mockPlayServices.generateSessionName()).thenReturn("MockSessionName");
+
+        _sessionManager.startSession(1000, _mockGoogleApiClient);
+
+        verify(_mockSessionBuilder,timeout(2000).times(1)).setName("MockSessionName");
+    }
+
+    @SmallTest
+    public void testStartSessionSetSessionBuilderStartTime() throws Exception {
+        _sessionManager.startSession(1000, _mockGoogleApiClient);
+
+        verify(_mockSessionBuilder,timeout(2000).times(1)).setStartTime(anyLong(),any(TimeUnit.class));
+    }
+
+    @SmallTest
+    public void testStartSessionSetsSession() throws Exception {
+        _sessionManager.startSession(1000, _mockGoogleApiClient);
+
+        verify(_mockSessionsApi,timeout(2000).times(1)).startSession(any(GoogleApiClient.class),any(Session.class));
+    }
+
+    @SmallTest
+    public void testAddDataPointAddsSessionData() throws Exception {
+        _sessionManager.startSession(1000, _mockGoogleApiClient);
+        _sessionManager.addDataPoint(1000, DetectedActivity.ON_BICYCLE);
+        assertEquals(1, _sessionManager.getSessionData().size());
+    }
+
+    @SmallTest
+    public void testAddDataPointWhenActivitySameAsPreviousDoesNotAddSessionData() throws Exception {
+        _sessionManager.startSession(1000, _mockGoogleApiClient);
+        _sessionManager.addDataPoint(1000, DetectedActivity.ON_BICYCLE);
+        _sessionManager.addDataPoint(1000, DetectedActivity.ON_BICYCLE);
+        assertEquals(1, _sessionManager.getSessionData().size());
+    }
+
+    @SmallTest
+    public void testAddDataPointWhenActivityNotSameAsPreviousDoesAddSessionData() throws Exception {
+        _sessionManager.startSession(1000, _mockGoogleApiClient);
+        _sessionManager.addDataPoint(1000, DetectedActivity.ON_BICYCLE);
+        _sessionManager.addDataPoint(1000, DetectedActivity.ON_FOOT);
+        assertEquals(2, _sessionManager.getSessionData().size());
+    }
+
+    @SmallTest
+    public void testSaveActiveSessionCallsStopSession() {
+        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
+        _sessionManager.startSession(1000, _mockGoogleApiClient);
+        _sessionManager.saveActiveSession();
+        verify(_mockSessionsApi, times(1)).stopSession(_mockGoogleApiClient, "MockSessionIdentifier");
+    }
+
+    @SmallTest
+    public void testSaveActiveSessionSetsCallBack() {
+        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
+
+        _sessionManager.startSession(1000, _mockGoogleApiClient);
+        _sessionManager.saveActiveSession();
+        verify(_mockResult, times(1)).setResultCallback(any(ResultCallback.class));
+    }
+
+    @SmallTest
+    public void testSaveActiveSessionCallBackCreatesDataPoints() {
+        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
+
+        _sessionManager.startSession(1000, _mockGoogleApiClient);
+        _sessionManager.saveActiveSession();
+
+        ArgumentCaptor<ResultCallback> captor = ArgumentCaptor.forClass(ResultCallback.class);
+
+        verify(_mockResult, times(1)).setResultCallback(captor.capture());
+
+        captor.getValue().onResult(new SessionStopResult(new Status(1), new ArrayList<Session>()));
+    }
+
+    /*
+    @SmallTest
+    public void testOnDestroyStopsSessionWhenConnected() throws Exception {
+        when(_googleAPIClient.isConnected()).thenReturn(true);
+
+        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
+        startService();
+        _service.onConnected(new Bundle());
+        shutdownService();
+
+        verify(_mockSessionsApi,timeout(2000).times(1)).stopSession(_googleAPIClient,"MockSessionIdentifier");
+    }
+    */
+
+}

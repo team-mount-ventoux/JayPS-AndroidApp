@@ -2,7 +2,6 @@ package com.njackson.activities;
 
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -13,7 +12,7 @@ import com.njackson.R;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.SettingsActivity;
-import com.njackson.events.ActivityRecognitionService.CurrentState;
+import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.status.GoogleFitStatus;
@@ -44,8 +43,8 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Subscribe
-    public void onRecognitionState(CurrentState event) {
-        if(event.getState().compareTo(CurrentState.State.PLAY_SERVICES_NOT_AVAILABLE) == 0)
+    public void onRecognitionState(ActivityRecognitionStatus event) {
+        if(event.getState().compareTo(ActivityRecognitionStatus.State.PLAY_SERVICES_NOT_AVAILABLE) == 0)
             Log.d(TAG, "PLAY_NOT_AVIALABLE");
         else
             Log.d(TAG, "SERVICE_STARTED");

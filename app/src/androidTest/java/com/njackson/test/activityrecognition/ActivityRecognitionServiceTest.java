@@ -1,7 +1,6 @@
 package com.njackson.test.activityrecognition;
 
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,7 +13,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.events.ActivityRecognitionService.CurrentState;
+import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGooglePlayServices;
@@ -54,7 +53,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
 
     static IGooglePlayServices _playServices;
 
-    private CurrentState _activityStatusEvent;
+    private ActivityRecognitionStatus _activityStatusEvent;
     private CountDownLatch _stateLatch;
     private ActivityRecognitionService _service;
     private static ITimer _mockTimer;
@@ -87,7 +86,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     }
 
     @Subscribe
-    public void onGPSStatusEvent(CurrentState event) {
+    public void onGPSStatusEvent(ActivityRecognitionStatus event) {
         _activityStatusEvent = event;
         _stateLatch.countDown();
     }
@@ -132,7 +131,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.API_UNAVAILABLE);
         startService();
 
-        assertEquals(CurrentState.State.PLAY_SERVICES_NOT_AVAILABLE, _activityStatusEvent.getState());
+        assertEquals(ActivityRecognitionStatus.State.PLAY_SERVICES_NOT_AVAILABLE, _activityStatusEvent.getState());
     }
 
     @SmallTest
@@ -140,7 +139,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
         startService();
 
-        assertEquals(CurrentState.State.STARTED, _activityStatusEvent.getState());
+        assertEquals(ActivityRecognitionStatus.State.STARTED, _activityStatusEvent.getState());
     }
 
     @SmallTest

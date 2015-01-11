@@ -35,9 +35,11 @@ import com.google.android.gms.fitness.result.SessionReadResult;
 import com.google.android.gms.fitness.result.SessionStopResult;
 import com.njackson.activities.MainActivity;
 import com.njackson.application.PebbleBikeApplication;
+import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.events.status.GoogleFitStatus;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -55,11 +57,12 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
     private static final String TAG = "GoogleFitService";
     @Inject Bus _bus;
     @Inject @Named("GoogleFit") GoogleApiClient _googleAPIClient;
-    @Inject RecordingApi _recordingApi;
-    @Inject SessionsApi _sessionsApi;
     @Inject IGooglePlayServices _playServices;
-    private Session _session;
-    private String _sessionIdentifier;
+
+    @Subscribe
+    public void onNewActivityEvent(NewActivityEvent event) {
+
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -92,7 +95,7 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
 
     private void stopRecordingSession() {
         if(_googleAPIClient.isConnected()) {
-            PendingResult<SessionStopResult> pendingResult = _sessionsApi.stopSession(_googleAPIClient, _sessionIdentifier);
+
 
             Log.d(TAG,"Stopped Recording Sessions");
         }
@@ -131,19 +134,7 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
 
     private void startRecordingSession() {
         long startTime = new Date().getTime();
-        //String description = "";
-        String sessionName = _playServices.generateSessionName();
-        _sessionIdentifier = _playServices.generateSessionIdentifier(startTime);
+        //_sessionIdentifier = _playServices.generateSessionIdentifier(startTime);
 
-        _session = _playServices.newSessionBuilder()
-                .setName(sessionName)
-                .setIdentifier(_sessionIdentifier)
-                //.setDescription(description)
-                .setStartTime(startTime, TimeUnit.MILLISECONDS)
-                        // optional - if your app knows what activity:
-                //.setActivity(FitnessActivities.RUNNING)
-                .build();
-
-        _sessionsApi.startSession(_googleAPIClient, _session);
     }
 }

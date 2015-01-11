@@ -78,12 +78,6 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         GoogleApiClient provideFitnessAPIClient() { return mock(GoogleApiClient.class); }
 
         @Provides
-        RecordingApi providesGoogleFitRecordingApi() { return _mockRecordingApi; }
-
-        @Provides
-        SessionsApi providesGoogleFitSessionsApi() { return _mockSessionsApi; }
-
-        @Provides
         IGooglePlayServices providesGooglePlayServices() { return _mockPlayServices; }
     }
 
@@ -113,8 +107,6 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
 
         System.setProperty("dexmaker.dexcache", getSystemContext().getCacheDir().getPath());
 
-        setupMocks();
-
         TestApplication app = new TestApplication();
         app.setObjectGraph(ObjectGraph.create(TestModule.class));
         app.inject(this);
@@ -123,23 +115,6 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         setApplication(app);
 
         _stateLatch = new CountDownLatch(1);
-    }
-
-    private void setupMocks() {
-        _mockRecordingApi = mock(RecordingApi.class);
-        _pendingResultMock = mock(PendingResult.class);
-        when(_mockRecordingApi.subscribe(any(GoogleApiClient.class),any(DataType.class)))
-                .thenReturn(_pendingResultMock);
-
-        _mockSessionsApi = mock(SessionsApi.class);
-
-        _mockSessionBuilder = mock(Session.Builder.class);
-        when(_mockSessionBuilder.setName(anyString())).thenReturn(_mockSessionBuilder);
-        when(_mockSessionBuilder.setIdentifier(anyString())).thenReturn(_mockSessionBuilder);
-        when(_mockSessionBuilder.setStartTime(anyLong(),any(TimeUnit.class))).thenReturn(_mockSessionBuilder);
-
-        _mockPlayServices = mock(IGooglePlayServices.class);
-        when(_mockPlayServices.newSessionBuilder()).thenReturn(_mockSessionBuilder);
     }
 
     private void startService() throws Exception {
@@ -199,62 +174,6 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         shutdownService();
 
         verify(_googleAPIClient,timeout(2000).times(1)).unregisterConnectionFailedListener(any(GoogleFitService.class));
-    }
-
-    @SmallTest
-    public void testOnConnectedCreatesNewSessionBuilder() throws Exception {
-        startService();
-        _service.onConnected(new Bundle());
-
-        verify(_mockPlayServices,timeout(2000).times(1)).newSessionBuilder();
-    }
-
-    @SmallTest
-    public void testOnConnectedSetSessionBuilderSessionIdentifier() throws Exception {
-        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
-
-        startService();
-        _service.onConnected(new Bundle());
-
-        verify(_mockSessionBuilder,timeout(2000).times(1)).setIdentifier("MockSessionIdentifier");
-    }
-
-    @SmallTest
-    public void testOnConnectedSetSessionBuilderSessionName() throws Exception {
-        when(_mockPlayServices.generateSessionName()).thenReturn("MockSessionName");
-
-        startService();
-        _service.onConnected(new Bundle());
-
-        verify(_mockSessionBuilder,timeout(2000).times(1)).setName("MockSessionName");
-    }
-
-    @SmallTest
-    public void testOnConnectedSetSessionBuilderStartTime() throws Exception {
-        startService();
-        _service.onConnected(new Bundle());
-
-        verify(_mockSessionBuilder,timeout(2000).times(1)).setStartTime(anyLong(),any(TimeUnit.class));
-    }
-
-    @SmallTest
-    public void testOnConnectedSetsSession() throws Exception {
-        startService();
-        _service.onConnected(new Bundle());
-
-        verify(_mockSessionsApi,timeout(2000).times(1)).startSession(any(GoogleApiClient.class),any(Session.class));
-    }
-
-    @SmallTest
-    public void testOnDestroyStopsSessionWhenConnected() throws Exception {
-        when(_googleAPIClient.isConnected()).thenReturn(true);
-
-        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
-        startService();
-        _service.onConnected(new Bundle());
-        shutdownService();
-
-        verify(_mockSessionsApi,timeout(2000).times(1)).stopSession(_googleAPIClient,"MockSessionIdentifier");
     }
 
     @SmallTest

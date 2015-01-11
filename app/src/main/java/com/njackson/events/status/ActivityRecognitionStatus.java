@@ -1,9 +1,9 @@
-package com.njackson.events.ActivityRecognitionService;
+package com.njackson.events.status;
 
 /**
  * Created by server on 21/03/2014.
  */
-public class CurrentState {
+public class ActivityRecognitionStatus {
 
     public enum State {
         STARTED,
@@ -14,7 +14,7 @@ public class CurrentState {
     public State _state;
     public State getState() { return _state; }
 
-    public CurrentState(State state) {
+    public ActivityRecognitionStatus(State state) {
         this._state = state;
     }
 
