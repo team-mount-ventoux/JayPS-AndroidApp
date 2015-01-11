@@ -112,7 +112,7 @@ public class PebbleService extends Service {
     @Override
     public void onDestroy (){
         _bus.unregister(this);
-        _messageManager.hideWatchFace();
+        //_messageManager.hideWatchFace();
         super.onDestroy();
     }
 

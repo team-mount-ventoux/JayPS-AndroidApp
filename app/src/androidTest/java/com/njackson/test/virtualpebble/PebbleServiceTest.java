@@ -113,14 +113,14 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
 
         _stateLatch.await(2000, TimeUnit.MILLISECONDS);
     }
-
+/*
     @SmallTest
-    public void testServiceShowsWatchFaceOnStart() throws InterruptedException {
+    public void testServiceHideWatchFaceOnStop() throws InterruptedException {
         startService();
         shutdownService();
         Mockito.verify(_mockMessageManager,times(1)).hideWatchFace();
     }
-
+*/
     @SmallTest
     public void testServiceShowsWatchFaceOnDispose() throws InterruptedException {
         startService();
