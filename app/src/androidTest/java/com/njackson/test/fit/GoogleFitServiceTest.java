@@ -218,11 +218,23 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
     }
 
     @SmallTest
-    public void testDestroyedStopsRecordingAPI() throws Exception {
+    public void testDestroyedStopsRecordingAPIWhenConnected() throws Exception {
+        when(_googleAPIClient.isConnected()).thenReturn(true);
+
         startService();
         shutdownService();
 
         verify(_mockRecordingApi, timeout(2000).times(1)).unsubscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA);
+    }
+
+    @SmallTest
+    public void testDestroyedDoesNotStopsRecordingAPIWhenNotConnected() throws Exception {
+        when(_googleAPIClient.isConnected()).thenReturn(false);
+
+        startService();
+        shutdownService();
+
+        verify(_mockRecordingApi, timeout(2000).times(0)).unsubscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA);
     }
 
     @SmallTest
@@ -270,13 +282,26 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
     }
 
     @SmallTest
-    public void testOnDestroyStopsSession() throws Exception {
+    public void testOnDestroyStopsSessionWhenConnected() throws Exception {
+        when(_googleAPIClient.isConnected()).thenReturn(true);
+
         when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
         startService();
         _service.onConnected(new Bundle());
         shutdownService();
 
         verify(_mockSessionsApi,timeout(2000).times(1)).stopSession(_googleAPIClient,"MockSessionIdentifier");
+    }
+
+    @SmallTest
+    public void testOnDestroyDoesNotStopsSessionWhenNotConnected() throws Exception {
+        when(_googleAPIClient.isConnected()).thenReturn(false);
+
+        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
+        startService();
+        shutdownService();
+
+        verify(_mockSessionsApi,timeout(2000).times(0)).stopSession(_googleAPIClient,"MockSessionIdentifier");
     }
 
     @SmallTest

@@ -65,8 +65,10 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
         _googleAPIClient.unregisterConnectionFailedListener(this);
         _googleAPIClient.unregisterConnectionCallbacks(this);
 
-        _recordingApi.unsubscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA);
-        _sessionsApi.stopSession(_googleAPIClient, _sessionIdentifier);
+        if(_googleAPIClient.isConnected()) {
+            _recordingApi.unsubscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA);
+            _sessionsApi.stopSession(_googleAPIClient, _sessionIdentifier);
+        }
 
         Log.d(TAG,"Destroy GoogleFit Service");
 

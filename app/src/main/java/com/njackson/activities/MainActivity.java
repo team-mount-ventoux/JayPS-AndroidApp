@@ -59,19 +59,19 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
                 _playServices.showConnectionResultErrorDialog(event.getConnectionResult(), this);
                 return;
             }
-        }
 
-        // The failure has a resolution. Resolve it.
-        // Called typically when the app is not yet authorized, and an
-        // authorization dialog is displayed to the user.
-        if (!_authInProgress) {
-            try {
-                Log.i(TAG, "Attempting to resolve failed connection");
-                _authInProgress = true;
-                _playServices.startConnectionResultResolution(event.getConnectionResult(),this);
-            } catch (IntentSender.SendIntentException e) {
-                Log.e(TAG,
-                        "Exception while starting resolution activity", e);
+            // The failure has a resolution. Resolve it.
+            // Called typically when the app is not yet authorized, and an
+            // authorization dialog is displayed to the user.
+            if (!_authInProgress) {
+                try {
+                    Log.i(TAG, "Attempting to resolve failed connection");
+                    _authInProgress = true;
+                    _playServices.startConnectionResultResolution(event.getConnectionResult(),this);
+                } catch (IntentSender.SendIntentException e) {
+                    Log.e(TAG,
+                            "Exception while starting resolution activity", e);
+                }
             }
         }
     }

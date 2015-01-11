@@ -235,6 +235,18 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
+    public void testOnOtherGoogleFitEventsDoesNothing() throws IntentSender.SendIntentException {
+        when(_mockPlayServices.connectionResultHasResolution(any(ConnectionResult.class))).thenReturn(false);
+
+        _activity = getActivity();
+
+        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTED, createConnectionResult()));
+
+        verify(_mockPlayServices,timeout(2000).times(0)).connectionResultHasResolution(any(ConnectionResult.class));
+        verify(_mockPlayServices,timeout(2000).times(0)).startConnectionResultResolution(any(ConnectionResult.class), any(MainActivity.class));
+    }
+
+    @SmallTest
     public void testOnGoogleFitConnectionFailedWithNoResolutionShowsErrorDialog() {
         when(_mockPlayServices.connectionResultHasResolution(any(ConnectionResult.class))).thenReturn(false);
 
