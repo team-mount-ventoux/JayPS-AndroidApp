@@ -2,11 +2,13 @@ package com.njackson.fit;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -15,6 +17,7 @@ import com.google.android.gms.fitness.RecordingApi;
 import com.google.android.gms.fitness.SessionsApi;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Session;
+import com.njackson.activities.MainActivity;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.status.GoogleFitStatus;
 import com.njackson.utils.googleplay.IGooglePlayServices;
@@ -50,7 +53,7 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG,"Create GoogleFit Service");
+        Log.d(TAG, "Create GoogleFit Service");
         ((PebbleBikeApplication)getApplication()).inject(this);
         _bus.register(this);
     }
@@ -98,6 +101,7 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d(TAG,"Connection Failed");
+        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED, connectionResult));
     }
     /* END GOOGLE CLIENT DELEGATE METHODS */
 

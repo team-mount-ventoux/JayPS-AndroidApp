@@ -1,11 +1,13 @@
 package com.njackson.test.fit;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -275,5 +277,19 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         shutdownService();
 
         verify(_mockSessionsApi,timeout(2000).times(1)).stopSession(_googleAPIClient,"MockSessionIdentifier");
+    }
+
+    @SmallTest
+    public void testOnConnectionFailedPostsEvent() throws Exception {
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),1, new Intent("MOCK"),0);
+        ConnectionResult result = new ConnectionResult(0,pendingIntent);
+
+        startService();
+        _stateLatch = new CountDownLatch(1);
+        _service.onConnectionFailed(result);
+
+        _stateLatch.await(2000,TimeUnit.MILLISECONDS);
+
+        assertEquals(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED, _state.getState());
     }
 }

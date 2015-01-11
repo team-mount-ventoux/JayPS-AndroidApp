@@ -1,6 +1,7 @@
 package com.njackson.activities;
 
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +16,8 @@ import com.njackson.application.SettingsActivity;
 import com.njackson.events.ActivityRecognitionService.CurrentState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
+import com.njackson.events.status.GoogleFitStatus;
+import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -28,6 +31,8 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
     @Inject IAnalytics _analytics;
     @Inject SharedPreferences _sharedPreferences;
     @Inject IServiceStarter _serviceStarter;
+    @Inject IGooglePlayServices _playServices;
+    private boolean _authInProgress;
 
     @Subscribe
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
@@ -45,6 +50,30 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
             Log.d(TAG, "PLAY_NOT_AVIALABLE");
         else
             Log.d(TAG, "SERVICE_STARTED");
+    }
+
+    @Subscribe
+    public void onGoogleFitStatusChanged(GoogleFitStatus event) {
+        if(event.getState() == GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED) {
+            if(!_playServices.connectionResultHasResolution(event.getConnectionResult())) {
+                _playServices.showConnectionResultErrorDialog(event.getConnectionResult(), this);
+                return;
+            }
+        }
+
+        // The failure has a resolution. Resolve it.
+        // Called typically when the app is not yet authorized, and an
+        // authorization dialog is displayed to the user.
+        if (!_authInProgress) {
+            try {
+                Log.i(TAG, "Attempting to resolve failed connection");
+                _authInProgress = true;
+                _playServices.startConnectionResultResolution(event.getConnectionResult(),this);
+            } catch (IntentSender.SendIntentException e) {
+                Log.e(TAG,
+                        "Exception while starting resolution activity", e);
+            }
+        }
     }
 
     @Override
