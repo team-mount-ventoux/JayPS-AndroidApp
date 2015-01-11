@@ -4,6 +4,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import com.google.common.base.Function;
 
@@ -15,6 +16,8 @@ import fr.jayps.android.AdvancedLocation;
  * Created by njackson on 24/12/14.
  */
 public class GPSSensorEventListener implements SensorEventListener{
+
+    private static final String TAG = "PB-GPSSensorEventListener";
 
     private AdvancedLocation _advancedLocation;
     private Callable  _callback;
@@ -42,6 +45,7 @@ public class GPSSensorEventListener implements SensorEventListener{
         if(sensorType == Sensor.TYPE_PRESSURE) {
             float pressure_value = values[0];
             double altitude = _sensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure_value);
+            Log.d(TAG, "pressure_value=" + pressure_value + " altitude=" + altitude);
             _advancedLocation.onAltitudeChanged(altitude);
 
             try {

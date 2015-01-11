@@ -120,6 +120,7 @@ public class GPSService extends Service {
         Log.d(TAG, "Started GPS Service");
 
         _advancedLocation = new AdvancedLocation(getApplicationContext());
+        _advancedLocation.debugLevel = 2; //debug ? 2 : 0;
         _advancedLocation.debugTagPrefix = "PB-";
 
         // the intent has an extra which relates to the refresh interval
@@ -224,6 +225,7 @@ public class GPSService extends Service {
         // GPS is running
         // reninit all properties
         _advancedLocation = new AdvancedLocation(getApplicationContext());
+        _advancedLocation.debugLevel = 2; //debug ? 2 : 0;
         _advancedLocation.debugTagPrefix = "PB-";
 
         loadGPSStats();
@@ -254,7 +256,8 @@ public class GPSService extends Service {
             }
         });
 
-        _sensorManager.registerListener(_sensorListener,_sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE),SensorManager.SENSOR_DELAY_NORMAL);
+        // delay between events in microseconds
+        _sensorManager.registerListener(_sensorListener, _sensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE), 3000000);
     }
 
     private void stopLocationUpdates() {
@@ -325,8 +328,8 @@ public class GPSService extends Service {
         event.setYpos(ypos);
         event.setBearing(_advancedLocation.getBearing());
 
+        Log.d(TAG,"post New Location time=" + event.getTime());
         _bus.post(event);
-        Log.d(TAG,"New Location");
     }
 
 }
