@@ -1,7 +1,9 @@
 package com.njackson.test.activityrecognition;
 
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.test.ServiceTestCase;
@@ -48,6 +50,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     @Inject Bus _bus;
     @Inject @Named("GoogleActivity") GoogleApiClient _googleApiClient;
     @Inject IServiceStarter _serviceStarter;
+    @Inject SharedPreferences _sharedPreferences;
 
     static IGooglePlayServices _playServices;
 
@@ -67,6 +70,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         @Provides @Singleton @Named("GoogleActivity") GoogleApiClient provideActivityRecognitionClient() { return mock(GoogleApiClient.class); }
         @Provides @Singleton IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
         @Provides ITimer providesTimer() { return _mockTimer; }
+        @Provides @Singleton SharedPreferences provideSharedPreferences() { return mock(SharedPreferences.class); };
     }
 
     /**
@@ -198,7 +202,9 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     }
 
     @SmallTest
-    public void testRespondsToNewActivityEventStartsLocation() throws Exception {
+    public void testRespondsToNewActivityEventStartsLocationWhenActivityRecognitonPreferenceSet() throws Exception {
+        when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
+
         startService();
         _bus.post(new NewActivityEvent(DetectedActivity.ON_FOOT));
 
@@ -206,7 +212,19 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     }
 
     @SmallTest
-    public void testRespondsToNewActivityEventStartsTimer() throws Exception {
+    public void testRespondsToNewActivityEventDoesNotStartsLocationWhenActivityRecognitonPreferenceNotSet() throws Exception {
+        when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(false);
+
+        startService();
+        _bus.post(new NewActivityEvent(DetectedActivity.ON_FOOT));
+
+        verify(_serviceStarter,timeout(2000).times(0)).startLocationServices();
+    }
+
+    @SmallTest
+    public void testRespondsToNewSTILLEventAndActivityRecognitionSetStartsTimer() throws Exception {
+        when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
+
         startService();
         _bus.post(new NewActivityEvent(DetectedActivity.STILL));
 
@@ -214,7 +232,19 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     }
 
     @SmallTest
-    public void testRespondsToNewActivityEventDoesNotStartTimerIfTimerActive() throws Exception {
+    public void testRespondsToNewSTILLAndActivityRecognitionSetDoesNotStartsTimer() throws Exception {
+        when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(false);
+
+        startService();
+        _bus.post(new NewActivityEvent(DetectedActivity.STILL));
+
+        verify(_mockTimer,timeout(2000).times(0)).setTimer(anyLong(),any(ActivityRecognitionService.class));
+    }
+
+    @SmallTest
+    public void testRespondsToNewSTILLActivityEventDoesNotStartTimerIfTimerActive() throws Exception {
+        when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
+
         startService();
 
         when(_mockTimer.getActive()).thenReturn(true);
@@ -225,6 +255,8 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
 
     @SmallTest
     public void testCancelsTimerWhenActivityDetected() throws Exception {
+        when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
+
         startService();
         _bus.post(new NewActivityEvent(DetectedActivity.ON_FOOT));
 

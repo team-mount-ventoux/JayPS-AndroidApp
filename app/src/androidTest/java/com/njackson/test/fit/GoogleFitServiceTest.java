@@ -202,42 +202,6 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
     }
 
     @SmallTest
-    public void testOnConnectedStartsRecordingAPI() throws Exception {
-        startService();
-        _service.onConnected(new Bundle());
-
-        verify(_mockRecordingApi, timeout(2000).times(1)).subscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA);
-    }
-
-    @SmallTest
-    public void testOnConnectedRegistersCallbackToRecordingApi() throws Exception {
-        startService();
-        _service.onConnected(new Bundle());
-
-        verify(_pendingResultMock,timeout(2000).times(1)).setResultCallback(any(ResultCallback.class));
-    }
-
-    @SmallTest
-    public void testDestroyedStopsRecordingAPIWhenConnected() throws Exception {
-        when(_googleAPIClient.isConnected()).thenReturn(true);
-
-        startService();
-        shutdownService();
-
-        verify(_mockRecordingApi, timeout(2000).times(1)).unsubscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA);
-    }
-
-    @SmallTest
-    public void testDestroyedDoesNotStopsRecordingAPIWhenNotConnected() throws Exception {
-        when(_googleAPIClient.isConnected()).thenReturn(false);
-
-        startService();
-        shutdownService();
-
-        verify(_mockRecordingApi, timeout(2000).times(0)).unsubscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA);
-    }
-
-    @SmallTest
     public void testOnConnectedCreatesNewSessionBuilder() throws Exception {
         startService();
         _service.onConnected(new Bundle());

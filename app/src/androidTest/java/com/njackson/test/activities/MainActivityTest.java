@@ -157,22 +157,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
-    public void testRegistersForSharedPreferencesUpdatesOnCreate() {
-        _activity = getActivity();
-
-        verify(_mockPreferences,times(1)).registerOnSharedPreferenceChangeListener(any(MainActivity.class));
-    }
-
-    @SmallTest
-    public void testUnRegistersForSharedPreferencesUpdatesOnDestroy() throws InterruptedException {
-        _activity = getActivity();
-
-        _activity.finish();
-
-        verify(_mockPreferences, timeout(2000).times(1)).unregisterOnSharedPreferenceChangeListener(any(MainActivity.class));
-    }
-
-    @SmallTest
     public void testRespondsToStartButtonTouchedEventStartsServices() throws Exception {
         _activity = getActivity();
 
@@ -188,50 +172,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         _bus.post(new StopButtonTouchedEvent());
 
         verify(_mockServiceStarter, timeout(2000).times(1)).stopLocationServices();
-    }
-
-    @SmallTest
-    public void testStartsActivityRecognitionServiceWhenPreferenceSet() throws Exception {
-        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
-
-        _activity = getActivity();
-
-        verify(_mockServiceStarter,timeout(2000).times(1)).startRecognitionServices();
-    }
-
-    @SmallTest
-    public void testDoesNotStartActivityRecognitionServiceWhenPreferenceSet() throws Exception {
-        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
-
-        _activity = getActivity();
-
-        verify(_mockServiceStarter,timeout(2000).times(0)).startRecognitionServices();
-    }
-
-    @SmallTest
-    public void testStopsActivityRecognitionServiceWhenPreferenceChanged() throws Exception {
-        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
-
-        _activity = getActivity();
-
-        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
-
-        _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
-
-        verify(_mockServiceStarter,times(1)).stopRecognitionServices();
-    }
-
-    @SmallTest
-    public void testStartsActivityRecognitionServiceWhenPreferenceChanged() throws Exception {
-        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
-
-        _activity = getActivity();
-
-        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
-
-        _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
-
-        verify(_mockServiceStarter,times(1)).startRecognitionServices();
     }
 
     @SmallTest

@@ -23,9 +23,21 @@ public class ServiceStarter implements IServiceStarter {
         _sharedPreferences = preferences;
     }
 
+
+    @Override
+    public void startEssentialServices() {
+        startActivityRecognitionService();
+        startPebbleService();
+    }
+
+    @Override
+    public void stopEssentialServices() {
+        stopActivityRecognitionService();
+        stopPebbleService();
+    }
+
     @Override
     public void startLocationServices() {
-        startPebbleService();
         startGPSService();
         startLiveService();
         startGoogleFitService();
@@ -35,18 +47,7 @@ public class ServiceStarter implements IServiceStarter {
     public void stopLocationServices() {
         stopGPSService();
         stopLiveService();
-        stopPebbleService();
         stopGoogleFitService();
-    }
-
-    @Override
-    public void startRecognitionServices() {
-        startActivityRecognitionService();
-    }
-
-    @Override
-    public void stopRecognitionServices() {
-        stopActivityRecognitionService();
     }
 
     protected void startGPSService() {

@@ -10,20 +10,38 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.FitnessActivities;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.google.android.gms.fitness.RecordingApi;
 import com.google.android.gms.fitness.SessionsApi;
+import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
+import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Session;
+import com.google.android.gms.fitness.data.Subscription;
+import com.google.android.gms.fitness.data.Value;
+import com.google.android.gms.fitness.request.DataSourcesRequest;
+import com.google.android.gms.fitness.request.SessionInsertRequest;
+import com.google.android.gms.fitness.request.SessionReadRequest;
+import com.google.android.gms.fitness.result.DataSourcesResult;
+import com.google.android.gms.fitness.result.ListSubscriptionsResult;
+import com.google.android.gms.fitness.result.SessionReadResult;
+import com.google.android.gms.fitness.result.SessionStopResult;
 import com.njackson.activities.MainActivity;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.status.GoogleFitStatus;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.squareup.otto.Bus;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
@@ -65,14 +83,19 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
         _googleAPIClient.unregisterConnectionFailedListener(this);
         _googleAPIClient.unregisterConnectionCallbacks(this);
 
-        if(_googleAPIClient.isConnected()) {
-            _recordingApi.unsubscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA);
-            _sessionsApi.stopSession(_googleAPIClient, _sessionIdentifier);
-        }
+        stopRecordingSession();
 
         Log.d(TAG,"Destroy GoogleFit Service");
 
         super.onDestroy();
+    }
+
+    private void stopRecordingSession() {
+        if(_googleAPIClient.isConnected()) {
+            PendingResult<SessionStopResult> pendingResult = _sessionsApi.stopSession(_googleAPIClient, _sessionIdentifier);
+
+            Log.d(TAG,"Stopped Recording Sessions");
+        }
     }
 
     @Override
@@ -91,7 +114,6 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
     @Override
     public void onConnected(Bundle bundle) {
         Log.d(TAG,"Connected");
-        setupRecordingApi();
         startRecordingSession();
     }
 
@@ -107,27 +129,9 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
     }
     /* END GOOGLE CLIENT DELEGATE METHODS */
 
-    private void setupRecordingApi() {
-        _recordingApi.subscribe(_googleAPIClient, DataType.TYPE_DISTANCE_DELTA).setResultCallback(new ResultCallback<Status>() {
-            @Override
-            public void onResult(Status status) {
-                if (status.isSuccess()) {
-                    if (status.getStatusCode()
-                            == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED) {
-                        Log.i(TAG, "Existing subscription for activity detected.");
-                    } else {
-                        Log.i(TAG, "Successfully subscribed!");
-                    }
-                } else {
-                    Log.i(TAG, "There was a problem subscribing.");
-                }
-            }
-        });
-    }
-
     private void startRecordingSession() {
         long startTime = new Date().getTime();
-        String description = "";
+        //String description = "";
         String sessionName = _playServices.generateSessionName();
         _sessionIdentifier = _playServices.generateSessionIdentifier(startTime);
 

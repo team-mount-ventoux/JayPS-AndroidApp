@@ -3,6 +3,7 @@ package com.njackson.activityrecognition;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -36,6 +37,7 @@ public class ActivityRecognitionService  extends Service implements
     @Inject @Named("GoogleActivity") GoogleApiClient _recognitionClient;
     @Inject IServiceStarter _serviceStarter;
     @Inject ITimer _timer;
+    @Inject SharedPreferences _sharedPreferences;
 
     public static final int MILLISECONDS_PER_SECOND = 1000;
     public static final int DETECTION_INTERVAL_SECONDS = 2;
@@ -45,12 +47,16 @@ public class ActivityRecognitionService  extends Service implements
 
     @Subscribe
     public void onNewActivityEvent(NewActivityEvent event) {
-        if(event.getActivityType() != DetectedActivity.STILL) {
-            _serviceStarter.startLocationServices();
-            _timer.cancel();
-        } else {
-            if(!_timer.getActive()) {
-                _timer.setTimer(Constants.ACTIVITY_RECOGNITON_STILL_TIME, this);
+        boolean autoStart = _sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
+
+        if(autoStart) {
+            if (event.getActivityType() != DetectedActivity.STILL) {
+                _serviceStarter.startLocationServices();
+                _timer.cancel();
+            } else {
+                if (!_timer.getActive()) {
+                    _timer.setTimer(Constants.ACTIVITY_RECOGNITON_STILL_TIME, this);
+                }
             }
         }
     }
