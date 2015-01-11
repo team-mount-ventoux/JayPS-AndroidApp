@@ -168,7 +168,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         _mockServiceStarter = mock(IGPSServiceStarterForeground.class);
         _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
-        when(_mockPreferences.getString("ORUXMAPS_AUTO","disable")).thenReturn("new_track");
+        when(_mockPreferences.getString("ORUXMAPS_AUTO","disable")).thenReturn("disable");
     }
 
     @SmallTest
@@ -229,6 +229,34 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
                 anyLong(),
                 anyFloat(),
                 any(LocationListener.class));
+    }
+
+    @SmallTest
+    public void testOruxContinue() throws Exception {
+        when(_mockPreferences.getString("ORUXMAPS_AUTO","disable")).thenReturn("continue");
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
+    }
+
+    @SmallTest
+    public void testOruxNewSegment() throws Exception {
+        when(_mockPreferences.getString("ORUXMAPS_AUTO","disable")).thenReturn("new_segment");
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
+    }
+
+    @SmallTest
+    public void testOruxNewTrack() throws Exception {
+        when(_mockPreferences.getString("ORUXMAPS_AUTO","disable")).thenReturn("new_track");
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
+    }
+
+    @SmallTest
+    public void testOruxAuto() throws Exception {
+        when(_mockPreferences.getString("ORUXMAPS_AUTO","disable")).thenReturn("auto");
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
     }
 
     @SmallTest
