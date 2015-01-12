@@ -167,6 +167,21 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
     }
 
     @SmallTest
+    public void testNewWALKINGActivityEventCreates1DataPoints() {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    @SmallTest
+    public void testNewON_BICYCLEActivityEventCreates1DataPoints() {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    @SmallTest
+    public void testNewRUNNINGActivityEventCreates1DataPoints() {
+        throw new UnsupportedOperationException("Not Implemented");
+    }
+
+    @SmallTest
     public void testSaveActiveSessionCallBackWithNoRecognisedActivityCreates1DataPoints() {
         when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
         when(_mockSession.getStartTime(TimeUnit.MILLISECONDS)).thenReturn((long)1000);
@@ -187,9 +202,19 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
         DataSet dataSet = dataSetArgumentCaptor.getValue();
 
         assertEquals(1,dataSet.getDataPoints().size());
-        assertEquals(1000,dataSet.getDataPoints().get(0).getStartTime(TimeUnit.MILLISECONDS));
-        assertEquals(2000,dataSet.getDataPoints().get(0).getEndTime(TimeUnit.MILLISECONDS));
-        assertEquals(FitnessActivities.UNKNOWN, dataSet.getDataPoints().get(0).getValue(Field.FIELD_ACTIVITY).asActivity());
+        assertEquals("Start time should equal session start time",1000,dataSet.getDataPoints().get(0).getStartTime(TimeUnit.MILLISECONDS));
+        assertEquals("End time should equal session end time", 2000,dataSet.getDataPoints().get(0).getEndTime(TimeUnit.MILLISECONDS));
+        assertEquals("Activity should equal unknown", FitnessActivities.UNKNOWN, dataSet.getDataPoints().get(0).getValue(Field.FIELD_ACTIVITY).asActivity());
+    }
+
+    @SmallTest
+    public void testSaveActiveSessionCallBackWithOneRecognisedActivityCreates1DataPoints() {
+
+    }
+
+    @SmallTest
+    public void testSaveActiveSessionCallBackWithTwoRecognisedActivityCreates2DataPoints() {
+
     }
 
     /*
