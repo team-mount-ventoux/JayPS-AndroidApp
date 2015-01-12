@@ -1,25 +1,23 @@
 package com.njackson.utils.googleplay;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.fitness.FitnessActivities;
 import com.google.android.gms.fitness.SessionsApi;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
+import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Session;
+import com.google.android.gms.fitness.request.SessionInsertRequest;
 import com.google.android.gms.fitness.result.SessionStopResult;
-import com.google.android.gms.location.DetectedActivity;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -37,7 +35,11 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
 
     private List<SessionData> _data;
 
+    @Override
     public List<SessionData> getSessionData() { return _data; }
+
+    @Override
+    public List<DataPoint> getDataPoints() { return _activitySegments.getDataPoints(); }
 
     public GoogleFitSessionManager(Context context ,IGooglePlayServices playServices, SessionsApi sessionsApi) {
         _playServices = playServices;
@@ -79,11 +81,26 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
             public void onResult(SessionStopResult sessionStopResult) {
                 if (sessionStopResult.getSessions().size() > 0) {
                     for (Session session : sessionStopResult.getSessions()) {
-
+                        buildDataPoints();
+                        insertDataPoints();
                     }
                 }
             }
         });
+    }
+
+    private void buildDataPoints() {
+        DataPoint firstRunningDp = _activitySegments.createDataPoint()
+                .setTimeInterval(_session.getStartTime(TimeUnit.MILLISECONDS), _session.getEndTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
+        firstRunningDp.getValue(Field.FIELD_ACTIVITY).setActivity(FitnessActivities.BASEBALL);
+        _activitySegments.add(firstRunningDp);
+    }
+
+    private void insertDataPoints() {
+        SessionInsertRequest insertRequest = new SessionInsertRequest.Builder()
+                .setSession(_session)
+                .addDataSet(_activitySegments)
+                .build();
     }
 
     private Session createSession(long startTime) {
