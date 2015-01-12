@@ -74,14 +74,14 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
     }
 
     @Override
-    public void saveActiveSession() {
+    public void saveActiveSession(final long endTime) {
         PendingResult<SessionStopResult> pendingResult = _sessionsApi.stopSession(_googleAPIClient, _sessionIdentifier);
         pendingResult.setResultCallback(new ResultCallback<SessionStopResult>() {
             @Override
             public void onResult(SessionStopResult sessionStopResult) {
                 if (sessionStopResult.getSessions().size() > 0) {
                     for (Session session : sessionStopResult.getSessions()) {
-                        buildDataPoints();
+                        buildDataPoints(endTime);
                         insertDataPoints();
                     }
                 }
@@ -89,18 +89,17 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
         });
     }
 
-    private void buildDataPoints() {
-        DataPoint firstRunningDp = _activitySegments.createDataPoint()
-                .setTimeInterval(_session.getStartTime(TimeUnit.MILLISECONDS), _session.getEndTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS);
-        firstRunningDp.getValue(Field.FIELD_ACTIVITY).setActivity(FitnessActivities.BASEBALL);
-        _activitySegments.add(firstRunningDp);
+    private void buildDataPoints(long endTime) {
+        if(_data.size() < 1) {
+            DataPoint firstRunningDp = _activitySegments.createDataPoint()
+                    .setTimeInterval(_session.getStartTime(TimeUnit.MILLISECONDS), endTime, TimeUnit.MILLISECONDS);
+            firstRunningDp.getValue(Field.FIELD_ACTIVITY).setActivity(FitnessActivities.UNKNOWN);
+            _activitySegments.add(firstRunningDp);
+        }
     }
 
     private void insertDataPoints() {
-        SessionInsertRequest insertRequest = new SessionInsertRequest.Builder()
-                .setSession(_session)
-                .addDataSet(_activitySegments)
-                .build();
+        _playServices.newSessionInsertRequest(_session, _activitySegments);
     }
 
     private Session createSession(long startTime) {

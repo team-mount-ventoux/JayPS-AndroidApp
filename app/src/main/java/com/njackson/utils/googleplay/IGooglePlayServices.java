@@ -7,7 +7,9 @@ import android.content.IntentSender;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.Session;
+import com.google.android.gms.fitness.request.SessionInsertRequest;
 
 /**
  * Created by njackson on 02/01/15.
@@ -16,7 +18,9 @@ public interface IGooglePlayServices {
     public int isGooglePlayServicesAvailable(Context context);
     public void requestActivityUpdates(GoogleApiClient client, long timeInterval, PendingIntent intent);
     public void removeActivityUpdates(GoogleApiClient client, PendingIntent intent);
+
     public Session.Builder newSessionBuilder();
+    public SessionInsertRequest newSessionInsertRequest(Session session, DataSet dataSet);
     public String generateSessionIdentifier(long currentTimeMilliseconds);
     public String generateSessionName();
 

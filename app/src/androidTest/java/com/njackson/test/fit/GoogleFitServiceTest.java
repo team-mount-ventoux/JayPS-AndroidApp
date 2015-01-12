@@ -23,6 +23,7 @@ import com.njackson.fit.GoogleFitService;
 import com.njackson.gps.GPSService;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.GooglePlayServices;
+import com.njackson.utils.googleplay.IGoogleFitSessionManager;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -58,11 +59,7 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
     @Inject @Named("GoogleFit") GoogleApiClient _googleAPIClient;
 
     private GoogleFitStatus _state;
-    private static RecordingApi _mockRecordingApi;
-    private static SessionsApi _mockSessionsApi;
-    private PendingResult<com.google.android.gms.common.api.Status> _pendingResultMock;
-    private static Session.Builder _mockSessionBuilder;
-    private static IGooglePlayServices _mockPlayServices;
+    private static IGoogleFitSessionManager _mockSessionManager;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -78,7 +75,7 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         GoogleApiClient provideFitnessAPIClient() { return mock(GoogleApiClient.class); }
 
         @Provides
-        IGooglePlayServices providesGooglePlayServices() { return _mockPlayServices; }
+        IGoogleFitSessionManager providesGoogleFitSessionManager() { return _mockSessionManager; }
     }
 
 
@@ -107,6 +104,8 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
 
         System.setProperty("dexmaker.dexcache", getSystemContext().getCacheDir().getPath());
 
+        setupMocks();
+
         TestApplication app = new TestApplication();
         app.setObjectGraph(ObjectGraph.create(TestModule.class));
         app.inject(this);
@@ -115,6 +114,10 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         setApplication(app);
 
         _stateLatch = new CountDownLatch(1);
+    }
+
+    private void setupMocks() {
+        _mockSessionManager = mock(IGoogleFitSessionManager.class);
     }
 
     private void startService() throws Exception {
@@ -169,7 +172,7 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
     }
 
     @SmallTest
-    public void testOnStartRemovesGoogleClientConnectionFailedHandlers() throws Exception {
+    public void testOnDestroyRemovesGoogleClientConnectionFailedHandlers() throws Exception {
         startService();
         shutdownService();
 
@@ -180,11 +183,10 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
     public void testOnDestroyDoesNotStopsSessionWhenNotConnected() throws Exception {
         when(_googleAPIClient.isConnected()).thenReturn(false);
 
-        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
         startService();
         shutdownService();
 
-        verify(_mockSessionsApi,timeout(2000).times(0)).stopSession(_googleAPIClient,"MockSessionIdentifier");
+        verify(_mockSessionManager,timeout(2000).times(0)).saveActiveSession(anyLong());
     }
 
     @SmallTest
@@ -199,5 +201,14 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         _stateLatch.await(2000,TimeUnit.MILLISECONDS);
 
         assertEquals(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED, _state.getState());
+    }
+
+    @SmallTest
+    public void testOnConnectedStartsSessionManager() throws Exception {
+        startService();
+
+        _service.onConnected(new Bundle());
+
+        verify(_mockSessionManager, timeout(2000).times(1)).startSession(anyLong(),any(GoogleApiClient.class));
     }
 }

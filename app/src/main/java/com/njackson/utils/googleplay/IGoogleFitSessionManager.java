@@ -15,5 +15,5 @@ public interface IGoogleFitSessionManager {
 
     public void startSession(long startTime, GoogleApiClient client);
     public void addDataPoint(long startTime, int activity);
-    public void saveActiveSession();
+    public void saveActiveSession(long endTime);
 }

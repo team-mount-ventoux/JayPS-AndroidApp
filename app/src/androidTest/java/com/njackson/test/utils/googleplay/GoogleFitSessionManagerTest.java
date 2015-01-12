@@ -8,7 +8,10 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.fitness.FitnessActivities;
 import com.google.android.gms.fitness.SessionsApi;
+import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Session;
 import com.google.android.gms.fitness.result.SessionStopResult;
 import com.google.android.gms.location.DetectedActivity;
@@ -42,6 +45,7 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
     private GoogleApiClient _mockGoogleApiClient;
     private Context _mockContext;
     private PendingResult<SessionStopResult> _mockResult;
+    private Session _mockSession;
 
     @Override
     public void setUp() throws Exception {
@@ -62,10 +66,12 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
         _mockGoogleApiClient = mock(GoogleApiClient.class);
         _mockSessionsApi = mock(SessionsApi.class);
 
+        _mockSession = mock(Session.class);
         _mockSessionBuilder = mock(Session.Builder.class);
         when(_mockSessionBuilder.setName(anyString())).thenReturn(_mockSessionBuilder);
         when(_mockSessionBuilder.setIdentifier(anyString())).thenReturn(_mockSessionBuilder);
         when(_mockSessionBuilder.setStartTime(anyLong(),any(TimeUnit.class))).thenReturn(_mockSessionBuilder);
+        when(_mockSessionBuilder.build()).thenReturn(_mockSession);
 
         _mockPlayServices = mock(IGooglePlayServices.class);
         when(_mockPlayServices.newSessionBuilder()).thenReturn(_mockSessionBuilder);
@@ -147,7 +153,7 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
     public void testSaveActiveSessionCallsStopSession() {
         when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
         _sessionManager.startSession(1000, _mockGoogleApiClient);
-        _sessionManager.saveActiveSession();
+        _sessionManager.saveActiveSession(2000);
         verify(_mockSessionsApi, times(1)).stopSession(_mockGoogleApiClient, "MockSessionIdentifier");
     }
 
@@ -156,22 +162,34 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
         when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
 
         _sessionManager.startSession(1000, _mockGoogleApiClient);
-        _sessionManager.saveActiveSession();
+        _sessionManager.saveActiveSession(2000);
         verify(_mockResult, times(1)).setResultCallback(any(ResultCallback.class));
     }
 
     @SmallTest
-    public void testSaveActiveSessionCallBackCreatesDataPoints() {
+    public void testSaveActiveSessionCallBackWithNoRecognisedActivityCreates1DataPoints() {
         when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
-
+        when(_mockSession.getStartTime(TimeUnit.MILLISECONDS)).thenReturn((long)1000);
         _sessionManager.startSession(1000, _mockGoogleApiClient);
-        _sessionManager.saveActiveSession();
+        _sessionManager.saveActiveSession(2000);
+
+        ArrayList<Session> sessions = new ArrayList<>();
+        sessions.add(mock(Session.class));
 
         ArgumentCaptor<ResultCallback> captor = ArgumentCaptor.forClass(ResultCallback.class);
-
         verify(_mockResult, times(1)).setResultCallback(captor.capture());
 
-        captor.getValue().onResult(new SessionStopResult(new Status(1), new ArrayList<Session>()));
+        captor.getValue().onResult(new SessionStopResult(new Status(1), sessions));
+
+        ArgumentCaptor<DataSet> dataSetArgumentCaptor = ArgumentCaptor.forClass(DataSet.class);
+        verify(_mockPlayServices,times(1)).newSessionInsertRequest(any(Session.class), dataSetArgumentCaptor.capture());
+
+        DataSet dataSet = dataSetArgumentCaptor.getValue();
+
+        assertEquals(1,dataSet.getDataPoints().size());
+        assertEquals(1000,dataSet.getDataPoints().get(0).getStartTime(TimeUnit.MILLISECONDS));
+        assertEquals(2000,dataSet.getDataPoints().get(0).getEndTime(TimeUnit.MILLISECONDS));
+        assertEquals(FitnessActivities.UNKNOWN, dataSet.getDataPoints().get(0).getValue(Field.FIELD_ACTIVITY).asActivity());
     }
 
     /*

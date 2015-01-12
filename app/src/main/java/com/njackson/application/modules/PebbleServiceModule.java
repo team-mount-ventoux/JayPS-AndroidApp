@@ -1,5 +1,7 @@
 package com.njackson.application.modules;
 
+import com.njackson.utils.googleplay.GoogleFitSessionManager;
+import com.njackson.utils.googleplay.IGoogleFitSessionManager;
 import com.njackson.virtualpebble.IMessageManager;
 import com.njackson.virtualpebble.MessageManager;
 import com.njackson.virtualpebble.PebbleService;

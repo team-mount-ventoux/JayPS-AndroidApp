@@ -37,6 +37,7 @@ import com.njackson.activities.MainActivity;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.events.status.GoogleFitStatus;
+import com.njackson.utils.googleplay.IGoogleFitSessionManager;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -57,7 +58,7 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
     private static final String TAG = "GoogleFitService";
     @Inject Bus _bus;
     @Inject @Named("GoogleFit") GoogleApiClient _googleAPIClient;
-    @Inject IGooglePlayServices _playServices;
+    @Inject IGoogleFitSessionManager _sessionManager;
 
     @Subscribe
     public void onNewActivityEvent(NewActivityEvent event) {
@@ -95,9 +96,8 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
 
     private void stopRecordingSession() {
         if(_googleAPIClient.isConnected()) {
-
-
             Log.d(TAG,"Stopped Recording Sessions");
+            _sessionManager.saveActiveSession(new Date().getTime());
         }
     }
 
@@ -134,7 +134,7 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
 
     private void startRecordingSession() {
         long startTime = new Date().getTime();
-        //_sessionIdentifier = _playServices.generateSessionIdentifier(startTime);
-
+        Log.d(TAG,"Start Recording Sessions");
+        _sessionManager.startSession(startTime,_googleAPIClient);
     }
 }

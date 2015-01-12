@@ -12,6 +12,9 @@ import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.SettingsActivity;
 import com.njackson.gps.GPSService;
+import com.njackson.utils.googleplay.GoogleFitSessionManager;
+import com.njackson.utils.googleplay.GooglePlayServices;
+import com.njackson.utils.googleplay.IGoogleFitSessionManager;
 import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.services.ServiceStarter;
 
@@ -69,6 +72,9 @@ public class AndroidModule {
                 .addScope(Fitness.SCOPE_BODY_READ_WRITE)
                 .build();
     }
+
+    @Provides
+    IGoogleFitSessionManager providesGoogleFitSessionManager() { return new GoogleFitSessionManager(application, new GooglePlayServices(), Fitness.SessionsApi); }
 
     @Provides @Singleton
     IServiceStarter provideServiceStarter() { return new ServiceStarter(application, provideSharedPreferences()); }
