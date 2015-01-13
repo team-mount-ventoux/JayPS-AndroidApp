@@ -124,4 +124,8 @@ public class NewLocation {
     private long _time;
     public void setTime(long time) { this._time = time; }
     public long getTime() { return this._time; }
+
+    private int _HeartRate = 0;
+    public int getHeartRate() { return this._HeartRate; }
+    public void setHeartRate(int heartRate) { this._HeartRate = heartRate;}
 }

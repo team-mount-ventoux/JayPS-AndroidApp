@@ -47,6 +47,7 @@ public class LocationEventConverter {
     private static float _altitudeConversion;
 
     public static PebbleDictionary convert(NewLocation event, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int heartRate) {
+        // todo(jay) remove param heartRate
 
         PebbleDictionary dic = new PebbleDictionary();
         byte[] data = new byte[21];

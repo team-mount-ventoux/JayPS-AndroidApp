@@ -42,7 +42,7 @@ public class PebbleService extends Service {
                     _sharedPreferences.getBoolean("PREF_DEBUG", false) /* debug */,
                     _sharedPreferences.getBoolean("LIVE_TRACKING", false) /* liveTrackingEnabled */,
                     Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000")) /* refreshInterval */,
-                    255 /* heartRate */
+                    newLocation.getHeartRate() /* heartRate */
             );
             sendDataToPebble(dictionary);
         }
