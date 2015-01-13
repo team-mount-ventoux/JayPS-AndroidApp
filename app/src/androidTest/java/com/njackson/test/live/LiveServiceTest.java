@@ -7,6 +7,7 @@ import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.live.LiveService;
 import com.njackson.live.LiveTracking;
+import com.njackson.live.LiveTrackingFriend;
 import com.njackson.test.application.TestApplication;
 import com.njackson.virtualpebble.IMessageManager;
 
@@ -19,10 +20,22 @@ import android.location.Location;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 import org.mockito.ArgumentCaptor;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
+
+import java.io.ByteArrayInputStream;
+import java.util.HashMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 import dagger.Module;
 import dagger.ObjectGraph;
@@ -160,5 +173,81 @@ public class LiveServiceTest extends ServiceTestCase<LiveService>{
         byte[] msgLiveShort = liveTracking.getMsgLiveShort(location);
 
         String[] names = liveTracking.getNames();
+    }
+
+    @SmallTest
+    public void testLiveTrackingFriendSetFromNodeList() throws Exception {
+        LiveTracking liveTracking = new LiveTracking(LiveTracking.TYPE_JAYPS, _bus);
+        Location location = new Location("PebbleBike");
+        location.setAccuracy(5);
+        location.setLatitude(48);
+        location.setLongitude(3);
+        location.setTime(1420980000);
+
+        String response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+          + "<message>"
+          + "<type>activity_updated</type>"
+          + "<friends>"
+                + "<friend id=\"0\">"
+                + "<id>f1/0</id>"
+                + "<nickname>Friend 1</nickname>"
+                + "<lat>44</lat>"
+                + "<lon>-5</lon>"
+                + "<ts>1421075656</ts>"
+                + "</friend>"
+                + "<friend id=\"1\">"
+                + "<id>f2</id>"
+                + "<nickname>Friend 2</nickname>"
+                + "<lat>44</lat>"
+                + "<lon>8</lon>"
+                + "<ts>1421175938</ts>"
+                + "</friend>"
+                + "</friends>"
+                + "<points>"
+                + "<point id=\"0\">"
+                + "<lat>49</lat>"
+                + "<lon>7.7931</lon>"
+                + "<ele>0.0</ele>"
+                + "<ts>1421175944</ts>"
+                + "<accuracy>10.0</accuracy>"
+                + "</point>"
+                + "<point id=\"1\">"
+                + "<lat>49</lat>"
+                + "<lon>7.7932</lon>"
+                + "<ele>0.0</ele>"
+                + "<ts>1421175963</ts>"
+                + "<accuracy>10.0</accuracy>"
+                + "</point>"
+                + "</points>"
+                + "</message>";
+
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        Document doc = db.parse(new InputSource(new ByteArrayInputStream(response.getBytes("utf-8"))));
+
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        String expression = "";
+        NodeList nodes;
+        Node node;
+        expression = "//friend";
+        nodes = (NodeList)xpath.evaluate(expression, doc, XPathConstants.NODESET);
+
+
+        HashMap<String, LiveTrackingFriend> friends = new HashMap<String, LiveTrackingFriend>();
+        for( int i = 0; i < nodes.getLength(); i++ ) {
+            // for each friends
+            node = nodes.item(i);
+
+            LiveTrackingFriend friend = new LiveTrackingFriend();
+            friend.setFromNodeList(node.getChildNodes());
+
+            if (friend.id != "" && friend.lat != null && friend.lon != null) {
+                //nbReceivedFriends++;
+
+                LiveTrackingFriend f2 = new LiveTrackingFriend();
+                f2.updateFromFriend(friend, location);
+                friends.put(friend.id, f2);
+            }
+        }
     }
 }
