@@ -327,7 +327,7 @@ public class GPSService extends Service {
         event.setXpos(xpos);
         event.setYpos(ypos);
         event.setBearing(_advancedLocation.getBearing());
-        event.setHeartRate(0);
+        event.setHeartRate(255); // 255: no Heart Rate available
 
         Log.d(TAG,"post New Location time=" + event.getTime());
         _bus.post(event);
