@@ -59,8 +59,8 @@ public class LiveTracking {
     public final static int maxNumberOfFriend = 5;
     public final static int sizeOfAFriend = 9;
 
-    static final int TYPE_JAYPS = 1;
-    static final int TYPE_MMT = 2;
+    public static final int TYPE_JAYPS = 1;
+    public static final int TYPE_MMT = 2;
     private int _type = TYPE_JAYPS;
 
     boolean debug = true;
