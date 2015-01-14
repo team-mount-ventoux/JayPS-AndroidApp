@@ -101,13 +101,6 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
         super.onDestroy();
     }
 
-    private void stopRecordingSession() {
-        if(_googleAPIClient.isConnected()) {
-            Log.d(TAG,"Stopped Recording Sessions");
-            _sessionManager.saveActiveSession(new Date().getTime());
-        }
-    }
-
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -143,5 +136,12 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
         long startTime = new Date().getTime();
         Log.d(TAG,"Start Recording Sessions");
         _sessionManager.startSession(startTime,_googleAPIClient);
+    }
+
+    private void stopRecordingSession() {
+        if(_googleAPIClient.isConnected()) {
+            Log.d(TAG,"Stopped Recording Sessions");
+            _sessionManager.saveActiveSession(new Date().getTime());
+        }
     }
 }
