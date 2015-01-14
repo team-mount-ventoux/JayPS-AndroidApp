@@ -1,12 +1,17 @@
 package com.njackson.application;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.njackson.Constants;
 import com.njackson.R;
@@ -42,11 +47,59 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
 
-        Preference pref = findPreference("PREF_GEOID_HEIGHT_INFO");
+        Preference pref = findPreference("PREF_PRESSURE_INFO");
+        SensorManager mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        if (mSensorManager.getDefaultSensor(Sensor.TYPE_PRESSURE) != null){
+            pref.setSummary("Pressure sensor available");
+        } else {
+            pref.setSummary("No pressure sensor");
+        }
+
+        pref = findPreference("PREF_GEOID_HEIGHT_INFO");
         if (_sharedPreferences.getFloat("GEOID_HEIGHT", 0) != 0) {
             pref.setSummary("Correction: " + _sharedPreferences.getFloat("GEOID_HEIGHT", 0) + "m");
         } else {
             pref.setSummary("No correction");
+        }
+
+        setHrmSummary();
+
+        // check to determine whether BLE is supported on the device.
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Preference pref_hrm = findPreference("PREF_HRM");
+            pref_hrm.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    if (preference.getKey().equals("PREF_HRM")) {
+                        final Intent intent = new Intent(getApplicationContext(), HRMScanActivity.class);
+                        startActivityForResult(intent, 1);
+                    }
+                    return false;
+                }
+            });
+        }
+    }
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            String hrm_name = "";
+            String hrm_address = "";
+            if(resultCode == RESULT_OK) {
+                hrm_name = data.getStringExtra("hrm_name");
+                hrm_address = data.getStringExtra("hrm_address");
+            }
+
+            SharedPreferences.Editor editor = _sharedPreferences.edit();
+            editor.putString("hrm_name", hrm_name);
+            editor.putString("hrm_address", hrm_address);
+            editor.commit();
+
+            setHrmSummary();
+
+            if (!hrm_address.equals("")) {
+                //todo(jay) if (MainActivity.getInstance().checkServiceRunning()) {
+                    Toast.makeText(getApplicationContext(), "Please restart GPS to display heart rate", Toast.LENGTH_LONG).show();
+                //}
+            }
         }
     }
 
@@ -148,8 +201,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
     private void setHrmSummary() {
-        String summary = "";
-        // TODO(jay) String summary = MainActivity.hrm_name;
+        String summary = _sharedPreferences.getString("hrm_name", "");
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             summary = getResources().getString(R.string.ble_not_supported);
         }

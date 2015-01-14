@@ -21,9 +21,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
-import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
-import com.njackson.events.GPSService.NewLocation;
+import com.njackson.events.LiveService.LiveMessage;
+import com.squareup.otto.Bus;
 
 import fr.jayps.android.AdvancedLocation;
 
@@ -39,10 +39,12 @@ public class LiveTracking {
 
     private static final String TAG = "PB-LiveTracking";
 
+    private Bus _bus;
+
     protected Context _context = null;
-    private NewLocation _firstLocation = null;
+    private Location _firstLocation = null;
     private long _prevTime = -1;
-    private NewLocation _lastLocation = null;
+    private Location _lastLocation = null;
     private String _activity_id = "";
     private String _bufferPoints = "";
     private String _bufferAccuracies = "";
@@ -54,90 +56,28 @@ public class LiveTracking {
     public int numberOfFriends = 0;
     private int _numberOfFriendsSentToPebble = 0;
 
-    final int maxNumberOfFriend = 5;
+    public final static int maxNumberOfFriend = 5;
+    public final static int sizeOfAFriend = 9;
 
-    static final int TYPE_JAYPS = 1;
-    static final int TYPE_MMT = 2;
+    public static final int TYPE_JAYPS = 1;
+    public static final int TYPE_MMT = 2;
     private int _type = TYPE_JAYPS;
 
     boolean debug = true;
 
-    class LiveTrackingFriend {
-        public int number = 0;
-        public String id = "";
-        public String nickname = "";
-        public Double lat = null, lon = null;
-        long ts = 0;
-        long dt = -1;
-        private long _receivedTimestamp = 0;
-        float deltaDistance = 0.0f, bearing = 0.0f;
-        private Location _location;
-
-        public LiveTrackingFriend() {
-            _location = new Location("PebbleBike");
-        }
-        public String toString() {
-            return id + " " + _receivedTimestamp + " " + lat + "/" + lon + "--" + ts + "//" + dt;
-        }
-        public boolean setFromNodeList(NodeList friendChildNodes) {
-            id = "";
-            for( int j = 0; j < friendChildNodes.getLength(); j++ ) {
-                // for each fields
-
-                Node item = friendChildNodes.item( j );
-                String nodeName = item.getNodeName();
-                if (nodeName.equals("id")) {
-                    _receivedTimestamp = System.currentTimeMillis() / 1000;
-                    id = item.getChildNodes().item(0).getNodeValue();
-                }
-                if (nodeName.equals("nickname")) {
-                    nickname = item.getChildNodes().item(0).getNodeValue();
-                }
-                if (nodeName.equals("lat")) {
-                    lat = Double.valueOf(item.getChildNodes().item(0).getNodeValue());
-                }
-                if (nodeName.equals("lon")) {
-                    lon = Double.valueOf(item.getChildNodes().item(0).getNodeValue());
-                }
-                if (nodeName.equals("ts")) {
-                    ts = Long.valueOf(item.getChildNodes().item(0).getNodeValue());
-                }
-            }
-            return id != "";
-        }
-        public boolean updateFromFriend(LiveTrackingFriend friend, NewLocation lastlocation) {
-            if ((id == "") || !friend.id.equals(this.id)) {
-                Log.e(TAG, "updateFromFriend this "+this.toString());
-                Log.e(TAG, "updateFromFriend friend "+friend.toString());
-                return false;
-            }
-            dt = friend.ts-ts;
-            //Log.d(TAG, "dt:"+ts+"->"+friend.ts+" "+dt+"s");
-            ts = friend.ts;
-            lat = friend.lat;
-            lon = friend.lon;
-            _location.setLatitude(lat);
-            _location.setLongitude(lon);
-
-            //TODo(jay) deltaDistance = lastlocation.distanceTo(_location);
-            //TODo(jay) bearing = lastlocation.bearingTo(_location);
-            return true;
-        }
-        public Location getLocation() {
-            return _location;
-        }
-    }
 
     private HashMap<String, LiveTrackingFriend> _friends = new HashMap<String, LiveTrackingFriend>();
 
-    public LiveTracking(int type) {
+    public LiveTracking(int type, Bus bus) {
         this._context = null;
         this._type = type;
+        _bus = bus;
     }
-    public LiveTracking(Context context, int type) {
+    public LiveTracking(Context context, int type, Bus bus) {
         this._context = context;
         this._type = type;
-        this._lastLocation = new NewLocation();
+        _bus = bus;
+        this._lastLocation = new Location("PebbleBike");
 
         // Get current version code
         try {
@@ -162,7 +102,7 @@ public class LiveTracking {
         this._url = url;
     }
 
-    public boolean addPoint(NewLocation firstLocation, NewLocation location, double altitude, int heart_rate) {
+    public boolean addPoint(Location firstLocation, Location location, double altitude, int heart_rate) {
         _firstLocation = firstLocation;
         //Log.d(TAG, "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + altitude + "," + location.getTime() + "," + location.getAccuracy()+ ")");
         if (location.getTime() - _prevTime < 5000) {
@@ -339,36 +279,24 @@ public class LiveTracking {
                 if (msgLiveShort.length > 1) {
                     String sending = "";
 
-                    PebbleDictionary dic = new PebbleDictionary();
-                    boolean forceSend = false;
+                    LiveMessage msg = new LiveMessage();
                     if (_numberOfFriendsSentToPebble != msgLiveShort[0] || (5 * Math.random() <= 1)) {
                         _numberOfFriendsSentToPebble = msgLiveShort[0];
 
-                        if (names[0] != null) {
-                            dic.addString(Constants.MSG_LIVE_NAME0, names[0]);
-                        }
-                        if (names[1] != null) {
-                            dic.addString(Constants.MSG_LIVE_NAME1, names[1]);
-                        }
-                        if (names[2] != null) {
-                            dic.addString(Constants.MSG_LIVE_NAME2, names[2]);
-                        }
-                        if (names[3] != null) {
-                            dic.addString(Constants.MSG_LIVE_NAME3, names[3]);
-                        }
-                        if (names[4] != null) {
-                            dic.addString(Constants.MSG_LIVE_NAME4, names[4]);
-                        }
+                        msg.setName0(names[0]);
+                        msg.setName1(names[1]);
+                        msg.setName2(names[2]);
+                        msg.setName3(names[3]);
+                        msg.setName4(names[4]);
                         sending += " MSG_LIVE_NAMEx"+msgLiveShort[0];
-                        forceSend = true;
                     }
-                    dic.addBytes(Constants.MSG_LIVE_SHORT, msgLiveShort);
+                    msg.setLive(msgLiveShort);
                     for( int i = 0; i < msgLiveShort.length; i++ ) {
                         sending += " msgLiveShort["+i+"]: "   + ((256+msgLiveShort[i])%256);
                     }
                     if (debug) Log.d(TAG, sending);
 
-                   // TODO(jay): VirtualPebble.sendDataToPebble(dic, forceSend);
+                    _bus.post(msg);
                 }
             }
 
@@ -383,8 +311,7 @@ public class LiveTracking {
         return false;
     }
 
-    public byte[] getMsgLiveShort(NewLocation firstLocation) {
-        final int sizeOfAFriend = 9;
+    public byte[] getMsgLiveShort(Location firstLocation) {
         float _distanceConversion = (float) Constants.M_TO_KM; //TODO: miles
 
         byte[] data = new byte[1 + maxNumberOfFriend * sizeOfAFriend];
@@ -406,10 +333,8 @@ public class LiveTracking {
 
             Location tmploc = f.getLocation();
             //Log.d(TAG,  f.number + "|lat="+firstLocation.getLatitude()+"-lon="+firstLocation.getLongitude());
-            double xpos = 0;
-            double ypos = 0;
-            //TODo(jay) double xpos = firstLocation.distanceTo(tmploc) * Math.sin(firstLocation.bearingTo(tmploc)/180*3.1415);
-            //TODo(jay) double ypos = firstLocation.distanceTo(tmploc) * Math.cos(firstLocation.bearingTo(tmploc)/180*3.1415);
+            double xpos = firstLocation.distanceTo(tmploc) * Math.sin(firstLocation.bearingTo(tmploc)/180*3.1415);
+            double ypos = firstLocation.distanceTo(tmploc) * Math.cos(firstLocation.bearingTo(tmploc)/180*3.1415);
             xpos = Math.floor(xpos/10);
             ypos = Math.floor(ypos/10);
 

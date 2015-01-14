@@ -10,38 +10,24 @@ import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.ActivityUnitTestCase;
-import android.test.UiThreadTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.njackson.activities.MainActivity;
-import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.application.modules.PebbleServiceModule;
 import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.status.GoogleFitStatus;
-import com.njackson.gps.GPSService;
-import com.njackson.live.LiveService;
-import com.njackson.live.LiveTracking;
 import com.njackson.test.application.TestApplication;
-import com.njackson.test.testUtils.Services;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
 import com.njackson.virtualpebble.IMessageManager;
-import com.njackson.virtualpebble.MessageManager;
-import com.njackson.virtualpebble.PebbleService;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -63,6 +49,8 @@ import static org.mockito.Mockito.when;
  * Created by server on 30/03/2014.
  */
 public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
+
+    private static final String TAG = "PB-MainActivityTest";
 
     @Inject Bus _bus;
     @Inject SharedPreferences _mockPreferences;
@@ -134,7 +122,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         setupMocks();
 
-        Log.d("MAINTEST", "Setup Complete");
+        Log.d(TAG, "Setup Complete");
     }
 
     private void setupMocks() {

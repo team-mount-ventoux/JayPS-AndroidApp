@@ -12,20 +12,21 @@ import android.location.LocationManager;
 import android.os.IBinder;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.util.Log;
 
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.GPSService.ChangeRefreshInterval;
+import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.ResetGPSState;
-import com.njackson.events.GPSService.CurrentState;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.gps.GPSSensorEventListener;
 import com.njackson.gps.GPSService;
+import com.njackson.gps.IGPSServiceStarterForeground;
 import com.njackson.test.application.TestApplication;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.mockito.ArgumentCaptor;
-import org.mockito.verification.Timeout;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -56,19 +57,21 @@ import static org.mockito.Mockito.when;
  */
 public class GPSServiceTest extends ServiceTestCase<GPSService>{
 
+    private static final String TAG = "PB-GPSServiceTest";
+
     @Inject Bus _bus = new Bus();
     @Inject LocationManager _mockLocationManager;
     @Inject SensorManager _mockSensorManager;
     @Inject SharedPreferences _mockPreferences;
+    private SharedPreferences.Editor _mockEditor;
+    private static IGPSServiceStarterForeground _mockServiceStarter;
 
     private GPSService _service;
     private Context _applicationContext;
 
-    private SharedPreferences.Editor _mockEditor;
-
     private NewLocation _locationEventResults;
 
-    private CurrentState _gpsStatusEvent;
+    private GPSStatus _gpsStatusEvent;
 
     private CountDownLatch _stateLatch;
     private CountDownLatch _newLocationLatch;
@@ -95,6 +98,9 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         SharedPreferences provideSharedPreferences() {
             return mock(SharedPreferences.class);
         }
+
+        @Provides
+        IGPSServiceStarterForeground providesForegroundServiceStarter() { return _mockServiceStarter; }
     }
 
 
@@ -110,14 +116,17 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
     @Subscribe
     public void onNewLocationEvent(NewLocation event) {
         _locationEventResults = event;
-        _newLocationLatch.countDown();
+        if (_newLocationLatch != null) _newLocationLatch.countDown();
     }
 
     @Subscribe
-    public void onGPSStatusEvent(CurrentState event) {
+    public void onGPSStatusEvent(GPSStatus event) {
         _gpsStatusEvent = event;
 
-        _stateLatch.countDown();
+        if (event.getState().compareTo(GPSStatus.State.STARTED) == 0) {
+            Log.d(TAG, "onGPSStatusEvent STARTED");
+            _stateLatch.countDown();
+        }
     }
 
     @Override
@@ -155,8 +164,10 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
 
 
     private void setupMocks() {
+        _mockServiceStarter = mock(IGPSServiceStarterForeground.class);
         _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
+        when(_mockPreferences.getString("ORUXMAPS_AUTO","disable")).thenReturn("disable");
     }
 
     @SmallTest
@@ -173,7 +184,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
 
         startService();
 
-        assertEquals(CurrentState.State.DISABLED, _gpsStatusEvent.getState());
+        assertEquals(GPSStatus.State.DISABLED, _gpsStatusEvent.getState());
     }
 
     @SmallTest
@@ -217,6 +228,34 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
                 anyLong(),
                 anyFloat(),
                 any(LocationListener.class));
+    }
+
+    @SmallTest
+    public void testOruxContinue() throws Exception {
+        when(_mockPreferences.getString("ORUXMAPS_AUTO","disable")).thenReturn("continue");
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
+    }
+
+    @SmallTest
+    public void testOruxNewSegment() throws Exception {
+        when(_mockPreferences.getString("ORUXMAPS_AUTO","disable")).thenReturn("new_segment");
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
+    }
+
+    @SmallTest
+    public void testOruxNewTrack() throws Exception {
+        when(_mockPreferences.getString("ORUXMAPS_AUTO","disable")).thenReturn("new_track");
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
+    }
+
+    @SmallTest
+    public void testOruxAuto() throws Exception {
+        when(_mockPreferences.getString("ORUXMAPS_AUTO","disable")).thenReturn("auto");
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
     }
 
     @SmallTest
@@ -284,5 +323,22 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         shutdownService();
 
         verify(_mockSensorManager,timeout(2000).times(1)).unregisterListener(any(GPSSensorEventListener.class));
+    }
+
+    @SmallTest
+    public void testStartsServiceForeground() throws Exception {
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
+
+        verify(_mockServiceStarter,timeout(2000).times(1)).startServiceForeground(any(GPSService.class),anyString(),anyString());
+    }
+
+    @SmallTest
+    public void testStopsServiceForeground() throws Exception {
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        startService();
+        shutdownService();
+
+        verify(_mockServiceStarter,timeout(2000).times(1)).stopServiceForeground(any(GPSService.class));
     }
 }

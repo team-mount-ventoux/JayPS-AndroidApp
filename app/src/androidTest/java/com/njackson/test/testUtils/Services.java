@@ -10,6 +10,8 @@ import android.util.Log;
  */
 public class Services {
 
+    private static final String TAG = "PB-Services";
+
     public static void startServiceAndWaitForReady(Class clazz, Context context) throws Exception {
         context.startService(new Intent(context,clazz));
         boolean serviceStarted = waitForServiceToStart(clazz, context, 20000);
@@ -25,7 +27,7 @@ public class Services {
             Thread.sleep(100);
             timer += 100;
         }
-        Log.d("MAINTEST", "Timeout waiting for service: " + serviceClass.getName());
+        Log.d(TAG, "Timeout waiting for service: " + serviceClass.getName());
         throw new Exception("Timeout waiting for Service to Start");
     }
 
@@ -48,7 +50,7 @@ public class Services {
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
 
             if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.d("SHIZ", "SERVICE RUNNING: " + serviceClass.getName());
+                Log.d(TAG, "SERVICE RUNNING: " + serviceClass.getName());
                 return true;
             }
         }

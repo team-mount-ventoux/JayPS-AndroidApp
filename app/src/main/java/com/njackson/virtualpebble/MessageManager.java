@@ -9,6 +9,12 @@ import android.util.Log;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -28,7 +34,7 @@ public class MessageManager implements IMessageManager, Runnable {
 
     private Context _applicationContext;
 
-    public void setContext(Context context) {
+    public MessageManager(Context context) {
         _applicationContext = context;
     }
 
@@ -164,6 +170,23 @@ public class MessageManager implements IMessageManager, Runnable {
     @Override
     public void hideWatchFace() {
         PebbleKit.closeAppOnPebble(_applicationContext,Constants.WATCH_UUID);
+    }
+
+    @Override
+    public void showSimpleNotificationOnWatch(String title, String text) {
+        Log.d(TAG, "showSimpleNotificationOnWatch " + title + text);
+        final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
+        final Map<String, String> data = new HashMap<String, String>();
+        data.put("title", title);
+        data.put("body", text);
+        final JSONObject jsonData = new JSONObject(data);
+        final String notificationData = new JSONArray().put(jsonData).toString();
+
+        i.putExtra("messageType", "PEBBLE_ALERT");
+        i.putExtra("sender", "Pebble Bike");
+        i.putExtra("notificationData", notificationData);
+
+        _applicationContext.sendBroadcast(i);
     }
 
 }

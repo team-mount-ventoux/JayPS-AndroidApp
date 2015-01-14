@@ -25,6 +25,7 @@ public class ServiceStarter implements IServiceStarter {
 
 
     @Override
+<<<<<<< HEAD
     public void startEssentialServices() {
         startActivityRecognitionService();
         startPebbleService();
@@ -34,6 +35,17 @@ public class ServiceStarter implements IServiceStarter {
     public void stopEssentialServices() {
         stopActivityRecognitionService();
         stopPebbleService();
+=======
+    public void startLocationServices() {
+        startGPSService();
+        startLiveService();
+    }
+
+    @Override
+    public void stopLocationServices() {
+        stopGPSService();
+        stopLiveService();
+>>>>>>> f758d09a223053241f86cada5f821026a71dcf39
     }
 
     @Override
@@ -62,8 +74,9 @@ public class ServiceStarter implements IServiceStarter {
         _context.stopService(new Intent(_context, GPSService.class));
     }
 
+    @Override
     public void startPebbleService() { _context.startService(new Intent(_context, PebbleService.class)); }
-
+    @Override
     public void stopPebbleService() { _context.stopService(new Intent(_context, PebbleService.class)); }
 
     private void startLiveService() { _context.startService(new Intent(_context, LiveService.class)); }

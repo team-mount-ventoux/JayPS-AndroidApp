@@ -7,16 +7,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.njackson.R;
+import com.njackson.events.status.GPSStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
-
-import javax.inject.Inject;
+import com.squareup.otto.Subscribe;
 
 /**
  * Created by server on 11/04/2014.
  */
 public class StartButtonFragment extends BaseFragment {
 
+    private static final String TAG = "PB-StartButtonFragment";
+
+    private View _view;
 
     public StartButtonFragment() {
         // Required empty public constructor
@@ -26,11 +29,11 @@ public class StartButtonFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreateView(inflater,container,savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_start_button, container, false);
+        _view = inflater.inflate(R.layout.fragment_start_button, container, false);
 
-        SetupOnClick(view);
+        SetupOnClick(_view);
 
-        return view;
+        return _view;
     }
 
     private void SetupOnClick(View view) {
@@ -40,13 +43,33 @@ public class StartButtonFragment extends BaseFragment {
             public void onClick(View view) {
                 if(startButton.getText() == getString(R.string.startbuttonfragment_start)) {
                     _bus.post(new StartButtonTouchedEvent());
-                    startButton.setText(getString(R.string.startbuttonfragment_stop));
+                    makeStartButtonInStopState(startButton);
                 } else {
                     _bus.post(new StopButtonTouchedEvent());
-                    startButton.setText(getString(R.string.startbuttonfragment_start));
+                    makeStartButtonInStartState(startButton);
                 }
             }
         });
     }
 
+    @Subscribe
+    public void onGPSServiceState(GPSStatus event) {
+        final Button startButton = (Button) _view.findViewById(R.id.start_button);
+        if (event.getState().compareTo(GPSStatus.State.STOPPED) == 0) {
+            //Log.d(TAG, "onGPSServiceState STOPPED");
+            makeStartButtonInStartState(startButton);
+        } else if (event.getState().compareTo(GPSStatus.State.STARTED) == 0) {
+            //Log.d(TAG, "onGPSServiceState STARTED");
+            makeStartButtonInStopState(startButton);
+        }
+    }
+
+    private void makeStartButtonInStartState(Button startButton) {
+        startButton.setText(getString(R.string.startbuttonfragment_start));
+        startButton.setBackgroundColor(getResources().getColor(R.color.startbuttonfragment_button_start));
+    }
+    private void makeStartButtonInStopState(Button startButton) {
+        startButton.setText(getString(R.string.startbuttonfragment_stop));
+        startButton.setBackgroundColor(getResources().getColor(R.color.startbuttonfragment_button_stop));
+    }
 }

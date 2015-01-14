@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.njackson.application.modules.AndroidModule;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.application.modules.PebbleServiceModule;
 import com.parse.Parse;
 import com.parse.ParseCrashReporting;
 
@@ -19,6 +18,8 @@ import dagger.ObjectGraph;
  */
 public class PebbleBikeApplication extends Application {
 
+    private static final String TAG = "PB-PebbleBikeApplication";
+
     protected ObjectGraph graph;
 
     @Override public void onCreate() {
@@ -31,8 +32,7 @@ public class PebbleBikeApplication extends Application {
     protected List<Object> getModules() {
         return Arrays.asList(
                 new AndroidModule(this),
-                new PebbleBikeModule(),
-                new PebbleServiceModule()
+                new PebbleBikeModule()
         );
     }
 
@@ -44,7 +44,7 @@ public class PebbleBikeApplication extends Application {
     }
 
     private void createObjectGraph() {
-        Log.d("MAINTEST", "Create object graph");
+        Log.d(TAG, "Create object graph");
         graph = ObjectGraph.create(getModules().toArray());
     }
 

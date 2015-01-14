@@ -17,6 +17,9 @@ import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
 import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.services.ServiceStarter;
+import com.njackson.virtualpebble.IMessageManager;
+import com.njackson.virtualpebble.MessageManager;
+import com.njackson.virtualpebble.PebbleService;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -30,7 +33,7 @@ import static android.content.Context.SENSOR_SERVICE;
 /**
  * Created by server on 30/03/2014.
  */
-@Module(library = true,complete=false,injects = {GPSService.class, ActivityRecognitionService.class, MainActivity.class, SettingsActivity.class})
+@Module(library = true,complete=false,injects = {GPSService.class, ActivityRecognitionService.class, MainActivity.class, SettingsActivity.class, PebbleService.class})
 public class AndroidModule {
     private final PebbleBikeApplication application;
 
@@ -78,4 +81,7 @@ public class AndroidModule {
 
     @Provides @Singleton
     IServiceStarter provideServiceStarter() { return new ServiceStarter(application, provideSharedPreferences()); }
+
+    @Provides
+    public IMessageManager providesMessageManager() { return new MessageManager(application); }
 }

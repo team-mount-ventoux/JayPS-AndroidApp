@@ -119,4 +119,7 @@
         <item>Accuracy</item>
         <item>Heart rate</item>
     </string-array>
+
+    <!-- messages -->
+    <string name="message_pebble_new_watchface">A new watchface is available. Please install it from the Pebble Bike android application settings</string>
 </resources>
