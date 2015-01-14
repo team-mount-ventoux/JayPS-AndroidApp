@@ -18,7 +18,9 @@ import com.njackson.fit.GoogleFitService;
 import com.njackson.fragments.AltitudeFragment;
 import com.njackson.fragments.SpeedFragment;
 import com.njackson.fragments.StartButtonFragment;
+import com.njackson.gps.GPSServerStarterForeground;
 import com.njackson.gps.GPSService;
+import com.njackson.gps.IGPSServiceStarterForeground;
 import com.njackson.live.LiveService;
 import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGooglePlayServices;
@@ -57,4 +59,6 @@ public class PebbleBikeModule {
     @Provides SessionsApi providesGoogleFitSessionsApi() { return Fitness.SessionsApi; }
 
     @Provides ITimer providesTimer() { return new Timer(); }
+
+    @Provides IGPSServiceStarterForeground providesForegroundServiceStarter() { return new GPSServerStarterForeground(); }
 }
