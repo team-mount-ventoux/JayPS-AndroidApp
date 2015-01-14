@@ -167,27 +167,112 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
     }
 
     @SmallTest
+    public void testSaveActiveSessionCallBackWithNoRecognisedActivityCreates1DataPoints() {
+        startSession(1000);
+        _sessionManager.saveActiveSession(2000);
+        DataSet dataSet = getDataSet();
+
+        assertEquals(1,dataSet.getDataPoints().size());
+        assertEquals("Start time should equal session start time",1000,dataSet.getDataPoints().get(0).getStartTime(TimeUnit.MILLISECONDS));
+        assertEquals("End time should equal session end time", 2000,dataSet.getDataPoints().get(0).getEndTime(TimeUnit.MILLISECONDS));
+        assertEquals("Activity should equal unknown", FitnessActivities.UNKNOWN, dataSet.getDataPoints().get(0).getValue(Field.FIELD_ACTIVITY).asActivity());
+    }
+
+    @SmallTest
     public void testNewWALKINGActivityEventCreates1DataPoints() {
-        throw new UnsupportedOperationException("Not Implemented");
+        startSession(1000);
+
+        _sessionManager.addDataPoint(2000, DetectedActivity.WALKING);
+
+        _sessionManager.saveActiveSession(3000);
+
+        DataSet dataSet = getDataSet();
+
+        assertEquals(1,dataSet.getDataPoints().size());
+        assertEquals("Start time should equal data start time",2000,dataSet.getDataPoints().get(0).getStartTime(TimeUnit.MILLISECONDS));
+        assertEquals("End time should equal session end time", 3000,dataSet.getDataPoints().get(0).getEndTime(TimeUnit.MILLISECONDS));
+        assertEquals("Activity should equal unknown", FitnessActivities.WALKING, dataSet.getDataPoints().get(0).getValue(Field.FIELD_ACTIVITY).asActivity());
     }
 
     @SmallTest
     public void testNewON_BICYCLEActivityEventCreates1DataPoints() {
-        throw new UnsupportedOperationException("Not Implemented");
+        startSession(1000);
+
+        _sessionManager.addDataPoint(2000, DetectedActivity.ON_BICYCLE);
+
+        _sessionManager.saveActiveSession(3000);
+
+        DataSet dataSet = getDataSet();
+
+        assertEquals(1,dataSet.getDataPoints().size());
+        assertEquals("Start time should equal data start time",2000,dataSet.getDataPoints().get(0).getStartTime(TimeUnit.MILLISECONDS));
+        assertEquals("End time should equal session end time", 3000,dataSet.getDataPoints().get(0).getEndTime(TimeUnit.MILLISECONDS));
+        assertEquals("Activity should equal unknown", FitnessActivities.BIKING, dataSet.getDataPoints().get(0).getValue(Field.FIELD_ACTIVITY).asActivity());
     }
 
     @SmallTest
     public void testNewRUNNINGActivityEventCreates1DataPoints() {
-        throw new UnsupportedOperationException("Not Implemented");
+        startSession(1000);
+
+        _sessionManager.addDataPoint(2000, DetectedActivity.RUNNING);
+
+        _sessionManager.saveActiveSession(3000);
+
+        DataSet dataSet = getDataSet();
+
+        assertEquals(1,dataSet.getDataPoints().size());
+        assertEquals("Start time should equal data start time",2000,dataSet.getDataPoints().get(0).getStartTime(TimeUnit.MILLISECONDS));
+        assertEquals("End time should equal session end time", 3000,dataSet.getDataPoints().get(0).getEndTime(TimeUnit.MILLISECONDS));
+        assertEquals("Activity should equal unknown", FitnessActivities.RUNNING, dataSet.getDataPoints().get(0).getValue(Field.FIELD_ACTIVITY).asActivity());
+    }
+
+
+    @SmallTest
+    public void test2DuplicateActivityEventsCreates1DataPoints() {
+        startSession(1000);
+
+        _sessionManager.addDataPoint(2000, DetectedActivity.RUNNING);
+        _sessionManager.addDataPoint(3000, DetectedActivity.RUNNING);
+
+        _sessionManager.saveActiveSession(4000);
+
+        DataSet dataSet = getDataSet();
+
+        assertEquals(1,dataSet.getDataPoints().size());
+        assertEquals("Start time should equal data start time",2000,dataSet.getDataPoints().get(0).getStartTime(TimeUnit.MILLISECONDS));
+        assertEquals("End time should equal session end time", 4000,dataSet.getDataPoints().get(0).getEndTime(TimeUnit.MILLISECONDS));
+        assertEquals("Activity should equal unknown", FitnessActivities.RUNNING, dataSet.getDataPoints().get(0).getValue(Field.FIELD_ACTIVITY).asActivity());
     }
 
     @SmallTest
-    public void testSaveActiveSessionCallBackWithNoRecognisedActivityCreates1DataPoints() {
-        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
-        when(_mockSession.getStartTime(TimeUnit.MILLISECONDS)).thenReturn((long)1000);
-        _sessionManager.startSession(1000, _mockGoogleApiClient);
-        _sessionManager.saveActiveSession(2000);
+    public void test2UniqueActivityEventsCreates2DataPoints() {
+        startSession(1000);
 
+        _sessionManager.addDataPoint(2000, DetectedActivity.RUNNING);
+        _sessionManager.addDataPoint(3000, DetectedActivity.WALKING);
+
+        _sessionManager.saveActiveSession(4000);
+
+        DataSet dataSet = getDataSet();
+
+        assertEquals(2,dataSet.getDataPoints().size());
+
+        assertEquals("Start time should equal data start time",2000,dataSet.getDataPoints().get(0).getStartTime(TimeUnit.MILLISECONDS));
+        assertEquals("End time should equal session end time", 3000,dataSet.getDataPoints().get(0).getEndTime(TimeUnit.MILLISECONDS));
+        assertEquals("Activity should equal unknown", FitnessActivities.RUNNING, dataSet.getDataPoints().get(0).getValue(Field.FIELD_ACTIVITY).asActivity());
+
+        assertEquals("Start time should equal data start time",3000,dataSet.getDataPoints().get(1).getStartTime(TimeUnit.MILLISECONDS));
+        assertEquals("End time should equal session end time", 4000,dataSet.getDataPoints().get(1).getEndTime(TimeUnit.MILLISECONDS));
+        assertEquals("Activity should equal unknown", FitnessActivities.WALKING, dataSet.getDataPoints().get(1).getValue(Field.FIELD_ACTIVITY).asActivity());
+    }
+
+    private void startSession(long startTime) {
+        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
+        when(_mockSession.getStartTime(TimeUnit.MILLISECONDS)).thenReturn(startTime);
+        _sessionManager.startSession(startTime, _mockGoogleApiClient);
+    }
+
+    private DataSet getDataSet() {
         ArrayList<Session> sessions = new ArrayList<>();
         sessions.add(mock(Session.class));
 
@@ -199,36 +284,6 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
         ArgumentCaptor<DataSet> dataSetArgumentCaptor = ArgumentCaptor.forClass(DataSet.class);
         verify(_mockPlayServices,times(1)).newSessionInsertRequest(any(Session.class), dataSetArgumentCaptor.capture());
 
-        DataSet dataSet = dataSetArgumentCaptor.getValue();
-
-        assertEquals(1,dataSet.getDataPoints().size());
-        assertEquals("Start time should equal session start time",1000,dataSet.getDataPoints().get(0).getStartTime(TimeUnit.MILLISECONDS));
-        assertEquals("End time should equal session end time", 2000,dataSet.getDataPoints().get(0).getEndTime(TimeUnit.MILLISECONDS));
-        assertEquals("Activity should equal unknown", FitnessActivities.UNKNOWN, dataSet.getDataPoints().get(0).getValue(Field.FIELD_ACTIVITY).asActivity());
+        return dataSetArgumentCaptor.getValue();
     }
-
-    @SmallTest
-    public void testSaveActiveSessionCallBackWithOneRecognisedActivityCreates1DataPoints() {
-
-    }
-
-    @SmallTest
-    public void testSaveActiveSessionCallBackWithTwoRecognisedActivityCreates2DataPoints() {
-
-    }
-
-    /*
-    @SmallTest
-    public void testOnDestroyStopsSessionWhenConnected() throws Exception {
-        when(_googleAPIClient.isConnected()).thenReturn(true);
-
-        when(_mockPlayServices.generateSessionIdentifier(anyLong())).thenReturn("MockSessionIdentifier");
-        startService();
-        _service.onConnected(new Bundle());
-        shutdownService();
-
-        verify(_mockSessionsApi,timeout(2000).times(1)).stopSession(_googleAPIClient,"MockSessionIdentifier");
-    }
-    */
-
 }

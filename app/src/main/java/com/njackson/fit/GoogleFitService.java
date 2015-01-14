@@ -33,6 +33,7 @@ import com.google.android.gms.fitness.result.DataSourcesResult;
 import com.google.android.gms.fitness.result.ListSubscriptionsResult;
 import com.google.android.gms.fitness.result.SessionReadResult;
 import com.google.android.gms.fitness.result.SessionStopResult;
+import com.google.android.gms.location.DetectedActivity;
 import com.njackson.activities.MainActivity;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
@@ -62,7 +63,13 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
 
     @Subscribe
     public void onNewActivityEvent(NewActivityEvent event) {
-
+        switch (event.getActivityType()) {
+            case DetectedActivity.ON_BICYCLE:
+            case DetectedActivity.RUNNING:
+            case DetectedActivity.WALKING:
+                _sessionManager.addDataPoint(new Date().getTime(),event.getActivityType());
+                break;
+        }
     }
 
     @Override

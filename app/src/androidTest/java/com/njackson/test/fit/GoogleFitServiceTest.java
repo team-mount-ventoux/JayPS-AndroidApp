@@ -17,7 +17,9 @@ import com.google.android.gms.fitness.RecordingApi;
 import com.google.android.gms.fitness.SessionsApi;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Session;
+import com.google.android.gms.location.DetectedActivity;
 import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.events.status.GoogleFitStatus;
 import com.njackson.fit.GoogleFitService;
 import com.njackson.gps.GPSService;
@@ -180,6 +182,16 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
     }
 
     @SmallTest
+    public void testOnDestroyStopsSessionWhenConnected() throws Exception {
+        when(_googleAPIClient.isConnected()).thenReturn(true);
+
+        startService();
+        shutdownService();
+
+        verify(_mockSessionManager,timeout(2000).times(1)).saveActiveSession(anyLong());
+    }
+
+    @SmallTest
     public void testOnDestroyDoesNotStopsSessionWhenNotConnected() throws Exception {
         when(_googleAPIClient.isConnected()).thenReturn(false);
 
@@ -210,5 +222,45 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         _service.onConnected(new Bundle());
 
         verify(_mockSessionManager, timeout(2000).times(1)).startSession(anyLong(),any(GoogleApiClient.class));
+    }
+
+    @SmallTest
+    public void testOnNewActivityRunningCreatesDataPoint() throws Exception {
+        startService();
+
+        _service.onConnected(new Bundle());
+        _bus.post(new NewActivityEvent(DetectedActivity.RUNNING));
+
+        verify(_mockSessionManager, timeout(2000).times(1)).addDataPoint(anyLong(),anyInt());
+    }
+
+    @SmallTest
+    public void testOnNewActivityBikingCreatesDataPoint() throws Exception {
+        startService();
+
+        _service.onConnected(new Bundle());
+        _bus.post(new NewActivityEvent(DetectedActivity.ON_BICYCLE));
+
+        verify(_mockSessionManager, timeout(2000).times(1)).addDataPoint(anyLong(),anyInt());
+    }
+
+    @SmallTest
+    public void testOnNewActivityWalkingCreatesDataPoint() throws Exception {
+        startService();
+
+        _service.onConnected(new Bundle());
+        _bus.post(new NewActivityEvent(DetectedActivity.WALKING));
+
+        verify(_mockSessionManager, timeout(2000).times(1)).addDataPoint(anyLong(),anyInt());
+    }
+
+    @SmallTest
+    public void testOnNewActivityStillDoesNotCreateDataPoint() throws Exception {
+        startService();
+
+        _service.onConnected(new Bundle());
+        _bus.post(new NewActivityEvent(DetectedActivity.STILL));
+
+        verify(_mockSessionManager, timeout(2000).times(0)).addDataPoint(anyLong(),anyInt());
     }
 }

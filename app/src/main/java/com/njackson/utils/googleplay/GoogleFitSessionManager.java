@@ -13,7 +13,6 @@ import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Session;
-import com.google.android.gms.fitness.request.SessionInsertRequest;
 import com.google.android.gms.fitness.result.SessionStopResult;
 
 import java.util.ArrayList;
@@ -33,10 +32,10 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
     private GoogleApiClient _googleAPIClient;
     private DataSet _activitySegments;
 
-    private List<SessionData> _data;
+    private List<SessionData> _sessionDataList;
 
     @Override
-    public List<SessionData> getSessionData() { return _data; }
+    public List<SessionData> getSessionData() { return _sessionDataList; }
 
     @Override
     public List<DataPoint> getDataPoints() { return _activitySegments.getDataPoints(); }
@@ -52,7 +51,7 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
         _googleAPIClient = client;
         _session = createSession(startTime);
         _activitySegments = createDataSource();
-        _data = new ArrayList<SessionData>();
+        _sessionDataList = new ArrayList<SessionData>();
     }
 
     private DataSet createDataSource() {
@@ -67,9 +66,9 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
 
     @Override
     public void addDataPoint(long startTime, int activity) {
-        if(_data.size() == 0 || _data.get(_data.size() - 1).getActivity() != activity) {
+        if(_sessionDataList.size() == 0 || _sessionDataList.get(_sessionDataList.size() - 1).getActivity() != activity) {
             SessionData sessionData = new SessionData(startTime, activity);
-            _data.add(sessionData);
+            _sessionDataList.add(sessionData);
         }
     }
 
@@ -90,12 +89,29 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
     }
 
     private void buildDataPoints(long endTime) {
-        if(_data.size() < 1) {
-            DataPoint firstRunningDp = _activitySegments.createDataPoint()
-                    .setTimeInterval(_session.getStartTime(TimeUnit.MILLISECONDS), endTime, TimeUnit.MILLISECONDS);
-            firstRunningDp.getValue(Field.FIELD_ACTIVITY).setActivity(FitnessActivities.UNKNOWN);
-            _activitySegments.add(firstRunningDp);
+        if(_sessionDataList.size() < 1) {
+            createUnknownDataPoint(endTime);
+        } else {
+            SessionData nextData = null;
+            for(int n=0; n < _sessionDataList.size(); n++) {
+                long calculatedEndTime = (_sessionDataList.size() == n + 1) ? endTime : _sessionDataList.get(n+1).getStartTime();
+                createActivityDataPoint(_sessionDataList.get(n), calculatedEndTime);
+            }
         }
+    }
+
+    private void createActivityDataPoint(SessionData data, long endTime) {
+        DataPoint dataPoint = _activitySegments.createDataPoint()
+                .setTimeInterval(data.getStartTime(), endTime, TimeUnit.MILLISECONDS);
+        dataPoint.getValue(Field.FIELD_ACTIVITY).setActivity(new DetectedToFitnessActivityAdapater(data.getActivity()).getActivity());
+        _activitySegments.add(dataPoint);
+    }
+
+    private void createUnknownDataPoint(long endTime) {
+        DataPoint firstRunningDp = _activitySegments.createDataPoint()
+                .setTimeInterval(_session.getStartTime(TimeUnit.MILLISECONDS), endTime, TimeUnit.MILLISECONDS);
+        firstRunningDp.getValue(Field.FIELD_ACTIVITY).setActivity(FitnessActivities.UNKNOWN);
+        _activitySegments.add(firstRunningDp);
     }
 
     private void insertDataPoints() {
@@ -122,7 +138,6 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
     }
 
     public class SessionData {
-
         private final long _startTime;
         private final int _activity;
 
