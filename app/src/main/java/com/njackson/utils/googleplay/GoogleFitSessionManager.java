@@ -68,7 +68,7 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
 
     @Override
     public void addDataPoint(long startTime, int activity) {
-        if(_sessionDataList.size() == 0 || _sessionDataList.get(_sessionDataList.size() - 1).getActivity() != activity) {
+        if(activitySameAsLast(activity)) {
             SessionData sessionData = new SessionData(startTime, activity);
             _sessionDataList.add(sessionData);
         }
@@ -88,6 +88,10 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
                 }
             }
         });
+    }
+
+    private boolean activitySameAsLast(int activity) {
+        return _sessionDataList.size() == 0 || _sessionDataList.get(_sessionDataList.size() - 1).getActivity() != activity;
     }
 
     private void buildDataPoints(Session session, long endTime) {
