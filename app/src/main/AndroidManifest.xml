@@ -24,7 +24,7 @@
         <service android:name=".live.LiveService" android:label="LiveService"/>
         <service android:name=".activityrecognition.ActivityRecognitionIntentService" android:label="ActivityRecognitionIntentService"/>
         <service android:name=".activityrecognition.ActivityRecognitionService" android:label="ActivityRecognitionService"/>
-
+        <service android:name=".fit.GoogleFitService" android:label="GoogleFitService"/>
         <receiver android:name=".pebble.PebbleDataReceiver">
             <intent-filter>
                 <action android:name="com.getpebble.action.app.RECEIVE"/>

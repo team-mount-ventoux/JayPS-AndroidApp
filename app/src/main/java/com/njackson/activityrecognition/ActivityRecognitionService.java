@@ -3,6 +3,7 @@ package com.njackson.activityrecognition;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -12,7 +13,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.njackson.Constants;
 import com.njackson.application.PebbleBikeApplication;
-import com.njackson.events.ActivityRecognitionService.CurrentState;
+import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
@@ -22,6 +23,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by njackson on 01/01/15.
@@ -32,9 +34,10 @@ public class ActivityRecognitionService  extends Service implements
     private static final String TAG = "PB-ActivityRecognitionService";
     @Inject Bus _bus;
     @Inject IGooglePlayServices _googlePlay;
-    @Inject GoogleApiClient _recognitionClient;
+    @Inject @Named("GoogleActivity") GoogleApiClient _recognitionClient;
     @Inject IServiceStarter _serviceStarter;
     @Inject ITimer _timer;
+    @Inject SharedPreferences _sharedPreferences;
 
     public static final int MILLISECONDS_PER_SECOND = 1000;
     public static final int DETECTION_INTERVAL_SECONDS = 2;
@@ -44,12 +47,16 @@ public class ActivityRecognitionService  extends Service implements
 
     @Subscribe
     public void onNewActivityEvent(NewActivityEvent event) {
-        if(event.getActivityType() != DetectedActivity.STILL) {
-            _serviceStarter.startLocationServices();
-            _timer.cancel();
-        } else {
-            if(!_timer.getActive()) {
-                _timer.setTimer(Constants.ACTIVITY_RECOGNITON_STILL_TIME, this);
+        boolean autoStart = _sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
+
+        if(autoStart) {
+            if (event.getActivityType() != DetectedActivity.STILL) {
+                _serviceStarter.startLocationServices();
+                _timer.cancel();
+            } else {
+                if (!_timer.getActive()) {
+                    _timer.setTimer(Constants.ACTIVITY_RECOGNITON_STILL_TIME, this);
+                }
             }
         }
     }
@@ -63,7 +70,7 @@ public class ActivityRecognitionService  extends Service implements
         _bus.register(this);
 
         if(!checkGooglePlayServices()) {
-            _bus.post(new CurrentState(CurrentState.State.PLAY_SERVICES_NOT_AVAILABLE));
+            _bus.post(new ActivityRecognitionStatus(ActivityRecognitionStatus.State.PLAY_SERVICES_NOT_AVAILABLE));
             return;
         }
 
@@ -71,7 +78,7 @@ public class ActivityRecognitionService  extends Service implements
         createIntentService();
         connectToGooglePlayServices();
 
-        _bus.post(new CurrentState(CurrentState.State.STARTED));
+        _bus.post(new ActivityRecognitionStatus(ActivityRecognitionStatus.State.STARTED));
     }
 
     private void createIntentService() {

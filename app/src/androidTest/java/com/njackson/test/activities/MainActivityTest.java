@@ -1,45 +1,36 @@
 package com.njackson.test.activities;
 
 import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.ContextWrapper;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.test.ActivityInstrumentationTestCase2;
-import android.test.ActivityUnitTestCase;
-import android.test.UiThreadTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.njackson.activities.MainActivity;
-import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.application.modules.PebbleServiceModule;
 import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
-import com.njackson.gps.GPSService;
-import com.njackson.live.LiveService;
-import com.njackson.live.LiveTracking;
+import com.njackson.events.status.GoogleFitStatus;
 import com.njackson.test.application.TestApplication;
-import com.njackson.test.testUtils.Services;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
 import com.njackson.virtualpebble.IMessageManager;
-import com.njackson.virtualpebble.MessageManager;
-import com.njackson.virtualpebble.PebbleService;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -70,6 +61,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     private TestApplication _app;
 
     private SharedPreferences.Editor _mockEditor;
+    private static IGooglePlayServices _mockPlayServices;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -95,11 +87,11 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         @Provides @Singleton
         SensorManager provideSensorManager() { return mock(SensorManager.class); }
 
-        @Provides @Singleton
+        @Provides @Singleton @Named("GoogleActivity")
         GoogleApiClient provideActivityRecognitionClient() { return mock(GoogleApiClient.class); }
 
         @Provides
-        IGooglePlayServices providesGooglePlayServices() { return mock(IGooglePlayServices.class); }
+        IGooglePlayServices providesGooglePlayServices() { return _mockPlayServices; }
 
         @Provides @Singleton
         IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
@@ -135,7 +127,14 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     private void setupMocks() {
         _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
+        _mockPlayServices = mock(IGooglePlayServices.class);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
+    }
+
+    private ConnectionResult createConnectionResult() {
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getInstrumentation().getTargetContext(),1, new Intent("MOCK"),0);
+        ConnectionResult result = new ConnectionResult(0,pendingIntent);
+        return  result;
     }
 
     @SmallTest
@@ -143,22 +142,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         _activity = getActivity();
 
         verify(_mockAnalytics,times(1)).trackAppOpened(any(Intent.class));
-    }
-
-    @SmallTest
-    public void testRegistersForSharedPreferencesUpdatesOnCreate() {
-        _activity = getActivity();
-
-        verify(_mockPreferences,times(1)).registerOnSharedPreferenceChangeListener(any(MainActivity.class));
-    }
-
-    @SmallTest
-    public void testUnRegistersForSharedPreferencesUpdatesOnDestroy() throws InterruptedException {
-        _activity = getActivity();
-
-        _activity.finish();
-
-        verify(_mockPreferences, timeout(2000).times(1)).unregisterOnSharedPreferenceChangeListener(any(MainActivity.class));
     }
 
     @SmallTest
@@ -180,46 +163,59 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
-    public void testStartsActivityRecognitionServiceWhenPreferenceSet() throws Exception {
-        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
+    public void testOnOtherGoogleFitEventsDoesNothing() throws IntentSender.SendIntentException {
+        when(_mockPlayServices.connectionResultHasResolution(any(ConnectionResult.class))).thenReturn(false);
 
         _activity = getActivity();
 
-        verify(_mockServiceStarter,timeout(2000).times(1)).startRecognitionServices();
+        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTED, createConnectionResult()));
+
+        verify(_mockPlayServices,timeout(2000).times(0)).connectionResultHasResolution(any(ConnectionResult.class));
+        verify(_mockPlayServices,timeout(2000).times(0)).startConnectionResultResolution(any(ConnectionResult.class), any(MainActivity.class));
     }
 
     @SmallTest
-    public void testDoesNotStartActivityRecognitionServiceWhenPreferenceSet() throws Exception {
-        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
+    public void testOnGoogleFitConnectionFailedWithNoResolutionShowsErrorDialog() {
+        when(_mockPlayServices.connectionResultHasResolution(any(ConnectionResult.class))).thenReturn(false);
 
         _activity = getActivity();
 
-        verify(_mockServiceStarter,timeout(2000).times(0)).startRecognitionServices();
+        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED, createConnectionResult()));
+
+        verify(_mockPlayServices,timeout(2000).times(1)).showConnectionResultErrorDialog(any(ConnectionResult.class), any(MainActivity.class));
     }
 
     @SmallTest
-    public void testStopsActivityRecognitionServiceWhenPreferenceChanged() throws Exception {
-        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
+    public void testOnGoogleFitConnectionFailedWitResolutionDoesNotShowErrorDialog() {
+        when(_mockPlayServices.connectionResultHasResolution(any(ConnectionResult.class))).thenReturn(true);
 
         _activity = getActivity();
 
-        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
+        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED, createConnectionResult()));
 
-        _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
-
-        verify(_mockServiceStarter,times(1)).stopRecognitionServices();
+        verify(_mockPlayServices,timeout(2000).times(0)).showConnectionResultErrorDialog(any(ConnectionResult.class),any(MainActivity.class));
     }
 
     @SmallTest
-    public void testStartsActivityRecognitionServiceWhenPreferenceChanged() throws Exception {
-        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
+    public void testOnGoogleFitConnectionFailedWithResolutionStartsResultResolution() throws IntentSender.SendIntentException {
+        when(_mockPlayServices.connectionResultHasResolution(null)).thenReturn(true);
 
         _activity = getActivity();
 
-        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
+        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED));
 
-        _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
+        verify(_mockPlayServices,timeout(2000).times(1)).startConnectionResultResolution(any(ConnectionResult.class), any(MainActivity.class));
+    }
 
-        verify(_mockServiceStarter,times(1)).startRecognitionServices();
+    @SmallTest
+    public void testOnGoogleFitConnectionFailedWithResolutionReceivedSecondTimeDoesNotStartsResultResolution() throws IntentSender.SendIntentException {
+        when(_mockPlayServices.connectionResultHasResolution(null)).thenReturn(true);
+
+        _activity = getActivity();
+
+        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED));
+        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED));
+
+        verify(_mockPlayServices,timeout(2000).times(1)).startConnectionResultResolution(any(ConnectionResult.class), any(MainActivity.class));
     }
 }

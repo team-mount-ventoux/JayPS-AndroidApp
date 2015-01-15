@@ -1,11 +1,11 @@
 package com.njackson.test.virtualpebble;
 
-import android.content.Context;
 import android.content.Intent;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.events.GPSService.CurrentState;
+import com.njackson.events.PebbleService.NewMessage;
+import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.LocationEventConverter;
@@ -41,7 +41,7 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
 
     private PebbleService _service;
     private TestApplication _app;
-    private CurrentState _pebbleStatusEvent;
+    private GPSStatus _pebbleStatusEvent;
     private CountDownLatch _stateLatch;
 
     public PebbleServiceTest() {
@@ -69,7 +69,7 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
     }
 
     @Subscribe
-    public void onPebbleServiceStatusEvent(CurrentState event) {
+    public void onPebbleServiceStatusEvent(GPSStatus event) {
         _pebbleStatusEvent = event;
 
         _stateLatch.countDown();
@@ -122,13 +122,14 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
     }
 */
     @SmallTest
-    public void testServiceShowsWatchFaceOnDispose() throws InterruptedException {
+    public void testServiceShowsWatchFaceOnGPSServiceStart() throws InterruptedException {
         startService();
-        Mockito.verify(_mockMessageManager,times(1)).showWatchFace();
+        _bus.post(new GPSStatus(GPSStatus.State.STARTED));
+        Mockito.verify(_mockMessageManager,timeout(1000).times(1)).showWatchFace();
     }
 
     @SmallTest
-    public void testserviceRespondsToNewGPSLocation() throws InterruptedException {
+    public void testServiceRespondsToNewGPSLocation() throws InterruptedException {
         startService();
 
         ArgumentCaptor<PebbleDictionary> captor = new ArgumentCaptor<PebbleDictionary>();
@@ -146,5 +147,12 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
         byte[] data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
         assertEquals("Speed should be -9",-9,data[LocationEventConverter.BYTE_SPEED1]);
         assertEquals("Speed should be 3",3,data[LocationEventConverter.BYTE_SPEED2]);
+    }
+
+    @SmallTest
+    public void testNewMessageEventSendsMessageToPebble() throws InterruptedException {
+        startService();
+        _bus.post(new NewMessage("A Message"));
+        Mockito.verify(_mockMessageManager,timeout(1000).times(1)).showSimpleNotificationOnWatch(anyString(),anyString());
     }
 }

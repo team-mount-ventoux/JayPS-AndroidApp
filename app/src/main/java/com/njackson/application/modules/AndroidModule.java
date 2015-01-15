@@ -5,15 +5,23 @@ import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.location.ActivityRecognition;
 import com.njackson.activities.MainActivity;
 import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.SettingsActivity;
 import com.njackson.gps.GPSService;
+import com.njackson.utils.googleplay.GoogleFitSessionManager;
+import com.njackson.utils.googleplay.GooglePlayServices;
+import com.njackson.utils.googleplay.IGoogleFitSessionManager;
 import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.services.ServiceStarter;
+import com.njackson.virtualpebble.IMessageManager;
+import com.njackson.virtualpebble.MessageManager;
+import com.njackson.virtualpebble.PebbleService;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -25,7 +33,7 @@ import static android.content.Context.SENSOR_SERVICE;
 /**
  * Created by server on 30/03/2014.
  */
-@Module(library = true,complete=false,injects = {GPSService.class, ActivityRecognitionService.class, MainActivity.class, SettingsActivity.class})
+@Module(library = true,complete=false,injects = {GPSService.class, ActivityRecognitionService.class, MainActivity.class, SettingsActivity.class, PebbleService.class})
 public class AndroidModule {
     private final PebbleBikeApplication application;
 
@@ -54,11 +62,26 @@ public class AndroidModule {
         return application.getSharedPreferences("com.njackson_preferences", Context.MODE_PRIVATE);
     }
 
-    @Provides @Singleton
+    @Provides @Singleton @Named("GoogleActivity")
     GoogleApiClient provideActivityRecognitionClient() {
         return new GoogleApiClient.Builder(application).addApi(ActivityRecognition.API).build();
     }
 
+    @Provides @Singleton @Named("GoogleFit")
+    GoogleApiClient provideFitnessAPIClient() {
+        return new GoogleApiClient.Builder(application)
+                .addApi(Fitness.API)
+                .addScope(Fitness.SCOPE_ACTIVITY_READ)
+                .addScope(Fitness.SCOPE_BODY_READ_WRITE)
+                .build();
+    }
+
+    @Provides
+    IGoogleFitSessionManager providesGoogleFitSessionManager() { return new GoogleFitSessionManager(application, new GooglePlayServices(), Fitness.SessionsApi); }
+
     @Provides @Singleton
     IServiceStarter provideServiceStarter() { return new ServiceStarter(application, provideSharedPreferences()); }
+
+    @Provides
+    public IMessageManager providesMessageManager() { return new MessageManager(application); }
 }

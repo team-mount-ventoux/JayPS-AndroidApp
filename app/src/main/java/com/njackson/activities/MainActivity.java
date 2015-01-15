@@ -1,7 +1,7 @@
 package com.njackson.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.IntentSender;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -14,24 +14,26 @@ import com.njackson.R;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.SettingsActivity;
-import com.njackson.events.ActivityRecognitionService.CurrentState;
+import com.njackson.events.PebbleService.NewMessage;
+import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
+import com.njackson.events.status.GoogleFitStatus;
+import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
-import com.njackson.virtualpebble.IMessageManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-public class MainActivity extends FragmentActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class MainActivity extends FragmentActivity {
 
     private static final String TAG = "PB-MainActivity";
     @Inject Bus _bus;
     @Inject IAnalytics _analytics;
-    @Inject SharedPreferences _sharedPreferences;
     @Inject IServiceStarter _serviceStarter;
-    @Inject IMessageManager _messageManager;
+    @Inject IGooglePlayServices _playServices;
+    private boolean _authInProgress;
 
     @Subscribe
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
@@ -44,49 +46,55 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
     }
 
     @Subscribe
-    public void onRecognitionState(CurrentState event) {
-        if(event.getState().compareTo(CurrentState.State.PLAY_SERVICES_NOT_AVAILABLE) == 0)
+    public void onRecognitionState(ActivityRecognitionStatus event) {
+        if(event.getState().compareTo(ActivityRecognitionStatus.State.PLAY_SERVICES_NOT_AVAILABLE) == 0)
             Log.d(TAG, "PLAY_NOT_AVIALABLE");
         else
-            Log.d(TAG, "STARTED");
+            Log.d(TAG, "SERVICE_STARTED");
+    }
+
+    @Subscribe
+    public void onGoogleFitStatusChanged(GoogleFitStatus event) {
+        if(event.getState() == GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED) {
+            if(!_playServices.connectionResultHasResolution(event.getConnectionResult())) {
+                _playServices.showConnectionResultErrorDialog(event.getConnectionResult(), this);
+                return;
+            }
+
+            // The failure has a resolution. Resolve it.
+            // Called typically when the app is not yet authorized, and an
+            // authorization dialog is displayed to the user.
+            if (!_authInProgress) {
+                try {
+                    Log.i(TAG, "Attempting to resolve failed connection");
+                    _authInProgress = true;
+                    _playServices.startConnectionResultResolution(event.getConnectionResult(),this);
+                } catch (IntentSender.SendIntentException e) {
+                    Log.e(TAG,"Exception while starting resolution activity", e);
+                }
+            }
+        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
         ((PebbleBikeApplication) getApplication()).inject(this);
 
-        setContentView(R.layout.activity_main);
-
         _analytics.trackAppOpened(getIntent());
-        _serviceStarter.startPebbleService();
+        _serviceStarter.startEssentialServices();
 
         if (getIntent().getExtras() != null) {
-            if (getIntent().getExtras().containsKey("button")) {
-                Log.d(TAG, "onCreate() button:" + getIntent().getExtras().getInt("button"));
-                changeState(getIntent().getExtras().getInt("button"));
-            }
-            if (getIntent().getExtras().containsKey("version")) {
-                Log.d(TAG, "onCreate() version:" + getIntent().getExtras().getInt("version"));
-                notificationVersion(getIntent().getExtras().getInt("version"));
-                // TODO(nic) resendLastDataToPebble();
-            }
+            onNewIntent(getIntent());
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         _bus.register(this);
-
-        if(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)) {
-            _serviceStarter.startRecognitionServices();
-        }
-
-        _sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
     }
 
     @Override
@@ -97,8 +105,6 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
 
     @Override
     protected void onDestroy() {
-        _sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
-        _serviceStarter.stopPebbleService();
         super.onDestroy();
     }
 
@@ -121,27 +127,15 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.compareTo("ACTIVITY_RECOGNITION") == 0) {
-            boolean start = sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
-            if(start) {
-                _serviceStarter.startRecognitionServices();
-            } else {
-                _serviceStarter.stopRecognitionServices();
-            }
-        }
-    }
-
     // This is called for activities that set launchMode to "singleTop" in their package, or if a client used the FLAG_ACTIVITY_SINGLE_TOP flag when calling startActivity(Intent).
     // In either case, when the activity is re-launched while at the top of the activity stack instead of a new instance of the activity being started, onNewIntent() will be called
     // on the existing instance with the Intent that was used to re-launch it.
     // An activity will always be paused before receiving a new intent, so you can count on onResume() being called after this method.
+    // TODO: write tests for intent handler
     protected void onNewIntent (Intent intent) {
         if (intent.getExtras() != null) {
             if (intent.getExtras().containsKey("button")) {
                 Log.d(TAG, "onNewIntent() button:" + intent.getExtras().getInt("button"));
-
                 changeState(intent.getExtras().getInt("button"));
             }
             if (intent.getExtras().containsKey("version")) {
@@ -151,16 +145,26 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
             }
         }
     }
+
     private void notificationVersion(int version) {
         if (version < Constants.LAST_VERSION_PEBBLE) {
             Log.d(TAG, "version:" + version + " min:" + Constants.MIN_VERSION_PEBBLE + " last:" + Constants.LAST_VERSION_PEBBLE);
-            String msg = "A new watchface is available. Please install it from the Pebble Bike android application settings";
-            Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-            if (version < Constants.MIN_VERSION_PEBBLE) {
-                _messageManager.showSimpleNotificationOnWatch("Pebble Bike", msg);
-            }
+            String message = getString(R.string.message_pebble_new_watchface);
+
+            showToast(message);
+            sendMessageToPebble(message);
         }
     }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private void sendMessageToPebble(String message) {
+        _bus.post(new NewMessage(message));
+    }
+
+    // TODO: move to pebble service
     private void changeState(int button) {
         Log.d(TAG, "changeState(button:" + button + ")");
         switch (button) {
@@ -171,7 +175,6 @@ public class MainActivity extends FragmentActivity implements SharedPreferences.
                 _serviceStarter.startLocationServices();
                 break;
             case Constants.REFRESH_PRESS:
-                // TODO(nic): works only if GPS is running
                 _bus.post(new com.njackson.events.GPSService.ResetGPSState());
                 break;
         }

@@ -45,8 +45,12 @@ public class ActivityRecognitionIntentService extends IntentService {
                     Log.d(TAG, "ON_BICYCLE");
                     sendReply(result.getMostProbableActivity().getType());
                     break;
-                case DetectedActivity.ON_FOOT:
-                    Log.d(TAG, "ON_FOOT");
+                case DetectedActivity.WALKING:
+                    Log.d(TAG, "WALKING");
+                    sendReply(result.getMostProbableActivity().getType());
+                    break;
+                case DetectedActivity.RUNNING:
+                    Log.d(TAG, "RUNNING");
                     sendReply(result.getMostProbableActivity().getType());
                     break;
                 case DetectedActivity.TILTING:

@@ -1,7 +1,5 @@
 package com.njackson.gps;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,15 +12,12 @@ import android.location.LocationManager;
 
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.njackson.R;
-import com.njackson.activities.MainActivity;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSService.ChangeRefreshInterval;
+import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.ResetGPSState;
-import com.njackson.events.GPSService.CurrentState;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.oruxmaps.OruxMaps;
 import com.squareup.otto.Bus;
@@ -61,7 +56,7 @@ public class GPSService extends Service {
     private ServiceNmeaListener _nmeaListener;
     private GPSSensorEventListener _sensorListener;
 
-    private int _refresh_interval = 1000;
+    private long _refresh_interval = 1000;
     private boolean _gpsStarted = false;
 
     @Subscribe
@@ -103,7 +98,7 @@ public class GPSService extends Service {
         }
         stopLocationUpdates();
 
-        _bus.post(new CurrentState(CurrentState.State.STOPPED));
+        _bus.post(new GPSStatus(GPSStatus.State.STOPPED));
 
         _serviceStarter.stopServiceForeground(this);
 
@@ -134,7 +129,7 @@ public class GPSService extends Service {
             registerNmeaListener();
             registerSensorListener();
 
-            _bus.post(new CurrentState(CurrentState.State.STARTED));
+            _bus.post(new GPSStatus(GPSStatus.State.STARTED));
 
             String oruxmaps_auto = _sharedPreferences.getString("ORUXMAPS_AUTO", "disable");
             if (oruxmaps_auto.equals("continue")) {
@@ -169,7 +164,7 @@ public class GPSService extends Service {
             event.setAscent(_advancedLocation.getAscent()); // m
             _bus.post(event);
         } else {
-            _bus.post(new CurrentState(CurrentState.State.DISABLED)); // GPS DISABLED
+            _bus.post(new GPSStatus(GPSStatus.State.DISABLED)); // GPS DISABLED
         }
     }
 
@@ -189,6 +184,7 @@ public class GPSService extends Service {
         } catch (ClassCastException e) {
             _advancedLocation.setAscent(0.0);
         }
+
         _advancedLocation.setGeoidHeight(_sharedPreferences.getFloat("GEOID_HEIGHT", 0));
 
         if (_sharedPreferences.contains("GPS_FIRST_LOCATION_LAT") && _sharedPreferences.contains("GPS_FIRST_LOCATION_LON")) {
@@ -217,7 +213,7 @@ public class GPSService extends Service {
     // reset the saved state
     private void resetGPSStats() {
         SharedPreferences.Editor editor = _sharedPreferences.edit();
-        editor.putFloat("GPS_DISTANCE",0.0f);
+        editor.putFloat("GPS_DISTANCE", 0.0f);
         editor.putLong("GPS_ELAPSEDTIME", 0);
         editor.putFloat("GPS_ASCENT", 0.0f);
         editor.commit();
@@ -231,19 +227,19 @@ public class GPSService extends Service {
         loadGPSStats();
     }
 
-    private void requestLocationUpdates(int refresh_interval) {
+    private void requestLocationUpdates(long refresh_interval) {
         _refresh_interval = refresh_interval;
 
         if (_gpsStarted) {
             _locationMgr.removeUpdates(_locationListener);
         }
-        _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, (long)_refresh_interval, 2.0f, _locationListener);
+        _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, _refresh_interval, 2.0f, _locationListener);
 
         _gpsStarted = true;
     }
 
     private void registerNmeaListener() {
-        _nmeaListener = new ServiceNmeaListener(_advancedLocation);
+        _nmeaListener = new ServiceNmeaListener(_advancedLocation,_locationMgr, _sharedPreferences);
         _locationMgr.addNmeaListener(_nmeaListener);
     }
 
@@ -251,7 +247,7 @@ public class GPSService extends Service {
         _sensorListener = new GPSSensorEventListener(_advancedLocation,_sensorManager,new Callable() {
             @Override
             public Object call() throws Exception {
-                broadcastLocation();
+                //broadcastLocation();
                 return null;
             }
         });

@@ -16,8 +16,8 @@ import android.util.Log;
 
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.GPSService.ChangeRefreshInterval;
+import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.ResetGPSState;
-import com.njackson.events.GPSService.CurrentState;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.gps.GPSSensorEventListener;
 import com.njackson.gps.GPSService;
@@ -27,7 +27,6 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import org.mockito.ArgumentCaptor;
-import org.mockito.verification.Timeout;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -72,7 +71,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
 
     private NewLocation _locationEventResults;
 
-    private CurrentState _gpsStatusEvent;
+    private GPSStatus _gpsStatusEvent;
 
     private CountDownLatch _stateLatch;
     private CountDownLatch _newLocationLatch;
@@ -121,10 +120,10 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
     }
 
     @Subscribe
-    public void onGPSStatusEvent(CurrentState event) {
+    public void onGPSStatusEvent(GPSStatus event) {
         _gpsStatusEvent = event;
 
-        if (event.getState().compareTo(com.njackson.events.GPSService.CurrentState.State.STARTED) == 0) {
+        if (event.getState().compareTo(GPSStatus.State.STARTED) == 0) {
             Log.d(TAG, "onGPSStatusEvent STARTED");
             _stateLatch.countDown();
         }
@@ -185,7 +184,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
 
         startService();
 
-        assertEquals(CurrentState.State.DISABLED, _gpsStatusEvent.getState());
+        assertEquals(GPSStatus.State.DISABLED, _gpsStatusEvent.getState());
     }
 
     @SmallTest

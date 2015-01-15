@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.njackson.application.modules.AndroidModule;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.application.modules.PebbleServiceModule;
 import com.parse.Parse;
 import com.parse.ParseCrashReporting;
 
@@ -33,8 +32,7 @@ public class PebbleBikeApplication extends Application {
     protected List<Object> getModules() {
         return Arrays.asList(
                 new AndroidModule(this),
-                new PebbleBikeModule(),
-                new PebbleServiceModule(getApplicationContext())
+                new PebbleBikeModule()
         );
     }
 

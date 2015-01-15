@@ -1,18 +1,16 @@
 package com.njackson.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.njackson.R;
+import com.njackson.events.status.GPSStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.squareup.otto.Subscribe;
-
-import javax.inject.Inject;
 
 /**
  * Created by server on 11/04/2014.
@@ -55,12 +53,12 @@ public class StartButtonFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void onGPSServiceState(com.njackson.events.GPSService.CurrentState event) {
+    public void onGPSServiceState(GPSStatus event) {
         final Button startButton = (Button) _view.findViewById(R.id.start_button);
-        if (event.getState().compareTo(com.njackson.events.GPSService.CurrentState.State.STOPPED) == 0) {
+        if (event.getState().compareTo(GPSStatus.State.STOPPED) == 0) {
             //Log.d(TAG, "onGPSServiceState STOPPED");
             makeStartButtonInStartState(startButton);
-        } else if (event.getState().compareTo(com.njackson.events.GPSService.CurrentState.State.STARTED) == 0) {
+        } else if (event.getState().compareTo(GPSStatus.State.STARTED) == 0) {
             //Log.d(TAG, "onGPSServiceState STARTED");
             makeStartButtonInStopState(startButton);
         }

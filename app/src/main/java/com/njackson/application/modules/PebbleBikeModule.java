@@ -3,6 +3,10 @@ package com.njackson.application.modules;
 /**
  * Created by server on 30/03/2014.
  */
+import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.RecordingApi;
+import com.google.android.gms.fitness.SessionsApi;
+import com.google.android.gms.fitness.data.Session;
 import com.njackson.activities.MainActivity;
 import com.njackson.activityrecognition.ActivityRecognitionIntentService;
 import com.njackson.activityrecognition.ActivityRecognitionService;
@@ -10,10 +14,13 @@ import com.njackson.analytics.IAnalytics;
 import com.njackson.analytics.Parse;
 import com.njackson.application.MainThreadBus;
 import com.njackson.application.SettingsActivity;
+import com.njackson.fit.GoogleFitService;
 import com.njackson.fragments.AltitudeFragment;
 import com.njackson.fragments.SpeedFragment;
 import com.njackson.fragments.StartButtonFragment;
+import com.njackson.gps.GPSServerStarterForeground;
 import com.njackson.gps.GPSService;
+import com.njackson.gps.IGPSServiceStarterForeground;
 import com.njackson.live.LiveService;
 import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGooglePlayServices;
@@ -33,7 +40,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class, LiveService.class, ActivityRecognitionService.class, ActivityRecognitionIntentService.class},
+        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class, LiveService.class, GoogleFitService.class, ActivityRecognitionService.class, ActivityRecognitionIntentService.class},
         library = true, complete = false
 )
 public class PebbleBikeModule {
@@ -47,5 +54,11 @@ public class PebbleBikeModule {
 
     @Provides IGooglePlayServices providesGooglePlayServices() { return new GooglePlayServices(); }
 
+    @Provides RecordingApi providesGoogleFitRecordingApi() { return Fitness.RecordingApi; }
+
+    @Provides SessionsApi providesGoogleFitSessionsApi() { return Fitness.SessionsApi; }
+
     @Provides ITimer providesTimer() { return new Timer(); }
+
+    @Provides IGPSServiceStarterForeground providesForegroundServiceStarter() { return new GPSServerStarterForeground(); }
 }

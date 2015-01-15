@@ -8,4 +8,11 @@ public interface IServiceStarter {
     public void stopEssentialServices();
     public void startLocationServices();
     public void stopLocationServices();
+<<<<<<< HEAD
+=======
+    public void startRecognitionServices();
+    public void stopRecognitionServices();
+    public void startPebbleService();
+    public void stopPebbleService();
+>>>>>>> f758d09a223053241f86cada5f821026a71dcf39
 }

@@ -8,6 +8,8 @@ import android.util.Log;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
 import com.njackson.application.PebbleBikeApplication;
+import com.njackson.events.PebbleService.NewMessage;
+import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.events.LiveService.LiveMessage;
 import com.njackson.events.PebbleService.CurrentState;
@@ -16,8 +18,6 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
-
-import static com.njackson.events.GPSService.CurrentState.State.STARTED;
 
 
 public class PebbleService extends Service {
@@ -48,25 +48,26 @@ public class PebbleService extends Service {
         }
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        handleIntent(intent);
-        return START_STICKY;
-    }
-
     @Subscribe
-    public void onGPSServiceState(com.njackson.events.GPSService.CurrentState event) {
-
-        if (event.getState().compareTo(com.njackson.events.GPSService.CurrentState.State.STOPPED) == 0) {
+    public void onGPSServiceState(GPSStatus event) {
+        if(event.getState().compareTo(GPSStatus.State.STARTED) == 0) {
+            _messageManager.showWatchFace();
+        } else if (event.getState().compareTo(GPSStatus.State.STOPPED) == 0) {
             Log.d(TAG, "onGPSServiceState STOPPED");
             PebbleDictionary dictionary = new PebbleDictionary();
             dictionary.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
-            //Log.d(TAG, " STATE_CHANGED: "   + dictionary.getInteger(Constants.STATE_CHANGED));
             sendDataToPebble(dictionary);
         }
     }
 
-    @Subscribe public void onLiveMessage(LiveMessage msg) {
+    @Subscribe
+    public void onNewMessageEvent(NewMessage message) {
+        _messageManager.showSimpleNotificationOnWatch("Pebble Bike", message.getMessage());
+    }
+
+    //TODO: needs tests
+    @Subscribe
+    public void onLiveMessage(LiveMessage msg) {
         Log.d(TAG, "onLiveMessage");
 
         PebbleDictionary dic = new PebbleDictionary();
@@ -103,6 +104,12 @@ public class PebbleService extends Service {
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        handleIntent(intent);
+        return START_STICKY;
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
         ((PebbleBikeApplication)getApplication()).inject(this);
@@ -116,17 +123,22 @@ public class PebbleService extends Service {
         super.onDestroy();
     }
 
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
     private void handleIntent(Intent intent) {
         _messageThread = new Thread(_messageManager);
         _messageThread.start();
 
         _bus.post(new CurrentState(CurrentState.State.STARTED));
-        _messageManager.showWatchFace();
     }
 
     private void sendDataToPebble(PebbleDictionary data) {
         _messageManager.offer(data);
     }
+
     private void sendDataToPebbleIfPossible(PebbleDictionary data) {
         _messageManager.offerIfLow(data, 5);
     }
@@ -140,10 +152,5 @@ public class PebbleService extends Service {
         } else {
             sendDataToPebbleIfPossible(data);
         }
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
     }
 }
