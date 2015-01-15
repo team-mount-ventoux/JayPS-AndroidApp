@@ -67,6 +67,7 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
         _mockSessionsApi = mock(SessionsApi.class);
 
         _mockSession = mock(Session.class);
+
         _mockSessionBuilder = mock(Session.Builder.class);
         when(_mockSessionBuilder.setName(anyString())).thenReturn(_mockSessionBuilder);
         when(_mockSessionBuilder.setIdentifier(anyString())).thenReturn(_mockSessionBuilder);
@@ -168,7 +169,12 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
 
     @SmallTest
     public void testSaveActiveSessionCallBackWithNoRecognisedActivityCreates1DataPoints() {
+
+        // setup the mock to return the same start time as set
         startSession(1000);
+
+        when(_mockSession.getStartTime(TimeUnit.MILLISECONDS)).thenReturn((long)1000);
+
         _sessionManager.saveActiveSession(2000);
         DataSet dataSet = getDataSet();
 
@@ -274,15 +280,18 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
 
     private DataSet getDataSet() {
         ArrayList<Session> sessions = new ArrayList<>();
-        sessions.add(mock(Session.class));
+        sessions.add(_mockSession);
 
         ArgumentCaptor<ResultCallback> captor = ArgumentCaptor.forClass(ResultCallback.class);
         verify(_mockResult, times(1)).setResultCallback(captor.capture());
 
+        ArgumentCaptor<Session> sessionArgumentCaptor = ArgumentCaptor.forClass(Session.class);
+
         captor.getValue().onResult(new SessionStopResult(new Status(1), sessions));
 
         ArgumentCaptor<DataSet> dataSetArgumentCaptor = ArgumentCaptor.forClass(DataSet.class);
-        verify(_mockPlayServices,times(1)).newSessionInsertRequest(any(Session.class), dataSetArgumentCaptor.capture());
+        verify(_mockPlayServices,times(1)).newSessionInsertRequest(sessionArgumentCaptor.capture(), dataSetArgumentCaptor.capture());
+        assertEquals(_mockSession, sessionArgumentCaptor.getValue());
 
         return dataSetArgumentCaptor.getValue();
     }
