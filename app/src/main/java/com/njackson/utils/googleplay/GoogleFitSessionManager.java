@@ -1,6 +1,7 @@
 package com.njackson.utils.googleplay;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -24,6 +25,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class GoogleFitSessionManager implements IGoogleFitSessionManager {
 
+    private static final String TAG = "GoogleFit Session Manager";
     private final SessionsApi _sessionsApi;
     private final Context _context;
     private IGooglePlayServices _playServices;
@@ -80,17 +82,17 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
             public void onResult(SessionStopResult sessionStopResult) {
                 if (sessionStopResult.getSessions().size() > 0) {
                     for (Session session : sessionStopResult.getSessions()) {
-                        buildDataPoints(endTime);
-                        insertDataPoints();
+                        buildDataPoints(session, endTime);
+                        insertDataPoints(session);
                     }
                 }
             }
         });
     }
 
-    private void buildDataPoints(long endTime) {
+    private void buildDataPoints(Session session, long endTime) {
         if(_sessionDataList.size() < 1) {
-            createUnknownDataPoint(endTime);
+            createUnknownDataPoint(session, endTime);
         } else {
             SessionData nextData = null;
             for(int n=0; n < _sessionDataList.size(); n++) {
@@ -107,15 +109,16 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
         _activitySegments.add(dataPoint);
     }
 
-    private void createUnknownDataPoint(long endTime) {
+    private void createUnknownDataPoint(Session session, long endTime) {
         DataPoint firstRunningDp = _activitySegments.createDataPoint()
-                .setTimeInterval(_session.getStartTime(TimeUnit.MILLISECONDS), endTime, TimeUnit.MILLISECONDS);
+                .setTimeInterval(session.getStartTime(TimeUnit.MILLISECONDS), endTime, TimeUnit.MILLISECONDS);
         firstRunningDp.getValue(Field.FIELD_ACTIVITY).setActivity(FitnessActivities.UNKNOWN);
         _activitySegments.add(firstRunningDp);
     }
 
-    private void insertDataPoints() {
-        _playServices.newSessionInsertRequest(_session, _activitySegments);
+    private void insertDataPoints(Session session) {
+        _playServices.newSessionInsertRequest(session, _activitySegments);
+        Log.d(TAG,"GoogleFit Session Saved");
     }
 
     private Session createSession(long startTime) {
