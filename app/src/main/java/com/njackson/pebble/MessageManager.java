@@ -164,6 +164,11 @@ public class MessageManager implements IMessageManager, Runnable {
     }
 
     @Override
+    public void sendAckToPebble(int transactionId) {
+        PebbleKit.sendAckToPebble(_applicationContext,transactionId);
+    }
+
+    @Override
     public void showSimpleNotificationOnWatch(String title, String text) {
         final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
         final Map<String, String> data = new HashMap<String, String>();

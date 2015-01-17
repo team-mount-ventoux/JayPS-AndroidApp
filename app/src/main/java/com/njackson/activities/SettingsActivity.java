@@ -1,4 +1,4 @@
-package com.njackson.application;
+package com.njackson.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.njackson.Constants;
 import com.njackson.R;
+import com.njackson.activities.HRMScanActivity;
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.messages.ToastMessageMaker;
 

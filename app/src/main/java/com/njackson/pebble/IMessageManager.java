@@ -14,5 +14,7 @@ public interface IMessageManager extends Runnable {
     public void showWatchFace();
     public void hideWatchFace();
 
+    public void sendAckToPebble(int transactionId);
+
     public void showSimpleNotificationOnWatch(String title, String text);
 }

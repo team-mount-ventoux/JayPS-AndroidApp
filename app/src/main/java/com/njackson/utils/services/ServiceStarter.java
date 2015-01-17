@@ -8,6 +8,7 @@ import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.fit.GoogleFitService;
 import com.njackson.gps.GPSService;
 import com.njackson.live.LiveService;
+import com.njackson.oruxmaps.OruxMapsService;
 import com.njackson.pebble.PebbleService;
 
 /**
@@ -41,6 +42,7 @@ public class ServiceStarter implements IServiceStarter {
         startGPSService();
         startLiveService();
         startGoogleFitService();
+        startOruxService();
     }
 
     @Override
@@ -48,6 +50,7 @@ public class ServiceStarter implements IServiceStarter {
         stopGPSService();
         stopLiveService();
         stopGoogleFitService();
+        stopOruxService();
     }
 
     protected void startGPSService() {
@@ -77,5 +80,9 @@ public class ServiceStarter implements IServiceStarter {
     private void startGoogleFitService() { _context.startService(new Intent(_context, GoogleFitService.class)); }
 
     private void stopGoogleFitService() { _context.stopService(new Intent(_context, GoogleFitService.class)); }
+
+    private void startOruxService() { _context.startService(new Intent(_context, OruxMapsService.class)); }
+
+    private void stopOruxService() { _context.stopService(new Intent(_context, OruxMapsService.class)); }
 
 }

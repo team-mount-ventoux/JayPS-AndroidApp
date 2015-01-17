@@ -10,11 +10,12 @@ import com.google.android.gms.location.ActivityRecognition;
 import com.njackson.activities.MainActivity;
 import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.application.PebbleBikeApplication;
-import com.njackson.application.SettingsActivity;
+import com.njackson.activities.SettingsActivity;
 import com.njackson.gps.GPSService;
 import com.njackson.oruxmaps.IOruxMaps;
 import com.njackson.oruxmaps.OruxMaps;
 import com.njackson.oruxmaps.OruxMapsService;
+import com.njackson.pebble.PebbleDataReceiver;
 import com.njackson.utils.googleplay.GoogleFitSessionManager;
 import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
@@ -36,7 +37,7 @@ import static android.content.Context.SENSOR_SERVICE;
 /**
  * Created by server on 30/03/2014.
  */
-@Module(library = true,complete=false,injects = {GPSService.class, ActivityRecognitionService.class, MainActivity.class, SettingsActivity.class, PebbleService.class, OruxMapsService.class})
+@Module(library = true,complete=false,injects = {GPSService.class, ActivityRecognitionService.class, MainActivity.class, SettingsActivity.class, PebbleService.class, OruxMapsService.class, PebbleDataReceiver.class})
 public class AndroidModule {
     private final PebbleBikeApplication application;
 

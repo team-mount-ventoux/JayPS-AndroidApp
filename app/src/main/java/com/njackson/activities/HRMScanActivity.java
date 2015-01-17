@@ -1,4 +1,4 @@
-package com.njackson.application;
+package com.njackson.activities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;

@@ -17,14 +17,15 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.TestActivity"></activity>
-        <activity android:name=".application.SettingsActivity"/>
-        <activity android:name=".application.HRMScanActivity"/>
+        <activity android:name=".activities.SettingsActivity"/>
+        <activity android:name=".activities.HRMScanActivity"/>
         <service android:name=".gps.GPSService" android:label="GPSService"/>
         <service android:name=".pebble.PebbleService" android:label="PebbleService"/>
         <service android:name=".live.LiveService" android:label="LiveService"/>
         <service android:name=".activityrecognition.ActivityRecognitionIntentService" android:label="ActivityRecognitionIntentService"/>
         <service android:name=".activityrecognition.ActivityRecognitionService" android:label="ActivityRecognitionService"/>
         <service android:name=".fit.GoogleFitService" android:label="GoogleFitService"/>
+        <service android:name=".oruxmaps.OruxMapsService" android:label="OruxMapsService"/>
         <receiver android:name=".pebble.PebbleDataReceiver">
             <intent-filter>
                 <action android:name="com.getpebble.action.app.RECEIVE"/>

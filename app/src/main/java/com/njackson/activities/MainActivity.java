@@ -7,14 +7,10 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.njackson.Constants;
 import com.njackson.R;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
-import com.njackson.application.SettingsActivity;
-import com.njackson.events.PebbleService.NewMessage;
 import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
@@ -120,50 +116,5 @@ public class MainActivity extends FragmentActivity {
             startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    // TODO: write tests for intent handler
-    protected void onNewIntent (Intent intent) {
-        if (intent.getExtras() != null) {
-            if (intent.getExtras().containsKey("button")) {
-                changeState(intent.getExtras().getInt("button"));
-            }
-            if (intent.getExtras().containsKey("version")) {
-                notificationVersion(intent.getExtras().getInt("version"));
-                // TODO(nic) resendLastDataToPebble();
-            }
-        }
-    }
-
-    private void notificationVersion(int version) {
-        if (version < Constants.LAST_VERSION_PEBBLE) {
-            String message = getString(R.string.message_pebble_new_watchface);
-
-            showToast(message);
-            sendMessageToPebble(message);
-        }
-    }
-
-    private void showToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-    }
-
-    private void sendMessageToPebble(String message) {
-        _bus.post(new NewMessage(message));
-    }
-
-    // TODO: move to pebble service
-    private void changeState(int button) {
-        switch (button) {
-            case Constants.STOP_PRESS:
-                _serviceStarter.stopLocationServices();
-                break;
-            case Constants.PLAY_PRESS:
-                _serviceStarter.startLocationServices();
-                break;
-            case Constants.REFRESH_PRESS:
-                _bus.post(new com.njackson.events.GPSService.ResetGPSState());
-                break;
-        }
     }
 }
