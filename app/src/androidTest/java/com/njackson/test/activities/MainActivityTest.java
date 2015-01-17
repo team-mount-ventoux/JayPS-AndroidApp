@@ -1,9 +1,6 @@
 package com.njackson.test.activities;
 
-import android.app.ActivityManager;
 import android.app.PendingIntent;
-import android.content.ComponentName;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -25,7 +22,7 @@ import com.njackson.events.status.GoogleFitStatus;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
-import com.njackson.virtualpebble.IMessageManager;
+import com.njackson.pebble.IMessageManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

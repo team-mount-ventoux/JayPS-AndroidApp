@@ -18,7 +18,7 @@ import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
-import com.njackson.utils.timer.ITimer;
+import com.njackson.utils.time.ITimer;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

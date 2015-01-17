@@ -3,19 +3,15 @@ package com.njackson.test.utils.services;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.LocationListener;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.activityrecognition.ActivityRecognitionService;
-import com.njackson.events.UI.StartButtonTouchedEvent;
-import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.fit.GoogleFitService;
 import com.njackson.gps.GPSService;
 import com.njackson.live.LiveService;
-import com.njackson.test.testUtils.Services;
 import com.njackson.utils.services.ServiceStarter;
-import com.njackson.virtualpebble.PebbleService;
+import com.njackson.pebble.PebbleService;
 
 import org.mockito.ArgumentCaptor;
 

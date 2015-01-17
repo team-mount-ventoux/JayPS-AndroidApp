@@ -4,15 +4,20 @@ import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
 import com.njackson.activities.MainActivity;
+import com.njackson.oruxmaps.IOruxMaps;
 import com.njackson.oruxmaps.OruxMaps;
 
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import javax.inject.Inject;
+
 public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.PebbleDataReceiver {
 
     private static final String TAG = "PB-PebbleDataReceiver";
+
+    @Inject IOruxMaps _oruxMaps;
 
     public PebbleDataReceiver() {
         super(Constants.WATCH_UUID);
@@ -22,17 +27,17 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
         int  button = -1;
         int  version = -1;
-        //int live_max_name = -99;
+
         boolean  start = false;
         if (data.contains(Constants.CMD_BUTTON_PRESS)) {
             button = data.getUnsignedIntegerAsLong(Constants.CMD_BUTTON_PRESS).intValue();
             Log.d(TAG, "Constants.CMD_BUTTON_PRESS, button: " + button);
             if (button == Constants.ORUXMAPS_START_RECORD_CONTINUE_PRESS) {
-                OruxMaps.startRecordNewSegment(context);
+                _oruxMaps.startRecordNewSegment();
             } else if (button == Constants.ORUXMAPS_STOP_RECORD_PRESS) {
-                OruxMaps.stopRecord(context);
+                _oruxMaps.stopRecord();
             } else if (button == Constants.ORUXMAPS_NEW_WAYPOINT_PRESS) {
-                OruxMaps.newWaypoint(context);
+                _oruxMaps.newWaypoint();
             } else {
                 start = true;
             }

@@ -4,43 +4,51 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-public class OruxMaps {
+public class OruxMaps implements IOruxMaps {
 
-    private static final String TAG = "PB-OruxMaps";
+    private final Context _context;
 
-    public static void startRecordNewSegment(Context context) {
+    public OruxMaps(Context context) {
+        _context = context;
+    }
+
+    @Override
+    public void startRecordNewSegment() {
         String oruxIntent = "com.oruxmaps.INTENT_START_RECORD_NEWSEGMENT";
-        Log.d(TAG, "Sending " + oruxIntent);
         Intent intent = new Intent();
         intent.setAction(oruxIntent);
-        context.sendBroadcast(intent);
+        _context.sendBroadcast(intent);
     }
-    public static void startRecordNewTrack(Context context) {
+
+    @Override
+    public void startRecordNewTrack() {
         String oruxIntent = "com.oruxmaps.INTENT_START_RECORD_NEWTRACK";
-        Log.d(TAG, "Sending " + oruxIntent);
         Intent intent = new Intent();
         intent.setAction(oruxIntent);
-        context.sendBroadcast(intent);
+        _context.sendBroadcast(intent);
     }
-    public static void startRecordContinue(Context context) {
+
+    @Override
+    public void startRecordContinue() {
         String oruxIntent = "com.oruxmaps.INTENT_START_RECORD_CONTINUE";
-        Log.d(TAG, "Sending " + oruxIntent);
         Intent intent = new Intent();
         intent.setAction(oruxIntent);
-        context.sendBroadcast(intent);
+        _context.sendBroadcast(intent);
     }
-    public static void stopRecord(Context context) {
+
+    @Override
+    public void stopRecord() {
         String oruxIntent = "com.oruxmaps.INTENT_STOP_RECORD";
-        Log.d(TAG, "Sending " + oruxIntent);
         Intent intent = new Intent();
         intent.setAction(oruxIntent);
-        context.sendBroadcast(intent);
+        _context.sendBroadcast(intent);
     }
-    public static void newWaypoint(Context context) {
+
+    @Override
+    public void newWaypoint() {
         String oruxIntent = "com.oruxmaps.INTENT_NEW_WAYPOINT";
-        Log.d(TAG, "Sending " + oruxIntent);
         Intent intent = new Intent();
         intent.setAction(oruxIntent);
-        context.sendBroadcast(intent);
+        _context.sendBroadcast(intent);
     }
 }

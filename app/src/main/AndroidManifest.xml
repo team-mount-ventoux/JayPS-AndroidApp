@@ -20,7 +20,7 @@
         <activity android:name=".application.SettingsActivity"/>
         <activity android:name=".application.HRMScanActivity"/>
         <service android:name=".gps.GPSService" android:label="GPSService"/>
-        <service android:name=".virtualpebble.PebbleService" android:label="PebbleService"/>
+        <service android:name=".pebble.PebbleService" android:label="PebbleService"/>
         <service android:name=".live.LiveService" android:label="LiveService"/>
         <service android:name=".activityrecognition.ActivityRecognitionIntentService" android:label="ActivityRecognitionIntentService"/>
         <service android:name=".activityrecognition.ActivityRecognitionService" android:label="ActivityRecognitionService"/>

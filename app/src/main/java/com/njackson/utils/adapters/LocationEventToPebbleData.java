@@ -1,4 +1,4 @@
-package com.njackson.utils;
+package com.njackson.utils.adapters;
 
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
@@ -12,7 +12,7 @@ import com.njackson.events.GPSService.NewLocation;
  * Location however this dependency extends into the native code running on the
  * watch face that this needs to be changed at the same time
  */
-public class LocationEventConverter {
+public class LocationEventToPebbleData {
 
     public static final short POS_UNITS=0;
     public static final short POS_SERVICE_RUNNING=1; //Refactor Out

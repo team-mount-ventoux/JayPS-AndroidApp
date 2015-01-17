@@ -6,7 +6,6 @@ package com.njackson.application.modules;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.RecordingApi;
 import com.google.android.gms.fitness.SessionsApi;
-import com.google.android.gms.fitness.data.Session;
 import com.njackson.activities.MainActivity;
 import com.njackson.activityrecognition.ActivityRecognitionIntentService;
 import com.njackson.activityrecognition.ActivityRecognitionService;
@@ -22,15 +21,18 @@ import com.njackson.gps.GPSServerStarterForeground;
 import com.njackson.gps.GPSService;
 import com.njackson.gps.IGPSServiceStarterForeground;
 import com.njackson.live.LiveService;
+import com.njackson.oruxmaps.OruxMapsService;
 import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGooglePlayServices;
-import com.njackson.utils.timer.ITimer;
-import com.njackson.utils.timer.Timer;
+import com.njackson.utils.time.ITime;
+import com.njackson.utils.time.ITimer;
+import com.njackson.utils.time.Time;
+import com.njackson.utils.time.Timer;
 import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.watchface.InstallPebbleWatchFace;
 import com.njackson.utils.version.AndroidVersion;
 import com.njackson.utils.version.PebbleVersion;
-import com.njackson.virtualpebble.PebbleService;
+import com.njackson.pebble.PebbleService;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
@@ -40,7 +42,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class, LiveService.class, GoogleFitService.class, ActivityRecognitionService.class, ActivityRecognitionIntentService.class},
+        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class, LiveService.class, GoogleFitService.class, ActivityRecognitionService.class, ActivityRecognitionIntentService.class, OruxMapsService.class},
         library = true, complete = false
 )
 public class PebbleBikeModule {
@@ -59,6 +61,8 @@ public class PebbleBikeModule {
     @Provides SessionsApi providesGoogleFitSessionsApi() { return Fitness.SessionsApi; }
 
     @Provides ITimer providesTimer() { return new Timer(); }
+
+    @Provides ITime providesTime() { return new Time(); }
 
     @Provides IGPSServiceStarterForeground providesForegroundServiceStarter() { return new GPSServerStarterForeground(); }
 }

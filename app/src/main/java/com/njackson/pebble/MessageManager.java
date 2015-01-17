@@ -1,4 +1,4 @@
-package com.njackson.virtualpebble;
+package com.njackson.pebble;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -77,27 +77,18 @@ public class MessageManager implements IMessageManager, Runnable {
                 pebbleConnected();
             }
         });
-        PebbleKit.registerPebbleDisconnectedReceiver(_applicationContext, new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                //Log.d(TAG, "Pebble disconnected!");
-            }
-        });
     }
 
     private void notifyAckReceivedAsync(int transactionId) {
-        Log.d(TAG, "notifyAckReceivedAsync("+transactionId+") transID:" + transID);
         removeMessageASync();
         consumeAsync();
     }
 
     private void notifyNackReceivedAsync(int transactionId) {
-        Log.d(TAG, "notifyNackReceivedAsync("+transactionId+") transID:" + transID);
         removeMessageASync();
         consumeAsync();
     }
     private void pebbleConnected() {
-        Log.d(TAG, "pebbleConnected");
         removeMessageASync();
         consumeAsync();
     }
@@ -174,7 +165,6 @@ public class MessageManager implements IMessageManager, Runnable {
 
     @Override
     public void showSimpleNotificationOnWatch(String title, String text) {
-        Log.d(TAG, "showSimpleNotificationOnWatch " + title + text);
         final Intent i = new Intent("com.getpebble.action.SEND_NOTIFICATION");
         final Map<String, String> data = new HashMap<String, String>();
         data.put("title", title);

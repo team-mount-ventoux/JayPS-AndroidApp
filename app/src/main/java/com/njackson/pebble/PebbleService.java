@@ -1,4 +1,4 @@
-package com.njackson.virtualpebble;
+package com.njackson.pebble;
 
 import android.app.Service;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.events.LiveService.LiveMessage;
 import com.njackson.events.PebbleService.CurrentState;
-import com.njackson.utils.LocationEventConverter;
+import com.njackson.utils.adapters.LocationEventToPebbleData;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -34,15 +34,13 @@ public class PebbleService extends Service {
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
         if (newLocation.getTime() > 0) {
-            // location.getTime() == 0 if altitude is obtained through pressure sensor before first gps pos
-
-            PebbleDictionary dictionary = LocationEventConverter.convert(
+            PebbleDictionary dictionary = LocationEventToPebbleData.convert(
                     newLocation,
-                    true /* serviceRunning */, // TODO(nic)
-                    _sharedPreferences.getBoolean("PREF_DEBUG", false) /* debug */,
-                    _sharedPreferences.getBoolean("LIVE_TRACKING", false) /* liveTrackingEnabled */,
-                    Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000")) /* refreshInterval */,
-                    newLocation.getHeartRate() /* heartRate */
+                    true, // TODO(nic)
+                    _sharedPreferences.getBoolean("PREF_DEBUG", false),
+                    _sharedPreferences.getBoolean("LIVE_TRACKING", false),
+                    Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000")),
+                    newLocation.getHeartRate()
             );
             sendDataToPebble(dictionary);
         }
@@ -53,7 +51,6 @@ public class PebbleService extends Service {
         if(event.getState().compareTo(GPSStatus.State.STARTED) == 0) {
             _messageManager.showWatchFace();
         } else if (event.getState().compareTo(GPSStatus.State.STOPPED) == 0) {
-            Log.d(TAG, "onGPSServiceState STOPPED");
             PebbleDictionary dictionary = new PebbleDictionary();
             dictionary.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
             sendDataToPebble(dictionary);
@@ -98,7 +95,6 @@ public class PebbleService extends Service {
         for( int i = 0; i < msgLiveShort.length; i++ ) {
             sending += " msgLiveShort["+i+"]: "   + ((256+msgLiveShort[i])%256);
         }
-        Log.d(TAG, sending);
 
         sendDataToPebble(dic, forceSend);
     }

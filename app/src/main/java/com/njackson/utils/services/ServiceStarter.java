@@ -8,7 +8,7 @@ import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.fit.GoogleFitService;
 import com.njackson.gps.GPSService;
 import com.njackson.live.LiveService;
-import com.njackson.virtualpebble.PebbleService;
+import com.njackson.pebble.PebbleService;
 
 /**
  * Created by njackson on 03/01/15.

@@ -9,7 +9,7 @@ import com.njackson.live.LiveService;
 import com.njackson.live.LiveTracking;
 import com.njackson.live.LiveTrackingFriend;
 import com.njackson.test.application.TestApplication;
-import com.njackson.virtualpebble.IMessageManager;
+import com.njackson.pebble.IMessageManager;
 
 import com.squareup.otto.Bus;
 

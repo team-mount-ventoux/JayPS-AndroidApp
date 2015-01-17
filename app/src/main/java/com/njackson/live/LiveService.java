@@ -30,7 +30,6 @@ public class LiveService extends Service {
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
         if (_sharedPreferences.getBoolean("LIVE_TRACKING", false)) {
-            Log.i(TAG, "onNewLocationEvent time=" + newLocation.getTime());
             Location location = new Location("PebbleBike");
             location.setAccuracy(newLocation.getAccuracy());
             location.setLatitude(newLocation.getLatitude());
@@ -38,8 +37,6 @@ public class LiveService extends Service {
             location.setTime(newLocation.getTime());
 
             if (location.getTime() > 0) {
-                // location.getTime() == 0 if altitude is obtained through pressure sensor before first gps pos
-
                 if (firstLocation == null) {
                     firstLocation = location;
                 }
@@ -51,14 +48,13 @@ public class LiveService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "onStartCommand");
+        Log.i(TAG, "Started Live Service");
         handleIntent(intent);
         return START_STICKY;
     }
 
     @Override
     public void onCreate() {
-        Log.i(TAG, "onCreate");
         super.onCreate();
         ((PebbleBikeApplication)getApplication()).inject(this);
         _bus.register(this);
@@ -66,20 +62,18 @@ public class LiveService extends Service {
 
     @Override
     public void onDestroy() {
+        Log.i(TAG, "Destroy Live Service");
         _bus.unregister(this);
         super.onDestroy();
     }
 
     private void handleIntent(Intent intent) {
-        Log.i(TAG, "handleIntent");
-
         _liveTrackingJayps = new LiveTracking(getApplicationContext(), LiveTracking.TYPE_JAYPS, _bus);
         _liveTrackingMmt = new LiveTracking(getApplicationContext(), LiveTracking.TYPE_MMT, _bus);
 
         _liveTrackingJayps.setLogin(_sharedPreferences.getString("LIVE_TRACKING_LOGIN", ""));
         _liveTrackingJayps.setPassword(_sharedPreferences.getString("LIVE_TRACKING_PASSWORD", ""));
         _liveTrackingJayps.setUrl(_sharedPreferences.getString("LIVE_TRACKING_URL", ""));
-        Log.d(TAG, "login=" + _sharedPreferences.getString("LIVE_TRACKING_LOGIN", ""));
 
         _liveTrackingMmt.setLogin(_sharedPreferences.getString("LIVE_TRACKING_MMT_LOGIN", ""));
         _liveTrackingMmt.setPassword(_sharedPreferences.getString("LIVE_TRACKING_MMT_PASSWORD", ""));

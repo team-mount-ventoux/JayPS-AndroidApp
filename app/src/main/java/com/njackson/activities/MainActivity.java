@@ -49,8 +49,6 @@ public class MainActivity extends FragmentActivity {
     public void onRecognitionState(ActivityRecognitionStatus event) {
         if(event.getState().compareTo(ActivityRecognitionStatus.State.PLAY_SERVICES_NOT_AVAILABLE) == 0)
             Log.d(TAG, "PLAY_NOT_AVIALABLE");
-        else
-            Log.d(TAG, "SERVICE_STARTED");
     }
 
     @Subscribe
@@ -61,17 +59,18 @@ public class MainActivity extends FragmentActivity {
                 return;
             }
 
-            // The failure has a resolution. Resolve it.
-            // Called typically when the app is not yet authorized, and an
-            // authorization dialog is displayed to the user.
-            if (!_authInProgress) {
-                try {
-                    Log.i(TAG, "Attempting to resolve failed connection");
-                    _authInProgress = true;
-                    _playServices.startConnectionResultResolution(event.getConnectionResult(),this);
-                } catch (IntentSender.SendIntentException e) {
-                    Log.e(TAG,"Exception while starting resolution activity", e);
-                }
+            handleGoogleFitFailure(event);
+        }
+    }
+
+    private void handleGoogleFitFailure(GoogleFitStatus event) {
+        if (!_authInProgress) {
+            try {
+                Log.i(TAG, "Attempting to resolve failed connection");
+                _authInProgress = true;
+                _playServices.startConnectionResultResolution(event.getConnectionResult(),this);
+            } catch (IntentSender.SendIntentException e) {
+                Log.e(TAG,"Exception while starting resolution activity", e);
             }
         }
     }
@@ -110,16 +109,12 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
@@ -127,19 +122,13 @@ public class MainActivity extends FragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // This is called for activities that set launchMode to "singleTop" in their package, or if a client used the FLAG_ACTIVITY_SINGLE_TOP flag when calling startActivity(Intent).
-    // In either case, when the activity is re-launched while at the top of the activity stack instead of a new instance of the activity being started, onNewIntent() will be called
-    // on the existing instance with the Intent that was used to re-launch it.
-    // An activity will always be paused before receiving a new intent, so you can count on onResume() being called after this method.
     // TODO: write tests for intent handler
     protected void onNewIntent (Intent intent) {
         if (intent.getExtras() != null) {
             if (intent.getExtras().containsKey("button")) {
-                Log.d(TAG, "onNewIntent() button:" + intent.getExtras().getInt("button"));
                 changeState(intent.getExtras().getInt("button"));
             }
             if (intent.getExtras().containsKey("version")) {
-                Log.d(TAG, "onNewIntent() version:" + intent.getExtras().getInt("version"));
                 notificationVersion(intent.getExtras().getInt("version"));
                 // TODO(nic) resendLastDataToPebble();
             }
@@ -148,7 +137,6 @@ public class MainActivity extends FragmentActivity {
 
     private void notificationVersion(int version) {
         if (version < Constants.LAST_VERSION_PEBBLE) {
-            Log.d(TAG, "version:" + version + " min:" + Constants.MIN_VERSION_PEBBLE + " last:" + Constants.LAST_VERSION_PEBBLE);
             String message = getString(R.string.message_pebble_new_watchface);
 
             showToast(message);
@@ -166,7 +154,6 @@ public class MainActivity extends FragmentActivity {
 
     // TODO: move to pebble service
     private void changeState(int button) {
-        Log.d(TAG, "changeState(button:" + button + ")");
         switch (button) {
             case Constants.STOP_PRESS:
                 _serviceStarter.stopLocationServices();
