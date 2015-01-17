@@ -41,11 +41,9 @@ public class GPSSensorEventListener implements SensorEventListener{
     }
 
     public void sensorChanged(int sensorType, float[] values) {
-        // we register to TYPE_PRESSURE, so we don't really need this test
         if(sensorType == Sensor.TYPE_PRESSURE) {
             float pressure_value = values[0];
             double altitude = _sensorManager.getAltitude(SensorManager.PRESSURE_STANDARD_ATMOSPHERE, pressure_value);
-            Log.d(TAG, "pressure_value=" + pressure_value + " altitude=" + altitude);
             _advancedLocation.onAltitudeChanged(altitude);
 
             try {

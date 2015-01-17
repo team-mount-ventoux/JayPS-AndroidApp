@@ -115,7 +115,7 @@ public class GPSService extends Service {
         Log.d(TAG, "Started GPS Service");
 
         _advancedLocation = new AdvancedLocation(getApplicationContext());
-        _advancedLocation.debugLevel = 2; //debug ? 2 : 0;
+        _advancedLocation.debugLevel = 0; //debug ? 2 : 0;
         _advancedLocation.debugTagPrefix = "PB-";
 
         // the intent has an extra which relates to the refresh interval
@@ -221,7 +221,7 @@ public class GPSService extends Service {
         // GPS is running
         // reninit all properties
         _advancedLocation = new AdvancedLocation(getApplicationContext());
-        _advancedLocation.debugLevel = 2; //debug ? 2 : 0;
+        _advancedLocation.debugLevel = 0; //debug ? 2 : 0;
         _advancedLocation.debugTagPrefix = "PB-";
 
         loadGPSStats();
@@ -280,7 +280,6 @@ public class GPSService extends Service {
 
             xpos = Math.floor(xpos/10);
             ypos = Math.floor(ypos/10);
-            Log.d(TAG,  "xpos="+xpos+"-ypos="+ypos);
             broadcastLocation();
         }
 
@@ -325,7 +324,6 @@ public class GPSService extends Service {
         event.setBearing(_advancedLocation.getBearing());
         event.setHeartRate(255); // 255: no Heart Rate available
 
-        Log.d(TAG,"post New Location time=" + event.getTime());
         _bus.post(event);
     }
 
