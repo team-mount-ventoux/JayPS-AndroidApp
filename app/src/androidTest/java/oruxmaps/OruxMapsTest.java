@@ -51,7 +51,7 @@ public class OruxMapsTest extends AndroidTestCase {
 
     @SmallTest
     public void testStartRecordContinueSendsIntent() {
-        _oruxMaps.startRecordNewTrack();
+        _oruxMaps.startRecordContinue();
 
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
@@ -61,7 +61,7 @@ public class OruxMapsTest extends AndroidTestCase {
 
     @SmallTest
     public void testStopRecordSendsIntent() {
-        _oruxMaps.startRecordNewTrack();
+        _oruxMaps.stopRecord();
 
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
@@ -71,7 +71,7 @@ public class OruxMapsTest extends AndroidTestCase {
 
     @SmallTest
     public void testNewWaypointSendsIntent() {
-        _oruxMaps.startRecordNewTrack();
+        _oruxMaps.newWaypoint();
 
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 

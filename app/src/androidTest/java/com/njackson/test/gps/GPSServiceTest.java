@@ -319,6 +319,11 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
         startService();
 
-        verify(_mockEditor,timeout(1000).times(1)).putLong("GPS_LAST_START",1000);
+        verify(_mockEditor,timeout(1000).times(1)).putLong("GPS_LAST_START", 1000);
+    }
+
+    @SmallTest
+    public void testsSendStateChangeToPebbleOnStart() throws Exception {
+        //throw new Exception("State change not implemented");
     }
 }
