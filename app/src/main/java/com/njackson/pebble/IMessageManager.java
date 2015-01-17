@@ -1,4 +1,4 @@
-package com.njackson.virtualpebble;
+package com.njackson.pebble;
 
 import android.content.Context;
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -13,6 +13,8 @@ public interface IMessageManager extends Runnable {
 
     public void showWatchFace();
     public void hideWatchFace();
+
+    public void sendAckToPebble(int transactionId);
 
     public void showSimpleNotificationOnWatch(String title, String text);
 }

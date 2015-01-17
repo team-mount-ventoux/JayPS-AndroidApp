@@ -30,16 +30,12 @@ public class ServiceNmeaListener implements GpsStatus.NmeaListener {
     @Override
     public void onNmeaReceived(long timestamp, String nmea) {
         if (nmea.startsWith("$GPGGA")) {
-            // http://aprs.gids.nl/nmea/#gga
-            //Log.d(TAG, "geoid: " + nmea);
 
             String[] strValues = nmea.split(",");
 
             try {
                 // Height of geoid above WGS84 ellipsoid
                 double geoid_height = Double.parseDouble(strValues[11]);
-
-                Log.d(TAG, "nmea geoid_height: " + geoid_height);
 
                 _advancedLocation.setGeoidHeight(geoid_height);
                 SharedPreferences.Editor editor = _sharedPreferences.edit();

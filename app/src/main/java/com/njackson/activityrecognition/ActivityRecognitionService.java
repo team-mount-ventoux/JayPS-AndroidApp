@@ -17,8 +17,8 @@ import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
-import com.njackson.utils.timer.ITimer;
-import com.njackson.utils.timer.ITimerHandler;
+import com.njackson.utils.time.ITimer;
+import com.njackson.utils.time.ITimerHandler;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -65,6 +65,8 @@ public class ActivityRecognitionService  extends Service implements
     public void onCreate() {
         super.onCreate();
 
+        Log.d(TAG,"Started Activity Recognition Service");
+
         ((PebbleBikeApplication)getApplication()).inject(this);
 
         _bus.register(this);
@@ -97,7 +99,7 @@ public class ActivityRecognitionService  extends Service implements
 
     @Override
     public void onDestroy (){
-        Log.d(TAG,"Service Destroy");
+        Log.d(TAG,"Destroy Activity Recognition Service");
 
         _bus.unregister(this);
         _recognitionClient.unregisterConnectionCallbacks(this);

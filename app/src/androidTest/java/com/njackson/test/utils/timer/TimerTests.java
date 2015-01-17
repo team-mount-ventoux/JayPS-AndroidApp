@@ -3,8 +3,8 @@ package com.njackson.test.utils.timer;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.njackson.utils.timer.ITimerHandler;
-import com.njackson.utils.timer.Timer;
+import com.njackson.utils.time.ITimerHandler;
+import com.njackson.utils.time.Timer;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;

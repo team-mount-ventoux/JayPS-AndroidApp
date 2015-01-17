@@ -9,7 +9,7 @@ import android.test.ActivityUnitTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.R;
-import com.njackson.application.SettingsActivity;
+import com.njackson.activities.SettingsActivity;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.watchface.IInstallWatchFace;

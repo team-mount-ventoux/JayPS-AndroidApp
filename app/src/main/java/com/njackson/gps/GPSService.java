@@ -20,6 +20,7 @@ import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.oruxmaps.OruxMaps;
+import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -43,11 +44,9 @@ public class GPSService extends Service {
     @Inject LocationManager _locationMgr;
     @Inject SensorManager _sensorManager;
     @Inject IGPSServiceStarterForeground _serviceStarter;
-
     @Inject SharedPreferences _sharedPreferences;
     @Inject Bus _bus;
-
-    //Location firstLocation = null;
+    @Inject ITime _time;
 
     private AdvancedLocation _advancedLocation;
     private double xpos = 0;
@@ -72,8 +71,9 @@ public class GPSService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        handleCommand(intent);
+        Log.d(TAG, "Started GPS Service");
 
+        handleCommand(intent);
         _serviceStarter.startServiceForeground(this, "Pebble Bike", "GPS started");
 
         // ensures that if the service is recycled then it is restarted with the same refresh interval
@@ -84,23 +84,21 @@ public class GPSService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
         ((PebbleBikeApplication)getApplication()).inject(this);
         _bus.register(this);
     }
 
     @Override
     public void onDestroy (){
-        Log.d(TAG, "Stopped GPS Service");
+        Log.d(TAG, "Destroy GPS Service");
         saveGPSStats();
 
-        if (!_sharedPreferences.getString("ORUXMAPS_AUTO", "disable").equals("disable")) {
-            OruxMaps.stopRecord(getApplicationContext());
-        }
         stopLocationUpdates();
 
-        _bus.post(new GPSStatus(GPSStatus.State.STOPPED));
-
         _serviceStarter.stopServiceForeground(this);
+
+        _bus.post(new GPSStatus(GPSStatus.State.STOPPED));
 
         _bus.unregister(this);
         super.onDestroy();
@@ -112,10 +110,8 @@ public class GPSService extends Service {
     }
 
     private void handleCommand(Intent intent) {
-        Log.d(TAG, "Started GPS Service");
-
         _advancedLocation = new AdvancedLocation(getApplicationContext());
-        _advancedLocation.debugLevel = 2; //debug ? 2 : 0;
+        _advancedLocation.debugLevel = 0; //debug ? 2 : 0;
         _advancedLocation.debugTagPrefix = "PB-";
 
         // the intent has an extra which relates to the refresh interval
@@ -128,44 +124,18 @@ public class GPSService extends Service {
             requestLocationUpdates(_refresh_interval);
             registerNmeaListener();
             registerSensorListener();
+            setGPSStartTime();
 
             _bus.post(new GPSStatus(GPSStatus.State.STARTED));
-
-            String oruxmaps_auto = _sharedPreferences.getString("ORUXMAPS_AUTO", "disable");
-            if (oruxmaps_auto.equals("continue")) {
-                OruxMaps.startRecordContinue(getApplicationContext());
-            } else if (oruxmaps_auto.equals("new_segment")) {
-                OruxMaps.startRecordNewSegment(getApplicationContext());
-            } else if (oruxmaps_auto.equals("new_track")) {
-                OruxMaps.startRecordNewTrack(getApplicationContext());
-            } else if (oruxmaps_auto.equals("auto")) {
-                long last_start = _sharedPreferences.getLong("GPS_LAST_START", 0);
-                //Log.d(TAG, "GPS_LAST_START:" + last_start + " ts:" + System.currentTimeMillis());
-                if (System.currentTimeMillis() - last_start > 12 * 3600 * 1000) { // 12 hours
-                    OruxMaps.startRecordNewTrack(getApplicationContext());
-                } else {
-                    OruxMaps.startRecordNewSegment(getApplicationContext());
-                }
-            }
-
-            SharedPreferences.Editor editor = _sharedPreferences.edit();
-            editor.putLong("GPS_LAST_START", System.currentTimeMillis());
-            editor.commit();
-
-            // broadcast the saved values directly
-            NewLocation event = new NewLocation();
-            try {
-                event.setUnits(Integer.valueOf(_sharedPreferences.getString("UNITS_OF_MEASURE", "0")));
-            } catch (NumberFormatException e) {
-                event.setUnits(0);
-            }
-            event.setDistance(_advancedLocation.getDistance());
-            event.setAvgSpeed(_advancedLocation.getAverageSpeed());
-            event.setAscent(_advancedLocation.getAscent()); // m
-            _bus.post(event);
         } else {
             _bus.post(new GPSStatus(GPSStatus.State.DISABLED)); // GPS DISABLED
         }
+    }
+
+    private void setGPSStartTime() {
+        SharedPreferences.Editor editor = _sharedPreferences.edit();
+        editor.putLong("GPS_LAST_START", _time.getCurrentTimeMilliseconds());
+        editor.commit();
     }
 
     private boolean checkGPSEnabled(LocationManager locationMgr) {
@@ -221,7 +191,7 @@ public class GPSService extends Service {
         // GPS is running
         // reninit all properties
         _advancedLocation = new AdvancedLocation(getApplicationContext());
-        _advancedLocation.debugLevel = 2; //debug ? 2 : 0;
+        _advancedLocation.debugLevel = 0; //debug ? 2 : 0;
         _advancedLocation.debugTagPrefix = "PB-";
 
         loadGPSStats();
@@ -247,7 +217,6 @@ public class GPSService extends Service {
         _sensorListener = new GPSSensorEventListener(_advancedLocation,_sensorManager,new Callable() {
             @Override
             public Object call() throws Exception {
-                //broadcastLocation();
                 return null;
             }
         });
@@ -280,7 +249,6 @@ public class GPSService extends Service {
 
             xpos = Math.floor(xpos/10);
             ypos = Math.floor(ypos/10);
-            Log.d(TAG,  "xpos="+xpos+"-ypos="+ypos);
             broadcastLocation();
         }
 
@@ -325,7 +293,6 @@ public class GPSService extends Service {
         event.setBearing(_advancedLocation.getBearing());
         event.setHeartRate(255); // 255: no Heart Rate available
 
-        Log.d(TAG,"post New Location time=" + event.getTime());
         _bus.post(event);
     }
 

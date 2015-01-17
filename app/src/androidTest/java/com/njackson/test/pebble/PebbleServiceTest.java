@@ -1,4 +1,4 @@
-package com.njackson.test.virtualpebble;
+package com.njackson.test.pebble;
 
 import android.content.Intent;
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -8,9 +8,9 @@ import com.njackson.events.PebbleService.NewMessage;
 import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.test.application.TestApplication;
-import com.njackson.utils.LocationEventConverter;
-import com.njackson.virtualpebble.IMessageManager;
-import com.njackson.virtualpebble.PebbleService;
+import com.njackson.utils.adapters.LocationEventToPebbleData;
+import com.njackson.pebble.IMessageManager;
+import com.njackson.pebble.PebbleService;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -145,8 +145,8 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
         PebbleDictionary dic = captor.getValue();
 
         byte[] data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
-        assertEquals("Speed should be -9",-9,data[LocationEventConverter.BYTE_SPEED1]);
-        assertEquals("Speed should be 3",3,data[LocationEventConverter.BYTE_SPEED2]);
+        assertEquals("Speed should be -9",-9,data[LocationEventToPebbleData.BYTE_SPEED1]);
+        assertEquals("Speed should be 3",3,data[LocationEventToPebbleData.BYTE_SPEED2]);
     }
 
     @SmallTest

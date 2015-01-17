@@ -1,4 +1,4 @@
-package com.njackson.utils.timer;
+package com.njackson.utils.time;
 
 import java.util.TimerTask;
 
