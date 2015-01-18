@@ -141,12 +141,7 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
 
         _bus.post(event);
 
-        verify(_mockMessageManager, timeout(2000).times(1)).offer(captor.capture());
-        PebbleDictionary dic = captor.getValue();
-
-        byte[] data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
-        assertEquals("Speed should be -9",-9,data[NewLocationToPebbleDictionary.BYTE_SPEED1]);
-        assertEquals("Speed should be 3",3,data[NewLocationToPebbleDictionary.BYTE_SPEED2]);
+        verify(_mockMessageManager, timeout(2000).times(1)).offer(any(PebbleDictionary.class));
     }
 
     @SmallTest
