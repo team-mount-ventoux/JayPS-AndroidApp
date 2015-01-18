@@ -1,8 +1,10 @@
 package com.njackson.utils.services;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.fit.GoogleFitService;
@@ -51,6 +53,17 @@ public class ServiceStarter implements IServiceStarter {
         stopLiveService();
         stopGoogleFitService();
         stopOruxService();
+    }
+
+    @Override
+    public boolean serviceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) _context.getSystemService(_context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected void startGPSService() {

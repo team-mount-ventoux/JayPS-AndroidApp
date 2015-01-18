@@ -2,17 +2,23 @@ package com.njackson.test.fragments;
 
 import android.content.SharedPreferences;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.test.UiThreadTest;
 import android.test.suitebuilder.annotation.MediumTest;
+import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.Button;
 
 import com.njackson.R;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
+import com.njackson.events.status.GPSStatus;
 import com.njackson.fragments.StartButtonFragment;
+import com.njackson.gps.GPSService;
 import com.njackson.test.FragmentInstrumentTestCase2;
 import com.njackson.test.application.TestApplication;
+import com.njackson.utils.services.IServiceStarter;
+import com.njackson.utils.services.ServiceStarter;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -24,6 +30,7 @@ import dagger.ObjectGraph;
 import dagger.Provides;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by server on 27/04/2014.
@@ -31,11 +38,14 @@ import static org.mockito.Mockito.mock;
 public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
 
     @Inject Bus _bus;
+    @Inject IServiceStarter _serviceStarter;
 
     private Button _button;
 
     private StartButtonTouchedEvent _startButtonEvent;
     private StopButtonTouchedEvent _stopButtonEvent;
+
+    Thread _instrumentationThread;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -55,6 +65,18 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
         SharedPreferences provideSharedPreferences() {
             return mock(SharedPreferences.class);
         }
+
+        @Provides @Singleton
+        IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
+    }
+
+    @Subscribe
+    public void onStartButtonTouched(StartButtonTouchedEvent event) {
+        _startButtonEvent = event;
+    }
+    @Subscribe
+    public void onStopButtonTouched(StopButtonTouchedEvent event) {
+        _stopButtonEvent = event;
     }
 
     @Override
@@ -70,58 +92,134 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
         _activity = getActivity();
         _bus.register(this);
 
+        _instrumentationThread = Thread.currentThread();
+    }
+
+    @SmallTest
+    public void test_FragmentSetupCorrectly() throws InterruptedException {
         startFragment(new StartButtonFragment());
 
         _button = (Button) _activity.findViewById(R.id.start_button);
         assertNotNull(_button);
-        assertEquals("Start button text should be start",_activity.getString(R.string.startbuttonfragment_start),_button.getText());
     }
 
-    @Subscribe
-    public void onStartButtonTouched(StartButtonTouchedEvent event) {
-        _startButtonEvent = event;
-    }
-    @Subscribe
-    public void onStopButtonTouched(StopButtonTouchedEvent event) {
-        _stopButtonEvent = event;
-    }
-
-    @MediumTest
-    @UiThreadTest
+    @SmallTest
     public void test_StartButtonFiresStartEventWhenTouchedAndTextIsSTART() throws InterruptedException {
-        Button button = (Button) _activity.findViewById(R.id.start_button);
-        button.performClick();
+        startFragment(new StartButtonFragment());
+
+        _button = (Button) _activity.findViewById(R.id.start_button);
+
+        _activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                _button.performClick();
+            }
+        });
 
         Thread.sleep(100);
         assertNotNull("Start button event should not be null",_startButtonEvent);
     }
 
-    @MediumTest
-    @UiThreadTest
+    @SmallTest
     public void test_StartButtonFiresStartEventWhenTouchedAndTextIsSTOP() throws InterruptedException {
-        Button button = (Button) _activity.findViewById(R.id.start_button);
-        _button.setText(_activity.getString(R.string.startbuttonfragment_stop));
-        button.performClick();
+        startFragment(new StartButtonFragment());
+
+        _button = (Button) _activity.findViewById(R.id.start_button);
+        _activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                _button.setText(_activity.getString(R.string.startbuttonfragment_stop));
+                _button.performClick();
+            }
+        });
 
         Thread.sleep(100);
         assertNotNull("Start button event should not be null",_stopButtonEvent);
     }
 
-    @MediumTest
-    @UiThreadTest
+    @SmallTest
     public void test_StartButtonChangesTextToStopWhenTouched() throws InterruptedException {
-        _button.setText(_activity.getString(R.string.startbuttonfragment_start));
-        _button.performClick();
+        startFragment(new StartButtonFragment());
+        _button = (Button) _activity.findViewById(R.id.start_button);
+        _activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                _button.setText(_activity.getString(R.string.startbuttonfragment_start));
+                _button.performClick();
+            }
+        });
 
         Thread.sleep(100);
         assertEquals("Start button text should be stop",_activity.getString(R.string.startbuttonfragment_stop),_button.getText());
     }
 
-    @MediumTest
-    @UiThreadTest
+    @SmallTest
     public void test_StartButtonChangesTextToStartWhenTouched() throws InterruptedException {
-        _button.setText(R.string.startbuttonfragment_stop);
-        _button.performClick();
+        startFragment(new StartButtonFragment());
+        _button = (Button) _activity.findViewById(R.id.start_button);
+        _activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                _button.setText(R.string.startbuttonfragment_stop);
+                _button.performClick();
+            }
+        });
+
+        Thread.sleep(100);
+        assertEquals("Start button text should be start",_activity.getString(R.string.startbuttonfragment_start),_button.getText());
+    }
+
+    @SmallTest
+    public void test_GPSStartEventChangesTextToStartWhenFired() throws InterruptedException {
+        startFragment(new StartButtonFragment());
+        _button = (Button) _activity.findViewById(R.id.start_button);
+        _activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                _button.setText(R.string.startbuttonfragment_stop);
+            }
+        });
+
+        _bus.post(new GPSStatus(GPSStatus.State.STOPPED));
+
+        Thread.sleep(100);
+        assertEquals("Start button text should be start",_activity.getString(R.string.startbuttonfragment_start),_button.getText());
+    }
+
+    @SmallTest
+    public void test_GPSStopEventChangesTextToStopWhenFired() throws InterruptedException {
+        startFragment(new StartButtonFragment());
+        _button = (Button) _activity.findViewById(R.id.start_button);
+        _activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                _button.setText(R.string.startbuttonfragment_start);
+            }
+        });
+        
+        _bus.post(new GPSStatus(GPSStatus.State.STARTED));
+
+        Thread.sleep(100);
+        assertEquals("Start button text should be stop",_activity.getString(R.string.startbuttonfragment_stop),_button.getText());
+    }
+
+    @SmallTest
+    public void test_ButtonStateStartedWhenGPSServiceRunning() throws InterruptedException {
+        when(_serviceStarter.serviceRunning(GPSService.class)).thenReturn(true);
+
+        startFragment(new StartButtonFragment());
+        _button = (Button) _activity.findViewById(R.id.start_button);
+
+        Thread.sleep(100);
+        assertEquals("Start button text should be stop",_activity.getString(R.string.startbuttonfragment_stop),_button.getText());
+    }
+
+    @SmallTest
+    public void test_ButtonStateStoppedWhenGPSServiceStopped() throws InterruptedException {
+        when(_serviceStarter.serviceRunning(GPSService.class)).thenReturn(false);
+
+        startFragment(new StartButtonFragment());
+        _button = (Button) _activity.findViewById(R.id.start_button);
 
         Thread.sleep(100);
         assertEquals("Start button text should be start",_activity.getString(R.string.startbuttonfragment_start),_button.getText());

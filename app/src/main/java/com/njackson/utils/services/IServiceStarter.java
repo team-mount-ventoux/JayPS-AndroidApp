@@ -8,4 +8,5 @@ public interface IServiceStarter {
     public void stopEssentialServices();
     public void startLocationServices();
     public void stopLocationServices();
+    public boolean serviceRunning(Class<?> serviceClass);
 }

@@ -1,5 +1,7 @@
 package com.njackson.test.utils.services;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,12 +12,14 @@ import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.fit.GoogleFitService;
 import com.njackson.gps.GPSService;
 import com.njackson.live.LiveService;
+import com.njackson.oruxmaps.OruxMaps;
 import com.njackson.oruxmaps.OruxMapsService;
 import com.njackson.utils.services.ServiceStarter;
 import com.njackson.pebble.PebbleService;
 
 import org.mockito.ArgumentCaptor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
@@ -193,6 +197,34 @@ public class ServiceStarterTest extends AndroidTestCase {
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,GoogleFitService.class));
+    }
+
+    @SmallTest
+    public void testServiceRunningReturnsTrueWhenServiceStarted() throws Exception {
+        ActivityManager manager = mock(ActivityManager.class);
+        ArrayList<ActivityManager.RunningServiceInfo> runningServices = new ArrayList<ActivityManager.RunningServiceInfo>();
+        ActivityManager.RunningServiceInfo info = new ActivityManager.RunningServiceInfo();
+        info.service = new ComponentName(GPSService.class.getPackage().getName(),GPSService.class.getName());
+        runningServices.add(info);
+
+        when(manager.getRunningServices(Integer.MAX_VALUE)).thenReturn(runningServices);
+        when(_mockContext.getSystemService(getContext().ACTIVITY_SERVICE)).thenReturn(manager);
+
+        assertEquals(true,_serviceStarter.serviceRunning(GPSService.class));
+    }
+
+    @SmallTest
+    public void testServiceRunningReturnsFalseWhenServiceNotRunning() throws Exception {
+        ActivityManager manager = mock(ActivityManager.class);
+        ArrayList<ActivityManager.RunningServiceInfo> runningServices = new ArrayList<ActivityManager.RunningServiceInfo>();
+        ActivityManager.RunningServiceInfo info = new ActivityManager.RunningServiceInfo();
+        info.service = new ComponentName(GPSService.class.getPackage().getName(),GPSService.class.getName());
+        runningServices.add(info);
+
+        when(manager.getRunningServices(Integer.MAX_VALUE)).thenReturn(runningServices);
+        when(_mockContext.getSystemService(getContext().ACTIVITY_SERVICE)).thenReturn(manager);
+
+        assertEquals(false,_serviceStarter.serviceRunning(OruxMaps.class));
     }
 
     private Intent getIntentFromCaptor(List<Intent> intents, Class<?> serviceClass) {
