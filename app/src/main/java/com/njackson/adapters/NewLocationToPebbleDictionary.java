@@ -12,7 +12,7 @@ import com.njackson.events.GPSService.NewLocation;
  * Location however this dependency extends into the native code running on the
  * watch face that this needs to be changed at the same time
  */
-public class NewLocationToPebbleData extends PebbleDictionary{
+public class NewLocationToPebbleDictionary extends PebbleDictionary{
 
     public static final short POS_UNITS=0;
     public static final short POS_SERVICE_RUNNING=1; //Refactor Out
@@ -42,7 +42,7 @@ public class NewLocationToPebbleData extends PebbleDictionary{
     public static final short BYTE_BEARING = 19;
     public static final short BYTE_HEARTRATE = 20;
 
-    public static PebbleDictionary convert(NewLocation event, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int heartRate) {
+    public NewLocationToPebbleDictionary(NewLocation event, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int heartRate) {
         // todo(jay) remove param heartRate
 
         PebbleDictionary dic = new PebbleDictionary();
@@ -112,9 +112,6 @@ public class NewLocationToPebbleData extends PebbleDictionary{
         data[BYTE_BEARING] = (byte) (((int)  (event.getBearing() / 360 * 256)) % 256);
         data[BYTE_HEARTRATE] = (byte) (heartRate % 256);
 
-
-        dic.addBytes(Constants.PEBBLE_LOCTATION_DATA,data);
-        return dic;
-
+        this.addBytes(Constants.PEBBLE_LOCTATION_DATA, data);
     }
 }

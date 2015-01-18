@@ -1,18 +1,24 @@
 package com.njackson.test.adapters;
 
+import android.test.AndroidTestCase;
+
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
+import com.njackson.adapters.NewLocationToPebbleDictionary;
 import com.njackson.events.GPSService.NewLocation;
-import com.njackson.adapters.NewLocationToPebbleData;
 
 import junit.framework.TestCase;
 
 /**
  * Created by server on 25/03/2014.
  */
-public class NewLocationToPebbleDataTest extends TestCase{
+public class NewLocationToPebbleDataTest extends AndroidTestCase{
 
-    public void testConvertsNewLocationEventToDictionary() {
+    byte[] data;
+
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
 
         NewLocation event = new NewLocation();
         event.setUnits(1);
@@ -31,92 +37,110 @@ public class NewLocationToPebbleDataTest extends TestCase{
         event.setSlope(13.3f);
         event.setSpeed(14.4f);
 
-        PebbleDictionary dic = NewLocationToPebbleData.convert(event, true, true, true, 5000, 123);
-        byte[] data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
+        PebbleDictionary dic = new NewLocationToPebbleDictionary(event, true, true, true, 5000, 123);
+        data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
 
         assertNotNull("Data should not be null",data);
+    }
+
+    public void testConvertsUnitsCorrectly() {
         assertEquals("Expected units bit to be true",true,bitIsSet(data[0],0));
+    }
+
+    public void testServiceRunningCorrectly() {
         assertEquals("Expected service running bit to be true",true,bitIsSet(data[0], 1));
+    }
+
+    public void testDebugCorrectly() {
         assertEquals("Expected debug bit to be true",true,bitIsSet(data[0],2));
+    }
+
+    public void testLiveTracking() {
         assertEquals("Expected live tracking bit to be true",true,bitIsSet(data[0],3));
+    }
+
+    public void testRefresh() {
         assertEquals("Expected refresh of 3",3,data[0] >> 4);
-
-        assertEquals("Accuracy: Expected value 7",7,data[NewLocationToPebbleData.BYTE_ACCURACY]);
-        assertEquals("Distance 1: Expected value 1",1,data[NewLocationToPebbleData.BYTE_DISTANCE1]);
-        assertEquals("Distance 2: Expected value 0",0,data[NewLocationToPebbleData.BYTE_DISTANCE2]);
-        assertEquals("Time 1: Expected value -89",-89,data[NewLocationToPebbleData.BYTE_TIME1]);
-        assertEquals("Time 2: Expected value 1",1,data[NewLocationToPebbleData.BYTE_TIME2]);
-        assertEquals("Altitude 1: Expected value -68",-68,data[NewLocationToPebbleData.BYTE_ALTITUDE1]);
-        assertEquals("Altitude 2: Expected value 2",2,data[NewLocationToPebbleData.BYTE_ALTITUDE2]);
-        assertEquals("Ascent 1: Expected value 38",38,data[NewLocationToPebbleData.BYTE_ASCENT1]);
-        assertEquals("Ascent 2: Expected value 0",0,data[NewLocationToPebbleData.BYTE_ASCENT2]);
-        assertEquals("Ascent Rate 1: Expected value 9",9,data[NewLocationToPebbleData.BYTE_ASCENTRATE1]);
-        assertEquals("Ascent Rate 2: Expected value 0",0,data[NewLocationToPebbleData.BYTE_ASCENTRATE2]);
-        assertEquals("Slope: Expected value 13",13,data[NewLocationToPebbleData.BYTE_SLOPE]);
-        assertEquals("Xpos 1: Expected value 3",3,data[NewLocationToPebbleData.BYTE_XPOS1]);
-        assertEquals("Xpos 2: Expected value 0",0,data[NewLocationToPebbleData.BYTE_XPOS2]);
-        assertEquals("Ypos 1: Expected value 2",2,data[NewLocationToPebbleData.BYTE_YPOS1]);
-        assertEquals("Ypos 2: Expected value 0",0,data[NewLocationToPebbleData.BYTE_YPOS2]);
-        assertEquals("Speed 1: Expected value 6",6,data[NewLocationToPebbleData.BYTE_SPEED1]);
-        assertEquals("Speed 2: Expected value 2",2,data[NewLocationToPebbleData.BYTE_SPEED2]);
-        assertEquals("Bearing: Expected value -121",-121,data[NewLocationToPebbleData.BYTE_BEARING]);
-        assertEquals("Heartrate: Expected value 123",123,data[NewLocationToPebbleData.BYTE_HEARTRATE]);
-
     }
 
-    public void testDistanceConversionMetric() {
-        NewLocation event = new NewLocation();
-        event.setUnits(1);
-        event.setDistance(124.4f);
-        PebbleDictionary dic = NewLocationToPebbleData.convert(event, true, true, true, 5000, 123);
-        byte[] data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
-
-        assertEquals("Distance 1: Expected value 12",12,data[NewLocationToPebbleData.BYTE_DISTANCE1]);
-        assertEquals("Distance 2: Expected value 0",0,data[NewLocationToPebbleData.BYTE_DISTANCE2]);
+    public void testAccuracy() {
+        assertEquals("Accuracy: Expected value 7",7,data[NewLocationToPebbleDictionary.BYTE_ACCURACY]);
     }
 
-    public void testDistanceConversionImperial() {
-        NewLocation event = new NewLocation();
-        event.setUnits(0);
-        event.setDistance(124.4f);
-        PebbleDictionary dic = NewLocationToPebbleData.convert(event, true, true, true, 5000, 123);
-        byte[] data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
-
-        assertEquals("Distance 1: Expected value 7",7,data[NewLocationToPebbleData.BYTE_DISTANCE1]);
-        assertEquals("Distance 2: Expected value 0",0,data[NewLocationToPebbleData.BYTE_DISTANCE2]);
+    public void testDistance1() {
+        assertEquals("Distance 1: Expected value 1",-14,data[NewLocationToPebbleDictionary.BYTE_DISTANCE1]);
     }
 
-    public void testSpeedConversionMetric() {
-        NewLocation event = new NewLocation();
-        event.setUnits(1);
-        event.setSpeed(14.4f);
-        PebbleDictionary dic = NewLocationToPebbleData.convert(event, true, true, true, 5000, 123);
-        byte[] data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
-
-        assertEquals("Speed 1: Expected value 6",6,data[NewLocationToPebbleData.BYTE_SPEED1]);
-        assertEquals("Speed 2: Expected value 2",2,data[NewLocationToPebbleData.BYTE_SPEED2]);
+    public void testDistance2() {
+        assertEquals("Distance 2: Expected value 3",3,data[NewLocationToPebbleDictionary.BYTE_DISTANCE2]);
     }
 
-    public void testSpeedConversionImperial() {
-        NewLocation event = new NewLocation();
-        event.setUnits(0);
-        event.setSpeed(14.4f);
-        PebbleDictionary dic = NewLocationToPebbleData.convert(event, true, true, true, 5000, 123);
-        byte[] data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
-
-        assertEquals("Speed 1: Expected value 66",66,data[NewLocationToPebbleData.BYTE_SPEED1]);
-        assertEquals("Speed 2: Expected value 0",1,data[NewLocationToPebbleData.BYTE_SPEED2]);
+    public void testTime1() {
+        assertEquals("Time 1: Expected value -89",-89,data[NewLocationToPebbleDictionary.BYTE_TIME1]);
     }
 
-    public void testAltitudeConversionMetric() {
-        NewLocation event = new NewLocation();
-        event.setUnits(1);
-        event.setAltitude(4000);
-        PebbleDictionary dic = NewLocationToPebbleData.convert(event, true, true, true, 5000, 123);
-        byte[] data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
+    public void testTime2() {
+        assertEquals("Time 2: Expected value 1",1,data[NewLocationToPebbleDictionary.BYTE_TIME2]);
+    }
 
-        assertEquals("Altitude 1: Expected value -96",-96,data[NewLocationToPebbleData.BYTE_ALTITUDE1]);
-        assertEquals("Altitude 2: Expected value 15",15,data[NewLocationToPebbleData.BYTE_ALTITUDE2]);
+    public void testAltitude1() {
+        assertEquals("Altitude 1: Expected value -68",-68,data[NewLocationToPebbleDictionary.BYTE_ALTITUDE1]);
+    }
+
+    public void testAltitude2() {
+        assertEquals("Altitude 2: Expected value 2",2,data[NewLocationToPebbleDictionary.BYTE_ALTITUDE2]);
+    }
+
+    public void testAscent1() {
+        assertEquals("Ascent 1: Expected value 38",38,data[NewLocationToPebbleDictionary.BYTE_ASCENT1]);
+    }
+
+    public void testAscent2() {
+        assertEquals("Ascent 2: Expected value 0",0,data[NewLocationToPebbleDictionary.BYTE_ASCENT2]);
+    }
+
+    public void testAscentRate1() {
+        assertEquals("Ascent Rate 1: Expected value 9",9,data[NewLocationToPebbleDictionary.BYTE_ASCENTRATE1]);
+    }
+
+    public void testAscentRate2() {
+        assertEquals("Ascent Rate 2: Expected value 0",0,data[NewLocationToPebbleDictionary.BYTE_ASCENTRATE2]);
+    }
+
+    public void testSlope() {
+        assertEquals("Slope: Expected value 13",13,data[NewLocationToPebbleDictionary.BYTE_SLOPE]);
+    }
+
+    public void testXpos1() {
+        assertEquals("Xpos 1: Expected value 3",3,data[NewLocationToPebbleDictionary.BYTE_XPOS1]);
+    }
+
+    public void testXpos2() {
+        assertEquals("Xpos 2: Expected value 0",0,data[NewLocationToPebbleDictionary.BYTE_XPOS2]);
+    }
+
+    public void testYPos1() {
+        assertEquals("Ypos 1: Expected value 2",2,data[NewLocationToPebbleDictionary.BYTE_YPOS1]);
+    }
+
+    public void testYPos2() {
+        assertEquals("Ypos 2: Expected value 0",0,data[NewLocationToPebbleDictionary.BYTE_YPOS2]);
+    }
+
+    public void testSpeed1() {
+        assertEquals("Speed 1: Expected value -112",-112,data[NewLocationToPebbleDictionary.BYTE_SPEED1]);
+    }
+
+    public void testSpeed2() {
+        assertEquals("Speed 2: Expected value 0",0,data[NewLocationToPebbleDictionary.BYTE_SPEED2]);
+    }
+
+    public void testBearing() {
+        assertEquals("Bearing: Expected value -121",-121,data[NewLocationToPebbleDictionary.BYTE_BEARING]);
+    }
+
+    public void testHeartrate() {
+        assertEquals("Heartrate: Expected value 123",123,data[NewLocationToPebbleDictionary.BYTE_HEARTRATE]);
     }
 
     private boolean bitIsSet(byte b, int position)
@@ -125,17 +149,6 @@ public class NewLocationToPebbleDataTest extends TestCase{
         event.setUnits(1);
         int bit = (b >> position & 1);
         return bit == 1;
-    }
-
-    public void testAltitudeConversionImperial() {
-        NewLocation event = new NewLocation();
-        event.setUnits(0);
-        event.setAltitude(4000);
-        PebbleDictionary dic = NewLocationToPebbleData.convert(event, true, true, true, 5000, 123);
-        byte[] data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
-
-        assertEquals("Altitude 1: Expected value 67",67,data[NewLocationToPebbleData.BYTE_ALTITUDE1]);
-        assertEquals("Altitude 2: Expected value 51",51,data[NewLocationToPebbleData.BYTE_ALTITUDE2]);
     }
 
 }
