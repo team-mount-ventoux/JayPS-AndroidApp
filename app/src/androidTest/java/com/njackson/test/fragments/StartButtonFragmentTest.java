@@ -22,6 +22,9 @@ import com.njackson.utils.services.ServiceStarter;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -45,7 +48,8 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
     private StartButtonTouchedEvent _startButtonEvent;
     private StopButtonTouchedEvent _stopButtonEvent;
 
-    Thread _instrumentationThread;
+    private CountDownLatch _startLatch;
+    private CountDownLatch _stopLatch;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -73,10 +77,12 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
     @Subscribe
     public void onStartButtonTouched(StartButtonTouchedEvent event) {
         _startButtonEvent = event;
+        _startLatch.countDown();
     }
     @Subscribe
     public void onStopButtonTouched(StopButtonTouchedEvent event) {
         _stopButtonEvent = event;
+        _stopLatch.countDown();
     }
 
     @Override
@@ -92,7 +98,8 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
         _activity = getActivity();
         _bus.register(this);
 
-        _instrumentationThread = Thread.currentThread();
+        _startLatch = new CountDownLatch(1);
+        _stopLatch = new CountDownLatch(1);
     }
 
     @SmallTest
@@ -116,8 +123,8 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
             }
         });
 
-        Thread.sleep(100);
-        assertNotNull("Start button event should not be null",_startButtonEvent);
+        _startLatch.await(2000, TimeUnit.MILLISECONDS);
+        assertNotNull("Start button event should not be null", _startButtonEvent);
     }
 
     @SmallTest
@@ -133,7 +140,7 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
             }
         });
 
-        Thread.sleep(100);
+        _stopLatch.await(2000, TimeUnit.MILLISECONDS);
         assertNotNull("Start button event should not be null",_stopButtonEvent);
     }
 
@@ -196,7 +203,7 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
                 _button.setText(R.string.startbuttonfragment_start);
             }
         });
-        
+
         _bus.post(new GPSStatus(GPSStatus.State.STARTED));
 
         Thread.sleep(100);
