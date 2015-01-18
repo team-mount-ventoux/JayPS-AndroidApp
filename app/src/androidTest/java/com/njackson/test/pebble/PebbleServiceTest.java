@@ -8,7 +8,7 @@ import com.njackson.events.PebbleService.NewMessage;
 import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.test.application.TestApplication;
-import com.njackson.utils.adapters.LocationEventToPebbleData;
+import com.njackson.adapters.NewLocationToPebbleData;
 import com.njackson.pebble.IMessageManager;
 import com.njackson.pebble.PebbleService;
 
@@ -145,8 +145,8 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
         PebbleDictionary dic = captor.getValue();
 
         byte[] data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
-        assertEquals("Speed should be -9",-9,data[LocationEventToPebbleData.BYTE_SPEED1]);
-        assertEquals("Speed should be 3",3,data[LocationEventToPebbleData.BYTE_SPEED2]);
+        assertEquals("Speed should be -9",-9,data[NewLocationToPebbleData.BYTE_SPEED1]);
+        assertEquals("Speed should be 3",3,data[NewLocationToPebbleData.BYTE_SPEED2]);
     }
 
     @SmallTest

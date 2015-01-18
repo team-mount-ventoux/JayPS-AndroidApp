@@ -34,7 +34,7 @@ public class SpeedFragment extends BaseFragment {
         speedText.setText(converter.converFloatToString(event.getSpeed(),1));
 
         TextView avgSpeed = (TextView)getActivity().findViewById(R.id.avgspeed_text);
-        avgSpeed.setText(converter.converFloatToString(event.getAvgSpeed(),1));
+        avgSpeed.setText(converter.converFloatToString(event.getAverageSpeed(),1));
 
         TextView distance = (TextView)getActivity().findViewById(R.id.distance_text);
         distance.setText(converter.converFloatToString(event.getDistance(),1));

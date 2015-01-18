@@ -13,7 +13,7 @@ import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.events.LiveService.LiveMessage;
 import com.njackson.events.PebbleService.CurrentState;
-import com.njackson.utils.adapters.LocationEventToPebbleData;
+import com.njackson.adapters.NewLocationToPebbleData;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -34,7 +34,7 @@ public class PebbleService extends Service {
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
         if (newLocation.getTime() > 0) {
-            PebbleDictionary dictionary = LocationEventToPebbleData.convert(
+            PebbleDictionary dictionary = NewLocationToPebbleData.convert(
                     newLocation,
                     true, // TODO(nic)
                     _sharedPreferences.getBoolean("PREF_DEBUG", false),

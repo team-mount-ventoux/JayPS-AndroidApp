@@ -22,7 +22,7 @@ public class NewLocation {
     }
 
     private float _avgSpeed;
-    public float getAvgSpeed() {
+    public float getAverageSpeed() {
         return _avgSpeed;
     }
     public void setAvgSpeed(float _avgSpeed) {

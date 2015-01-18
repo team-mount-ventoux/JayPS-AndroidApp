@@ -1,4 +1,4 @@
-package com.njackson.utils.adapters;
+package com.njackson.adapters;
 
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
@@ -12,7 +12,7 @@ import com.njackson.events.GPSService.NewLocation;
  * Location however this dependency extends into the native code running on the
  * watch face that this needs to be changed at the same time
  */
-public class LocationEventToPebbleData {
+public class NewLocationToPebbleData extends PebbleDictionary{
 
     public static final short POS_UNITS=0;
     public static final short POS_SERVICE_RUNNING=1; //Refactor Out
@@ -42,10 +42,6 @@ public class LocationEventToPebbleData {
     public static final short BYTE_BEARING = 19;
     public static final short BYTE_HEARTRATE = 20;
 
-    private static float _speedConversion;
-    private static float _distanceConversion;
-    private static float _altitudeConversion;
-
     public static PebbleDictionary convert(NewLocation event, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int heartRate) {
         // todo(jay) remove param heartRate
 
@@ -53,8 +49,6 @@ public class LocationEventToPebbleData {
         byte[] data = new byte[21];
 
         data[BYTE_SETTINGS] = (byte) ((event.getUnits() % 2) * (1<<POS_UNITS)); // set the units
-        setUnits(event.getUnits()); // set the distance units to imperial or metric
-
 
         data[BYTE_SETTINGS] += (byte) ((serviceRunning ? 1: 0) * (1<<POS_SERVICE_RUNNING));
         data[BYTE_SETTINGS] += (byte) ((debug ? 1: 0) * (1<<POS_DEBUG));
@@ -76,23 +70,23 @@ public class LocationEventToPebbleData {
 
         data[BYTE_ACCURACY] = (byte) Math.ceil(event.getAccuracy());
 
-        data[BYTE_DISTANCE1] = (byte) (((int) (Math.floor(100 * event.getDistance() * _distanceConversion) / 1)) % 256);
-        data[BYTE_DISTANCE2] = (byte) (((int) (Math.floor(100 * event.getDistance() * _distanceConversion) / 1)) / 256);
+        data[BYTE_DISTANCE1] = (byte) (((int) (Math.floor(100 * event.getDistance()) / 1)) % 256);
+        data[BYTE_DISTANCE2] = (byte) (((int) (Math.floor(100 * event.getDistance()) / 1)) / 256);
 
         data[BYTE_TIME1] = (byte) ((event.getElapsedTimeSeconds() / 1000) % 256);
         data[BYTE_TIME2] = (byte) ((event.getElapsedTimeSeconds() / 1000) / 256);
 
-        data[BYTE_ALTITUDE1] = (byte) ((event.getAltitude() * _altitudeConversion) % 256);
-        data[BYTE_ALTITUDE2] = (byte) ((event.getAltitude() * _altitudeConversion) / 256);
+        data[BYTE_ALTITUDE1] = (byte) ((event.getAltitude()) % 256);
+        data[BYTE_ALTITUDE2] = (byte) ((event.getAltitude()) / 256);
 
-        data[BYTE_ASCENT1] = (byte) (Math.abs(event.getAscent() * _altitudeConversion) % 256);
-        data[BYTE_ASCENT2] = (byte) ((Math.abs(event.getAscent() * _altitudeConversion) / 256) % 128);
+        data[BYTE_ASCENT1] = (byte) (Math.abs(event.getAscent()) % 256);
+        data[BYTE_ASCENT2] = (byte) ((Math.abs(event.getAscent()) / 256) % 128);
         if (event.getAltitude() < 0) {
             data[BYTE_ASCENT2] += 128;
         }
 
-        data[BYTE_ASCENTRATE1] = (byte) (Math.abs(event.getAscentRate() * _altitudeConversion) % 256);
-        data[BYTE_ASCENTRATE2] = (byte) ((Math.abs(event.getAscentRate() * _altitudeConversion) / 256) % 128);
+        data[BYTE_ASCENTRATE1] = (byte) (Math.abs(event.getAscentRate()) % 256);
+        data[BYTE_ASCENTRATE2] = (byte) ((Math.abs(event.getAscentRate()) / 256) % 128);
         if (event.getAscentRate() < 0) {
             data[BYTE_ASCENTRATE2 ] += 128;
         }
@@ -113,8 +107,8 @@ public class LocationEventToPebbleData {
             data[BYTE_YPOS2] += 128;
         }
 
-        data[BYTE_SPEED1] = (byte) (((int) (Math.floor(10 * event.getSpeed() * _speedConversion) / 1)) % 256);
-        data[BYTE_SPEED2] = (byte) (((int) (Math.floor(10 * event.getSpeed() * _speedConversion) / 1)) / 256);
+        data[BYTE_SPEED1] = (byte) (((int) (Math.floor(10 * event.getSpeed()) / 1)) % 256);
+        data[BYTE_SPEED2] = (byte) (((int) (Math.floor(10 * event.getSpeed()) / 1)) / 256);
         data[BYTE_BEARING] = (byte) (((int)  (event.getBearing() / 360 * 256)) % 256);
         data[BYTE_HEARTRATE] = (byte) (heartRate % 256);
 
@@ -122,17 +116,5 @@ public class LocationEventToPebbleData {
         dic.addBytes(Constants.PEBBLE_LOCTATION_DATA,data);
         return dic;
 
-    }
-
-    private static void setUnits(int units) {
-        if(units == Constants.IMPERIAL) {
-            _speedConversion = (float)Constants.MS_TO_MPH;
-            _distanceConversion = (float)Constants.M_TO_MILES;
-            _altitudeConversion = (float)Constants.M_TO_FEET;
-        } else {
-            _speedConversion = (float)Constants.MS_TO_KPH;
-            _distanceConversion = (float)Constants.M_TO_KM;
-            _altitudeConversion = (float)Constants.M_TO_M;
-        }
     }
 }
