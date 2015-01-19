@@ -91,10 +91,10 @@ public class ServiceStarterTest extends AndroidTestCase {
 
     @SmallTest
     public void testStartsPebbleBikeService() throws Exception {
-        _serviceStarter.startEssentialServices();
+        _serviceStarter.startPebbleServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(2)).startService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(1)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,PebbleService.class));
@@ -102,13 +102,35 @@ public class ServiceStarterTest extends AndroidTestCase {
 
     @SmallTest
     public void testStopsPebbleBikeService() throws Exception {
-        _serviceStarter.stopEssentialServices();
+        _serviceStarter.stopPebbleServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(2)).stopService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(1)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,PebbleService.class));
+    }
+
+    @SmallTest
+    public void testStartsActivityRecognitionService() throws Exception {
+        _serviceStarter.startActivityServices();
+        ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
+
+        verify(_mockContext,times(1)).startService(intentArgumentCaptor.capture());
+
+        List<Intent> intents = intentArgumentCaptor.getAllValues();
+        assertTrue(checkComponentInCaptor(intents,ActivityRecognitionService.class));
+    }
+
+    @SmallTest
+    public void testStopsActivityRecognitionService() throws Exception {
+        _serviceStarter.stopActivityServices();
+        ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
+
+        verify(_mockContext,times(1)).stopService(intentArgumentCaptor.capture());
+
+        List<Intent> intents = intentArgumentCaptor.getAllValues();
+        assertTrue(checkComponentInCaptor(intents,ActivityRecognitionService.class));
     }
 
     @SmallTest
@@ -157,10 +179,10 @@ public class ServiceStarterTest extends AndroidTestCase {
 
     @SmallTest
     public void testStartsRecognitionService() throws Exception {
-        _serviceStarter.startEssentialServices();
+        _serviceStarter.startActivityServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(2)).startService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(1)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,ActivityRecognitionService.class));
@@ -168,10 +190,10 @@ public class ServiceStarterTest extends AndroidTestCase {
 
     @SmallTest
     public void testStopsRecognitionService() throws Exception {
-        _serviceStarter.stopEssentialServices();
+        _serviceStarter.stopActivityServices();
         ArgumentCaptor<Intent> intentArgumentCaptor = ArgumentCaptor.forClass(Intent.class);
 
-        verify(_mockContext,times(2)).stopService(intentArgumentCaptor.capture());
+        verify(_mockContext,times(1)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
         assertTrue(checkComponentInCaptor(intents,ActivityRecognitionService.class));

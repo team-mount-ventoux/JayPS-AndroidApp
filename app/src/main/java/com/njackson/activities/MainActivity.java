@@ -2,6 +2,7 @@ package com.njackson.activities;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -22,13 +23,14 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity  implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "PB-MainActivity";
     @Inject Bus _bus;
     @Inject IAnalytics _analytics;
     @Inject IServiceStarter _serviceStarter;
     @Inject IGooglePlayServices _playServices;
+    @Inject SharedPreferences _sharedPreferences;
     private boolean _authInProgress;
 
     @Subscribe
@@ -79,7 +81,13 @@ public class MainActivity extends FragmentActivity {
         ((PebbleBikeApplication) getApplication()).inject(this);
 
         _analytics.trackAppOpened(getIntent());
-        _serviceStarter.startEssentialServices();
+        _serviceStarter.startPebbleServices();
+
+        boolean activity_start = _sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
+        boolean fit_start = _sharedPreferences.getBoolean("GOOGLE_FIT",false);
+        if(fit_start || activity_start) {
+            _serviceStarter.startActivityServices();
+        }
 
         if (getIntent().getExtras() != null) {
             onNewIntent(getIntent());
@@ -90,6 +98,7 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
         _bus.register(this);
+        _sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -101,6 +110,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        _sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -116,5 +126,18 @@ public class MainActivity extends FragmentActivity {
             startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if(key.compareTo("ACTIVITY_RECOGNITION") == 0 || key.compareTo("GOOGLE_FIT") == 0) {
+            boolean activity_start = sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
+            boolean fit_start = sharedPreferences.getBoolean("GOOGLE_FIT",false);
+            if(activity_start || fit_start) {
+                _serviceStarter.startActivityServices();
+            } else {
+                _serviceStarter.stopActivityServices();
+            }
+        }
     }
 }

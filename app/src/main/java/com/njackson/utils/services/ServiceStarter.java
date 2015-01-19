@@ -26,17 +26,24 @@ public class ServiceStarter implements IServiceStarter {
         _sharedPreferences = preferences;
     }
 
-
     @Override
-    public void startEssentialServices() {
-        startActivityRecognitionService();
-        startPebbleService();
+    public void startPebbleServices() {
+        _context.startService(new Intent(_context, PebbleService.class));
     }
 
     @Override
-    public void stopEssentialServices() {
-        stopActivityRecognitionService();
-        stopPebbleService();
+    public void stopPebbleServices() {
+        _context.stopService(new Intent(_context, PebbleService.class));
+    }
+
+    @Override
+    public void startActivityServices() {
+        _context.startService(new Intent(_context, ActivityRecognitionService.class));
+    }
+
+    @Override
+    public void stopActivityServices() {
+        _context.stopService(new Intent(_context, ActivityRecognitionService.class));
     }
 
     @Override
@@ -78,17 +85,9 @@ public class ServiceStarter implements IServiceStarter {
         _context.stopService(new Intent(_context, GPSService.class));
     }
 
-    public void startPebbleService() { _context.startService(new Intent(_context, PebbleService.class)); }
-
-    public void stopPebbleService() { _context.stopService(new Intent(_context, PebbleService.class)); }
-
     private void startLiveService() { _context.startService(new Intent(_context, LiveService.class)); }
 
     private void stopLiveService() { _context.stopService(new Intent(_context, LiveService.class)); }
-
-    private void startActivityRecognitionService() { _context.startService(new Intent(_context, ActivityRecognitionService.class)); }
-
-    private void stopActivityRecognitionService() { _context.stopService(new Intent(_context, ActivityRecognitionService.class)); }
 
     private void startGoogleFitService() { _context.startService(new Intent(_context, GoogleFitService.class)); }
 

@@ -142,6 +142,61 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
+    public void testRegistersForSharedPreferencesUpdatesOnCreate() {
+        _activity = getActivity();
+
+        verify(_mockPreferences,times(1)).registerOnSharedPreferenceChangeListener(any(MainActivity.class));
+    }
+
+    @SmallTest
+    public void testStartsPebbleServiceOnCreate() {
+        _activity = getActivity();
+
+        verify(_mockServiceStarter,times(1)).startPebbleServices();
+    }
+
+    @SmallTest
+    public void testStartsActivityServiceOnCreateWhenGoogleFitPreferenceSet() {
+        when(_mockPreferences.getBoolean("GOOGLE_FIT",false)).thenReturn(true);
+        _activity = getActivity();
+
+        verify(_mockServiceStarter,times(1)).startActivityServices();
+    }
+
+    @SmallTest
+    public void testStartsActivityServiceOnCreateWhenActivityRecognitionPreferenceSet() {
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
+        _activity = getActivity();
+
+        verify(_mockServiceStarter,times(1)).startActivityServices();
+    }
+
+    @SmallTest
+    public void testDoesNotStartsActivityServiceOnCreateWhenGoogleFitPreferenceNotSet() {
+        when(_mockPreferences.getBoolean("GOOGLE_FIT",false)).thenReturn(false);
+        _activity = getActivity();
+
+        verify(_mockServiceStarter,times(0)).startActivityServices();
+    }
+
+    @SmallTest
+    public void testDoesNotStartsActivityServiceOnCreateWhenActivityRecognitionPreferenceNotSet() {
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(false);
+        _activity = getActivity();
+
+        verify(_mockServiceStarter,times(0)).startActivityServices();
+    }
+
+    @SmallTest
+    public void testUnRegistersForSharedPreferencesUpdatesOnDestroy() throws InterruptedException {
+        _activity = getActivity();
+
+        _activity.finish();
+
+        verify(_mockPreferences, timeout(2000).times(1)).unregisterOnSharedPreferenceChangeListener(any(MainActivity.class));
+    }
+
+    @SmallTest
     public void testRespondsToStartButtonTouchedEventStartsServices() throws Exception {
         _activity = getActivity();
 
@@ -214,5 +269,66 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED));
 
         verify(_mockPlayServices,timeout(2000).times(1)).startConnectionResultResolution(any(ConnectionResult.class), any(MainActivity.class));
+    }
+
+    @SmallTest
+    public void testStopsActivityRecognitionServiceWhenACTIVITY_RECOGNITIONPreferenceChanged() throws Exception {
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
+
+        _activity = getActivity();
+
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
+
+        _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
+
+        verify(_mockServiceStarter,times(1)).stopActivityServices();
+    }
+
+    @SmallTest
+    public void testStartsActivityRecognitionServiceWhenACTIVITY_RECOGNITIONPreferenceChanged() throws Exception {
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
+
+        _activity = getActivity();
+
+        when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
+
+        _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
+
+        verify(_mockServiceStarter,times(1)).startActivityServices();
+    }
+
+    @SmallTest
+    public void testStopsActivityRecognitionServiceWhenGOOGLE_FITPreferenceChanged() throws Exception {
+        when(_mockPreferences.getBoolean("GOOGLE_FIT", false)).thenReturn(true);
+
+        _activity = getActivity();
+
+        when(_mockPreferences.getBoolean("GOOGLE_FIT", false)).thenReturn(false);
+
+        _activity.onSharedPreferenceChanged(_mockPreferences,"GOOGLE_FIT");
+
+        verify(_mockServiceStarter,times(1)).stopActivityServices();
+    }
+
+    @SmallTest
+    public void testStartsActivityRecognitionServiceWhenGOOGLE_FITPreferenceChanged() throws Exception {
+        when(_mockPreferences.getBoolean("GOOGLE_FIT", false)).thenReturn(false);
+
+        _activity = getActivity();
+
+        when(_mockPreferences.getBoolean("GOOGLE_FIT", false)).thenReturn(true);
+
+        _activity.onSharedPreferenceChanged(_mockPreferences,"GOOGLE_FIT");
+
+        verify(_mockServiceStarter,times(1)).startActivityServices();
+    }
+
+    @SmallTest
+    public void testDoesNothingWhenIncorrectPreferenceChanged() throws Exception {
+        _activity = getActivity();
+        _activity.onSharedPreferenceChanged(_mockPreferences,"NONSENSE_PREFERENCE");
+
+        verify(_mockServiceStarter,times(0)).startActivityServices();
+        verify(_mockServiceStarter,times(0)).stopActivityServices();
     }
 }
