@@ -5,7 +5,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.android.gms.fitness.FitnessActivities;
 import com.google.android.gms.location.DetectedActivity;
-import com.njackson.utils.googleplay.DetectedToFitnessActivityAdapater;
+import com.njackson.adapters.DetectedToFitnessActivityAdapater;
 
 /**
  * Created by njackson on 14/01/15.

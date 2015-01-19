@@ -67,7 +67,6 @@ public class ActivityRecognitionIntentService extends IntentService {
                 default:
                     logActivity(result);
             }
-
         }
     }
 

@@ -15,6 +15,7 @@ import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Session;
 import com.google.android.gms.fitness.result.SessionStopResult;
+import com.njackson.adapters.DetectedToFitnessActivityAdapater;
 
 import java.util.ArrayList;
 import java.util.List;

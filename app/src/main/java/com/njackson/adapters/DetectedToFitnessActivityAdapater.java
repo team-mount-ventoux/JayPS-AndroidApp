@@ -1,4 +1,4 @@
-package com.njackson.utils.googleplay;
+package com.njackson.adapters;
 
 import com.google.android.gms.fitness.FitnessActivities;
 import com.google.android.gms.location.DetectedActivity;
