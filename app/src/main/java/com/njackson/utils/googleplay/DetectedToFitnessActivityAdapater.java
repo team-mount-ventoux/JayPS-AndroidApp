@@ -27,6 +27,9 @@ public class DetectedToFitnessActivityAdapater {
                 break;
             case DetectedActivity.RUNNING:
                 _activity = FitnessActivities.RUNNING;
+                break;
+            case DetectedActivity.ON_FOOT:
+                _activity = FitnessActivities.ON_FOOT;
         }
     }
 

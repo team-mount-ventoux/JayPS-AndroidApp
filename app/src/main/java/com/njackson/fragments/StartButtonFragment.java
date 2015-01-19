@@ -54,6 +54,12 @@ public class StartButtonFragment extends BaseFragment {
         return _view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkServiceRunningAndSetButton();
+    }
+
     private void checkServiceRunningAndSetButton() {
         if(_serviceStarter.serviceRunning(GPSService.class)) {
             final Button startButton = (Button) _view.findViewById(R.id.start_button);

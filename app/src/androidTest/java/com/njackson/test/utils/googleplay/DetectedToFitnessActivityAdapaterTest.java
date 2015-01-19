@@ -12,8 +12,8 @@ import com.njackson.utils.googleplay.DetectedToFitnessActivityAdapater;
  */
 public class DetectedToFitnessActivityAdapaterTest extends AndroidTestCase{
 
-    private int[] detectedActivities = {DetectedActivity.STILL, DetectedActivity.RUNNING, DetectedActivity.WALKING, DetectedActivity.ON_BICYCLE};
-    private String[] fitnessActivities = {FitnessActivities.STILL, FitnessActivities.RUNNING, FitnessActivities.WALKING, FitnessActivities.BIKING};
+    private int[] detectedActivities = {DetectedActivity.STILL, DetectedActivity.RUNNING, DetectedActivity.WALKING, DetectedActivity.ON_FOOT, DetectedActivity.ON_BICYCLE};
+    private String[] fitnessActivities = {FitnessActivities.STILL, FitnessActivities.RUNNING, FitnessActivities.WALKING, FitnessActivities.ON_FOOT, FitnessActivities.BIKING};
 
     @SmallTest
     public void testConvertsCorrectly() {
