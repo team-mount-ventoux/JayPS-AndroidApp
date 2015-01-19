@@ -23,10 +23,12 @@ public class DetectedToFitnessActivityAdapater {
                 _activity = FitnessActivities.STILL;
                 break;
             case DetectedActivity.WALKING:
+            case DetectedActivity.ON_FOOT:
                 _activity = FitnessActivities.WALKING;
                 break;
             case DetectedActivity.RUNNING:
                 _activity = FitnessActivities.RUNNING;
+                break;
         }
     }
 

@@ -67,6 +67,7 @@ public class GoogleFitService extends Service implements GoogleApiClient.Connect
             case DetectedActivity.ON_BICYCLE:
             case DetectedActivity.RUNNING:
             case DetectedActivity.WALKING:
+            case DetectedActivity.ON_FOOT:
                 _sessionManager.addDataPoint(new Date().getTime(),event.getActivityType());
                 break;
         }
