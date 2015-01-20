@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSService.NewLocation;
-import com.njackson.events.PebbleService.CurrentState;
+import com.njackson.events.status.LiveStatus;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -79,7 +79,7 @@ public class LiveService extends Service {
         _liveTrackingMmt.setPassword(_sharedPreferences.getString("LIVE_TRACKING_MMT_PASSWORD", ""));
         _liveTrackingMmt.setUrl(_sharedPreferences.getString("LIVE_TRACKING_MMT_URL", ""));
 
-        _bus.post(new CurrentState(CurrentState.State.STARTED));
+        _bus.post(new LiveStatus(LiveStatus.State.STARTED));
     }
 
     @Override

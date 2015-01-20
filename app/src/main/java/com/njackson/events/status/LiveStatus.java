@@ -1,9 +1,6 @@
-package com.njackson.events.PebbleService;
+package com.njackson.events.status;
 
-/**
- * Created by server on 21/03/2014.
- */
-public class CurrentState {
+public class LiveStatus {
 
     public enum State {
         STARTED,
@@ -14,7 +11,7 @@ public class CurrentState {
     public State _state;
     public State getState() { return _state; }
 
-    public CurrentState(State state) {
+    public LiveStatus(State state) {
         this._state = state;
     }
 

@@ -10,10 +10,10 @@ import com.njackson.Constants;
 import com.njackson.adapters.NewLocationToPebbleDictionary;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.PebbleService.NewMessage;
+import com.njackson.events.status.PebbleStatus;
 import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.events.LiveService.LiveMessage;
-import com.njackson.events.PebbleService.CurrentState;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -128,7 +128,7 @@ public class PebbleService extends Service {
         _messageThread = new Thread(_messageManager);
         _messageThread.start();
 
-        _bus.post(new CurrentState(CurrentState.State.STARTED));
+        _bus.post(new PebbleStatus(PebbleStatus.State.STARTED));
     }
 
     private void sendDataToPebble(PebbleDictionary data) {
