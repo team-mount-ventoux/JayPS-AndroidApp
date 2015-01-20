@@ -82,9 +82,7 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
     }
 
     @SmallTest
-    public void testStartSessionClearsSessionData() throws Exception {
-        _sessionManager.startSession(1000, _mockGoogleApiClient);
-
+    public void testConstructoreSetsInitialSessionData() throws Exception {
         assertEquals(0,_sessionManager.getSessionData().size());
     }
 
@@ -148,6 +146,15 @@ public class GoogleFitSessionManagerTest extends AndroidTestCase {
         _sessionManager.addDataPoint(1000, DetectedActivity.ON_BICYCLE);
         _sessionManager.addDataPoint(1000, DetectedActivity.ON_FOOT);
         assertEquals(2, _sessionManager.getSessionData().size());
+    }
+
+    @SmallTest
+    public void testSaveActiveSessionClearsSessionData() throws Exception {
+        startSession(1000);
+        _sessionManager.addDataPoint(2000, DetectedActivity.ON_BICYCLE);
+        _sessionManager.saveActiveSession(3000);
+        DataSet dataSet = getDataSet();
+        assertEquals(0,_sessionManager.getSessionData().size());
     }
 
     @SmallTest

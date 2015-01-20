@@ -97,6 +97,13 @@ public class ActivityRecognitionIntentServiceTest extends ServiceTestCase<Activi
         assertEquals(_event.getActivityType(), DetectedActivity.WALKING);
     }
 
+    public void testRecieveOnFoot() throws InterruptedException {
+        startWithType(DetectedActivity.ON_FOOT);
+
+        _latch.await(2000, TimeUnit.MILLISECONDS);
+        assertEquals(_event.getActivityType(), DetectedActivity.ON_FOOT);
+    }
+
     public void testRecieveStill() throws InterruptedException {
         startWithType(DetectedActivity.STILL);
 

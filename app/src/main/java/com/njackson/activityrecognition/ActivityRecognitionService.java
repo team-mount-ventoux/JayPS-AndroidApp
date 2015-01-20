@@ -55,7 +55,7 @@ public class ActivityRecognitionService  extends Service implements
                 _timer.cancel();
             } else {
                 if (!_timer.getActive()) {
-                    _timer.setTimer(Constants.ACTIVITY_RECOGNITON_STILL_TIME, this);
+                    _timer.setTimer(Constants.ACTIVITY_RECOGNITION_STILL_TIME, this);
                 }
             }
         }

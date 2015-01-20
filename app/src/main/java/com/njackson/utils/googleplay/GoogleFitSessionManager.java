@@ -15,6 +15,7 @@ import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Session;
 import com.google.android.gms.fitness.result.SessionStopResult;
+import com.njackson.adapters.DetectedToFitnessActivityAdapater;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +47,7 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
         _playServices = playServices;
         _sessionsApi = sessionsApi;
         _context = context;
+        _sessionDataList = new ArrayList<SessionData>();
     }
 
     @Override
@@ -53,7 +55,6 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
         _googleAPIClient = client;
         _session = createSession(startTime);
         _activitySegments = createDataSource();
-        _sessionDataList = new ArrayList<SessionData>();
     }
 
     private DataSet createDataSource() {
@@ -86,6 +87,7 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
                         insertDataPoints(session);
                     }
                 }
+                _sessionDataList.clear();
             }
         });
     }

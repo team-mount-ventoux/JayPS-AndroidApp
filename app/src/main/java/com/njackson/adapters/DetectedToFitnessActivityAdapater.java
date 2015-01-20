@@ -1,4 +1,4 @@
-package com.njackson.utils.googleplay;
+package com.njackson.adapters;
 
 import com.google.android.gms.fitness.FitnessActivities;
 import com.google.android.gms.location.DetectedActivity;
@@ -27,6 +27,9 @@ public class DetectedToFitnessActivityAdapater {
                 break;
             case DetectedActivity.RUNNING:
                 _activity = FitnessActivities.RUNNING;
+                break;
+            case DetectedActivity.ON_FOOT:
+                _activity = FitnessActivities.ON_FOOT;
         }
     }
 

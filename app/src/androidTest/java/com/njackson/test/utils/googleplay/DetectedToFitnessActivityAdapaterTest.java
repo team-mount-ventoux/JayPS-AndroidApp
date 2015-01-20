@@ -5,15 +5,15 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.android.gms.fitness.FitnessActivities;
 import com.google.android.gms.location.DetectedActivity;
-import com.njackson.utils.googleplay.DetectedToFitnessActivityAdapater;
+import com.njackson.adapters.DetectedToFitnessActivityAdapater;
 
 /**
  * Created by njackson on 14/01/15.
  */
 public class DetectedToFitnessActivityAdapaterTest extends AndroidTestCase{
 
-    private int[] detectedActivities = {DetectedActivity.STILL, DetectedActivity.RUNNING, DetectedActivity.WALKING, DetectedActivity.ON_BICYCLE};
-    private String[] fitnessActivities = {FitnessActivities.STILL, FitnessActivities.RUNNING, FitnessActivities.WALKING, FitnessActivities.BIKING};
+    private int[] detectedActivities = {DetectedActivity.STILL, DetectedActivity.RUNNING, DetectedActivity.WALKING, DetectedActivity.ON_FOOT, DetectedActivity.ON_BICYCLE};
+    private String[] fitnessActivities = {FitnessActivities.STILL, FitnessActivities.RUNNING, FitnessActivities.WALKING, FitnessActivities.ON_FOOT, FitnessActivities.BIKING};
 
     @SmallTest
     public void testConvertsCorrectly() {

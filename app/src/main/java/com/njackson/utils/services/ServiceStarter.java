@@ -1,8 +1,10 @@
 package com.njackson.utils.services;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.fit.GoogleFitService;
@@ -24,17 +26,24 @@ public class ServiceStarter implements IServiceStarter {
         _sharedPreferences = preferences;
     }
 
-
     @Override
-    public void startEssentialServices() {
-        startActivityRecognitionService();
-        startPebbleService();
+    public void startPebbleServices() {
+        _context.startService(new Intent(_context, PebbleService.class));
     }
 
     @Override
-    public void stopEssentialServices() {
-        stopActivityRecognitionService();
-        stopPebbleService();
+    public void stopPebbleServices() {
+        _context.stopService(new Intent(_context, PebbleService.class));
+    }
+
+    @Override
+    public void startActivityServices() {
+        _context.startService(new Intent(_context, ActivityRecognitionService.class));
+    }
+
+    @Override
+    public void stopActivityServices() {
+        _context.stopService(new Intent(_context, ActivityRecognitionService.class));
     }
 
     @Override
@@ -53,6 +62,17 @@ public class ServiceStarter implements IServiceStarter {
         stopOruxService();
     }
 
+    @Override
+    public boolean serviceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) _context.getSystemService(_context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     protected void startGPSService() {
         int refreshInterval = Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000"));
         Intent intent = new Intent(_context, GPSService.class);
@@ -65,17 +85,9 @@ public class ServiceStarter implements IServiceStarter {
         _context.stopService(new Intent(_context, GPSService.class));
     }
 
-    public void startPebbleService() { _context.startService(new Intent(_context, PebbleService.class)); }
-
-    public void stopPebbleService() { _context.stopService(new Intent(_context, PebbleService.class)); }
-
     private void startLiveService() { _context.startService(new Intent(_context, LiveService.class)); }
 
     private void stopLiveService() { _context.stopService(new Intent(_context, LiveService.class)); }
-
-    private void startActivityRecognitionService() { _context.startService(new Intent(_context, ActivityRecognitionService.class)); }
-
-    private void stopActivityRecognitionService() { _context.stopService(new Intent(_context, ActivityRecognitionService.class)); }
 
     private void startGoogleFitService() { _context.startService(new Intent(_context, GoogleFitService.class)); }
 

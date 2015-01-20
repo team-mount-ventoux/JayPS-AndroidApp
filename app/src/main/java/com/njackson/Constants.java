@@ -43,13 +43,13 @@ public class Constants {
 
     public static final int REFRESH_INTERVAL_DEFAULT = 500;
 
-    public static final double MS_TO_KPH = 3.6;
-    public static final double MS_TO_MPH = 2.23693629;
-    public static final double M_TO_KM = 0.001;
-    public static final double M_TO_MILES = 0.000621371192;
-    public static final double M_TO_M = 1;
-    public static final double M_TO_FEET = 3.2808399;
-    public static final long ACTIVITY_RECOGNITON_STILL_TIME = 30000;
+    public static final float MS_TO_KPH = 3.6f;
+    public static final float MS_TO_MPH = 2.23693629f;
+    public static final float M_TO_KM = 0.001f;
+    public static final float M_TO_MILES = 0.000621371192f;
+    public static final float M_TO_M = 1f;
+    public static final float M_TO_FEET = 3.2808399f;
+    public static final long ACTIVITY_RECOGNITION_STILL_TIME = 30000;
 
     public static final String GOOGLE_FIT_SESSION_IDENTIFIER_PREFIX = "PebbleBike-";
     public static final String GOOGLE_FIT_SESSION_NAME = "Pebble Bike";

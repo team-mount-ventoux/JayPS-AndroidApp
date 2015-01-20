@@ -3,12 +3,12 @@ package com.njackson.test.pebble;
 import android.content.Intent;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
+import com.njackson.adapters.NewLocationToPebbleDictionary;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.PebbleService.NewMessage;
 import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.test.application.TestApplication;
-import com.njackson.utils.adapters.LocationEventToPebbleData;
 import com.njackson.pebble.IMessageManager;
 import com.njackson.pebble.PebbleService;
 
@@ -141,12 +141,7 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
 
         _bus.post(event);
 
-        verify(_mockMessageManager, timeout(2000).times(1)).offer(captor.capture());
-        PebbleDictionary dic = captor.getValue();
-
-        byte[] data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
-        assertEquals("Speed should be -9",-9,data[LocationEventToPebbleData.BYTE_SPEED1]);
-        assertEquals("Speed should be 3",3,data[LocationEventToPebbleData.BYTE_SPEED2]);
+        verify(_mockMessageManager, timeout(2000).times(1)).offer(any(PebbleDictionary.class));
     }
 
     @SmallTest

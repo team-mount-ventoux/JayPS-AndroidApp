@@ -53,15 +53,32 @@ public class ActivityRecognitionIntentService extends IntentService {
                     Log.d(TAG, "RUNNING");
                     sendReply(result.getMostProbableActivity().getType());
                     break;
+                case DetectedActivity.ON_FOOT:
+                    Log.d(TAG, "ON_FOOT");
+                    sendReply(result.getMostProbableActivity().getType());
+                    break;
                 case DetectedActivity.TILTING:
                     Log.d(TAG, "TILTING");
                     break;
                 case DetectedActivity.STILL:
                     Log.d(TAG, "STILL");
                     sendReply(result.getMostProbableActivity().getType());
+                    break;
+                default:
+                    logActivity(result);
             }
-
         }
+    }
+
+    private void logActivity(ActivityRecognitionResult result) {
+        Log.d(TAG, "Unknown Activity");
+        Log.d(TAG, "Probable Activities");
+        for(DetectedActivity activity : result.getProbableActivities()) {
+            Log.d(TAG, "Most Probable list: " + result.getMostProbableActivity().getType());
+            Log.d(TAG, "Most Probable list: " + result.getMostProbableActivity().toString());
+        }
+        Log.d(TAG, "Most Probable: " + result.getMostProbableActivity().getType());
+        Log.d(TAG, "Most Probable: " + result.getMostProbableActivity().toString());
     }
 
     private void sendReply(int type) {

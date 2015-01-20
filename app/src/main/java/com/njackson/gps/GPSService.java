@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.njackson.adapters.AdvancedLocationToNewLocation;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSService.ChangeRefreshInterval;
 import com.njackson.events.status.GPSStatus;
@@ -49,8 +50,6 @@ public class GPSService extends Service {
     @Inject ITime _time;
 
     private AdvancedLocation _advancedLocation;
-    private double xpos = 0;
-    private double ypos = 0;
     private Location firstLocation = null;
     private ServiceNmeaListener _nmeaListener;
     private GPSSensorEventListener _sensorListener;
@@ -244,12 +243,12 @@ public class GPSService extends Service {
                 firstLocation = location;
             }
 
-            xpos = firstLocation.distanceTo(location) * Math.sin(firstLocation.bearingTo(location)/180*3.1415);
-            ypos = firstLocation.distanceTo(location) * Math.cos(firstLocation.bearingTo(location)/180*3.1415);
+            double xpos = firstLocation.distanceTo(location) * Math.sin(firstLocation.bearingTo(location)/180*3.1415);
+            double ypos = firstLocation.distanceTo(location) * Math.cos(firstLocation.bearingTo(location)/180*3.1415);
 
             xpos = Math.floor(xpos/10);
             ypos = Math.floor(ypos/10);
-            broadcastLocation();
+            broadcastLocation(xpos, ypos);
         }
 
         @Override
@@ -269,29 +268,15 @@ public class GPSService extends Service {
 
     };
 
-    private void broadcastLocation() {
-        NewLocation event = new NewLocation();
+    private void broadcastLocation(double xpos, double ypos) {
+
+        int units = 0;
         try {
-            event.setUnits(Integer.valueOf(_sharedPreferences.getString("UNITS_OF_MEASURE", "0")));
+            units = Integer.valueOf(_sharedPreferences.getString("UNITS_OF_MEASURE", "0"));
         } catch (NumberFormatException e) {
-            event.setUnits(0);
+
         }
-        event.setSpeed(_advancedLocation.getSpeed());
-        event.setDistance(_advancedLocation.getDistance());
-        event.setAvgSpeed(_advancedLocation.getAverageSpeed());
-        event.setLatitude(_advancedLocation.getLatitude());
-        event.setLongitude(_advancedLocation.getLongitude());
-        event.setAltitude(_advancedLocation.getAltitude()); // m
-        event.setAscent(_advancedLocation.getAscent()); // m
-        event.setAscentRate(3600f * _advancedLocation.getAscentRate()); // in m/h
-        event.setSlope(100f * _advancedLocation.getSlope()); // in %
-        event.setAccuracy(_advancedLocation.getAccuracy()); // m
-        event.setTime(_advancedLocation.getTime());
-        event.setElapsedTimeSeconds(_advancedLocation.getElapsedTime());
-        event.setXpos(xpos);
-        event.setYpos(ypos);
-        event.setBearing(_advancedLocation.getBearing());
-        event.setHeartRate(255); // 255: no Heart Rate available
+        NewLocation event = new AdvancedLocationToNewLocation(_advancedLocation, xpos, ypos, units);
 
         _bus.post(event);
     }
