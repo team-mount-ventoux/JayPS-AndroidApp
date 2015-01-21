@@ -17,6 +17,7 @@ public class AdvancedLocationToNewLocation extends NewLocation {
     public AdvancedLocationToNewLocation(AdvancedLocation advancedLocation, double xpos, double ypos, int units) {
         createUnits(units);
 
+        this.setUnits(units);
         this.setSpeed(advancedLocation.getSpeed() * _speedConversion);
         this.setDistance(advancedLocation.getDistance()  * _distanceConversion);
         this.setAvgSpeed(advancedLocation.getAverageSpeed() * _speedConversion);
