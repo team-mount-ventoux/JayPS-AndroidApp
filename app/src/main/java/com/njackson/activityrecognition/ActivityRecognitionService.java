@@ -15,6 +15,8 @@ import com.njackson.Constants;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
+import com.njackson.events.status.GPSStatus;
+import com.njackson.gps.IGPSServiceStarterForeground;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.time.ITimer;
@@ -36,6 +38,7 @@ public class ActivityRecognitionService  extends Service implements
     @Inject IGooglePlayServices _googlePlay;
     @Inject @Named("GoogleActivity") GoogleApiClient _recognitionClient;
     @Inject IServiceStarter _serviceStarter;
+    @Inject IGPSServiceStarterForeground _serviceStarterForeground;
     @Inject ITimer _timer;
     @Inject SharedPreferences _sharedPreferences;
 
@@ -60,7 +63,13 @@ public class ActivityRecognitionService  extends Service implements
             }
         }
     }
-
+    @Subscribe
+    public void onGPSServiceState(GPSStatus event) {
+        if (event.getState().compareTo(GPSStatus.State.STOPPED) == 0) {
+            // restart the (shared) git anotification because GPSService has removed it
+            _serviceStarterForeground.startServiceForeground(this, "Pebble Bike", "Activity Recognition started");
+        }
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -70,6 +79,8 @@ public class ActivityRecognitionService  extends Service implements
         ((PebbleBikeApplication)getApplication()).inject(this);
 
         _bus.register(this);
+
+        _serviceStarterForeground.startServiceForeground(this, "Pebble Bike", "Activity Recognition started");
 
         if(!checkGooglePlayServices()) {
             _bus.post(new ActivityRecognitionStatus(ActivityRecognitionStatus.State.PLAY_SERVICES_NOT_AVAILABLE));
@@ -100,6 +111,8 @@ public class ActivityRecognitionService  extends Service implements
     @Override
     public void onDestroy (){
         Log.d(TAG,"Destroy Activity Recognition Service");
+
+        _serviceStarterForeground.stopServiceForeground(this);
 
         _bus.unregister(this);
         _recognitionClient.unregisterConnectionCallbacks(this);

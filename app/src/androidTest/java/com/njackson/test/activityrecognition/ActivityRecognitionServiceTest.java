@@ -15,6 +15,7 @@ import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
+import com.njackson.gps.IGPSServiceStarterForeground;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
@@ -35,6 +36,7 @@ import dagger.Provides;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
@@ -57,6 +59,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     private CountDownLatch _stateLatch;
     private ActivityRecognitionService _service;
     private static ITimer _mockTimer;
+    private static IGPSServiceStarterForeground _mockServiceStarter;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -70,6 +73,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         @Provides @Singleton IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
         @Provides ITimer providesTimer() { return _mockTimer; }
         @Provides @Singleton SharedPreferences provideSharedPreferences() { return mock(SharedPreferences.class); };
+        @Provides IGPSServiceStarterForeground providesForegroundServiceStarter() { return _mockServiceStarter; }
     }
 
     /**
@@ -99,6 +103,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
 
         _playServices = mock(IGooglePlayServices.class);
         _mockTimer = mock(ITimer.class);
+        _mockServiceStarter = mock(IGPSServiceStarterForeground.class);
 
         TestApplication app = new TestApplication();
         app.setObjectGraph(ObjectGraph.create(TestModule.class));
@@ -124,6 +129,15 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         IBinder binder = _service.onBind(new Intent());
 
         assertNull(binder);
+    }
+
+    @SmallTest
+    public void testStartsAndStopServiceForeground() throws Exception {
+        startService();
+        verify(_mockServiceStarter,timeout(2000).times(1)).startServiceForeground(any(ActivityRecognitionService.class),anyString(),anyString());
+
+        shutdownService();
+        verify(_mockServiceStarter,timeout(2000).times(1)).stopServiceForeground(any(ActivityRecognitionService.class));
     }
 
     @SmallTest
