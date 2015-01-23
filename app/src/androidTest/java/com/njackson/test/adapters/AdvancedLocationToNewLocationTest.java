@@ -168,7 +168,7 @@ public class AdvancedLocationToNewLocationTest extends AndroidTestCase{
 
         NewLocation event = new AdvancedLocationToNewLocation(_mockAdvancedLocation,0,0, Constants.METRIC);
 
-        assertEquals(1000l,event.getElapsedTimeSeconds());
+        assertEquals(1,event.getElapsedTimeSeconds());
     }
 
     public void testSetsXPosCorrectlyWhenUnitsMetric() {

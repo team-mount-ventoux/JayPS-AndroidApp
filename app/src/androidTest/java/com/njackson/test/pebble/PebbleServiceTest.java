@@ -104,6 +104,7 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
         when(_mockPreferences.getBoolean("PREF_DEBUG", false)).thenReturn(true);
         when(_mockPreferences.getBoolean("LIVE_TRACKING", false)).thenReturn(true);
         when(_mockPreferences.getString("REFRESH_INTERVAL", "1000")).thenReturn("1000");
+        when(_mockPreferences.getString("CANVAS_MODE", "disable")).thenReturn("canvas_and_pbw");
     }
 
     private void startService() throws InterruptedException {

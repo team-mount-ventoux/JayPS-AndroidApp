@@ -73,8 +73,8 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
         data[BYTE_DISTANCE1] = (byte) (((int) (Math.floor(100 * event.getDistance()) / 1)) % 256);
         data[BYTE_DISTANCE2] = (byte) (((int) (Math.floor(100 * event.getDistance()) / 1)) / 256);
 
-        data[BYTE_TIME1] = (byte) ((event.getElapsedTimeSeconds() / 1000) % 256);
-        data[BYTE_TIME2] = (byte) ((event.getElapsedTimeSeconds() / 1000) / 256);
+        data[BYTE_TIME1] = (byte) ((event.getElapsedTimeSeconds()) % 256);
+        data[BYTE_TIME2] = (byte) ((event.getElapsedTimeSeconds()) / 256);
 
         data[BYTE_ALTITUDE1] = (byte) ((event.getAltitude()) % 256);
         data[BYTE_ALTITUDE2] = (byte) ((event.getAltitude()) / 256);

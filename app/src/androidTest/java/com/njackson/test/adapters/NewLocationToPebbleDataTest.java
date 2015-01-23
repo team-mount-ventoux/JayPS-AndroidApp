@@ -25,7 +25,7 @@ public class NewLocationToPebbleDataTest extends AndroidTestCase{
         event.setBearing(190.1);
         event.setYpos(2.2);
         event.setXpos(3.3);
-        event.setElapsedTimeSeconds(423223);
+        event.setElapsedTimeSeconds(423);
         event.setAvgSpeed(5.5f);
         event.setAccuracy(6.6f);
         event.setAltitude(700.7);

@@ -75,6 +75,7 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
             _serviceStarter.startLocationServices();
         } else if (button == Constants.REFRESH_PRESS) {
             _serviceStarter.startLocationServices();
+            //FIXME(nic) : reset shouldn't start record gps
             _bus.post(new ResetGPSState());
         }
     }

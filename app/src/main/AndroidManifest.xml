@@ -31,6 +31,14 @@
                 <action android:name="com.getpebble.action.app.RECEIVE"/>
             </intent-filter>
         </receiver>
+
+        <receiver android:exported="true" android:name=".pebble.canvas.CanvasPlugin">
+            <intent-filter>
+                <action android:name="com.pennas.pebblecanvas.plugin.REQUEST_DEFINITIONS" />
+                <action android:name="com.pennas.pebblecanvas.plugin.REQUEST_UPDATE" />
+            </intent-filter>
+        </receiver>
+
     </application>
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>

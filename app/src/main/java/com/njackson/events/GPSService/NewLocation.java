@@ -85,11 +85,11 @@ public class NewLocation {
         this._accuracy = _accuracy;
     }
 
-    private long _elapsedTimeSeconds;
-    public long getElapsedTimeSeconds() {
+    private int _elapsedTimeSeconds;
+    public int getElapsedTimeSeconds() {
         return _elapsedTimeSeconds;
     }
-    public void setElapsedTimeSeconds(long _time) {
+    public void setElapsedTimeSeconds(int _time) {
         this._elapsedTimeSeconds = _time;
     }
 

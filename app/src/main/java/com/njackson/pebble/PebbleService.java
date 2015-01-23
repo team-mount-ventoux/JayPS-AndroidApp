@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.util.Log;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
+import com.njackson.adapters.NewLocationToCanvasPluginGPSData;
 import com.njackson.adapters.NewLocationToPebbleDictionary;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.PebbleService.NewMessage;
@@ -14,6 +15,8 @@ import com.njackson.events.status.PebbleStatus;
 import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.events.LiveService.LiveMessage;
+import com.njackson.pebble.canvas.CanvasPlugin;
+import com.njackson.pebble.canvas.GPSData;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -34,22 +37,34 @@ public class PebbleService extends Service {
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
         if (newLocation.getTime() > 0) {
-            PebbleDictionary dictionary = new NewLocationToPebbleDictionary(
-                    newLocation,
-                    true, // TODO(nic)
-                    _sharedPreferences.getBoolean("PREF_DEBUG", false),
-                    _sharedPreferences.getBoolean("LIVE_TRACKING", false),
-                    Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000")),
-                    newLocation.getHeartRate()
-            );
-            sendDataToPebble(dictionary);
+            if (!_sharedPreferences.getString("CANVAS_MODE", "disable").equals("canvas_only")) {
+                PebbleDictionary dictionary = new NewLocationToPebbleDictionary(
+                        newLocation,
+                        true, // TODO(nic)
+                        _sharedPreferences.getBoolean("PREF_DEBUG", false),
+                        _sharedPreferences.getBoolean("LIVE_TRACKING", false),
+                        Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000")),
+                        newLocation.getHeartRate()
+                );
+                sendDataToPebble(dictionary);
+            }
+
+            if (!_sharedPreferences.getString("CANVAS_MODE", "disable").equals("disable")) {
+                GPSData data = new NewLocationToCanvasPluginGPSData(
+                        newLocation,
+                        _sharedPreferences.getBoolean("CANVAS_DISPLAY_UNITS", true)
+                );
+                CanvasPlugin.set_gpsdata_details(data, getApplicationContext());
+            }
         }
     }
 
     @Subscribe
     public void onGPSServiceState(GPSStatus event) {
         if(event.getState().compareTo(GPSStatus.State.STARTED) == 0) {
-            _messageManager.showWatchFace();
+            if (!_sharedPreferences.getString("CANVAS_MODE", "disable").equals("canvas_only")) {
+                _messageManager.showWatchFace();
+            }
         } else if (event.getState().compareTo(GPSStatus.State.STOPPED) == 0) {
             PebbleDictionary dictionary = new PebbleDictionary();
             dictionary.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
@@ -139,10 +154,6 @@ public class PebbleService extends Service {
         _messageManager.offerIfLow(data, 5);
     }
     private void sendDataToPebble(PebbleDictionary data, boolean forceSend) {
-        //TODO(jay)
-        //if (MainActivity.canvas_mode.equals("canvas_only")) {
-        //    return;
-        //}
         if (forceSend) {
             sendDataToPebble(data);
         } else {
