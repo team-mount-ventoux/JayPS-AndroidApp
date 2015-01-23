@@ -23,6 +23,8 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
+import de.cketti.library.changelog.ChangeLog;
+
 public class MainActivity extends FragmentActivity  implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "PB-MainActivity";
@@ -87,6 +89,11 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
         boolean fit_start = _sharedPreferences.getBoolean("GOOGLE_FIT",false);
         if(fit_start || activity_start) {
             _serviceStarter.startActivityServices();
+        }
+
+        ChangeLog cl = new ChangeLog(this);
+        if (cl.isFirstRun()) {
+            cl.getLogDialog().show();
         }
 
         if (getIntent().getExtras() != null) {

@@ -22,6 +22,8 @@ import com.njackson.utils.messages.ToastMessageMaker;
 
 import javax.inject.Inject;
 
+import de.cketti.library.changelog.ChangeLog;
+
 /**
  * Created by server on 28/06/2014.
  */
@@ -45,6 +47,16 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 _installWatchFace.execute(getApplicationContext(), new ToastMessageMaker());
+                return true;
+            }
+        });
+
+        final ChangeLog cl = new ChangeLog(this);
+        Preference changelog = findPreference("CHANGE_LOG");
+        changelog.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                cl.getFullLogDialog().show();
                 return true;
             }
         });

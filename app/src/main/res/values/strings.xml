@@ -90,6 +90,9 @@
     <string name="PREF_LIVE_TRACKING_MMT_PASSWORD_TITLE">Password</string>
     <string name="PREF_LIVE_TRACKING_MMT_PASSWORD_SUMMARY"></string>
 
+    <string name="PREF_CHANGE_LOG_TITLE">Change Log</string>
+    <string name="PREF_CHANGE_LOG_SUMMARY">Displays changes history</string>
+
     <!-- BLE HRM items -->
     <string name="ble_unknown_device">Unknown device</string>
     <string name="ble_error_bluetooth_not_supported">Bluetooth not supported.</string>

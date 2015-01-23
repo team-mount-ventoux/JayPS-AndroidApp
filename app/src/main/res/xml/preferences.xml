@@ -179,6 +179,12 @@
             android:summary=""
             />
 
+        <Preference
+            android:key="CHANGE_LOG"
+            android:title="@string/PREF_CHANGE_LOG_TITLE"
+            android:summary="@string/PREF_CHANGE_LOG_SUMMARY"
+            />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
