@@ -89,19 +89,19 @@ public class LiveTracking {
         }
     }
 
-    String getLogin() {
+    public String getLogin() {
         return this._login;
     }
 
-    void setLogin(String login) {
+    public void setLogin(String login) {
         this._login = login;
     }
 
-    void setPassword(String password) {
+    public void setPassword(String password) {
         this._password = password;
     }
 
-    void setUrl(String url) {
+    public void setUrl(String url) {
         this._url = url;
     }
 

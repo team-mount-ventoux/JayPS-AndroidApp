@@ -116,7 +116,7 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         when(_preferences.getString("LIVE_TRACKING_LOGIN","")).thenReturn("abcdefg");
         when(_preferences.getString("LIVE_TRACKING_MMT_LOGIN","")).thenReturn("abcdefghi");
         when(_preferences.getString("ORUXMAPS_AUTO","")).thenReturn("continue");
-        when(_preferences.getString("CANVAS_MODE","")).thenReturn("canvas_only");
+        when(_preferences.getString("CANVAS_MODE","")).thenReturn("canvas_and_pbw");
         when(_preferences.getString("hrm_name", "")).thenReturn("test");
     }
 
