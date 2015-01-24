@@ -7,7 +7,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.njackson.application.IInjectionContainer;
-import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
+import com.njackson.events.ActivityRecognitionCommand.NewActivityEvent;
 import com.njackson.events.GoogleFitCommand.GoogleFitChangeState;
 import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
 import com.njackson.service.IServiceCommand;

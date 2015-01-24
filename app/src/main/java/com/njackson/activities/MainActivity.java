@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import com.njackson.R;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
-import com.njackson.events.status.ActivityRecognitionStatus;
+import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.GoogleFitCommand.GoogleFitStatus;

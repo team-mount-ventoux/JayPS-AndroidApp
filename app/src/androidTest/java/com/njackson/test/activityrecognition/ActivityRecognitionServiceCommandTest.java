@@ -1,11 +1,10 @@
 package com.njackson.test.activityrecognition;
 
 import android.app.PendingIntent;
-import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.IBinder;
-import android.test.ServiceTestCase;
+import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -13,8 +12,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
 import com.njackson.application.modules.AndroidModule;
-import com.njackson.events.status.ActivityRecognitionStatus;
-import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
+import com.njackson.application.modules.ForApplication;
+import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionChangeState;
+import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionStatus;
+import com.njackson.events.ActivityRecognitionCommand.NewActivityEvent;
+import com.njackson.events.base.BaseChangeState;
 import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGooglePlayServices;
@@ -46,7 +48,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by njackson on 01/01/15.
  */
-public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityRecognitionServiceCommand> {
+public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
 
     @Inject Bus _bus;
     @Inject @Named("GoogleActivity") GoogleApiClient _googleApiClient;
@@ -57,17 +59,18 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
 
     private ActivityRecognitionStatus _activityStatusEvent;
     private CountDownLatch _stateLatch;
-    private ActivityRecognitionServiceCommand _service;
+    private ActivityRecognitionServiceCommand _command;
     private static ITimer _mockTimer;
     private static IForegroundServiceStarter _mockServiceStarter;
+    private TestApplication _app;
 
     @Module(
             includes = AndroidModule.class,
-            injects = ActivityRecognitionServiceTest.class,
+            injects = ActivityRecognitionServiceCommandTest.class,
             overrides = true,
             complete = false
     )
-    static class TestModule {
+    class TestModule {
         @Provides IGooglePlayServices providesGooglePlayServices() { return _playServices; }
         @Provides @Singleton @Named("GoogleActivity") GoogleApiClient provideActivityRecognitionClient() { return mock(GoogleApiClient.class); }
         @Provides @Singleton IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
@@ -75,19 +78,10 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         @Provides @Singleton SharedPreferences provideSharedPreferences() { return mock(SharedPreferences.class); };
         @Provides
         IForegroundServiceStarter providesForegroundServiceStarter() { return _mockServiceStarter; }
-    }
-
-    /**
-     * Constructor
-     *
-     * @param serviceClass The type of the service under test.
-     */
-    public ActivityRecognitionServiceTest(Class<ActivityRecognitionServiceCommand> serviceClass) {
-        super(serviceClass);
-    }
-
-    public ActivityRecognitionServiceTest() {
-        super(ActivityRecognitionServiceCommand.class);
+        @Provides @Singleton @ForApplication
+        Context provideApplicationContext() {
+            return getContext();
+        }
     }
 
     @Subscribe
@@ -100,126 +94,121 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     public void setUp() throws Exception {
         super.setUp();
 
-        System.setProperty("dexmaker.dexcache", getSystemContext().getCacheDir().getPath());
+        System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
 
         _playServices = mock(IGooglePlayServices.class);
         _mockTimer = mock(ITimer.class);
         _mockServiceStarter = mock(IForegroundServiceStarter.class);
 
-        TestApplication app = new TestApplication();
-        app.setObjectGraph(ObjectGraph.create(TestModule.class));
-        app.inject(this);
+        _app = new TestApplication();
+        _app.setObjectGraph(ObjectGraph.create(new TestModule()));
+        _app.inject(this);
         _bus.register(this);
 
-        setApplication(app);
-
         _stateLatch = new CountDownLatch(1);
-    }
-
-    private void startService() throws Exception {
-        Intent startIntent = new Intent(getSystemContext(), ActivityRecognitionServiceCommand.class);
-        startService(startIntent);
-        _service = getService();
-        _stateLatch.await(2000, TimeUnit.MILLISECONDS);
-    }
-
-    @SmallTest
-    public void testOnBindReturnsNull() throws Exception {
-        startService();
-
-        IBinder binder = _service.onBind(new Intent());
-
-        assertNull(binder);
-    }
-
-    @SmallTest
-    public void testStartsAndStopServiceForeground() throws Exception {
-        startService();
-        verify(_mockServiceStarter,timeout(2000).times(1)).startServiceForeground(any(ActivityRecognitionServiceCommand.class),anyString(),anyString());
-
-        shutdownService();
-        verify(_mockServiceStarter,timeout(2000).times(1)).stopServiceForeground(any(ActivityRecognitionServiceCommand.class));
+        _command = new ActivityRecognitionServiceCommand();
     }
 
     @SmallTest
     public void testGooglePlayDisableMessageReceived() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.API_UNAVAILABLE);
-        startService();
+        when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.API_UNAVAILABLE);
+
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+        _stateLatch.await(1000, TimeUnit.MILLISECONDS);
 
         assertEquals(ActivityRecognitionStatus.State.PLAY_SERVICES_NOT_AVAILABLE, _activityStatusEvent.getState());
     }
 
     @SmallTest
     public void testServiceStartedMessageReceived() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
-        startService();
+        when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
+
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+        _stateLatch.await(1000, TimeUnit.MILLISECONDS);
 
         assertEquals(ActivityRecognitionStatus.State.STARTED, _activityStatusEvent.getState());
     }
 
     @SmallTest
     public void testServiceConnectsToGooglePlayOnStart() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
-        startService();
+        when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
-        verify(_googleApiClient,times(1)).connect();
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+
+        verify(_googleApiClient,timeout(1000).times(1)).connect();
     }
 
     @SmallTest
     public void testRegistersActivityRecogntionConnectedEvent() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
-        startService();
+        when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
-        verify(_googleApiClient,times(1)).registerConnectionCallbacks(any(ActivityRecognitionServiceCommand.class));
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+
+        verify(_googleApiClient,timeout(1000).times(1)).registerConnectionCallbacks(any(ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
     public void testRegistersActivityRecogntionFailedEvent() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
-        startService();
+        when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
-        verify(_googleApiClient,times(1)).registerConnectionFailedListener(any(ActivityRecognitionServiceCommand.class));
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+
+        verify(_googleApiClient,timeout(1000).times(1)).registerConnectionFailedListener(any(ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
     public void testUnRegistersActivityRecogntionConnectedEvent() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
-        startService();
-        shutdownService();
-        verify(_googleApiClient,times(1)).unregisterConnectionCallbacks(any(ActivityRecognitionServiceCommand.class));
+        when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
+
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
+
+        verify(_googleApiClient,timeout(1000).times(1)).unregisterConnectionCallbacks(any(ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
     public void testUnRegistersActivityRecogntionFailedEvent() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
-        startService();
-        shutdownService();
-        verify(_googleApiClient,times(1)).unregisterConnectionFailedListener(any(ActivityRecognitionServiceCommand.class));
+        when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
+
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
+
+        verify(_googleApiClient,timeout(1000).times(1)).unregisterConnectionFailedListener(any(ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
     public void testRegistersActivityRecognitionUpdatesOnConnect() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
-        startService();
-        _service.onConnected(new Bundle());
+        when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
-        verify(_playServices,times(1)).requestActivityUpdates(any(GoogleApiClient.class), anyLong(), any(PendingIntent.class));
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+
+        _command.onConnected(new Bundle());
+
+        verify(_playServices,timeout(1000).times(1)).requestActivityUpdates(any(GoogleApiClient.class), anyLong(), any(PendingIntent.class));
     }
 
     @SmallTest
     public void testRegistersActivityRecognitionUpdatesOnDestroy() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
-        startService();
-        shutdownService();
+        when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
-        verify(_playServices,times(1)).removeActivityUpdates(any(GoogleApiClient.class), any(PendingIntent.class));
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
+
+        verify(_playServices,timeout(1000).times(1)).removeActivityUpdates(any(GoogleApiClient.class), any(PendingIntent.class));
     }
 
     @SmallTest
     public void testRespondsToNewActivityEventStartsLocationWhenActivityRecognitonPreferenceSet() throws Exception {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
 
-        startService();
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
         _bus.post(new NewActivityEvent(DetectedActivity.ON_FOOT));
 
         verify(_serviceStarter,timeout(2000).times(1)).startLocationServices();
@@ -229,7 +218,8 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     public void testRespondsToNewActivityEventDoesNotStartsLocationWhenActivityRecognitonPreferenceNotSet() throws Exception {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(false);
 
-        startService();
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
         _bus.post(new NewActivityEvent(DetectedActivity.ON_FOOT));
 
         verify(_serviceStarter,timeout(2000).times(0)).startLocationServices();
@@ -239,7 +229,8 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     public void testRespondsToNewSTILLEventAndActivityRecognitionSetStartsTimer() throws Exception {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
 
-        startService();
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
         _bus.post(new NewActivityEvent(DetectedActivity.STILL));
 
         verify(_mockTimer,timeout(2000).times(1)).setTimer(anyLong(),any(ActivityRecognitionServiceCommand.class));
@@ -249,7 +240,8 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     public void testRespondsToNewSTILLAndActivityRecognitionSetDoesNotStartsTimer() throws Exception {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(false);
 
-        startService();
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
         _bus.post(new NewActivityEvent(DetectedActivity.STILL));
 
         verify(_mockTimer,timeout(2000).times(0)).setTimer(anyLong(),any(ActivityRecognitionServiceCommand.class));
@@ -259,7 +251,8 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     public void testRespondsToNewSTILLActivityEventDoesNotStartTimerIfTimerActive() throws Exception {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
 
-        startService();
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
 
         when(_mockTimer.getActive()).thenReturn(true);
         _bus.post(new NewActivityEvent(DetectedActivity.STILL));
@@ -271,7 +264,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     public void testCancelsTimerWhenActivityDetected() throws Exception {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
 
-        startService();
+        _command.execute(_app);
         _bus.post(new NewActivityEvent(DetectedActivity.ON_FOOT));
 
         verify(_mockTimer,timeout(2000).times(1)).cancel();
@@ -279,8 +272,8 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
 
     @SmallTest
     public void testTimeoutHandlerStopsLocation() throws Exception {
-        startService();
-        _service.handleTimeout();
+        _command.execute(_app);
+        _command.handleTimeout();
 
         verify(_serviceStarter,timeout(2000).times(1)).stopLocationServices();
     }

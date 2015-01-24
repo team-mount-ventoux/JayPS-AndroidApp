@@ -3,7 +3,6 @@ package com.njackson.test.fit;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -11,15 +10,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.njackson.application.modules.AndroidModule;
-import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
+import com.njackson.events.ActivityRecognitionCommand.NewActivityEvent;
 import com.njackson.events.GoogleFitCommand.GoogleFitChangeState;
 import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
 import com.njackson.events.base.BaseChangeState;
 import com.njackson.fit.GoogleFitServiceCommand;
-import com.njackson.gps.GPSServiceCommand;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
-import com.njackson.utils.time.Time;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

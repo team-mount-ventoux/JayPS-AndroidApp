@@ -6,7 +6,7 @@ import android.test.ServiceTestCase;
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.njackson.application.modules.AndroidModule;
-import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
+import com.njackson.events.ActivityRecognitionCommand.NewActivityEvent;
 import com.njackson.test.application.TestApplication;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;

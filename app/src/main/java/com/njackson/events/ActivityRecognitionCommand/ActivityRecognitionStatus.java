@@ -1,4 +1,4 @@
-package com.njackson.events.status;
+package com.njackson.events.ActivityRecognitionCommand;
 
 /**
  * Created by server on 21/03/2014.
