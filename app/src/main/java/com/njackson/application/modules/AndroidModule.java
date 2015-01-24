@@ -136,7 +136,9 @@ public class AndroidModule {
     IGoogleFitSessionManager providesGoogleFitSessionManager() { return new GoogleFitSessionManager(application, new GooglePlayServices(), Fitness.SessionsApi); }
 
     @Provides @Singleton
-    IServiceStarter provideServiceStarter() { return new ServiceStarter(application, provideSharedPreferences(), providesBus()); }
+    IServiceStarter provideServiceStarter(Bus bus, SharedPreferences preferences) {
+        return new ServiceStarter(application, preferences, bus);
+    }
 
     @Provides
     public IMessageManager providesMessageManager() { return new MessageManager(application); }

@@ -43,7 +43,7 @@ import fr.jayps.android.AdvancedLocation;
  */
 public class GPSServiceCommand implements IServiceCommand {
 
-    private static final String TAG = "PB-GPSService";
+    private static final String TAG = "PB-GPSServiceCommand";
 
     @Inject @ForApplication
     Context _applicationContext;
@@ -89,8 +89,9 @@ public class GPSServiceCommand implements IServiceCommand {
     }
 
     private void start(int refreshInterval) {
-        createNewAdvancedLocation();
+        Log.d(TAG,"Start");
 
+        createNewAdvancedLocation();
         loadGPSStats();
 
         // check to see if GPS is enabled
