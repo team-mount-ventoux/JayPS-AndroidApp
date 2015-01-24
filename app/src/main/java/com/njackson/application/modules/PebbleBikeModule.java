@@ -23,6 +23,9 @@ import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.live.LiveService;
 import com.njackson.oruxmaps.OruxMapsService;
 import com.njackson.pebble.PebbleDataReceiver;
+import com.njackson.pebble.PebbleServiceCommand;
+import com.njackson.pebble.canvas.CanvasWrapper;
+import com.njackson.pebble.canvas.ICanvasWrapper;
 import com.njackson.service.MainService;
 import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGooglePlayServices;
@@ -34,7 +37,6 @@ import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.watchface.InstallPebbleWatchFace;
 import com.njackson.utils.version.AndroidVersion;
 import com.njackson.utils.version.PebbleVersion;
-import com.njackson.pebble.PebbleService;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
@@ -44,7 +46,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSServiceCommand.class, PebbleService.class, LiveService.class, GoogleFitService.class, ActivityRecognitionService.class, ActivityRecognitionIntentService.class, OruxMapsService.class, PebbleDataReceiver.class, MainService.class},
+        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSServiceCommand.class, PebbleServiceCommand.class, LiveService.class, GoogleFitService.class, ActivityRecognitionService.class, ActivityRecognitionIntentService.class, OruxMapsService.class, PebbleDataReceiver.class, MainService.class},
         library = true, complete = false
 )
 public class PebbleBikeModule {
@@ -66,6 +68,7 @@ public class PebbleBikeModule {
 
     @Provides ITime providesTime() { return new Time(); }
 
-    @Provides
-    IForegroundServiceStarter providesForegroundServiceStarter() { return new MainServiceForegroundStarter(); }
+    @Provides IForegroundServiceStarter providesForegroundServiceStarter() { return new MainServiceForegroundStarter(); }
+
+    @Provides ICanvasWrapper providesCanvasWrapper() { return new CanvasWrapper(); }
 }

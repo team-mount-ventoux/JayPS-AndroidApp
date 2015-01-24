@@ -10,7 +10,7 @@ import com.njackson.fit.GoogleFitService;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.live.LiveService;
 import com.njackson.oruxmaps.OruxMapsService;
-import com.njackson.pebble.PebbleService;
+import com.njackson.pebble.PebbleServiceCommand;
 
 /**
  * Created by njackson on 03/01/15.
@@ -27,12 +27,12 @@ public class ServiceStarter implements IServiceStarter {
 
     @Override
     public void startPebbleServices() {
-        _context.startService(new Intent(_context, PebbleService.class));
+        _context.startService(new Intent(_context, PebbleServiceCommand.class));
     }
 
     @Override
     public void stopPebbleServices() {
-        _context.stopService(new Intent(_context, PebbleService.class));
+        _context.stopService(new Intent(_context, PebbleServiceCommand.class));
     }
 
     @Override

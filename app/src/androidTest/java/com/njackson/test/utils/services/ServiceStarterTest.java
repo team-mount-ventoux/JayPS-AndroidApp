@@ -14,8 +14,8 @@ import com.njackson.gps.GPSServiceCommand;
 import com.njackson.live.LiveService;
 import com.njackson.oruxmaps.OruxMaps;
 import com.njackson.oruxmaps.OruxMapsService;
+import com.njackson.pebble.PebbleServiceCommand;
 import com.njackson.utils.services.ServiceStarter;
-import com.njackson.pebble.PebbleService;
 
 import org.mockito.ArgumentCaptor;
 
@@ -97,7 +97,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(1)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,PebbleService.class));
+        assertTrue(checkComponentInCaptor(intents,PebbleServiceCommand.class));
     }
 
     @SmallTest
@@ -108,7 +108,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(1)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,PebbleService.class));
+        assertTrue(checkComponentInCaptor(intents,PebbleServiceCommand.class));
     }
 
     @SmallTest

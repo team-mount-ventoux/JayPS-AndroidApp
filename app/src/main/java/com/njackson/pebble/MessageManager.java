@@ -34,8 +34,12 @@ public class MessageManager implements IMessageManager, Runnable {
 
     private Context _applicationContext;
 
+    private Thread _thisThread;
+
     public MessageManager(Context context) {
         _applicationContext = context;
+        _thisThread = new Thread(this);
+        _thisThread.start();
     }
 
     private void removeMessageASync() {

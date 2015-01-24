@@ -1,14 +1,20 @@
 package com.njackson.test.pebble;
 
+import android.content.Context;
 import android.content.Intent;
 import com.getpebble.android.kit.util.PebbleDictionary;
+import com.njackson.application.modules.ForApplication;
 import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.events.LiveService.LiveMessage;
 import com.njackson.events.PebbleService.NewMessage;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.NewLocation;
+import com.njackson.pebble.PebbleServiceCommand;
+import com.njackson.pebble.canvas.CanvasWrapper;
+import com.njackson.pebble.canvas.GPSData;
+import com.njackson.pebble.canvas.ICanvasWrapper;
 import com.njackson.test.application.TestApplication;
 import com.njackson.pebble.IMessageManager;
-import com.njackson.pebble.PebbleService;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -18,6 +24,7 @@ import org.mockito.Mockito;
 import static org.mockito.Mockito.*;
 
 import android.content.SharedPreferences;
+import android.test.AndroidTestCase;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -31,20 +38,18 @@ import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 
-public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
+public class PebbleServiceTest extends AndroidTestCase {
 
     @Inject Bus _bus;
     @Inject IMessageManager _mockMessageManager;
     @Inject SharedPreferences _mockPreferences;
 
-    private PebbleService _service;
-    private TestApplication _app;
+    private PebbleServiceCommand _service;
     private GPSStatus _pebbleStatusEvent;
     private CountDownLatch _stateLatch;
-
-    public PebbleServiceTest() {
-        super(PebbleService.class);
-    }
+    private PebbleServiceCommand _command;
+    private static ICanvasWrapper _mockCanvasWrapper;
+    private static TestApplication _app;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -64,6 +69,14 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
         SharedPreferences provideSharedPreferences() {
             return mock(SharedPreferences.class);
         }
+
+        @Provides
+        ICanvasWrapper providesCanvasWrapper() { return _mockCanvasWrapper; }
+
+        @Provides @Singleton @ForApplication
+        Context provideApplicationContext() {
+            return _app;
+        }
     }
 
     @Subscribe
@@ -77,18 +90,18 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
     public void setUp() throws Exception {
         super.setUp();
 
-        _service = new PebbleService();
+        _service = new PebbleServiceCommand();
 
-        System.setProperty("dexmaker.dexcache", getSystemContext().getCacheDir().getPath());
+        System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
 
         _app = new TestApplication();
         _app.setObjectGraph(ObjectGraph.create(TestModule.class));
         _app.inject(this);
         _bus.register(this);
 
-        setApplication(_app);
-
         setupMocks();
+
+        _command = new PebbleServiceCommand();
 
         _stateLatch = new CountDownLatch(1);
     }
@@ -99,19 +112,13 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
         super.tearDown();
     }
     private void setupMocks() {
+        _mockCanvasWrapper = mock(ICanvasWrapper.class);
         when(_mockPreferences.getBoolean("PREF_DEBUG", false)).thenReturn(true);
         when(_mockPreferences.getBoolean("LIVE_TRACKING", false)).thenReturn(true);
         when(_mockPreferences.getString("REFRESH_INTERVAL", "1000")).thenReturn("1000");
         when(_mockPreferences.getString("CANVAS_MODE", "disable")).thenReturn("canvas_and_pbw");
     }
 
-    private void startService() throws InterruptedException {
-        Intent startIntent = new Intent(getSystemContext(), PebbleService.class);
-        startService(startIntent);
-        _service = getService();
-
-        _stateLatch.await(2000, TimeUnit.MILLISECONDS);
-    }
 /*
     @SmallTest
     public void testServiceHideWatchFaceOnStop() throws InterruptedException {
@@ -122,14 +129,35 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
 */
     @SmallTest
     public void testServiceShowsWatchFaceOnGPSServiceStart() throws InterruptedException {
-        startService();
+        _command.execute(_app);
+
         _bus.post(new GPSStatus(GPSStatus.State.STARTED));
         Mockito.verify(_mockMessageManager,timeout(1000).times(1)).showWatchFace();
     }
 
     @SmallTest
-    public void testServiceRespondsToNewGPSLocation() throws InterruptedException {
-        startService();
+    public void testUpdatePebbleGPSServiceStop() throws InterruptedException {
+        _command.execute(_app);
+
+        _bus.post(new GPSStatus(GPSStatus.State.STOPPED));
+        Mockito.verify(_mockMessageManager,timeout(1000).times(1)).offer(any(PebbleDictionary.class));
+    }
+
+    @SmallTest
+    public void testUpdatePebbleOnNewLiveMessage() throws InterruptedException {
+        _command.execute(_app);
+
+        LiveMessage message = new LiveMessage();
+        message.setLive(new byte[]{});
+        _bus.post(new LiveMessage());
+        Mockito.verify(_mockMessageManager,timeout(1000).times(1)).offer(any(PebbleDictionary.class));
+    }
+
+    @SmallTest
+    public void testSendsLocationToPebbleWhenNotCanvasOnly() throws InterruptedException {
+        when(_mockPreferences.getString("CANVAS_MODE", "disable")).thenReturn("stuff");
+
+        _command.execute(_app);
 
         ArgumentCaptor<PebbleDictionary> captor = new ArgumentCaptor<PebbleDictionary>();
 
@@ -144,8 +172,63 @@ public class PebbleServiceTest extends ServiceTestCase<PebbleService>{
     }
 
     @SmallTest
+    public void testDoesNotSendsLocationToPebbleWhenCanvasOnly() throws InterruptedException {
+        when(_mockPreferences.getString("CANVAS_MODE", "disable")).thenReturn("canvas_only");
+
+        _command.execute(_app);
+
+        ArgumentCaptor<PebbleDictionary> captor = new ArgumentCaptor<PebbleDictionary>();
+
+        NewLocation event = new NewLocation();
+        event.setUnits(0);
+        event.setSpeed(45.4f);
+        event.setTime(1420988759);
+
+        _bus.post(event);
+
+        verify(_mockMessageManager, timeout(2000).times(0)).offer(any(PebbleDictionary.class));
+    }
+
+    @SmallTest
+    public void testSendsLocationToCanvasWhenNotCanvasDisabled() throws InterruptedException {
+        when(_mockPreferences.getString("CANVAS_MODE", "disable")).thenReturn("stuff");
+
+        _command.execute(_app);
+
+        ArgumentCaptor<PebbleDictionary> captor = new ArgumentCaptor<PebbleDictionary>();
+
+        NewLocation event = new NewLocation();
+        event.setUnits(0);
+        event.setSpeed(45.4f);
+        event.setTime(1420988759);
+
+        _bus.post(event);
+
+        verify(_mockCanvasWrapper, timeout(2000).times(1)).set_gpsdata_details(any(GPSData.class), any(Context.class));
+    }
+
+    @SmallTest
+    public void testDoesNotSendsLocationToCanvasWhenCanvasDisable() throws InterruptedException {
+        when(_mockPreferences.getString("CANVAS_MODE", "disable")).thenReturn("disable");
+
+        _command.execute(_app);
+
+        ArgumentCaptor<PebbleDictionary> captor = new ArgumentCaptor<PebbleDictionary>();
+
+        NewLocation event = new NewLocation();
+        event.setUnits(0);
+        event.setSpeed(45.4f);
+        event.setTime(1420988759);
+
+        _bus.post(event);
+
+        verify(_mockCanvasWrapper, timeout(2000).times(0)).set_gpsdata_details(any(GPSData.class), any(Context.class));
+    }
+
+    @SmallTest
     public void testNewMessageEventSendsMessageToPebble() throws InterruptedException {
-        startService();
+        _command.execute(_app);
+
         _bus.post(new NewMessage("A Message"));
         Mockito.verify(_mockMessageManager,timeout(1000).times(1)).showSimpleNotificationOnWatch(anyString(),anyString());
     }
