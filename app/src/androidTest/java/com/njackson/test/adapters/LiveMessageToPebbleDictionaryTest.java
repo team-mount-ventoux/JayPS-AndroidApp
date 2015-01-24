@@ -22,7 +22,7 @@ public class LiveMessageToPebbleDictionaryTest extends AndroidTestCase {
 
     public void testSetsName1() {
         LiveMessage message = new LiveMessage();
-        message.setName0("one");
+        message.setName1("one");
         PebbleDictionary dic = new LiveMessageToPebbleDictionary(message);
 
         assertEquals("one", dic.getString(Constants.MSG_LIVE_NAME1));
@@ -30,7 +30,7 @@ public class LiveMessageToPebbleDictionaryTest extends AndroidTestCase {
 
     public void testSetsName2() {
         LiveMessage message = new LiveMessage();
-        message.setName0("two");
+        message.setName2("two");
         PebbleDictionary dic = new LiveMessageToPebbleDictionary(message);
 
         assertEquals("two", dic.getString(Constants.MSG_LIVE_NAME2));
@@ -38,7 +38,7 @@ public class LiveMessageToPebbleDictionaryTest extends AndroidTestCase {
 
     public void testSetsName3() {
         LiveMessage message = new LiveMessage();
-        message.setName0("three");
+        message.setName3("three");
         PebbleDictionary dic = new LiveMessageToPebbleDictionary(message);
 
         assertEquals("three", dic.getString(Constants.MSG_LIVE_NAME3));
@@ -46,7 +46,7 @@ public class LiveMessageToPebbleDictionaryTest extends AndroidTestCase {
 
     public void testSetsName4() {
         LiveMessage message = new LiveMessage();
-        message.setName0("four");
+        message.setName4("four");
         PebbleDictionary dic = new LiveMessageToPebbleDictionary(message);
 
         assertEquals("four", dic.getString(Constants.MSG_LIVE_NAME4));
