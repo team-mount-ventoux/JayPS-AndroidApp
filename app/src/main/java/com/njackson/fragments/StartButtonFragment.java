@@ -7,10 +7,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.njackson.R;
-import com.njackson.events.status.GPSStatus;
+import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
-import com.njackson.gps.GPSService;
+import com.njackson.gps.GPSServiceCommand;
 import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Subscribe;
 
@@ -61,7 +61,7 @@ public class StartButtonFragment extends BaseFragment {
     }
 
     private void checkServiceRunningAndSetButton() {
-        if(_serviceStarter.serviceRunning(GPSService.class)) {
+        if(_serviceStarter.serviceRunning(GPSServiceCommand.class)) {
             final Button startButton = (Button) _view.findViewById(R.id.start_button);
             makeStartButtonInStopState(startButton);
         }

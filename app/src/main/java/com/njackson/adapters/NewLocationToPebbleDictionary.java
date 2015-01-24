@@ -2,7 +2,7 @@ package com.njackson.adapters;
 
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
-import com.njackson.events.GPSService.NewLocation;
+import com.njackson.events.GPSServiceCommand.NewLocation;
 
 /**
  * Created by server on 25/03/2014.

@@ -2,12 +2,10 @@ package com.njackson.test.pebble;
 
 import android.content.Intent;
 import com.getpebble.android.kit.util.PebbleDictionary;
-import com.njackson.Constants;
-import com.njackson.adapters.NewLocationToPebbleDictionary;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.PebbleService.NewMessage;
-import com.njackson.events.status.GPSStatus;
-import com.njackson.events.GPSService.NewLocation;
+import com.njackson.events.GPSServiceCommand.GPSStatus;
+import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.test.application.TestApplication;
 import com.njackson.pebble.IMessageManager;
 import com.njackson.pebble.PebbleService;

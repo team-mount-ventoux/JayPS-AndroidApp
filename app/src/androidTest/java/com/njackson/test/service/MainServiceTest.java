@@ -6,11 +6,10 @@ import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.gps.GPSService;
+import com.njackson.gps.GPSServiceCommand;
 import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.service.MainService;
 import com.njackson.test.application.TestApplication;
-import com.njackson.test.testUtils.Services;
 
 import dagger.Module;
 import dagger.ObjectGraph;
@@ -90,7 +89,7 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
     public void testStartsServiceForeground() throws Exception {
         startService();
 
-        verify(_mockServiceStarter,timeout(2000).times(1)).startServiceForeground(any(GPSService.class),anyString(),anyString());
+        verify(_mockServiceStarter,timeout(2000).times(1)).startServiceForeground(any(MainService.class),anyString(),anyString());
     }
 
     @SmallTest
@@ -98,6 +97,6 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
         startService();
         shutdownService();
 
-        verify(_mockServiceStarter,timeout(2000).times(1)).stopServiceForeground(any(GPSService.class));
+        verify(_mockServiceStarter,timeout(2000).times(1)).stopServiceForeground(any(MainService.class));
     }
 }

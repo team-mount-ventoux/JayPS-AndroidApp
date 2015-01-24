@@ -1,4 +1,4 @@
-package com.njackson.events.GPSService;
+package com.njackson.events.GPSServiceCommand;
 
 /**
  * Created by server on 27/06/2014.

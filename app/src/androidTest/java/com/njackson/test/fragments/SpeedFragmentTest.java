@@ -2,13 +2,12 @@ package com.njackson.test.fragments;
 
 import android.content.SharedPreferences;
 import android.location.LocationManager;
-import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.TextView;
 
 import com.njackson.R;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.events.GPSService.NewLocation;
+import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.fragments.SpeedFragment;
 import com.njackson.test.FragmentInstrumentTestCase2;
 import com.njackson.test.application.TestApplication;

@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.njackson.R;
-import com.njackson.events.GPSService.NewAltitiude;
+import com.njackson.events.GPSServiceCommand.NewAltitiude;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;

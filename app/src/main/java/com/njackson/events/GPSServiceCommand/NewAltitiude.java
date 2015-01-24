@@ -1,4 +1,4 @@
-package com.njackson.events.GPSService;
+package com.njackson.events.GPSServiceCommand;
 
 import java.security.InvalidParameterException;
 

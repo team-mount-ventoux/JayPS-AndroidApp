@@ -1,21 +1,16 @@
 package com.njackson.pebble;
 
-import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
 import com.njackson.R;
-import com.njackson.activities.MainActivity;
 import com.njackson.application.PebbleBikeApplication;
-import com.njackson.events.GPSService.ResetGPSState;
+import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.PebbleService.NewMessage;
 import com.njackson.oruxmaps.IOruxMaps;
-import com.njackson.oruxmaps.OruxMaps;
 import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 
 import javax.inject.Inject;
 

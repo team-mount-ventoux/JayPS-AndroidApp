@@ -1,7 +1,7 @@
 package com.njackson.adapters;
 
 import com.njackson.Constants;
-import com.njackson.events.GPSService.NewLocation;
+import com.njackson.events.GPSServiceCommand.NewLocation;
 
 import fr.jayps.android.AdvancedLocation;
 

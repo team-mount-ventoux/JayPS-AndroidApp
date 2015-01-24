@@ -5,9 +5,7 @@ import android.test.AndroidTestCase;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
 import com.njackson.adapters.NewLocationToPebbleDictionary;
-import com.njackson.events.GPSService.NewLocation;
-
-import junit.framework.TestCase;
+import com.njackson.events.GPSServiceCommand.NewLocation;
 
 /**
  * Created by server on 25/03/2014.

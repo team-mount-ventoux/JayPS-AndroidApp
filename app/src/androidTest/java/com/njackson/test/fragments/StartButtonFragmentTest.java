@@ -2,9 +2,6 @@ package com.njackson.test.fragments;
 
 import android.content.SharedPreferences;
 import android.location.LocationManager;
-import android.os.Handler;
-import android.test.UiThreadTest;
-import android.test.suitebuilder.annotation.MediumTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.Button;
 
@@ -12,13 +9,12 @@ import com.njackson.R;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
-import com.njackson.events.status.GPSStatus;
+import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.fragments.StartButtonFragment;
-import com.njackson.gps.GPSService;
+import com.njackson.gps.GPSServiceCommand;
 import com.njackson.test.FragmentInstrumentTestCase2;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.services.IServiceStarter;
-import com.njackson.utils.services.ServiceStarter;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -212,7 +208,7 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
 
     @SmallTest
     public void test_ButtonStateStartedWhenGPSServiceRunning() throws InterruptedException {
-        when(_serviceStarter.serviceRunning(GPSService.class)).thenReturn(true);
+        when(_serviceStarter.serviceRunning(GPSServiceCommand.class)).thenReturn(true);
 
         startFragment(new StartButtonFragment());
         _button = (Button) _activity.findViewById(R.id.start_button);
@@ -223,7 +219,7 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
 
     @SmallTest
     public void test_ButtonStateStoppedWhenGPSServiceStopped() throws InterruptedException {
-        when(_serviceStarter.serviceRunning(GPSService.class)).thenReturn(false);
+        when(_serviceStarter.serviceRunning(GPSServiceCommand.class)).thenReturn(false);
 
         startFragment(new StartButtonFragment());
         _button = (Button) _activity.findViewById(R.id.start_button);

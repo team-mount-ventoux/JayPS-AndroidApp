@@ -6,7 +6,7 @@ import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.gps.GPSService;
+import com.njackson.gps.GPSServiceCommand;
 import com.njackson.oruxmaps.IOruxMaps;
 import com.njackson.oruxmaps.OruxMapsService;
 import com.njackson.test.application.TestApplication;
@@ -86,7 +86,7 @@ public class OruxMapsServiceTest extends ServiceTestCase<OruxMapsService> {
     }
 
     private void startService() throws Exception {
-        Intent startIntent = new Intent(getSystemContext(), GPSService.class);
+        Intent startIntent = new Intent(getSystemContext(), GPSServiceCommand.class);
         startService(startIntent);
         _service = getService();
     }

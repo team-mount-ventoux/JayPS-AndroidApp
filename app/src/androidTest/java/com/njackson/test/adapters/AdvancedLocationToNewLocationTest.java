@@ -1,11 +1,10 @@
 package com.njackson.test.adapters;
 
-import android.location.Location;
 import android.test.AndroidTestCase;
 
 import com.njackson.Constants;
 import com.njackson.adapters.AdvancedLocationToNewLocation;
-import com.njackson.events.GPSService.NewLocation;
+import com.njackson.events.GPSServiceCommand.NewLocation;
 
 import fr.jayps.android.AdvancedLocation;
 

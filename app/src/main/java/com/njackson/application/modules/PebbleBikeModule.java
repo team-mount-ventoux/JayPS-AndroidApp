@@ -17,8 +17,8 @@ import com.njackson.fit.GoogleFitService;
 import com.njackson.fragments.AltitudeFragment;
 import com.njackson.fragments.SpeedFragment;
 import com.njackson.fragments.StartButtonFragment;
+import com.njackson.gps.GPSServiceCommand;
 import com.njackson.gps.MainServiceForegroundStarter;
-import com.njackson.gps.GPSService;
 import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.live.LiveService;
 import com.njackson.oruxmaps.OruxMapsService;
@@ -44,7 +44,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class, LiveService.class, GoogleFitService.class, ActivityRecognitionService.class, ActivityRecognitionIntentService.class, OruxMapsService.class, PebbleDataReceiver.class, MainService.class},
+        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSServiceCommand.class, PebbleService.class, LiveService.class, GoogleFitService.class, ActivityRecognitionService.class, ActivityRecognitionIntentService.class, OruxMapsService.class, PebbleDataReceiver.class, MainService.class},
         library = true, complete = false
 )
 public class PebbleBikeModule {

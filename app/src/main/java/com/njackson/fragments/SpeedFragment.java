@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.njackson.R;
-import com.njackson.events.GPSService.NewLocation;
+import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.utils.NumberConverter;
 import com.squareup.otto.Subscribe;
 

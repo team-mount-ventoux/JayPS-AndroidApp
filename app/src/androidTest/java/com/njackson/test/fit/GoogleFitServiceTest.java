@@ -9,24 +9,14 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.RecordingApi;
-import com.google.android.gms.fitness.SessionsApi;
-import com.google.android.gms.fitness.data.DataType;
-import com.google.android.gms.fitness.data.Session;
 import com.google.android.gms.location.DetectedActivity;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.events.status.GoogleFitStatus;
 import com.njackson.fit.GoogleFitService;
-import com.njackson.gps.GPSService;
+import com.njackson.gps.GPSServiceCommand;
 import com.njackson.test.application.TestApplication;
-import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
-import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -44,7 +34,6 @@ import dagger.Provides;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
@@ -123,7 +112,7 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
     }
 
     private void startService() throws Exception {
-        Intent startIntent = new Intent(getSystemContext(), GPSService.class);
+        Intent startIntent = new Intent(getSystemContext(), GPSServiceCommand.class);
         startService(startIntent);
         _service = getService();
         _stateLatch.await(2000, TimeUnit.MILLISECONDS);

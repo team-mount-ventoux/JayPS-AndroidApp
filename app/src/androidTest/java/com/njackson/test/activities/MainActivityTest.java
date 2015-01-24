@@ -15,7 +15,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.njackson.activities.MainActivity;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.events.GPSService.ResetGPSState;
+import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.status.GoogleFitStatus;

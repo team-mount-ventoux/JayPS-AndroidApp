@@ -1,13 +1,9 @@
 package com.njackson.adapters;
 
 
-import android.util.Log;
-
 import com.njackson.Constants;
-import com.njackson.events.GPSService.NewLocation;
+import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.pebble.canvas.GPSData;
-
-import javax.inject.Inject;
 
 public class NewLocationToCanvasPluginGPSData extends GPSData {
 

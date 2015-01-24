@@ -8,7 +8,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.njackson.application.PebbleBikeApplication;
-import com.njackson.events.GPSService.NewLocation;
+import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.status.LiveStatus;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;

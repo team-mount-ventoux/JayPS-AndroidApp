@@ -4,11 +4,10 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.fit.GoogleFitService;
-import com.njackson.gps.GPSService;
+import com.njackson.gps.GPSServiceCommand;
 import com.njackson.live.LiveService;
 import com.njackson.oruxmaps.OruxMapsService;
 import com.njackson.pebble.PebbleService;
@@ -75,14 +74,14 @@ public class ServiceStarter implements IServiceStarter {
 
     protected void startGPSService() {
         int refreshInterval = Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000"));
-        Intent intent = new Intent(_context, GPSService.class);
+        Intent intent = new Intent(_context, GPSServiceCommand.class);
         intent.putExtra("REFRESH_INTERVAL",refreshInterval);
 
         _context.startService(intent);
     }
 
     private void stopGPSService() {
-        _context.stopService(new Intent(_context, GPSService.class));
+        _context.stopService(new Intent(_context, GPSServiceCommand.class));
     }
 
     private void startLiveService() { _context.startService(new Intent(_context, LiveService.class)); }

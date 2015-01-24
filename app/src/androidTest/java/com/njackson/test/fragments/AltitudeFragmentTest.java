@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 
 import com.njackson.R;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.events.GPSService.NewAltitiude;
+import com.njackson.events.GPSServiceCommand.NewAltitiude;
 import com.njackson.fragments.AltitudeFragment;
 import com.njackson.test.FragmentInstrumentTestCase2;
 import com.njackson.test.application.TestApplication;

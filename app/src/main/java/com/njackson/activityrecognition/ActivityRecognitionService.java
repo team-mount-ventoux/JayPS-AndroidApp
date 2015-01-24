@@ -15,7 +15,7 @@ import com.njackson.Constants;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
-import com.njackson.events.status.GPSStatus;
+import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;

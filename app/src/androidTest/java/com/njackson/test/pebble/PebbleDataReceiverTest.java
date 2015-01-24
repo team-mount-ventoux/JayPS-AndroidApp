@@ -9,7 +9,7 @@ import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
 import com.njackson.R;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.events.GPSService.ResetGPSState;
+import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.PebbleService.NewMessage;
 import com.njackson.oruxmaps.IOruxMaps;
 import com.njackson.pebble.IMessageManager;
@@ -29,7 +29,6 @@ import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

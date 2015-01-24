@@ -10,7 +10,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.fit.GoogleFitService;
-import com.njackson.gps.GPSService;
+import com.njackson.gps.GPSServiceCommand;
 import com.njackson.live.LiveService;
 import com.njackson.oruxmaps.OruxMaps;
 import com.njackson.oruxmaps.OruxMapsService;
@@ -61,7 +61,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(4)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents, GPSService.class));
+        assertTrue(checkComponentInCaptor(intents, GPSServiceCommand.class));
     }
 
     @SmallTest
@@ -72,7 +72,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(4)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        Intent startIntent = getIntentFromCaptor(intents,GPSService.class);
+        Intent startIntent = getIntentFromCaptor(intents,GPSServiceCommand.class);
 
         int refreshInterval = startIntent.getIntExtra("REFRESH_INTERVAL",1000);
         assertEquals(1500,refreshInterval);
@@ -86,7 +86,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(4)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,GPSService.class));
+        assertTrue(checkComponentInCaptor(intents,GPSServiceCommand.class));
     }
 
     @SmallTest
@@ -226,13 +226,13 @@ public class ServiceStarterTest extends AndroidTestCase {
         ActivityManager manager = mock(ActivityManager.class);
         ArrayList<ActivityManager.RunningServiceInfo> runningServices = new ArrayList<ActivityManager.RunningServiceInfo>();
         ActivityManager.RunningServiceInfo info = new ActivityManager.RunningServiceInfo();
-        info.service = new ComponentName(GPSService.class.getPackage().getName(),GPSService.class.getName());
+        info.service = new ComponentName(GPSServiceCommand.class.getPackage().getName(),GPSServiceCommand.class.getName());
         runningServices.add(info);
 
         when(manager.getRunningServices(Integer.MAX_VALUE)).thenReturn(runningServices);
         when(_mockContext.getSystemService(getContext().ACTIVITY_SERVICE)).thenReturn(manager);
 
-        assertEquals(true,_serviceStarter.serviceRunning(GPSService.class));
+        assertEquals(true,_serviceStarter.serviceRunning(GPSServiceCommand.class));
     }
 
     @SmallTest
@@ -240,7 +240,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         ActivityManager manager = mock(ActivityManager.class);
         ArrayList<ActivityManager.RunningServiceInfo> runningServices = new ArrayList<ActivityManager.RunningServiceInfo>();
         ActivityManager.RunningServiceInfo info = new ActivityManager.RunningServiceInfo();
-        info.service = new ComponentName(GPSService.class.getPackage().getName(),GPSService.class.getName());
+        info.service = new ComponentName(GPSServiceCommand.class.getPackage().getName(),GPSServiceCommand.class.getName());
         runningServices.add(info);
 
         when(manager.getRunningServices(Integer.MAX_VALUE)).thenReturn(runningServices);

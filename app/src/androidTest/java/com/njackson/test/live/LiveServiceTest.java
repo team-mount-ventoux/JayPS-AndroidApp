@@ -4,10 +4,9 @@ import android.content.Intent;
 
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.events.GPSService.NewLocation;
+import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.live.LiveService;
 import com.njackson.live.LiveTracking;
-import com.njackson.live.LiveTrackingFriend;
 import com.njackson.test.application.TestApplication;
 import com.njackson.pebble.IMessageManager;
 
@@ -20,22 +19,10 @@ import android.location.Location;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 import org.mockito.ArgumentCaptor;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
 
-
-import java.io.ByteArrayInputStream;
-import java.util.HashMap;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 
 import dagger.Module;
 import dagger.ObjectGraph;

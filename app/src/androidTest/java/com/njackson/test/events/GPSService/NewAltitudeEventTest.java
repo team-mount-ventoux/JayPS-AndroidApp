@@ -2,7 +2,7 @@ package com.njackson.test.events.GPSService;
 
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.njackson.events.GPSService.NewAltitiude;
+import com.njackson.events.GPSServiceCommand.NewAltitiude;
 
 import junit.framework.TestCase;
 
