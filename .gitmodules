@@ -1,6 +1,3 @@
 [submodule "submodules/AdvancedLocation"]
 	path = submodules/AdvancedLocation
 	url = https://nicholasjackson@github.com/jay3/AdvancedLocation.git
-[submodule "submodules/gradle-android-test-plugin"]
-	path = submodules/gradle-android-test-plugin
-	url = git@github.com:JakeWharton/gradle-android-test-plugin.git
