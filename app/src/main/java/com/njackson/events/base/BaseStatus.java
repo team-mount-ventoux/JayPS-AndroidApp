@@ -1,7 +1,9 @@
-package com.njackson.events.status;
+package com.njackson.events.base;
 
-public class LiveStatus {
-
+/**
+ * Created by njackson on 24/01/15.
+ */
+public class BaseStatus {
     public enum State {
         STARTED,
         STOPPED,
@@ -11,8 +13,7 @@ public class LiveStatus {
     public State _state;
     public State getState() { return _state; }
 
-    public LiveStatus(State state) {
+    public BaseStatus(State state) {
         this._state = state;
     }
-
 }

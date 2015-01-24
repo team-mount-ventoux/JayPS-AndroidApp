@@ -6,7 +6,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.TextView;
 
 import com.njackson.R;
-import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.fragments.SpeedFragment;
 import com.njackson.test.FragmentInstrumentTestCase2;
@@ -48,7 +48,7 @@ public class SpeedFragmentTest extends FragmentInstrumentTestCase2 {
     private SharedPreferences _mock;
 
     @Module(
-            includes = PebbleBikeModule.class,
+            includes = AndroidModule.class,
             injects = SpeedFragmentTest.class,
             overrides = true,
             complete = false

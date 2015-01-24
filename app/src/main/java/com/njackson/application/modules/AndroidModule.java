@@ -6,25 +6,53 @@ import android.hardware.SensorManager;
 import android.location.LocationManager;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.Fitness;
+import com.google.android.gms.fitness.RecordingApi;
+import com.google.android.gms.fitness.SessionsApi;
 import com.google.android.gms.location.ActivityRecognition;
 import com.njackson.activities.MainActivity;
-import com.njackson.activityrecognition.ActivityRecognitionService;
+import com.njackson.activityrecognition.ActivityRecognitionIntentService;
+import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
+import com.njackson.analytics.IAnalytics;
+import com.njackson.analytics.Parse;
+import com.njackson.application.MainThreadBus;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.activities.SettingsActivity;
+import com.njackson.fit.GoogleFitServiceCommand;
+import com.njackson.fragments.AltitudeFragment;
+import com.njackson.fragments.SpeedFragment;
 import com.njackson.fragments.StartButtonFragment;
 import com.njackson.gps.GPSServiceCommand;
+import com.njackson.gps.IForegroundServiceStarter;
+import com.njackson.gps.MainServiceForegroundStarter;
+import com.njackson.live.ILiveTracking;
+import com.njackson.live.LiveServiceCommand;
+import com.njackson.live.LiveTracking;
 import com.njackson.oruxmaps.IOruxMaps;
 import com.njackson.oruxmaps.OruxMaps;
-import com.njackson.oruxmaps.OruxMapsService;
+import com.njackson.oruxmaps.OruxMapsServiceCommand;
 import com.njackson.pebble.PebbleDataReceiver;
 import com.njackson.pebble.PebbleServiceCommand;
+import com.njackson.pebble.canvas.CanvasWrapper;
+import com.njackson.pebble.canvas.ICanvasWrapper;
+import com.njackson.service.MainService;
 import com.njackson.utils.googleplay.GoogleFitSessionManager;
 import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
+import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.services.ServiceStarter;
 import com.njackson.pebble.IMessageManager;
 import com.njackson.pebble.MessageManager;
+import com.njackson.utils.time.ITime;
+import com.njackson.utils.time.ITimer;
+import com.njackson.utils.time.Time;
+import com.njackson.utils.time.Timer;
+import com.njackson.utils.version.AndroidVersion;
+import com.njackson.utils.version.PebbleVersion;
+import com.njackson.utils.watchface.IInstallWatchFace;
+import com.njackson.utils.watchface.InstallPebbleWatchFace;
+import com.squareup.otto.Bus;
+import com.squareup.otto.ThreadEnforcer;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -38,10 +66,26 @@ import static android.content.Context.SENSOR_SERVICE;
 /**
  * Created by server on 30/03/2014.
  */
-@Module(library = true,complete=false,injects = {GPSServiceCommand.class, ActivityRecognitionService.class, MainActivity.class, SettingsActivity.class, StartButtonFragment.class,PebbleServiceCommand.class, OruxMapsService.class, PebbleDataReceiver.class})
+@Module(library = true,complete=false,injects = {
+        MainActivity.class,
+        SettingsActivity.class,
+        StartButtonFragment.class,
+        SpeedFragment.class,
+        AltitudeFragment.class,
+        MainService.class,
+        ActivityRecognitionIntentService.class,
+        GPSServiceCommand.class,
+        PebbleServiceCommand.class,
+        LiveServiceCommand.class,
+        OruxMapsServiceCommand.class,
+        GoogleFitServiceCommand.class,
+        ActivityRecognitionServiceCommand.class,
+        PebbleDataReceiver.class,
+        })
 public class AndroidModule {
-    private final PebbleBikeApplication application;
+    private PebbleBikeApplication application = null;
 
+    public AndroidModule(){}
     public AndroidModule(PebbleBikeApplication application) {
         this.application = application;
     }
@@ -54,6 +98,9 @@ public class AndroidModule {
     Context provideApplicationContext() {
         return application;
     }
+
+    @Provides @Singleton
+    Bus providesBus() { return new MainThreadBus(new Bus(ThreadEnforcer.ANY)); }
 
     @Provides @Singleton LocationManager provideLocationManager() {
         return (LocationManager) application.getSystemService(LOCATION_SERVICE);
@@ -91,4 +138,45 @@ public class AndroidModule {
     public IMessageManager providesMessageManager() { return new MessageManager(application); }
 
     @Provides IOruxMaps providesOruxMaps() { return new OruxMaps(application); }
+
+    @Provides
+    @Named("LiveTrackingMmt")
+    ILiveTracking provideLiveTrackingMmt() {
+        return new LiveTracking(application, LiveTracking.TYPE_JAYPS, providesBus());
+    }
+
+    @Provides
+    @Named("LiveTrackingJayPS")
+    ILiveTracking provideLiveTrackingJay() {
+        return new LiveTracking(application, LiveTracking.TYPE_MMT, providesBus());
+    }
+
+    @Provides @Singleton
+    IAnalytics providesAnalytics() {
+        return new Parse();
+    }
+
+    @Provides
+    IInstallWatchFace providesWatchFaceInstall() { return new InstallPebbleWatchFace(new AndroidVersion(), new PebbleVersion()); }
+
+    @Provides
+    IGooglePlayServices providesGooglePlayServices() { return new GooglePlayServices(); }
+
+    @Provides
+    RecordingApi providesGoogleFitRecordingApi() { return Fitness.RecordingApi; }
+
+    @Provides
+    SessionsApi providesGoogleFitSessionsApi() { return Fitness.SessionsApi; }
+
+    @Provides
+    ITimer providesTimer() { return new Timer(); }
+
+    @Provides
+    ITime providesTime() { return new Time(); }
+
+    @Provides
+    IForegroundServiceStarter providesForegroundServiceStarter() { return new MainServiceForegroundStarter(); }
+
+    @Provides
+    ICanvasWrapper providesCanvasWrapper() { return new CanvasWrapper(); }
 }

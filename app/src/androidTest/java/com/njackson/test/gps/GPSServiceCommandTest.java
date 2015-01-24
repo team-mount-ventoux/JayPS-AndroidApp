@@ -12,13 +12,14 @@ import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
 
+import com.njackson.application.modules.AndroidModule;
 import com.njackson.application.modules.ForApplication;
-import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.GPSServiceCommand.ChangeRefreshInterval;
 import com.njackson.events.GPSServiceCommand.GPSChangeState;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.GPSServiceCommand.NewLocation;
+import com.njackson.events.base.BaseChangeState;
 import com.njackson.gps.GPSSensorEventListener;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.gps.IForegroundServiceStarter;
@@ -81,7 +82,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
     private GPSServiceCommand _serviceCommand;
 
     @Module(
-            includes = PebbleBikeModule.class,
+            includes = AndroidModule.class,
             injects = GPSServiceCommandTest.class,
             overrides = true,
             complete = false
@@ -171,7 +172,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(false);
 
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(GPSChangeState.State.START));
+        _bus.post(new GPSChangeState(BaseChangeState.State.START));
 
         _stateLatch.await(2000,TimeUnit.MILLISECONDS);
 
@@ -183,7 +184,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
 
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(GPSChangeState.State.START));
+        _bus.post(new GPSChangeState(BaseChangeState.State.START));
 
         ArgumentCaptor<LocationListener> locationListenerCaptor = ArgumentCaptor.forClass(LocationListener.class);
         verify(_mockLocationManager,timeout(1000).times(1)).requestLocationUpdates(

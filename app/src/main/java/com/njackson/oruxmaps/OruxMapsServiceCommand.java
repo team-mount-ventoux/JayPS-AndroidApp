@@ -15,7 +15,7 @@ import javax.inject.Inject;
 /**
  * Created by njackson on 17/01/15.
  */
-public class OruxMapsService extends Service {
+public class OruxMapsServiceCommand extends Service {
 
     private static final String TAG = "OruxMapsService";
 

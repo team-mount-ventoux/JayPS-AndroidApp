@@ -8,7 +8,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
 import com.njackson.R;
-import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.PebbleService.NewMessage;
 import com.njackson.oruxmaps.IOruxMaps;
@@ -55,7 +55,7 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
 
 
     @Module(
-            includes = PebbleBikeModule.class,
+            includes = AndroidModule.class,
             injects = PebbleDataReceiverTest.class,
             overrides = true,
             complete = false

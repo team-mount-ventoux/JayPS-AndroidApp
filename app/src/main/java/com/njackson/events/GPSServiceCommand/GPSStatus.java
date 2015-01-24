@@ -1,21 +1,12 @@
 package com.njackson.events.GPSServiceCommand;
 
+import com.njackson.events.base.BaseStatus;
+
 /**
  * Created by server on 21/03/2014.
  */
-public class GPSStatus {
-
-    public enum State {
-        STARTED,
-        STOPPED,
-        DISABLED
-    }
-
-    public State _state;
-    public State getState() { return _state; }
-
+public class GPSStatus extends BaseStatus{
     public GPSStatus(State state) {
-        this._state = state;
+        super(state);
     }
-
 }

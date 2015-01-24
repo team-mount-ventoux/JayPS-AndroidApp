@@ -5,8 +5,7 @@ import android.os.IBinder;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.njackson.application.modules.PebbleBikeModule;
-import com.njackson.gps.GPSServiceCommand;
+import com.njackson.application.modules.AndroidModule;
 import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.service.MainService;
 import com.njackson.test.application.TestApplication;
@@ -30,7 +29,7 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
     private MainService _service;
 
     @Module(
-            includes = PebbleBikeModule.class,
+            includes = AndroidModule.class,
             injects = MainServiceTest.class,
             overrides = true,
             complete = false

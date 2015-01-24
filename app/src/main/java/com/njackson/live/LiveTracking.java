@@ -35,7 +35,7 @@ import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
 
-public class LiveTracking {
+public class LiveTracking implements ILiveTracking {
 
     private static final String TAG = "PB-LiveTracking";
 

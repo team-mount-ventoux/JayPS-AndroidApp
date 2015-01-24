@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.njackson.activityrecognition.ActivityRecognitionService;
-import com.njackson.fit.GoogleFitService;
+import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
+import com.njackson.fit.GoogleFitServiceCommand;
 import com.njackson.gps.GPSServiceCommand;
-import com.njackson.live.LiveService;
-import com.njackson.oruxmaps.OruxMapsService;
+import com.njackson.live.LiveServiceCommand;
+import com.njackson.oruxmaps.OruxMapsServiceCommand;
 import com.njackson.pebble.PebbleServiceCommand;
 
 /**
@@ -37,12 +37,12 @@ public class ServiceStarter implements IServiceStarter {
 
     @Override
     public void startActivityServices() {
-        _context.startService(new Intent(_context, ActivityRecognitionService.class));
+        _context.startService(new Intent(_context, ActivityRecognitionServiceCommand.class));
     }
 
     @Override
     public void stopActivityServices() {
-        _context.stopService(new Intent(_context, ActivityRecognitionService.class));
+        _context.stopService(new Intent(_context, ActivityRecognitionServiceCommand.class));
     }
 
     @Override
@@ -84,16 +84,16 @@ public class ServiceStarter implements IServiceStarter {
         _context.stopService(new Intent(_context, GPSServiceCommand.class));
     }
 
-    private void startLiveService() { _context.startService(new Intent(_context, LiveService.class)); }
+    private void startLiveService() { _context.startService(new Intent(_context, LiveServiceCommand.class)); }
 
-    private void stopLiveService() { _context.stopService(new Intent(_context, LiveService.class)); }
+    private void stopLiveService() { _context.stopService(new Intent(_context, LiveServiceCommand.class)); }
 
-    private void startGoogleFitService() { _context.startService(new Intent(_context, GoogleFitService.class)); }
+    private void startGoogleFitService() { _context.startService(new Intent(_context, GoogleFitServiceCommand.class)); }
 
-    private void stopGoogleFitService() { _context.stopService(new Intent(_context, GoogleFitService.class)); }
+    private void stopGoogleFitService() { _context.stopService(new Intent(_context, GoogleFitServiceCommand.class)); }
 
-    private void startOruxService() { _context.startService(new Intent(_context, OruxMapsService.class)); }
+    private void startOruxService() { _context.startService(new Intent(_context, OruxMapsServiceCommand.class)); }
 
-    private void stopOruxService() { _context.stopService(new Intent(_context, OruxMapsService.class)); }
+    private void stopOruxService() { _context.stopService(new Intent(_context, OruxMapsServiceCommand.class)); }
 
 }

@@ -10,10 +10,10 @@ import android.test.suitebuilder.annotation.SmallTest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
-import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.events.status.GoogleFitStatus;
-import com.njackson.fit.GoogleFitService;
+import com.njackson.fit.GoogleFitServiceCommand;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
@@ -42,8 +42,8 @@ import static org.mockito.Mockito.when;
 /**
  * Created by njackson on 05/01/15.
  */
-public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
-    private GoogleFitService _service;
+public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitServiceCommand> {
+    private GoogleFitServiceCommand _service;
     private CountDownLatch _stateLatch;
 
     @Inject Bus _bus;
@@ -53,7 +53,7 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
     private static IGoogleFitSessionManager _mockSessionManager;
 
     @Module(
-            includes = PebbleBikeModule.class,
+            includes = AndroidModule.class,
             injects = GoogleFitServiceTest.class,
             overrides = true,
             complete = false
@@ -81,12 +81,12 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
      *
      * @param serviceClass The type of the service under test.
      */
-    public GoogleFitServiceTest(Class<GoogleFitService> serviceClass) {
+    public GoogleFitServiceTest(Class<GoogleFitServiceCommand> serviceClass) {
         super(serviceClass);
     }
 
     public GoogleFitServiceTest() {
-        super(GoogleFitService.class);
+        super(GoogleFitServiceCommand.class);
     }
 
     @Override
@@ -144,14 +144,14 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
     public void testOnStartRegistersGoogleClientConnectedHandlers() throws Exception {
         startService();
 
-        verify(_googleAPIClient,timeout(2000).times(1)).registerConnectionCallbacks(any(GoogleFitService.class));
+        verify(_googleAPIClient,timeout(2000).times(1)).registerConnectionCallbacks(any(GoogleFitServiceCommand.class));
     }
 
     @SmallTest
     public void testOnStartRegistersGoogleClientConnectionFailedHandlers() throws Exception {
         startService();
 
-        verify(_googleAPIClient,timeout(2000).times(1)).registerConnectionFailedListener(any(GoogleFitService.class));
+        verify(_googleAPIClient,timeout(2000).times(1)).registerConnectionFailedListener(any(GoogleFitServiceCommand.class));
     }
 
     @SmallTest
@@ -159,7 +159,7 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         startService();
         shutdownService();
 
-        verify(_googleAPIClient,timeout(2000).times(1)).unregisterConnectionCallbacks(any(GoogleFitService.class));
+        verify(_googleAPIClient,timeout(2000).times(1)).unregisterConnectionCallbacks(any(GoogleFitServiceCommand.class));
     }
 
     @SmallTest
@@ -167,7 +167,7 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitService> {
         startService();
         shutdownService();
 
-        verify(_googleAPIClient,timeout(2000).times(1)).unregisterConnectionFailedListener(any(GoogleFitService.class));
+        verify(_googleAPIClient,timeout(2000).times(1)).unregisterConnectionFailedListener(any(GoogleFitServiceCommand.class));
     }
 
     @SmallTest

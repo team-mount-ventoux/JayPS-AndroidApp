@@ -8,12 +8,12 @@ import android.content.SharedPreferences;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.njackson.activityrecognition.ActivityRecognitionService;
-import com.njackson.fit.GoogleFitService;
+import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
+import com.njackson.fit.GoogleFitServiceCommand;
 import com.njackson.gps.GPSServiceCommand;
-import com.njackson.live.LiveService;
+import com.njackson.live.LiveServiceCommand;
 import com.njackson.oruxmaps.OruxMaps;
-import com.njackson.oruxmaps.OruxMapsService;
+import com.njackson.oruxmaps.OruxMapsServiceCommand;
 import com.njackson.pebble.PebbleServiceCommand;
 import com.njackson.utils.services.ServiceStarter;
 
@@ -119,7 +119,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(1)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,ActivityRecognitionService.class));
+        assertTrue(checkComponentInCaptor(intents,ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
@@ -130,7 +130,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(1)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,ActivityRecognitionService.class));
+        assertTrue(checkComponentInCaptor(intents,ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
@@ -141,7 +141,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(4)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,LiveService.class));
+        assertTrue(checkComponentInCaptor(intents,LiveServiceCommand.class));
     }
 
     @SmallTest
@@ -152,7 +152,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(4)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,LiveService.class));
+        assertTrue(checkComponentInCaptor(intents,LiveServiceCommand.class));
     }
 
     @SmallTest
@@ -163,7 +163,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(4)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,OruxMapsService.class));
+        assertTrue(checkComponentInCaptor(intents,OruxMapsServiceCommand.class));
     }
 
     @SmallTest
@@ -174,7 +174,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(4)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,OruxMapsService.class));
+        assertTrue(checkComponentInCaptor(intents,OruxMapsServiceCommand.class));
     }
 
     @SmallTest
@@ -185,7 +185,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(1)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,ActivityRecognitionService.class));
+        assertTrue(checkComponentInCaptor(intents,ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
@@ -196,7 +196,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(1)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,ActivityRecognitionService.class));
+        assertTrue(checkComponentInCaptor(intents,ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
@@ -207,7 +207,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(4)).startService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,GoogleFitService.class));
+        assertTrue(checkComponentInCaptor(intents,GoogleFitServiceCommand.class));
     }
 
     @SmallTest
@@ -218,7 +218,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockContext,times(4)).stopService(intentArgumentCaptor.capture());
 
         List<Intent> intents = intentArgumentCaptor.getAllValues();
-        assertTrue(checkComponentInCaptor(intents,GoogleFitService.class));
+        assertTrue(checkComponentInCaptor(intents,GoogleFitServiceCommand.class));
     }
 
     @SmallTest

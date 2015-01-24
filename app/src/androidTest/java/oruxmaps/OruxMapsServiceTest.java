@@ -5,10 +5,10 @@ import android.content.SharedPreferences;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.application.modules.AndroidModule;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.oruxmaps.IOruxMaps;
-import com.njackson.oruxmaps.OruxMapsService;
+import com.njackson.oruxmaps.OruxMapsServiceCommand;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
@@ -28,18 +28,18 @@ import static org.mockito.Mockito.when;
 /**
  * Created by njackson on 17/01/15.
  */
-public class OruxMapsServiceTest extends ServiceTestCase<OruxMapsService> {
+public class OruxMapsServiceTest extends ServiceTestCase<OruxMapsServiceCommand> {
 
     @Inject Bus _bus;
     @Inject SharedPreferences _sharedPreferences;
 
-    private OruxMapsService _service;
+    private OruxMapsServiceCommand _service;
 
     private static IOruxMaps _mockOruxMaps;
     private static ITime _mockTime;
 
     @Module(
-            includes = PebbleBikeModule.class,
+            includes = AndroidModule.class,
             injects = OruxMapsServiceTest.class,
             overrides = true,
             complete = false
@@ -56,12 +56,12 @@ public class OruxMapsServiceTest extends ServiceTestCase<OruxMapsService> {
      *
      * @param serviceClass The type of the service under test.
      */
-    public OruxMapsServiceTest(Class<OruxMapsService> serviceClass) {
+    public OruxMapsServiceTest(Class<OruxMapsServiceCommand> serviceClass) {
         super(serviceClass);
     }
 
     public OruxMapsServiceTest() {
-        super(OruxMapsService.class);
+        super(OruxMapsServiceCommand.class);
     }
 
     @Override

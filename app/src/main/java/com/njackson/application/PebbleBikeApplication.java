@@ -4,10 +4,10 @@ import android.app.Application;
 import android.util.Log;
 
 import com.njackson.application.modules.AndroidModule;
-import com.njackson.application.modules.PebbleBikeModule;
 import com.parse.Parse;
 import com.parse.ParseCrashReporting;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,10 +30,9 @@ public class PebbleBikeApplication extends Application implements IInjectionCont
     }
 
     protected List<Object> getModules() {
-        return Arrays.asList(
-                new AndroidModule(this),
-                new PebbleBikeModule()
-        );
+        List<Object> modules = new ArrayList<Object>();
+        modules.add(new AndroidModule(this));
+        return modules;
     }
 
     public void inject(Object object) {

@@ -11,8 +11,8 @@ import android.test.suitebuilder.annotation.SmallTest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
-import com.njackson.activityrecognition.ActivityRecognitionService;
-import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
+import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.gps.IForegroundServiceStarter;
@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by njackson on 01/01/15.
  */
-public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityRecognitionService> {
+public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityRecognitionServiceCommand> {
 
     @Inject Bus _bus;
     @Inject @Named("GoogleActivity") GoogleApiClient _googleApiClient;
@@ -57,12 +57,12 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
 
     private ActivityRecognitionStatus _activityStatusEvent;
     private CountDownLatch _stateLatch;
-    private ActivityRecognitionService _service;
+    private ActivityRecognitionServiceCommand _service;
     private static ITimer _mockTimer;
     private static IForegroundServiceStarter _mockServiceStarter;
 
     @Module(
-            includes = PebbleBikeModule.class,
+            includes = AndroidModule.class,
             injects = ActivityRecognitionServiceTest.class,
             overrides = true,
             complete = false
@@ -82,12 +82,12 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
      *
      * @param serviceClass The type of the service under test.
      */
-    public ActivityRecognitionServiceTest(Class<ActivityRecognitionService> serviceClass) {
+    public ActivityRecognitionServiceTest(Class<ActivityRecognitionServiceCommand> serviceClass) {
         super(serviceClass);
     }
 
     public ActivityRecognitionServiceTest() {
-        super(ActivityRecognitionService.class);
+        super(ActivityRecognitionServiceCommand.class);
     }
 
     @Subscribe
@@ -117,7 +117,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     }
 
     private void startService() throws Exception {
-        Intent startIntent = new Intent(getSystemContext(), ActivityRecognitionService.class);
+        Intent startIntent = new Intent(getSystemContext(), ActivityRecognitionServiceCommand.class);
         startService(startIntent);
         _service = getService();
         _stateLatch.await(2000, TimeUnit.MILLISECONDS);
@@ -135,15 +135,15 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     @SmallTest
     public void testStartsAndStopServiceForeground() throws Exception {
         startService();
-        verify(_mockServiceStarter,timeout(2000).times(1)).startServiceForeground(any(ActivityRecognitionService.class),anyString(),anyString());
+        verify(_mockServiceStarter,timeout(2000).times(1)).startServiceForeground(any(ActivityRecognitionServiceCommand.class),anyString(),anyString());
 
         shutdownService();
-        verify(_mockServiceStarter,timeout(2000).times(1)).stopServiceForeground(any(ActivityRecognitionService.class));
+        verify(_mockServiceStarter,timeout(2000).times(1)).stopServiceForeground(any(ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
     public void testGooglePlayDisableMessageReceived() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.API_UNAVAILABLE);
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.API_UNAVAILABLE);
         startService();
 
         assertEquals(ActivityRecognitionStatus.State.PLAY_SERVICES_NOT_AVAILABLE, _activityStatusEvent.getState());
@@ -151,7 +151,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
 
     @SmallTest
     public void testServiceStartedMessageReceived() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
         startService();
 
         assertEquals(ActivityRecognitionStatus.State.STARTED, _activityStatusEvent.getState());
@@ -159,7 +159,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
 
     @SmallTest
     public void testServiceConnectsToGooglePlayOnStart() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
         startService();
 
         verify(_googleApiClient,times(1)).connect();
@@ -167,39 +167,39 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
 
     @SmallTest
     public void testRegistersActivityRecogntionConnectedEvent() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
         startService();
 
-        verify(_googleApiClient,times(1)).registerConnectionCallbacks(any(ActivityRecognitionService.class));
+        verify(_googleApiClient,times(1)).registerConnectionCallbacks(any(ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
     public void testRegistersActivityRecogntionFailedEvent() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
         startService();
 
-        verify(_googleApiClient,times(1)).registerConnectionFailedListener(any(ActivityRecognitionService.class));
+        verify(_googleApiClient,times(1)).registerConnectionFailedListener(any(ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
     public void testUnRegistersActivityRecogntionConnectedEvent() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
         startService();
         shutdownService();
-        verify(_googleApiClient,times(1)).unregisterConnectionCallbacks(any(ActivityRecognitionService.class));
+        verify(_googleApiClient,times(1)).unregisterConnectionCallbacks(any(ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
     public void testUnRegistersActivityRecogntionFailedEvent() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
         startService();
         shutdownService();
-        verify(_googleApiClient,times(1)).unregisterConnectionFailedListener(any(ActivityRecognitionService.class));
+        verify(_googleApiClient,times(1)).unregisterConnectionFailedListener(any(ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
     public void testRegistersActivityRecognitionUpdatesOnConnect() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
         startService();
         _service.onConnected(new Bundle());
 
@@ -208,7 +208,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
 
     @SmallTest
     public void testRegistersActivityRecognitionUpdatesOnDestroy() throws Exception {
-        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionService.class))).thenReturn(ConnectionResult.SUCCESS);
+        when(_playServices.isGooglePlayServicesAvailable(any(ActivityRecognitionServiceCommand.class))).thenReturn(ConnectionResult.SUCCESS);
         startService();
         shutdownService();
 
@@ -242,7 +242,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         startService();
         _bus.post(new NewActivityEvent(DetectedActivity.STILL));
 
-        verify(_mockTimer,timeout(2000).times(1)).setTimer(anyLong(),any(ActivityRecognitionService.class));
+        verify(_mockTimer,timeout(2000).times(1)).setTimer(anyLong(),any(ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
@@ -252,7 +252,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         startService();
         _bus.post(new NewActivityEvent(DetectedActivity.STILL));
 
-        verify(_mockTimer,timeout(2000).times(0)).setTimer(anyLong(),any(ActivityRecognitionService.class));
+        verify(_mockTimer,timeout(2000).times(0)).setTimer(anyLong(),any(ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest
@@ -264,7 +264,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         when(_mockTimer.getActive()).thenReturn(true);
         _bus.post(new NewActivityEvent(DetectedActivity.STILL));
 
-        verify(_mockTimer,timeout(2000).times(0)).setTimer(anyLong(),any(ActivityRecognitionService.class));
+        verify(_mockTimer,timeout(2000).times(0)).setTimer(anyLong(),any(ActivityRecognitionServiceCommand.class));
     }
 
     @SmallTest

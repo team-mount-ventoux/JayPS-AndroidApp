@@ -10,7 +10,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.R;
 import com.njackson.activities.SettingsActivity;
-import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.application.modules.AndroidModule;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.messages.IMessageMaker;
@@ -51,7 +51,7 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
     @Inject SharedPreferences _preferences;
 
     @Module(
-            includes = PebbleBikeModule.class,
+            includes = AndroidModule.class,
             injects = SettingsActivityTest.class,
             overrides = true,
             complete = false

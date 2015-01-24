@@ -6,7 +6,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 import android.widget.Button;
 
 import com.njackson.R;
-import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
@@ -48,7 +48,7 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
     private CountDownLatch _stopLatch;
 
     @Module(
-            includes = PebbleBikeModule.class,
+            includes = AndroidModule.class,
             injects = StartButtonFragmentTest.class,
             overrides = true,
             complete = false

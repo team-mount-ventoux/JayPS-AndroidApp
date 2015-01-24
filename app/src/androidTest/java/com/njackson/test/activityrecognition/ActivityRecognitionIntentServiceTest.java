@@ -1,18 +1,11 @@
 package com.njackson.activityrecognition;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.hardware.SensorManager;
-import android.location.LocationManager;
-import android.os.Bundle;
 import android.test.ServiceTestCase;
 
 import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
-import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.test.application.TestApplication;
 import com.squareup.otto.Bus;
@@ -22,13 +15,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.ObjectGraph;
-import dagger.Provides;
 
-import static org.mockito.Mockito.mock;
 
 /**
  * Created by njackson on 11/01/2014.
@@ -47,7 +37,7 @@ public class ActivityRecognitionIntentServiceTest extends ServiceTestCase<Activi
     @Inject Bus _bus;
 
     @Module(
-            includes = PebbleBikeModule.class,
+            includes = AndroidModule.class,
             injects = ActivityRecognitionIntentServiceTest.class,
             overrides = true,
             complete = false

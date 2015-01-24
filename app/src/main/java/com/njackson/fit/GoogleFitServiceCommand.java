@@ -54,7 +54,7 @@ import javax.inject.Named;
 /**
  * Created by njackson on 05/01/15.
  */
-public class GoogleFitService extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GoogleFitServiceCommand extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "GoogleFitService";
     @Inject Bus _bus;

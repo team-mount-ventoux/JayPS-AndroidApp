@@ -14,7 +14,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.njackson.activities.MainActivity;
 import com.njackson.analytics.IAnalytics;
-import com.njackson.application.modules.PebbleBikeModule;
+import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
@@ -61,7 +61,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     private static IGooglePlayServices _mockPlayServices;
 
     @Module(
-            includes = PebbleBikeModule.class,
+            includes = AndroidModule.class,
             injects = MainActivityTest.class,
             overrides = true,
             complete = false

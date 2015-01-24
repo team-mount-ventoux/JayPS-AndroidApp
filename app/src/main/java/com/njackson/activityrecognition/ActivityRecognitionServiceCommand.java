@@ -30,7 +30,7 @@ import javax.inject.Named;
 /**
  * Created by njackson on 01/01/15.
  */
-public class ActivityRecognitionService  extends Service implements
+public class ActivityRecognitionServiceCommand extends Service implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, ITimerHandler {
 
     private static final String TAG = "PB-ActivityRecognitionService";

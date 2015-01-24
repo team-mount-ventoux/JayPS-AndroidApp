@@ -1,16 +1,14 @@
 package com.njackson.test.pebble;
 
 import android.content.Context;
-import android.content.Intent;
 import com.getpebble.android.kit.util.PebbleDictionary;
+import com.njackson.application.modules.AndroidModule;
 import com.njackson.application.modules.ForApplication;
-import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.LiveService.LiveMessage;
 import com.njackson.events.PebbleService.NewMessage;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.pebble.PebbleServiceCommand;
-import com.njackson.pebble.canvas.CanvasWrapper;
 import com.njackson.pebble.canvas.GPSData;
 import com.njackson.pebble.canvas.ICanvasWrapper;
 import com.njackson.test.application.TestApplication;
@@ -25,11 +23,9 @@ import static org.mockito.Mockito.*;
 
 import android.content.SharedPreferences;
 import android.test.AndroidTestCase;
-import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,7 +34,7 @@ import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 
-public class PebbleServiceTest extends AndroidTestCase {
+public class PebbleServiceCommandTest extends AndroidTestCase {
 
     @Inject Bus _bus;
     @Inject IMessageManager _mockMessageManager;
@@ -52,8 +48,8 @@ public class PebbleServiceTest extends AndroidTestCase {
     private static TestApplication _app;
 
     @Module(
-            includes = PebbleBikeModule.class,
-            injects = PebbleServiceTest.class,
+            includes = AndroidModule.class,
+            injects = PebbleServiceCommandTest.class,
             overrides = true,
             complete = false
     )
