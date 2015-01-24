@@ -1,12 +1,12 @@
 package oruxmaps;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.test.ServiceTestCase;
+import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.application.modules.AndroidModule;
-import com.njackson.gps.GPSServiceCommand;
+import com.njackson.events.GPSServiceCommand.GPSStatus;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.oruxmaps.IOruxMaps;
 import com.njackson.oruxmaps.OruxMapsServiceCommand;
 import com.njackson.test.application.TestApplication;
@@ -28,56 +28,42 @@ import static org.mockito.Mockito.when;
 /**
  * Created by njackson on 17/01/15.
  */
-public class OruxMapsServiceTest extends ServiceTestCase<OruxMapsServiceCommand> {
+public class OruxMapsServiceCommandTest extends AndroidTestCase {
 
     @Inject Bus _bus;
     @Inject SharedPreferences _sharedPreferences;
 
-    private OruxMapsServiceCommand _service;
+    private OruxMapsServiceCommand _command;
 
     private static IOruxMaps _mockOruxMaps;
     private static ITime _mockTime;
+    private TestApplication _app;
 
     @Module(
             includes = AndroidModule.class,
-            injects = OruxMapsServiceTest.class,
+            injects = OruxMapsServiceCommandTest.class,
             overrides = true,
             complete = false
     )
-    static class TestModule {
+    class TestModule {
         @Provides IOruxMaps providesOruxMaps() { return _mockOruxMaps; }
         @Provides @Singleton SharedPreferences providesSharedPreferences() { return mock(SharedPreferences.class); }
         @Provides ITime providesTime() { return _mockTime; }
-    }
-
-
-    /**
-     * Constructor
-     *
-     * @param serviceClass The type of the service under test.
-     */
-    public OruxMapsServiceTest(Class<OruxMapsServiceCommand> serviceClass) {
-        super(serviceClass);
-    }
-
-    public OruxMapsServiceTest() {
-        super(OruxMapsServiceCommand.class);
     }
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
 
-        System.setProperty("dexmaker.dexcache", getSystemContext().getCacheDir().getPath());
+        System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
         setupMocks();
 
-        TestApplication app = new TestApplication();
-        app.setObjectGraph(ObjectGraph.create(TestModule.class));
-        app.inject(this);
+        _app = new TestApplication();
+        _app.setObjectGraph(ObjectGraph.create(new TestModule()));
+        _app.inject(this);
         _bus.register(this);
 
-        setApplication(app);
-
+        _command = new OruxMapsServiceCommand();
     }
 
     private void setupMocks() {
@@ -85,85 +71,76 @@ public class OruxMapsServiceTest extends ServiceTestCase<OruxMapsServiceCommand>
         _mockTime = mock(ITime.class);
     }
 
-    private void startService() throws Exception {
-        Intent startIntent = new Intent(getSystemContext(), GPSServiceCommand.class);
-        startService(startIntent);
-        _service = getService();
-    }
-
     @SmallTest
-    public void testReturnsNullOnBind() throws Exception {
-        when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("disable");
-        startService();
-
-        assertNull(_service.onBind(new Intent()));
-    }
-
-    @SmallTest
-    public void testContinueOruxMapsOnStartWhenPreferenceContinue() throws Exception {
+    public void testContinueOruxMapsOnGPSStartWhenPreferenceContinue() throws Exception {
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("continue");
 
-        startService();
+        _command.execute(_app);
+        _bus.post(new GPSStatus(BaseStatus.State.STARTED));
 
-        verify(_mockOruxMaps,timeout(2000).times(1)).startRecordContinue();
+        verify(_mockOruxMaps, timeout(2000).times(1)).startRecordContinue();
     }
 
     @SmallTest
-    public void testNewSegmentOruxMapsOnStartWhenPreferenceNewSegment() throws Exception {
+    public void testNewSegmentOruxMapsOnGPSStartWhenPreferenceNewSegment() throws Exception {
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("new_segment");
 
-        startService();
+        _command.execute(_app);
+        _bus.post(new GPSStatus(BaseStatus.State.STARTED));
 
-        verify(_mockOruxMaps,timeout(2000).times(1)).startRecordNewSegment();
+        verify(_mockOruxMaps, timeout(2000).times(1)).startRecordNewSegment();
     }
 
     @SmallTest
-    public void testNewTrackOruxMapsOnStartWhenPreferenceNewTrack() throws Exception {
+    public void testNewTrackOruxMapsOnGPSStartWhenPreferenceNewTrack() throws Exception {
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("new_track");
 
-        startService();
+        _command.execute(_app);
+        _bus.post(new GPSStatus(BaseStatus.State.STARTED));
 
         verify(_mockOruxMaps,timeout(2000).times(1)).startRecordNewTrack();
     }
 
     @SmallTest
-    public void testNewTrackOruxMapsOnStartWhenPreferenceAutoAndLastStart12HoursAgo() throws Exception {
+    public void testNewTrackOruxMapsOnGPSStartWhenPreferenceAutoAndLastStart12HoursAgo() throws Exception {
         when(_sharedPreferences.getLong("GPS_LAST_START", 0)).thenReturn((long)0);
         when(_mockTime.getCurrentTimeMilliseconds()).thenReturn((long)((12 * 3600 * 1000) + 1));
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("auto");
 
-        startService();
+        _command.execute(_app);
+        _bus.post(new GPSStatus(BaseStatus.State.STARTED));
 
         verify(_mockOruxMaps,timeout(2000).times(1)).startRecordNewTrack();
     }
 
     @SmallTest
-    public void testNewSegmentOruxMapsOnStartWhenPreferenceAutoAndLastStartLess12HoursAgo() throws Exception {
+    public void testNewSegmentOruxMapsOnGPSStartWhenPreferenceAutoAndLastStartLess12HoursAgo() throws Exception {
         when(_sharedPreferences.getLong("GPS_LAST_START", 0)).thenReturn((long)0);
         when(_mockTime.getCurrentTimeMilliseconds()).thenReturn((long)12);
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("auto");
 
-        startService();
+        _command.execute(_app);
+        _bus.post(new GPSStatus(BaseStatus.State.STARTED));
 
         verify(_mockOruxMaps,timeout(2000).times(1)).startRecordNewSegment();
     }
 
     @SmallTest
-    public void testSavesOruxMapsOnDestroyWhenPreferenceSet() throws Exception {
+    public void testSavesOruxMapsOnGPSStopWhenPreferenceSet() throws Exception {
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("something");
 
-        startService();
-        shutdownService();
+        _command.execute(_app);
+        _bus.post(new GPSStatus(BaseStatus.State.STOPPED));
 
         verify(_mockOruxMaps,timeout(2000).times(1)).stopRecord();
     }
 
     @SmallTest
-    public void testDoesNotSaveOruxMapsOnDestroyWhenPreferenceDisabled() throws Exception {
+    public void testDoesNotSaveOruxMapsOnGPSStopWhenPreferenceDisabled() throws Exception {
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("disable");
 
-        startService();
-        shutdownService();
+        _command.execute(_app);
+        _bus.post(new GPSStatus(BaseStatus.State.STOPPED));
 
         verify(_mockOruxMaps,timeout(2000).times(0)).stopRecord();
     }
