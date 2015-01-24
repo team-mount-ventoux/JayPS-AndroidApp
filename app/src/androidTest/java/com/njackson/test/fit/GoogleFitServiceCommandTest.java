@@ -4,7 +4,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.test.ServiceTestCase;
+import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -12,11 +12,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
-import com.njackson.events.status.GoogleFitStatus;
+import com.njackson.events.GoogleFitCommand.GoogleFitChangeState;
+import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
+import com.njackson.events.base.BaseChangeState;
 import com.njackson.fit.GoogleFitServiceCommand;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
+import com.njackson.utils.time.Time;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -42,8 +45,7 @@ import static org.mockito.Mockito.when;
 /**
  * Created by njackson on 05/01/15.
  */
-public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitServiceCommand> {
-    private GoogleFitServiceCommand _service;
+public class GoogleFitServiceCommandTest extends AndroidTestCase {
     private CountDownLatch _stateLatch;
 
     @Inject Bus _bus;
@@ -51,14 +53,16 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitServiceComman
 
     private GoogleFitStatus _state;
     private static IGoogleFitSessionManager _mockSessionManager;
+    private TestApplication _app;
+    private GoogleFitServiceCommand _command;
 
     @Module(
             includes = AndroidModule.class,
-            injects = GoogleFitServiceTest.class,
+            injects = GoogleFitServiceCommandTest.class,
             overrides = true,
             complete = false
     )
-    static class TestModule {
+    class TestModule {
 
         @Provides
         @Singleton
@@ -76,96 +80,81 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitServiceComman
         _stateLatch.countDown();
     }
 
-    /**
-     * Constructor
-     *
-     * @param serviceClass The type of the service under test.
-     */
-    public GoogleFitServiceTest(Class<GoogleFitServiceCommand> serviceClass) {
-        super(serviceClass);
-    }
-
-    public GoogleFitServiceTest() {
-        super(GoogleFitServiceCommand.class);
-    }
-
     @Override
     public void setUp() throws Exception {
         super.setUp();
 
-        System.setProperty("dexmaker.dexcache", getSystemContext().getCacheDir().getPath());
+        System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
 
         setupMocks();
 
-        TestApplication app = new TestApplication();
-        app.setObjectGraph(ObjectGraph.create(TestModule.class));
-        app.inject(this);
+        _app = new TestApplication();
+        _app.setObjectGraph(ObjectGraph.create(new TestModule()));
+        _app.inject(this);
         _bus.register(this);
 
-        setApplication(app);
-
         _stateLatch = new CountDownLatch(1);
+        _command = new GoogleFitServiceCommand();
     }
 
     private void setupMocks() {
         _mockSessionManager = mock(IGoogleFitSessionManager.class);
     }
 
-    private void startService() throws Exception {
-        Intent startIntent = new Intent(getSystemContext(), GPSServiceCommand.class);
-        startService(startIntent);
-        _service = getService();
-        _stateLatch.await(2000, TimeUnit.MILLISECONDS);
-    }
-
-    @SmallTest
-    public void testOnBindReturnsNull() throws Exception {
-        startService();
-        IBinder binder = _service.onBind(new Intent());
-
-        assertNull(binder);
-    }
-
     @SmallTest
     public void testOnStartSendsServiceStarted() throws Exception {
-        startService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
+        _stateLatch.await(1000, TimeUnit.MILLISECONDS);
 
-        assertEquals(GoogleFitStatus.State.SERVICE_STARTED,_state.getState());
+        assertEquals(GoogleFitStatus.State.SERVICE_STARTED, _state.getState());
+    }
+
+    @SmallTest
+    public void testOnStopSendsServiceStopped() throws Exception {
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
+        _stateLatch.await(1000, TimeUnit.MILLISECONDS);
+
+        assertEquals(GoogleFitStatus.State.SERVICE_STOPPED, _state.getState());
     }
 
     @SmallTest
     public void testOnStartedConnectsToGoogleFit() throws Exception {
-        startService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
 
         verify(_googleAPIClient,timeout(2000).times(1)).connect();
     }
 
     @SmallTest
     public void testOnStartRegistersGoogleClientConnectedHandlers() throws Exception {
-        startService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
 
         verify(_googleAPIClient,timeout(2000).times(1)).registerConnectionCallbacks(any(GoogleFitServiceCommand.class));
     }
 
     @SmallTest
     public void testOnStartRegistersGoogleClientConnectionFailedHandlers() throws Exception {
-        startService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
 
         verify(_googleAPIClient,timeout(2000).times(1)).registerConnectionFailedListener(any(GoogleFitServiceCommand.class));
     }
 
     @SmallTest
     public void testOnDestroyRemovesGoogleClientConnectedHandlers() throws Exception {
-        startService();
-        shutdownService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
 
         verify(_googleAPIClient,timeout(2000).times(1)).unregisterConnectionCallbacks(any(GoogleFitServiceCommand.class));
     }
 
     @SmallTest
     public void testOnDestroyRemovesGoogleClientConnectionFailedHandlers() throws Exception {
-        startService();
-        shutdownService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
 
         verify(_googleAPIClient,timeout(2000).times(1)).unregisterConnectionFailedListener(any(GoogleFitServiceCommand.class));
     }
@@ -174,8 +163,8 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitServiceComman
     public void testOnDestroyStopsSessionWhenConnected() throws Exception {
         when(_googleAPIClient.isConnected()).thenReturn(true);
 
-        startService();
-        shutdownService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
 
         verify(_mockSessionManager,timeout(2000).times(1)).saveActiveSession(anyLong());
     }
@@ -184,8 +173,8 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitServiceComman
     public void testOnDestroyDoesNotStopsSessionWhenNotConnected() throws Exception {
         when(_googleAPIClient.isConnected()).thenReturn(false);
 
-        startService();
-        shutdownService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
 
         verify(_mockSessionManager,timeout(2000).times(0)).saveActiveSession(anyLong());
     }
@@ -195,9 +184,12 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitServiceComman
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),1, new Intent("MOCK"),0);
         ConnectionResult result = new ConnectionResult(0,pendingIntent);
 
-        startService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
+        _stateLatch.await(1000, TimeUnit.MILLISECONDS);
+
         _stateLatch = new CountDownLatch(1);
-        _service.onConnectionFailed(result);
+        _command.onConnectionFailed(result);
 
         _stateLatch.await(2000,TimeUnit.MILLISECONDS);
 
@@ -206,18 +198,19 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitServiceComman
 
     @SmallTest
     public void testOnConnectedStartsSessionManager() throws Exception {
-        startService();
+        _command.execute(_app);
 
-        _service.onConnected(new Bundle());
+        _command.onConnected(new Bundle());
 
         verify(_mockSessionManager, timeout(2000).times(1)).startSession(anyLong(),any(GoogleApiClient.class));
     }
 
     @SmallTest
     public void testOnNewActivityRunningCreatesDataPoint() throws Exception {
-        startService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
 
-        _service.onConnected(new Bundle());
+        _command.onConnected(new Bundle());
         _bus.post(new NewActivityEvent(DetectedActivity.RUNNING));
 
         verify(_mockSessionManager, timeout(2000).times(1)).addDataPoint(anyLong(),anyInt());
@@ -225,9 +218,10 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitServiceComman
 
     @SmallTest
     public void testOnNewActivityBikingCreatesDataPoint() throws Exception {
-        startService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
 
-        _service.onConnected(new Bundle());
+        _command.onConnected(new Bundle());
         _bus.post(new NewActivityEvent(DetectedActivity.ON_BICYCLE));
 
         verify(_mockSessionManager, timeout(2000).times(1)).addDataPoint(anyLong(),anyInt());
@@ -235,9 +229,10 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitServiceComman
 
     @SmallTest
     public void testOnNewActivityWalkingCreatesDataPoint() throws Exception {
-        startService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
 
-        _service.onConnected(new Bundle());
+        _command.onConnected(new Bundle());
         _bus.post(new NewActivityEvent(DetectedActivity.WALKING));
 
         verify(_mockSessionManager, timeout(2000).times(1)).addDataPoint(anyLong(),anyInt());
@@ -245,9 +240,21 @@ public class GoogleFitServiceTest extends ServiceTestCase<GoogleFitServiceComman
 
     @SmallTest
     public void testOnNewActivityStillDoesNotCreateDataPoint() throws Exception {
-        startService();
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
 
-        _service.onConnected(new Bundle());
+        _command.onConnected(new Bundle());
+        _bus.post(new NewActivityEvent(DetectedActivity.STILL));
+
+        verify(_mockSessionManager, timeout(2000).times(0)).addDataPoint(anyLong(),anyInt());
+    }
+
+    @SmallTest
+    public void testOnNewActivityOnlyAddsDataPointWhenStarted() throws Exception {
+        _command.execute(_app);
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
+
+        _command.onConnected(new Bundle());
         _bus.post(new NewActivityEvent(DetectedActivity.STILL));
 
         verify(_mockSessionManager, timeout(2000).times(0)).addDataPoint(anyLong(),anyInt());

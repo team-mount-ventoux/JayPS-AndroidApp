@@ -2,7 +2,7 @@ package com.njackson.adapters;
 
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
-import com.njackson.events.LiveService.LiveMessage;
+import com.njackson.events.LiveServiceCommand.LiveMessage;
 
 /**
  * Created by njackson on 24/01/15.

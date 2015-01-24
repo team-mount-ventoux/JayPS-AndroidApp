@@ -1,4 +1,4 @@
-package com.njackson.events.LiveService;
+package com.njackson.events.LiveServiceCommand;
 
 import com.njackson.events.base.BaseChangeState;
 

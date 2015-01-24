@@ -1,7 +1,6 @@
 package com.njackson.live;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 
@@ -9,7 +8,7 @@ import com.njackson.adapters.NewLocationToAndroidLocation;
 import com.njackson.application.IInjectionContainer;
 import com.njackson.application.modules.ForApplication;
 import com.njackson.events.GPSServiceCommand.NewLocation;
-import com.njackson.events.LiveService.LiveChangeState;
+import com.njackson.events.LiveServiceCommand.LiveChangeState;
 import com.njackson.events.base.BaseChangeState;
 import com.njackson.service.IServiceCommand;
 import com.squareup.otto.Bus;

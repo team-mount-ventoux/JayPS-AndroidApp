@@ -1,10 +1,7 @@
 package com.njackson.pebble;
 
-import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.IBinder;
 import android.util.Log;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
@@ -12,14 +9,11 @@ import com.njackson.adapters.LiveMessageToPebbleDictionary;
 import com.njackson.adapters.NewLocationToCanvasPluginGPSData;
 import com.njackson.adapters.NewLocationToPebbleDictionary;
 import com.njackson.application.IInjectionContainer;
-import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.modules.ForApplication;
-import com.njackson.events.PebbleService.NewMessage;
-import com.njackson.events.status.PebbleStatus;
+import com.njackson.events.PebbleServiceCommand.NewMessage;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.NewLocation;
-import com.njackson.events.LiveService.LiveMessage;
-import com.njackson.pebble.canvas.CanvasPlugin;
+import com.njackson.events.LiveServiceCommand.LiveMessage;
 import com.njackson.pebble.canvas.GPSData;
 import com.njackson.pebble.canvas.ICanvasWrapper;
 import com.njackson.service.IServiceCommand;

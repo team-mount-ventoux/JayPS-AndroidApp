@@ -1,4 +1,4 @@
-package com.njackson.events.status;
+package com.njackson.events.GoogleFitCommand;
 
 import com.google.android.gms.common.ConnectionResult;
 

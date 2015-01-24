@@ -1,4 +1,4 @@
-package com.njackson.events.PebbleService;
+package com.njackson.events.PebbleServiceCommand;
 
 /**
  * Created by njackson on 14/01/15.

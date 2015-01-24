@@ -10,7 +10,7 @@ import com.njackson.Constants;
 import com.njackson.R;
 import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
-import com.njackson.events.PebbleService.NewMessage;
+import com.njackson.events.PebbleServiceCommand.NewMessage;
 import com.njackson.oruxmaps.IOruxMaps;
 import com.njackson.pebble.IMessageManager;
 import com.njackson.pebble.PebbleDataReceiver;

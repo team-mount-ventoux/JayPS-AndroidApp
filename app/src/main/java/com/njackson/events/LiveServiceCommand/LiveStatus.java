@@ -1,4 +1,4 @@
-package com.njackson.events.LiveService;
+package com.njackson.events.LiveServiceCommand;
 
 public class LiveStatus {
 

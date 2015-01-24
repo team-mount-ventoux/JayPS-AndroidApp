@@ -1,52 +1,21 @@
 package com.njackson.fit;
 
-import android.app.Service;
-import android.content.Intent;
-import android.content.IntentSender;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.FitnessActivities;
-import com.google.android.gms.fitness.FitnessStatusCodes;
-import com.google.android.gms.fitness.RecordingApi;
-import com.google.android.gms.fitness.SessionsApi;
-import com.google.android.gms.fitness.data.DataPoint;
-import com.google.android.gms.fitness.data.DataSet;
-import com.google.android.gms.fitness.data.DataSource;
-import com.google.android.gms.fitness.data.DataType;
-import com.google.android.gms.fitness.data.Field;
-import com.google.android.gms.fitness.data.Session;
-import com.google.android.gms.fitness.data.Subscription;
-import com.google.android.gms.fitness.data.Value;
-import com.google.android.gms.fitness.request.DataSourcesRequest;
-import com.google.android.gms.fitness.request.SessionInsertRequest;
-import com.google.android.gms.fitness.request.SessionReadRequest;
-import com.google.android.gms.fitness.result.DataSourcesResult;
-import com.google.android.gms.fitness.result.ListSubscriptionsResult;
-import com.google.android.gms.fitness.result.SessionReadResult;
-import com.google.android.gms.fitness.result.SessionStopResult;
 import com.google.android.gms.location.DetectedActivity;
-import com.njackson.activities.MainActivity;
-import com.njackson.application.PebbleBikeApplication;
+import com.njackson.application.IInjectionContainer;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
-import com.njackson.events.status.GoogleFitStatus;
+import com.njackson.events.GoogleFitCommand.GoogleFitChangeState;
+import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
+import com.njackson.service.IServiceCommand;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
-import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -54,42 +23,56 @@ import javax.inject.Named;
 /**
  * Created by njackson on 05/01/15.
  */
-public class GoogleFitServiceCommand extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = "GoogleFitService";
     @Inject Bus _bus;
     @Inject @Named("GoogleFit") GoogleApiClient _googleAPIClient;
     @Inject IGoogleFitSessionManager _sessionManager;
 
+    private GoogleFitStatus.State _currentStatus;
+
     @Subscribe
     public void onNewActivityEvent(NewActivityEvent event) {
-        switch (event.getActivityType()) {
-            case DetectedActivity.ON_BICYCLE:
-            case DetectedActivity.RUNNING:
-            case DetectedActivity.WALKING:
-            case DetectedActivity.ON_FOOT:
-                _sessionManager.addDataPoint(new Date().getTime(),event.getActivityType());
+        if(_currentStatus.compareTo(GoogleFitStatus.State.SERVICE_STARTED) == 0) {
+            switch (event.getActivityType()) {
+                case DetectedActivity.ON_BICYCLE:
+                case DetectedActivity.RUNNING:
+                case DetectedActivity.WALKING:
+                case DetectedActivity.ON_FOOT:
+                    _sessionManager.addDataPoint(new Date().getTime(), event.getActivityType());
+                    break;
+            }
+        }
+    }
+
+    @Subscribe
+    public void onChangeState(GoogleFitChangeState event) {
+        switch(event.getState()) {
+            case START:
+                start();
                 break;
+            case STOP:
+                stop();
         }
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        handleCommand(intent);
-        // ensures that if the service is recycled then it is restarted with the same refresh interval
-        return START_REDELIVER_INTENT;
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Log.d(TAG, "Create GoogleFit Service");
-        ((PebbleBikeApplication)getApplication()).inject(this);
+    public void execute(IInjectionContainer container) {
+        container.inject(this);
         _bus.register(this);
     }
 
-    @Override
-    public void onDestroy (){
+    private void start() {
+        _googleAPIClient.registerConnectionCallbacks(this);
+        _googleAPIClient.registerConnectionFailedListener(this);
+        _googleAPIClient.connect();
+
+        _currentStatus = GoogleFitStatus.State.SERVICE_STARTED;
+        _bus.post(new GoogleFitStatus(_currentStatus));
+    }
+
+    public void stop (){
         _bus.unregister(this);
 
         _googleAPIClient.unregisterConnectionFailedListener(this);
@@ -97,21 +80,9 @@ public class GoogleFitServiceCommand extends Service implements GoogleApiClient.
 
         stopRecordingSession();
 
+        _currentStatus = GoogleFitStatus.State.SERVICE_STOPPED;
+        _bus.post(new GoogleFitStatus(_currentStatus));
         Log.d(TAG,"Destroy GoogleFit Service");
-
-        super.onDestroy();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-
-    private void handleCommand(Intent intent) {
-        _googleAPIClient.registerConnectionCallbacks(this);
-        _googleAPIClient.registerConnectionFailedListener(this);
-        _googleAPIClient.connect();
-        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.SERVICE_STARTED));
     }
 
     /* GOOOGLE CLIENT DELEGATE METHODS */

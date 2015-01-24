@@ -22,7 +22,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import com.njackson.Constants;
-import com.njackson.events.LiveService.LiveMessage;
+import com.njackson.events.LiveServiceCommand.LiveMessage;
 import com.squareup.otto.Bus;
 
 import fr.jayps.android.AdvancedLocation;

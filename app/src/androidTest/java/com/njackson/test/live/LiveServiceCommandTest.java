@@ -1,9 +1,8 @@
 package com.njackson.test.live;
 
-import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.GPSServiceCommand.NewLocation;
-import com.njackson.events.LiveService.LiveChangeState;
+import com.njackson.events.LiveServiceCommand.LiveChangeState;
 import com.njackson.events.base.BaseChangeState;
 import com.njackson.live.ILiveTracking;
 import com.njackson.live.LiveServiceCommand;

@@ -18,7 +18,7 @@ import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
-import com.njackson.events.status.GoogleFitStatus;
+import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;

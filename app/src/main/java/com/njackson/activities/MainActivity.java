@@ -15,7 +15,7 @@ import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
-import com.njackson.events.status.GoogleFitStatus;
+import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
