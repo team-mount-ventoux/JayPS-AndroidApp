@@ -17,12 +17,13 @@ import com.njackson.fit.GoogleFitService;
 import com.njackson.fragments.AltitudeFragment;
 import com.njackson.fragments.SpeedFragment;
 import com.njackson.fragments.StartButtonFragment;
-import com.njackson.gps.GPSServerStarterForeground;
+import com.njackson.gps.MainServiceForegroundStarter;
 import com.njackson.gps.GPSService;
-import com.njackson.gps.IGPSServiceStarterForeground;
+import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.live.LiveService;
 import com.njackson.oruxmaps.OruxMapsService;
 import com.njackson.pebble.PebbleDataReceiver;
+import com.njackson.service.MainService;
 import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.time.ITime;
@@ -43,7 +44,7 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class, LiveService.class, GoogleFitService.class, ActivityRecognitionService.class, ActivityRecognitionIntentService.class, OruxMapsService.class, PebbleDataReceiver.class},
+        injects = {MainActivity.class, SettingsActivity.class, SpeedFragment.class, AltitudeFragment.class, StartButtonFragment.class, GPSService.class, PebbleService.class, LiveService.class, GoogleFitService.class, ActivityRecognitionService.class, ActivityRecognitionIntentService.class, OruxMapsService.class, PebbleDataReceiver.class, MainService.class},
         library = true, complete = false
 )
 public class PebbleBikeModule {
@@ -65,5 +66,6 @@ public class PebbleBikeModule {
 
     @Provides ITime providesTime() { return new Time(); }
 
-    @Provides IGPSServiceStarterForeground providesForegroundServiceStarter() { return new GPSServerStarterForeground(); }
+    @Provides
+    IForegroundServiceStarter providesForegroundServiceStarter() { return new MainServiceForegroundStarter(); }
 }

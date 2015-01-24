@@ -16,7 +16,7 @@ import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
 import com.njackson.events.status.GPSStatus;
-import com.njackson.gps.IGPSServiceStarterForeground;
+import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.time.ITimer;
@@ -38,7 +38,8 @@ public class ActivityRecognitionService  extends Service implements
     @Inject IGooglePlayServices _googlePlay;
     @Inject @Named("GoogleActivity") GoogleApiClient _recognitionClient;
     @Inject IServiceStarter _serviceStarter;
-    @Inject IGPSServiceStarterForeground _serviceStarterForeground;
+    @Inject
+    IForegroundServiceStarter _serviceStarterForeground;
     @Inject ITimer _timer;
     @Inject SharedPreferences _sharedPreferences;
 

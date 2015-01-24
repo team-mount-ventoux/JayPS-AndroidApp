@@ -12,7 +12,7 @@ import com.njackson.activities.MainActivity;
 /**
  * Created by njackson on 06/01/15.
  */
-public class GPSServerStarterForeground implements IGPSServiceStarterForeground {
+public class MainServiceForegroundStarter implements IForegroundServiceStarter {
 
     @Override
     public void startServiceForeground(Service service, String title, String contentText) {

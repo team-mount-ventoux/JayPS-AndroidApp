@@ -20,7 +20,6 @@ import com.njackson.events.GPSService.ChangeRefreshInterval;
 import com.njackson.events.status.GPSStatus;
 import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.GPSService.NewLocation;
-import com.njackson.oruxmaps.OruxMaps;
 import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -44,7 +43,8 @@ public class GPSService extends Service {
 
     @Inject LocationManager _locationMgr;
     @Inject SensorManager _sensorManager;
-    @Inject IGPSServiceStarterForeground _serviceStarter;
+    @Inject
+    IForegroundServiceStarter _serviceStarter;
     @Inject SharedPreferences _sharedPreferences;
     @Inject Bus _bus;
     @Inject ITime _time;

@@ -15,7 +15,7 @@ import com.njackson.activityrecognition.ActivityRecognitionService;
 import com.njackson.application.modules.PebbleBikeModule;
 import com.njackson.events.status.ActivityRecognitionStatus;
 import com.njackson.events.ActivityRecognitionService.NewActivityEvent;
-import com.njackson.gps.IGPSServiceStarterForeground;
+import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
@@ -59,7 +59,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
     private CountDownLatch _stateLatch;
     private ActivityRecognitionService _service;
     private static ITimer _mockTimer;
-    private static IGPSServiceStarterForeground _mockServiceStarter;
+    private static IForegroundServiceStarter _mockServiceStarter;
 
     @Module(
             includes = PebbleBikeModule.class,
@@ -73,7 +73,8 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
         @Provides @Singleton IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
         @Provides ITimer providesTimer() { return _mockTimer; }
         @Provides @Singleton SharedPreferences provideSharedPreferences() { return mock(SharedPreferences.class); };
-        @Provides IGPSServiceStarterForeground providesForegroundServiceStarter() { return _mockServiceStarter; }
+        @Provides
+        IForegroundServiceStarter providesForegroundServiceStarter() { return _mockServiceStarter; }
     }
 
     /**
@@ -103,7 +104,7 @@ public class ActivityRecognitionServiceTest extends ServiceTestCase<ActivityReco
 
         _playServices = mock(IGooglePlayServices.class);
         _mockTimer = mock(ITimer.class);
-        _mockServiceStarter = mock(IGPSServiceStarterForeground.class);
+        _mockServiceStarter = mock(IForegroundServiceStarter.class);
 
         TestApplication app = new TestApplication();
         app.setObjectGraph(ObjectGraph.create(TestModule.class));

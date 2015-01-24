@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.njackson.service.MainService;
+
 /**
  * Created by njackson on 23/12/14.
  */
@@ -14,13 +16,13 @@ public class Services {
 
     public static void startServiceAndWaitForReady(Class clazz, Context context) throws Exception {
         context.startService(new Intent(context,clazz));
-        boolean serviceStarted = waitForServiceToStart(clazz, context, 20000);
+        boolean serviceStarted = waitForServiceToStart(context, clazz, 20000);
     }
 
-    public static boolean waitForServiceToStart(Class serviceClass, Context context, int timeout) throws Exception {
+    public static boolean waitForServiceToStart(Context context, Class<MainService> serviceClass, int timeout) throws Exception {
         int timer = 0;
         while(timer < timeout) {
-            if(serviceRunning(serviceClass, context)) {
+            if(serviceRunning(context, serviceClass)) {
                 return true;
             }
 
@@ -34,7 +36,7 @@ public class Services {
     public static boolean waitForServiceToStop(Class serviceClass, Context context, int timeout) throws Exception {
         int timer = 0;
         while(timer < timeout) {
-            if(!serviceRunning(serviceClass, context)) {
+            if(!serviceRunning(context,serviceClass)) {
                 return true;
             }
 
@@ -45,10 +47,10 @@ public class Services {
         throw new Exception("Timeout waiting for Service to Stop");
     }
 
-    public static boolean serviceRunning(Class<?> serviceClass, Context context) {
+    public static boolean serviceRunning(Context context, Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-
+            Log.d(TAG, "SERVICE: " + service.service.getClassName());
             if (serviceClass.getName().equals(service.service.getClassName())) {
                 Log.d(TAG, "SERVICE RUNNING: " + serviceClass.getName());
                 return true;

@@ -21,7 +21,7 @@ import com.njackson.events.GPSService.ResetGPSState;
 import com.njackson.events.GPSService.NewLocation;
 import com.njackson.gps.GPSSensorEventListener;
 import com.njackson.gps.GPSService;
-import com.njackson.gps.IGPSServiceStarterForeground;
+import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
@@ -47,7 +47,6 @@ import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -65,7 +64,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
     @Inject SensorManager _mockSensorManager;
     @Inject SharedPreferences _mockPreferences;
     private SharedPreferences.Editor _mockEditor;
-    private static IGPSServiceStarterForeground _mockServiceStarter;
+    private static IForegroundServiceStarter _mockServiceStarter;
     private static ITime _mockTime;
 
     private GPSService _service;
@@ -102,7 +101,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         }
 
         @Provides
-        IGPSServiceStarterForeground providesForegroundServiceStarter() { return _mockServiceStarter; }
+        IForegroundServiceStarter providesForegroundServiceStarter() { return _mockServiceStarter; }
 
         @Provides
         ITime providesTime() { return _mockTime; }
@@ -163,7 +162,7 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
 
     private void setupMocks() {
         _mockTime = mock(ITime.class);
-        _mockServiceStarter = mock(IGPSServiceStarterForeground.class);
+        _mockServiceStarter = mock(IForegroundServiceStarter.class);
         _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
     }
@@ -293,23 +292,6 @@ public class GPSServiceTest extends ServiceTestCase<GPSService>{
         shutdownService();
 
         verify(_mockSensorManager,timeout(2000).times(1)).unregisterListener(any(GPSSensorEventListener.class));
-    }
-
-    @SmallTest
-    public void testStartsServiceForeground() throws Exception {
-        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
-        startService();
-
-        verify(_mockServiceStarter,timeout(2000).times(1)).startServiceForeground(any(GPSService.class),anyString(),anyString());
-    }
-
-    @SmallTest
-    public void testStopsServiceForeground() throws Exception {
-        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
-        startService();
-        shutdownService();
-
-        verify(_mockServiceStarter,timeout(2000).times(1)).stopServiceForeground(any(GPSService.class));
     }
 
     @SmallTest

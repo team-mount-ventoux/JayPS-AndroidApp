@@ -16,7 +16,7 @@ import dagger.ObjectGraph;
 /**
  * Created by server on 30/03/2014.
  */
-public class PebbleBikeApplication extends Application {
+public class PebbleBikeApplication extends Application implements IInjectionContainer {
 
     private static final String TAG = "PB-PebbleBikeApplication";
 
