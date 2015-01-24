@@ -72,13 +72,12 @@ public class LiveTracking {
         this._context = null;
         this._type = type;
         _bus = bus;
-    }
-    public LiveTracking(Context context, int type, Bus bus) {
-        this._context = context;
-        this._type = type;
-        _bus = bus;
         this._lastLocation = new Location("PebbleBike");
+    }
 
+    public LiveTracking(Context context, int type, Bus bus) {
+        this(type, bus);
+        this._context = context;
         // Get current version code
         try {
             PackageInfo packageInfo = this._context.getPackageManager().getPackageInfo(
@@ -89,15 +88,19 @@ public class LiveTracking {
             _versionCode = -1;
         }
     }
+
     String getLogin() {
         return this._login;
     }
+
     void setLogin(String login) {
         this._login = login;
     }
+
     void setPassword(String password) {
         this._password = password;
     }
+
     void setUrl(String url) {
         this._url = url;
     }
@@ -109,14 +112,16 @@ public class LiveTracking {
             // too early (dt<5s), do nothing
             return false;
         }
-        _bufferPoints += (_bufferPoints != "" ? " " : "") + location.getLatitude() + " " + location.getLongitude() + " " + String.format(Locale.US, "%.1f", altitude) + " " + String.format("%d", (int) (location.getTime()/1000));
+        _bufferPoints += (_bufferPoints != "" ? " " : "") + location.getLatitude() + " " + location.getLongitude() + " " + String.format(Locale.US, "%.1f", altitude) + " " + String.format("%d", (int) (location.getTime() / 1000));
         _bufferAccuracies += (_bufferAccuracies != "" ? " " : "") + String.format(Locale.US, "%.1f", location.getAccuracy());
         if (heart_rate > 0) {
-            _bufferHeartRates += (_bufferHeartRates != "" ? " " : "") + heart_rate + " " + String.format("%d", (int) (location.getTime()/1000));
+            _bufferHeartRates += (_bufferHeartRates != "" ? " " : "") + heart_rate + " " + String.format("%d", (int) (location.getTime() / 1000));
         }
         if (location.getTime() - _prevTime < 30000) {
             // too early (5s<dt<30s), save point to send it later
-            if (debug) Log.d(TAG, "too early: skip addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + altitude + "," + location.getTime() + ")");
+            if (debug) {
+                Log.d(TAG, "too early: skip addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + altitude + "," + location.getTime() + ")");
+			}
             return false;
         }
         // ok
@@ -125,16 +130,19 @@ public class LiveTracking {
         new SendLiveTask().execute(new SendLiveTaskParams(_bufferPoints, _bufferAccuracies, _bufferHeartRates));
         return true;
     }
+
     class SendLiveTaskParams {
         String points;
         String accuracies;
         String heartrates;
+
         public SendLiveTaskParams(String points, String accuracies, String heartrates) {
             this.points = points;
             this.accuracies = accuracies;
             this.heartrates = heartrates;
         }
     }
+
     private class SendLiveTask extends AsyncTask<SendLiveTaskParams, Void, Boolean> {
         protected Boolean doInBackground(SendLiveTaskParams... params) {
             int count = params.length;
@@ -166,19 +174,19 @@ public class LiveTracking {
 
             postParameters = "request=" + request;
             if (_activity_id == "") {
-                postParameters += "&title=Test&source=PebbleBike&version="+_versionCode;
+                postParameters += "&title=Test&source=PebbleBike&version=" + _versionCode;
             } else {
-                postParameters += "&activity_id="+_activity_id;
+                postParameters += "&activity_id=" + _activity_id;
             }
 
             if (points != "") {
-                postParameters += "&points="+points;
+                postParameters += "&points=" + points;
             }
             if (accuracies != "" && _type == TYPE_JAYPS) {
-                postParameters += "&jayps_accuracies="+accuracies;
+                postParameters += "&jayps_accuracies=" + accuracies;
             }
             if (heartrates != "") {
-                postParameters += "&hr="+heartrates;
+                postParameters += "&hr=" + heartrates;
             }
             String tmp_url = "";
             if (_type == TYPE_JAYPS) {
@@ -196,7 +204,7 @@ public class LiveTracking {
 
             if (authString != "") {
                 String basicAuth = "Basic " + new String(Base64.encode(authString.getBytes(), Base64.NO_WRAP));
-                urlConnection.setRequestProperty ("Authorization", basicAuth);
+                urlConnection.setRequestProperty("Authorization", basicAuth);
             }
 
             urlConnection.setDoOutput(true);
@@ -208,15 +216,26 @@ public class LiveTracking {
             out.close();
 
             //start listening to the stream
-            String response= "";
+            String response = "";
             Scanner inStream = new Scanner(urlConnection.getInputStream());
 
             //process the stream and store it in StringBuilder
-            while(inStream.hasNextLine()) {
-                response+=(inStream.nextLine()) + "\n";
+            while (inStream.hasNextLine()) {
+                response += (inStream.nextLine()) + "\n";
             }
-            //Log.d(TAG, "response:" + response);
 
+            return parseResponse(request, response);
+
+        } catch (Exception e) {
+            Log.e(TAG, "Exception:" + e);
+        }
+        return false;
+    }
+
+    public boolean parseResponse(String request, String response) {
+        //Log.d(TAG, "request: "+ request + " response:" + response);
+
+        try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new InputSource(new ByteArrayInputStream(response.getBytes("utf-8"))));
@@ -226,11 +245,13 @@ public class LiveTracking {
             NodeList nodes;
             Node node;
 
-            if (request == "start_activity") {
+            if(request=="start_activity")
+
+            {
                 expression = "/message/activity_id";
 
                 String activity_id = xpath.evaluate(expression, doc);
-                if (debug) Log.d(TAG, "activity_id:"+activity_id);
+                if (debug) Log.d(TAG, "activity_id:" + activity_id);
                 if (activity_id != "") {
                     _activity_id = activity_id;
                 }
@@ -238,13 +259,14 @@ public class LiveTracking {
 
             int nbReceivedFriends = 0;
 
-            if (_type == TYPE_JAYPS) {
+            if(_type==TYPE_JAYPS)
+
+            {
                 expression = "//friend";
-                nodes = (NodeList)xpath.evaluate(expression, doc, XPathConstants.NODESET);
+                nodes = (NodeList) xpath.evaluate(expression, doc, XPathConstants.NODESET);
 
 
-
-                for( int i = 0; i < nodes.getLength(); i++ ) {
+                for (int i = 0; i < nodes.getLength(); i++) {
                     // for each friends
                     node = nodes.item(i);
 
@@ -288,11 +310,11 @@ public class LiveTracking {
                         msg.setName2(names[2]);
                         msg.setName3(names[3]);
                         msg.setName4(names[4]);
-                        sending += " MSG_LIVE_NAMEx"+msgLiveShort[0];
+                        sending += " MSG_LIVE_NAMEx" + msgLiveShort[0];
                     }
                     msg.setLive(msgLiveShort);
-                    for( int i = 0; i < msgLiveShort.length; i++ ) {
-                        sending += " msgLiveShort["+i+"]: "   + ((256+msgLiveShort[i])%256);
+                    for (int i = 0; i < msgLiveShort.length; i++) {
+                        sending += " msgLiveShort[" + i + "]: " + ((256 + msgLiveShort[i]) % 256);
                     }
                     if (debug) Log.d(TAG, sending);
 
@@ -300,11 +322,9 @@ public class LiveTracking {
                 }
             }
 
+            _bufferPoints=_bufferAccuracies=_bufferHeartRates="";
 
-            _bufferPoints = _bufferAccuracies = _bufferHeartRates = "";
-
-            return nbReceivedFriends > 0;
-
+            return nbReceivedFriends>0;
         } catch (Exception e) {
             Log.e(TAG, "Exception:" + e);
         }

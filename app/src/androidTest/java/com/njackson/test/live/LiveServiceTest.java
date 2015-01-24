@@ -184,70 +184,47 @@ public class LiveServiceTest extends ServiceTestCase<LiveService>{
         location.setLongitude(3);
         location.setTime(1420980000);
 
+        liveTracking.addPoint(location, location, 200, 255);
+
         String response = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
           + "<message>"
-          + "<type>activity_updated</type>"
+          + "<type>activity_started</type>"
+          + "<activity_id>12</activity_id>"
           + "<friends>"
                 + "<friend id=\"0\">"
-                + "<id>f1/0</id>"
-                + "<nickname>Friend 1</nickname>"
-                + "<lat>44</lat>"
-                + "<lon>-5</lon>"
-                + "<ts>1421075656</ts>"
+                + "  <id>f1/0</id>"
+                + "  <nickname>Friend 1</nickname>"
+                + "  <lat>44</lat>"
+                + "  <lon>-5</lon>"
+                + "  <ts>1421075656</ts>"
                 + "</friend>"
                 + "<friend id=\"1\">"
-                + "<id>f2</id>"
-                + "<nickname>Friend 2</nickname>"
-                + "<lat>44</lat>"
-                + "<lon>8</lon>"
-                + "<ts>1421175938</ts>"
+                + "  <id>f2</id>"
+                + "  <nickname>Friend 2</nickname>"
+                + "  <lat>44</lat>"
+                + "  <lon>8</lon>"
+                + "  <ts>1421175938</ts>"
                 + "</friend>"
                 + "</friends>"
                 + "<points>"
-                + "<point id=\"0\">"
-                + "<lat>49</lat>"
-                + "<lon>7.7931</lon>"
-                + "<ele>0.0</ele>"
-                + "<ts>1421175944</ts>"
-                + "<accuracy>10.0</accuracy>"
+                + "  <point id=\"0\">"
+                + "  <lat>49</lat>"
+                + "  <lon>7.7931</lon>"
+                + "  <ele>0.0</ele>"
+                + "  <ts>1421175944</ts>"
+                + "  <accuracy>10.0</accuracy>"
                 + "</point>"
                 + "<point id=\"1\">"
-                + "<lat>49</lat>"
-                + "<lon>7.7932</lon>"
-                + "<ele>0.0</ele>"
-                + "<ts>1421175963</ts>"
-                + "<accuracy>10.0</accuracy>"
+                + "  <lat>49</lat>"
+                + "  <lon>7.7932</lon>"
+                + "  <ele>0.0</ele>"
+                + "  <ts>1421175963</ts>"
+                + "  <accuracy>10.0</accuracy>"
                 + "</point>"
                 + "</points>"
                 + "</message>";
 
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        Document doc = db.parse(new InputSource(new ByteArrayInputStream(response.getBytes("utf-8"))));
-
-        XPath xpath = XPathFactory.newInstance().newXPath();
-        String expression = "";
-        NodeList nodes;
-        Node node;
-        expression = "//friend";
-        nodes = (NodeList)xpath.evaluate(expression, doc, XPathConstants.NODESET);
-
-
-        HashMap<String, LiveTrackingFriend> friends = new HashMap<String, LiveTrackingFriend>();
-        for( int i = 0; i < nodes.getLength(); i++ ) {
-            // for each friends
-            node = nodes.item(i);
-
-            LiveTrackingFriend friend = new LiveTrackingFriend();
-            friend.setFromNodeList(node.getChildNodes());
-
-            if (friend.id != "" && friend.lat != null && friend.lon != null) {
-                //nbReceivedFriends++;
-
-                LiveTrackingFriend f2 = new LiveTrackingFriend();
-                f2.updateFromFriend(friend, location);
-                friends.put(friend.id, f2);
-            }
-        }
+        liveTracking.parseResponse("start_activity", response);
+        assertEquals(2, liveTracking.numberOfFriends);
     }
 }
