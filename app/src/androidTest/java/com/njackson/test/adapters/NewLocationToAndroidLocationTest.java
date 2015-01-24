@@ -15,7 +15,6 @@ public class NewLocationToAndroidLocationTest extends AndroidTestCase {
     @SmallTest
     public void testSetsProvider() {
         NewLocation newLocation = new NewLocation();
-        newLocation.setAccuracy(102);
 
         Location location = new NewLocationToAndroidLocation("Test", newLocation);
 
@@ -29,7 +28,7 @@ public class NewLocationToAndroidLocationTest extends AndroidTestCase {
 
         Location location = new NewLocationToAndroidLocation("Test", newLocation);
 
-        assertEquals(102.0, location.getAccuracy());
+        assertEquals(102f, location.getAccuracy());
     }
 
     @SmallTest
@@ -39,7 +38,7 @@ public class NewLocationToAndroidLocationTest extends AndroidTestCase {
 
         Location location = new NewLocationToAndroidLocation("Test", newLocation);
 
-        assertEquals(103.0, location.getLatitude());
+        assertEquals(103d, location.getLatitude());
     }
 
     @SmallTest
@@ -49,7 +48,7 @@ public class NewLocationToAndroidLocationTest extends AndroidTestCase {
 
         Location location = new NewLocationToAndroidLocation("Test", newLocation);
 
-        assertEquals(104.0, location.getLongitude());
+        assertEquals(104d, location.getLongitude());
     }
 
     @SmallTest
