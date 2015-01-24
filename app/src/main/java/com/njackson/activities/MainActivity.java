@@ -83,7 +83,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
         ((PebbleBikeApplication) getApplication()).inject(this);
 
         _analytics.trackAppOpened(getIntent());
-        _serviceStarter.startPebbleServices();
+        _serviceStarter.startMainService();
 
         boolean activity_start = _sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
         boolean fit_start = _sharedPreferences.getBoolean("GOOGLE_FIT",false);

@@ -5,10 +5,15 @@ import android.os.IBinder;
 import android.test.ServiceTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.modules.AndroidModule;
 import com.njackson.gps.IForegroundServiceStarter;
+import com.njackson.service.IServiceCommand;
 import com.njackson.service.MainService;
 import com.njackson.test.application.TestApplication;
+
+import java.util.Arrays;
+import java.util.List;
 
 import dagger.Module;
 import dagger.ObjectGraph;
@@ -27,6 +32,7 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
 
     private static IForegroundServiceStarter _mockServiceStarter;
     private MainService _service;
+    private IServiceCommand _mockServiceCommand;
 
     @Module(
             includes = AndroidModule.class,
@@ -34,9 +40,17 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
             overrides = true,
             complete = false
     )
-    static class TestModule {
+    class TestModule {
         @Provides
         IForegroundServiceStarter providesForegroundServiceStarter() { return _mockServiceStarter; }
+        @Provides
+        List<IServiceCommand> providesServiceCommands() {
+            return Arrays.asList(
+                    _mockServiceCommand,
+                    _mockServiceCommand,
+                    _mockServiceCommand
+            );
+        }
     }
 
     /**
@@ -58,7 +72,7 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
         System.setProperty("dexmaker.dexcache", getSystemContext().getCacheDir().getPath());
 
         TestApplication app = new TestApplication();
-        app.setObjectGraph(ObjectGraph.create(TestModule.class));
+        app.setObjectGraph(ObjectGraph.create(new TestModule()));
         app.inject(this);
 
         setApplication(app);
@@ -68,6 +82,7 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
 
     private void setupMocks() {
         _mockServiceStarter = mock(IForegroundServiceStarter.class);
+        _mockServiceCommand = mock(IServiceCommand.class);
     }
 
     private void startService() throws Exception {
@@ -97,5 +112,12 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
         shutdownService();
 
         verify(_mockServiceStarter,timeout(2000).times(1)).stopServiceForeground(any(MainService.class));
+    }
+
+    @SmallTest
+    public void testSetsUpCommandsOnStart() throws Exception {
+        startService();
+
+        verify(_mockServiceCommand,timeout(1000).times(3)).execute(any(PebbleBikeApplication.class));
     }
 }

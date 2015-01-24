@@ -152,7 +152,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void testStartsPebbleServiceOnCreate() {
         _activity = getActivity();
 
-        verify(_mockServiceStarter,times(1)).startPebbleServices();
+        verify(_mockServiceStarter,times(1)).startMainService();
     }
 
     @SmallTest

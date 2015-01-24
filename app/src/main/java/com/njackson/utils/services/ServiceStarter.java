@@ -6,43 +6,52 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 
 import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
+import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionChangeState;
+import com.njackson.events.GPSServiceCommand.GPSChangeState;
+import com.njackson.events.GoogleFitCommand.GoogleFitChangeState;
+import com.njackson.events.LiveServiceCommand.LiveChangeState;
+import com.njackson.events.base.BaseChangeState;
 import com.njackson.fit.GoogleFitServiceCommand;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.live.LiveServiceCommand;
 import com.njackson.oruxmaps.OruxMapsServiceCommand;
 import com.njackson.pebble.PebbleServiceCommand;
+import com.njackson.service.MainService;
+import com.squareup.otto.Bus;
 
 /**
  * Created by njackson on 03/01/15.
  */
 public class ServiceStarter implements IServiceStarter {
 
+    private final Bus _bus;
     Context _context;
     SharedPreferences _sharedPreferences;
 
-    public ServiceStarter(Context context, SharedPreferences preferences) {
+    public ServiceStarter(Context context, SharedPreferences preferences, Bus bus) {
         _context = context;
         _sharedPreferences = preferences;
+        _bus = bus;
     }
 
     @Override
-    public void startPebbleServices() {
-        _context.startService(new Intent(_context, PebbleServiceCommand.class));
+    public void startMainService() {
+        _context.startService(new Intent(_context, MainService.class));
     }
 
     @Override
-    public void stopPebbleServices() {
-        _context.stopService(new Intent(_context, PebbleServiceCommand.class));
+    public void stopMainService() {
+        _context.stopService(new Intent(_context, MainService.class));
     }
 
     @Override
     public void startActivityServices() {
-        _context.startService(new Intent(_context, ActivityRecognitionServiceCommand.class));
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
     }
 
     @Override
     public void stopActivityServices() {
-        _context.stopService(new Intent(_context, ActivityRecognitionServiceCommand.class));
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
     }
 
     @Override
@@ -50,7 +59,6 @@ public class ServiceStarter implements IServiceStarter {
         startGPSService();
         startLiveService();
         startGoogleFitService();
-        startOruxService();
     }
 
     @Override
@@ -58,7 +66,6 @@ public class ServiceStarter implements IServiceStarter {
         stopGPSService();
         stopLiveService();
         stopGoogleFitService();
-        stopOruxService();
     }
 
     @Override
@@ -74,26 +81,30 @@ public class ServiceStarter implements IServiceStarter {
 
     protected void startGPSService() {
         int refreshInterval = Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000"));
-        Intent intent = new Intent(_context, GPSServiceCommand.class);
-        intent.putExtra("REFRESH_INTERVAL",refreshInterval);
 
-        _context.startService(intent);
+        GPSChangeState state = new GPSChangeState(BaseChangeState.State.START, refreshInterval);
+        _bus.post(state);
     }
 
     private void stopGPSService() {
-        _context.stopService(new Intent(_context, GPSServiceCommand.class));
+        GPSChangeState state = new GPSChangeState(BaseChangeState.State.STOP);
+        _bus.post(state);
     }
 
-    private void startLiveService() { _context.startService(new Intent(_context, LiveServiceCommand.class)); }
+    private void startLiveService() {
+        _bus.post(new LiveChangeState(BaseChangeState.State.START));
+    }
 
-    private void stopLiveService() { _context.stopService(new Intent(_context, LiveServiceCommand.class)); }
+    private void stopLiveService() {
+        _bus.post(new LiveChangeState(BaseChangeState.State.STOP));
+    }
 
-    private void startGoogleFitService() { _context.startService(new Intent(_context, GoogleFitServiceCommand.class)); }
+    private void startGoogleFitService() {
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
+    }
 
-    private void stopGoogleFitService() { _context.stopService(new Intent(_context, GoogleFitServiceCommand.class)); }
-
-    private void startOruxService() { _context.startService(new Intent(_context, OruxMapsServiceCommand.class)); }
-
-    private void stopOruxService() { _context.stopService(new Intent(_context, OruxMapsServiceCommand.class)); }
+    private void stopGoogleFitService() {
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
+    }
 
 }

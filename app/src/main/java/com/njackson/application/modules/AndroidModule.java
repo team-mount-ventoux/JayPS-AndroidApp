@@ -34,6 +34,7 @@ import com.njackson.pebble.PebbleDataReceiver;
 import com.njackson.pebble.PebbleServiceCommand;
 import com.njackson.pebble.canvas.CanvasWrapper;
 import com.njackson.pebble.canvas.ICanvasWrapper;
+import com.njackson.service.IServiceCommand;
 import com.njackson.service.MainService;
 import com.njackson.utils.googleplay.GoogleFitSessionManager;
 import com.njackson.utils.googleplay.GooglePlayServices;
@@ -53,6 +54,9 @@ import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.watchface.InstallPebbleWatchFace;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
+
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -132,7 +136,7 @@ public class AndroidModule {
     IGoogleFitSessionManager providesGoogleFitSessionManager() { return new GoogleFitSessionManager(application, new GooglePlayServices(), Fitness.SessionsApi); }
 
     @Provides @Singleton
-    IServiceStarter provideServiceStarter() { return new ServiceStarter(application, provideSharedPreferences()); }
+    IServiceStarter provideServiceStarter() { return new ServiceStarter(application, provideSharedPreferences(), providesBus()); }
 
     @Provides
     public IMessageManager providesMessageManager() { return new MessageManager(application); }
@@ -179,4 +183,16 @@ public class AndroidModule {
 
     @Provides
     ICanvasWrapper providesCanvasWrapper() { return new CanvasWrapper(); }
+
+    @Provides
+    List<IServiceCommand> providesServiceCommands() {
+        return Arrays.asList(
+                new GPSServiceCommand(),
+                new PebbleServiceCommand(),
+                new ActivityRecognitionServiceCommand(),
+                new OruxMapsServiceCommand(),
+                new LiveServiceCommand(),
+                new GoogleFitServiceCommand()
+        );
+    }
 }

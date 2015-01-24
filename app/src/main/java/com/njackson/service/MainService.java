@@ -5,8 +5,19 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
 import com.njackson.application.PebbleBikeApplication;
+import com.njackson.fit.GoogleFitServiceCommand;
+import com.njackson.gps.GPSServiceCommand;
 import com.njackson.gps.IForegroundServiceStarter;
+import com.njackson.live.LiveServiceCommand;
+import com.njackson.oruxmaps.OruxMapsServiceCommand;
+import com.njackson.pebble.PebbleServiceCommand;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -15,9 +26,10 @@ import javax.inject.Inject;
  */
 public class MainService extends Service {
 
-    @Inject
-    IForegroundServiceStarter _serviceStarter;
     private String TAG = "MainService";
+
+    @Inject IForegroundServiceStarter _serviceStarter;
+    @Inject List<IServiceCommand> _serviceCommands;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -50,6 +62,8 @@ public class MainService extends Service {
     }
 
     private void handleCommand(Intent intent) {
-
+        for(IServiceCommand command: _serviceCommands) {
+            command.execute((PebbleBikeApplication)getApplication());
+        }
     }
 }
