@@ -154,13 +154,13 @@ public class AndroidModule {
     @Provides
     @Named("LiveTrackingMmt")
     ILiveTracking provideLiveTrackingMmt() {
-        return new LiveTracking(application, LiveTracking.TYPE_JAYPS, providesBus());
+        return new LiveTracking(application, LiveTracking.TYPE_MMT, providesBus());
     }
 
     @Provides
     @Named("LiveTrackingJayPS")
-    ILiveTracking provideLiveTrackingJay() {
-        return new LiveTracking(application, LiveTracking.TYPE_MMT, providesBus());
+    ILiveTracking provideLiveTrackingJayps() {
+        return new LiveTracking(application, LiveTracking.TYPE_JAYPS, providesBus());
     }
 
     @Provides @Singleton
