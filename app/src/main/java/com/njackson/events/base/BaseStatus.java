@@ -7,7 +7,8 @@ public class BaseStatus {
     public enum Status {
         STARTED,
         STOPPED,
-        DISABLED
+        DISABLED,
+        UNABLE_TO_START
     }
 
     public Status _status;

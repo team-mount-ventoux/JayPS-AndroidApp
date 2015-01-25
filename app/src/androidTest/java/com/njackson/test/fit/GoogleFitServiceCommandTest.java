@@ -14,6 +14,7 @@ import com.njackson.events.ActivityRecognitionCommand.NewActivityEvent;
 import com.njackson.events.GoogleFitCommand.GoogleFitChangeState;
 import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
 import com.njackson.events.base.BaseChangeState;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.fit.GoogleFitServiceCommand;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
@@ -104,7 +105,7 @@ public class GoogleFitServiceCommandTest extends AndroidTestCase {
         _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
         _stateLatch.await(1000, TimeUnit.MILLISECONDS);
 
-        assertEquals(GoogleFitStatus.State.SERVICE_STARTED, _state.getState());
+        assertEquals(BaseStatus.Status.STARTED, _state.getStatus());
     }
 
     @SmallTest
@@ -113,7 +114,7 @@ public class GoogleFitServiceCommandTest extends AndroidTestCase {
         _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
         _stateLatch.await(1000, TimeUnit.MILLISECONDS);
 
-        assertEquals(GoogleFitStatus.State.SERVICE_STOPPED, _state.getState());
+        assertEquals(BaseStatus.Status.STOPPED, _state.getStatus());
     }
 
     @SmallTest
@@ -190,7 +191,7 @@ public class GoogleFitServiceCommandTest extends AndroidTestCase {
 
         _stateLatch.await(2000,TimeUnit.MILLISECONDS);
 
-        assertEquals(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED, _state.getState());
+        assertEquals(BaseStatus.Status.UNABLE_TO_START, _state.getStatus());
     }
 
     @SmallTest

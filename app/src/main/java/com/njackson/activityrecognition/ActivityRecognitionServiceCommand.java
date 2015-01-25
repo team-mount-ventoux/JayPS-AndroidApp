@@ -49,7 +49,7 @@ public class ActivityRecognitionServiceCommand implements IServiceCommand,
     public static final int DETECTION_INTERVAL_MILLISECONDS = MILLISECONDS_PER_SECOND * DETECTION_INTERVAL_SECONDS;
 
     private PendingIntent _activityRecognitionPendingIntent;
-    private BaseStatus _currentStatus;
+    private BaseStatus.Status _currentStatus;
 
     @Subscribe
     public void onNewActivityEvent(NewActivityEvent event) {
@@ -85,15 +85,21 @@ public class ActivityRecognitionServiceCommand implements IServiceCommand,
     }
 
     @Override
+    public void dispose() {
+        _bus.unregister(this);
+    }
+
+    @Override
     public BaseStatus.Status getStatus() {
-        return null;
+        return _currentStatus;
     }
 
     public void start() {
         Log.d(TAG,"Started Activity Recognition Service");
 
         if(!checkGooglePlayServices()) {
-            _bus.post(new ActivityRecognitionStatus(ActivityRecognitionStatus.State.PLAY_SERVICES_NOT_AVAILABLE));
+            _currentStatus = BaseStatus.Status.UNABLE_TO_START;
+            _bus.post(new ActivityRecognitionStatus(_currentStatus, false));
             return;
         }
 
@@ -101,18 +107,21 @@ public class ActivityRecognitionServiceCommand implements IServiceCommand,
         createIntentService();
         connectToGooglePlayServices();
 
-        _bus.post(new ActivityRecognitionStatus(ActivityRecognitionStatus.State.STARTED));
+        _currentStatus = BaseStatus.Status.STARTED;
+        _bus.post(new ActivityRecognitionStatus(_currentStatus));
     }
 
     public void stop (){
         Log.d(TAG,"Destroy Activity Recognition Service");
 
-        _bus.unregister(this);
         _recognitionClient.unregisterConnectionCallbacks(this);
         _recognitionClient.unregisterConnectionFailedListener(this);
 
         _googlePlay.removeActivityUpdates(_recognitionClient,_activityRecognitionPendingIntent);
         _recognitionClient.disconnect();
+
+        _currentStatus = BaseStatus.Status.STOPPED;
+        _bus.post(new ActivityRecognitionStatus(_currentStatus));
     }
 
     private void createIntentService() {
@@ -154,6 +163,5 @@ public class ActivityRecognitionServiceCommand implements IServiceCommand,
     public void handleTimeout() {
         Log.d(TAG,"Stopping location");
         _serviceStarter.stopLocationServices();
-
     }
 }

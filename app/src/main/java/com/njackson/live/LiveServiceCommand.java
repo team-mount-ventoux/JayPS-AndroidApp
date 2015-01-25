@@ -9,6 +9,7 @@ import com.njackson.application.IInjectionContainer;
 import com.njackson.application.modules.ForApplication;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.LiveServiceCommand.LiveChangeState;
+import com.njackson.events.LiveServiceCommand.LiveStatus;
 import com.njackson.events.base.BaseChangeState;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
@@ -30,6 +31,7 @@ public class LiveServiceCommand implements IServiceCommand {
     @Inject @Named("LiveTrackingMmt") ILiveTracking _liveTrackingMmt;
 
     Location firstLocation = null;
+    private BaseStatus.Status _currentStatus;
 
     @Subscribe
     public void onChangeStateEvent(LiveChangeState event) {
@@ -62,8 +64,13 @@ public class LiveServiceCommand implements IServiceCommand {
     }
 
     @Override
+    public void dispose() {
+        _bus.unregister(this);
+    }
+
+    @Override
     public BaseStatus.Status getStatus() {
-        return null;
+        return _currentStatus;
     }
 
     private void start() {
@@ -74,5 +81,8 @@ public class LiveServiceCommand implements IServiceCommand {
         _liveTrackingMmt.setLogin(_sharedPreferences.getString("LIVE_TRACKING_MMT_LOGIN", ""));
         _liveTrackingMmt.setPassword(_sharedPreferences.getString("LIVE_TRACKING_MMT_PASSWORD", ""));
         _liveTrackingMmt.setUrl(_sharedPreferences.getString("LIVE_TRACKING_MMT_URL", ""));
+
+        _currentStatus = BaseStatus.Status.STARTED;
+        _bus.post(new LiveStatus(_currentStatus));
     }
 }

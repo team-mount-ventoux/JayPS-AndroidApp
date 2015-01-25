@@ -32,6 +32,11 @@ public class OruxMapsServiceCommand implements IServiceCommand {
     }
 
     @Override
+    public void dispose() {
+        _bus.unregister(this);
+    }
+
+    @Override
     public BaseStatus.Status getStatus() {
         return null;
     }

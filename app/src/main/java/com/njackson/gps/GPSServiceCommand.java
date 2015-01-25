@@ -90,8 +90,13 @@ public class GPSServiceCommand implements IServiceCommand {
     }
 
     @Override
+    public void dispose() {
+        _bus.unregister(this);
+    }
+
+    @Override
     public BaseStatus.Status getStatus() {
-        return null;
+        return _currentStatus;
     }
 
     private void start(int refreshInterval) {

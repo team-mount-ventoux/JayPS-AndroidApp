@@ -8,5 +8,6 @@ import com.njackson.events.base.BaseStatus;
  */
 public interface IServiceCommand {
     public void execute(IInjectionContainer container);
+    public void dispose();
     public BaseStatus.Status getStatus();
 }

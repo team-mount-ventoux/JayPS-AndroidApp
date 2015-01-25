@@ -56,6 +56,9 @@ public class MainService extends Service implements ITimerHandler {
     @Override
     public void onDestroy () {
         _serviceStarter.stopServiceForeground(this);
+
+        disposeCommands();
+
         super.onDestroy();
     }
 
@@ -67,6 +70,12 @@ public class MainService extends Service implements ITimerHandler {
         setupAutoStop();
 
         _bus.post(new MainServiceStatus(BaseStatus.Status.STARTED));
+    }
+
+    private void disposeCommands() {
+        for(IServiceCommand command: _serviceCommands) {
+            command.dispose();
+        }
     }
 
     /*

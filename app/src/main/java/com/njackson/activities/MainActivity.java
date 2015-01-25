@@ -16,6 +16,7 @@ import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
@@ -47,13 +48,13 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
 
     @Subscribe
     public void onRecognitionState(ActivityRecognitionStatus event) {
-        if(event.getState().compareTo(ActivityRecognitionStatus.State.PLAY_SERVICES_NOT_AVAILABLE) == 0)
+        if(event.getStatus().compareTo(ActivityRecognitionStatus.Status.UNABLE_TO_START) == 0)
             Log.d(TAG, "PLAY_NOT_AVIALABLE");
     }
 
     @Subscribe
     public void onGoogleFitStatusChanged(GoogleFitStatus event) {
-        if(event.getState() == GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED) {
+        if(event.getStatus() == BaseStatus.Status.UNABLE_TO_START) {
             if(!_playServices.connectionResultHasResolution(event.getConnectionResult())) {
                 _playServices.showConnectionResultErrorDialog(event.getConnectionResult(), this);
                 return;

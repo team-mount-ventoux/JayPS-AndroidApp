@@ -19,6 +19,7 @@ import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
@@ -138,7 +139,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     public void testSendsTrackAppOpenedAnalyticsOnCreate() {
         _activity = getActivity();
 
-        verify(_mockAnalytics,times(1)).trackAppOpened(any(Intent.class));
+        verify(_mockAnalytics, times(1)).trackAppOpened(any(Intent.class));
     }
 
     @SmallTest
@@ -161,7 +162,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
         _activity = getActivity();
 
-        verify(_mockServiceStarter,times(1)).startActivityService();
+        verify(_mockServiceStarter, times(1)).startActivityService();
     }
 
     @SmallTest
@@ -213,7 +214,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         _activity = getActivity();
 
-        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTED, createConnectionResult()));
+        _bus.post(new GoogleFitStatus(BaseStatus.Status.UNABLE_TO_START, createConnectionResult()));
 
         verify(_mockPlayServices,timeout(2000).times(0)).connectionResultHasResolution(any(ConnectionResult.class));
         verify(_mockPlayServices,timeout(2000).times(0)).startConnectionResultResolution(any(ConnectionResult.class), any(MainActivity.class));
@@ -225,7 +226,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         _activity = getActivity();
 
-        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED, createConnectionResult()));
+        _bus.post(new GoogleFitStatus(BaseStatus.Status.UNABLE_TO_START, createConnectionResult()));
 
         verify(_mockPlayServices,timeout(2000).times(1)).showConnectionResultErrorDialog(any(ConnectionResult.class), any(MainActivity.class));
     }
@@ -236,9 +237,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         _activity = getActivity();
 
-        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED, createConnectionResult()));
+        _bus.post(new GoogleFitStatus(BaseStatus.Status.UNABLE_TO_START, createConnectionResult()));
 
-        verify(_mockPlayServices,timeout(2000).times(0)).showConnectionResultErrorDialog(any(ConnectionResult.class),any(MainActivity.class));
+        verify(_mockPlayServices,timeout(2000).times(0)).showConnectionResultErrorDialog(any(ConnectionResult.class), any(MainActivity.class));
     }
 
     @SmallTest
@@ -247,7 +248,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         _activity = getActivity();
 
-        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED));
+        _bus.post(new GoogleFitStatus(BaseStatus.Status.UNABLE_TO_START));
 
         verify(_mockPlayServices,timeout(2000).times(1)).startConnectionResultResolution(any(ConnectionResult.class), any(MainActivity.class));
     }
@@ -258,8 +259,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         _activity = getActivity();
 
-        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED));
-        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED));
+        _bus.post(new GoogleFitStatus(BaseStatus.Status.UNABLE_TO_START));
+        _bus.post(new GoogleFitStatus(BaseStatus.Status.UNABLE_TO_START));
 
         verify(_mockPlayServices,timeout(2000).times(1)).startConnectionResultResolution(any(ConnectionResult.class), any(MainActivity.class));
     }
@@ -272,7 +273,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(false);
 
-        _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
+        _activity.onSharedPreferenceChanged(_mockPreferences, "ACTIVITY_RECOGNITION");
 
         verify(_mockServiceStarter,times(1)).stopActivityService();
     }
@@ -285,7 +286,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION", false)).thenReturn(true);
 
-        _activity.onSharedPreferenceChanged(_mockPreferences,"ACTIVITY_RECOGNITION");
+        _activity.onSharedPreferenceChanged(_mockPreferences, "ACTIVITY_RECOGNITION");
 
         verify(_mockServiceStarter,times(1)).startActivityService();
     }

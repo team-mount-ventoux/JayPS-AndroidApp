@@ -31,11 +31,11 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
     @Inject @Named("GoogleFit") GoogleApiClient _googleAPIClient;
     @Inject IGoogleFitSessionManager _sessionManager;
 
-    private GoogleFitStatus.State _currentStatus;
+    private BaseStatus.Status _currentStatus;
 
     @Subscribe
     public void onNewActivityEvent(NewActivityEvent event) {
-        if(_currentStatus.compareTo(GoogleFitStatus.State.SERVICE_STARTED) == 0) {
+        if(_currentStatus.compareTo(BaseStatus.Status.STARTED) == 0) {
             switch (event.getActivityType()) {
                 case DetectedActivity.ON_BICYCLE:
                 case DetectedActivity.RUNNING:
@@ -65,8 +65,13 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
     }
 
     @Override
+    public void dispose() {
+        _bus.unregister(this);
+    }
+
+    @Override
     public BaseStatus.Status getStatus() {
-        return null;
+        return _currentStatus;
     }
 
     private void start() {
@@ -74,7 +79,7 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
         _googleAPIClient.registerConnectionFailedListener(this);
         _googleAPIClient.connect();
 
-        _currentStatus = GoogleFitStatus.State.SERVICE_STARTED;
+        _currentStatus = BaseStatus.Status.STARTED;
         _bus.post(new GoogleFitStatus(_currentStatus));
     }
 
@@ -86,7 +91,7 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
 
         stopRecordingSession();
 
-        _currentStatus = GoogleFitStatus.State.SERVICE_STOPPED;
+        _currentStatus = BaseStatus.Status.STOPPED;
         _bus.post(new GoogleFitStatus(_currentStatus));
         Log.d(TAG,"Destroy GoogleFit Service");
     }
@@ -106,7 +111,8 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d(TAG,"Connection Failed");
-        _bus.post(new GoogleFitStatus(GoogleFitStatus.State.GOOGLEFIT_CONNECTION_FAILED, connectionResult));
+        _currentStatus = BaseStatus.Status.UNABLE_TO_START;
+        _bus.post(new GoogleFitStatus(_currentStatus, connectionResult));
     }
     /* END GOOGLE CLIENT DELEGATE METHODS */
 

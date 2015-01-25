@@ -17,6 +17,7 @@ import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionChangeS
 import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionStatus;
 import com.njackson.events.ActivityRecognitionCommand.NewActivityEvent;
 import com.njackson.events.base.BaseChangeState;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.googleplay.IGooglePlayServices;
@@ -117,7 +118,8 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
         _stateLatch.await(1000, TimeUnit.MILLISECONDS);
 
-        assertEquals(ActivityRecognitionStatus.State.PLAY_SERVICES_NOT_AVAILABLE, _activityStatusEvent.getState());
+        assertEquals(BaseStatus.Status.UNABLE_TO_START, _activityStatusEvent.getStatus());
+        assertFalse(_activityStatusEvent.playServicesAvailable());
     }
 
     @SmallTest
@@ -128,7 +130,18 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
         _stateLatch.await(1000, TimeUnit.MILLISECONDS);
 
-        assertEquals(ActivityRecognitionStatus.State.STARTED, _activityStatusEvent.getState());
+        assertEquals(BaseStatus.Status.STARTED, _activityStatusEvent.getStatus());
+    }
+
+    @SmallTest
+    public void testServiceStoppedMessageReceived() throws Exception {
+        when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
+
+        _command.execute(_app);
+        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
+        _stateLatch.await(1000, TimeUnit.MILLISECONDS);
+
+        assertEquals(BaseStatus.Status.STOPPED, _activityStatusEvent.getStatus());
     }
 
     @SmallTest

@@ -183,4 +183,12 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
 
         verify(_mockBus,timeout(1000).times(1)).post(any(MainServiceStatus.class));
     }
+
+    @SmallTest
+    public void testDisposeCommandsOnDestroy() throws Exception {
+        startService();
+        shutdownService();
+
+        verify(_mockServiceCommand,timeout(1000).times(3)).dispose();
+    }
 }

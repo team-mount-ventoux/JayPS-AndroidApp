@@ -1,21 +1,23 @@
 package com.njackson.events.ActivityRecognitionCommand;
 
+import com.njackson.events.base.BaseStatus;
+
 /**
  * Created by server on 21/03/2014.
  */
-public class ActivityRecognitionStatus {
+public class ActivityRecognitionStatus extends BaseStatus {
 
-    public enum State {
-        STARTED,
-        STOPPED,
-        PLAY_SERVICES_NOT_AVAILABLE, DISABLED
+    private boolean _playServicesAvailable = true;
+    public boolean playServicesAvailable() {
+        return _playServicesAvailable;
     }
 
-    public State _state;
-    public State getState() { return _state; }
-
-    public ActivityRecognitionStatus(State state) {
-        this._state = state;
+    public ActivityRecognitionStatus(Status status) {
+        super(status);
     }
 
+    public ActivityRecognitionStatus(Status status, boolean playServicesAvailable) {
+        super(status);
+        _playServicesAvailable = playServicesAvailable;
+    }
 }

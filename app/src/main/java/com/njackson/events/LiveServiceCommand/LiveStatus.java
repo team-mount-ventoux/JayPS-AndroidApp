@@ -1,18 +1,9 @@
 package com.njackson.events.LiveServiceCommand;
 
-public class LiveStatus {
+import com.njackson.events.base.BaseStatus;
 
-    public enum State {
-        STARTED,
-        STOPPED,
-        DISABLED
+public class LiveStatus extends BaseStatus{
+    public LiveStatus(Status status) {
+        super(status);
     }
-
-    public State _state;
-    public State getState() { return _state; }
-
-    public LiveStatus(State state) {
-        this._state = state;
-    }
-
 }
