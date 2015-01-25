@@ -81,6 +81,7 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
 
         _currentStatus = BaseStatus.Status.STARTED;
         _bus.post(new GoogleFitStatus(_currentStatus));
+        Log.d(TAG,"Start");
     }
 
     public void stop (){
@@ -93,7 +94,7 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
 
         _currentStatus = BaseStatus.Status.STOPPED;
         _bus.post(new GoogleFitStatus(_currentStatus));
-        Log.d(TAG,"Destroy GoogleFit Service");
+        Log.d(TAG,"Stop");
     }
 
     /* GOOOGLE CLIENT DELEGATE METHODS */

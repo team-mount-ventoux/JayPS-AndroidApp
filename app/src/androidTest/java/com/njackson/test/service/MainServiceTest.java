@@ -175,6 +175,15 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
     }
 
     @SmallTest
+    public void testCancelsTimerWhenNoCommandsRunning() throws Exception {
+        startService();
+
+        _service.handleTimeout();
+
+        verify(_mockTimer,timeout(1000).times(2)).cancel();
+    }
+
+    @SmallTest
     public void testDoesNotStopAutomaticallyWhenCommandsRunning() throws Exception {
         when(_mockServiceCommand.getStatus()).thenReturn(BaseStatus.Status.STARTED);
         startService();

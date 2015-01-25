@@ -68,5 +68,28 @@ public class TimerTests extends AndroidTestCase {
         _timer.setTimer(500, _mockHandler);
 
         verify(_mockHandler,timeout(2000).times(1)).handleTimeout();
+        assertFalse(_timer.getActive());
+    }
+
+    @SmallTest
+    public void testRepeatingWhenTimeoutSetsActiveToTrue() throws InterruptedException {
+        _timer.setRepeatingTimer(500, _mockHandler);
+
+        verify(_mockHandler,timeout(2000).times(1)).handleTimeout();
+        assertTrue(_timer.getActive());
+    }
+
+    @SmallTest
+    public void testRepeatingWhenStartedSetsActiveToTrue() throws InterruptedException {
+        _timer.setRepeatingTimer(500, _mockHandler);
+
+        assertTrue(_timer.getActive());
+    }
+
+    @SmallTest
+    public void testRepeatingTimerCallsMultipleTimes() throws InterruptedException {
+        _timer.setRepeatingTimer(500, _mockHandler);
+
+        verify(_mockHandler,timeout(2000).times(2)).handleTimeout();
     }
 }

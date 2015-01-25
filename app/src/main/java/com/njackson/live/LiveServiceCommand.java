@@ -70,7 +70,7 @@ public class LiveServiceCommand implements IServiceCommand {
 
     @Override
     public BaseStatus.Status getStatus() {
-        return _currentStatus;
+        return null;
     }
 
     private void start() {
@@ -81,8 +81,5 @@ public class LiveServiceCommand implements IServiceCommand {
         _liveTrackingMmt.setLogin(_sharedPreferences.getString("LIVE_TRACKING_MMT_LOGIN", ""));
         _liveTrackingMmt.setPassword(_sharedPreferences.getString("LIVE_TRACKING_MMT_PASSWORD", ""));
         _liveTrackingMmt.setUrl(_sharedPreferences.getString("LIVE_TRACKING_MMT_URL", ""));
-
-        _currentStatus = BaseStatus.Status.STARTED;
-        _bus.post(new LiveStatus(_currentStatus));
     }
 }

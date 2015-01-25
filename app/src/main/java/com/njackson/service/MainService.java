@@ -16,6 +16,7 @@ import com.squareup.otto.Bus;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 /**
  * Created by njackson on 24/01/15.
@@ -55,6 +56,7 @@ public class MainService extends Service implements ITimerHandler {
 
     @Override
     public void onDestroy () {
+        Log.d(TAG,"Destroy");
         _serviceStarter.stopServiceForeground(this);
 
         disposeCommands();
@@ -82,7 +84,7 @@ public class MainService extends Service implements ITimerHandler {
         If none of the commands are STARTED then this service will auto terminate
      */
     private void setupAutoStop() {
-        _timer.setTimer(1000,this);
+        _timer.setRepeatingTimer(1000,this);
     }
 
     @Override
@@ -92,10 +94,12 @@ public class MainService extends Service implements ITimerHandler {
         for(IServiceCommand command: _serviceCommands) {
             if(command.getStatus() == BaseStatus.Status.STARTED) {
                 shouldContinue = true;
+                Log.d(TAG,"Command still running" + command.getClass().getName());
             }
         }
 
         if(!shouldContinue) {
+            _timer.cancel();
             stop();
         }
     }
@@ -103,6 +107,7 @@ public class MainService extends Service implements ITimerHandler {
     // Activity manager is not invoked with tests we need to wrap stop self to test it
     // has been called
     private void stop() {
+        Log.d(TAG,"STOP ALL");
         _bus.post(new MainServiceStatus(BaseStatus.Status.STOPPED));
         this.stopSelf();
     }
