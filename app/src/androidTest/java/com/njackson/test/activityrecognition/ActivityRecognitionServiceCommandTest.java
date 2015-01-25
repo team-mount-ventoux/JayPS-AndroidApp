@@ -11,6 +11,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.DetectedActivity;
 import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
+import com.njackson.application.MainThreadBus;
 import com.njackson.application.modules.AndroidModule;
 import com.njackson.application.modules.ForApplication;
 import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionChangeState;
@@ -25,6 +26,9 @@ import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.time.ITimer;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+import com.squareup.otto.ThreadEnforcer;
+
+import org.mockito.ArgumentCaptor;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +45,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,8 +63,6 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
 
     static IGooglePlayServices _playServices;
 
-    private ActivityRecognitionStatus _activityStatusEvent;
-    private CountDownLatch _stateLatch;
     private ActivityRecognitionServiceCommand _command;
     private static ITimer _mockTimer;
     private static IForegroundServiceStarter _mockServiceStarter;
@@ -83,12 +86,8 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         Context provideApplicationContext() {
             return getContext();
         }
-    }
-
-    @Subscribe
-    public void onGPSStatusEvent(ActivityRecognitionStatus event) {
-        _activityStatusEvent = event;
-        _stateLatch.countDown();
+        @Provides @Singleton
+        Bus providesBus() { return mock(Bus.class); }
     }
 
     @Override
@@ -104,9 +103,7 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         _app = new TestApplication();
         _app.setObjectGraph(ObjectGraph.create(new TestModule()));
         _app.inject(this);
-        _bus.register(this);
 
-        _stateLatch = new CountDownLatch(1);
         _command = new ActivityRecognitionServiceCommand();
     }
 
@@ -115,11 +112,13 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.API_UNAVAILABLE);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
-        _stateLatch.await(1000, TimeUnit.MILLISECONDS);
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
 
-        assertEquals(BaseStatus.Status.UNABLE_TO_START, _activityStatusEvent.getStatus());
-        assertFalse(_activityStatusEvent.playServicesAvailable());
+        ArgumentCaptor<ActivityRecognitionStatus> captor = ArgumentCaptor.forClass(ActivityRecognitionStatus.class);
+        verify(_bus,timeout(1000).times(1)).post(captor.capture());
+
+        assertEquals(BaseStatus.Status.UNABLE_TO_START, captor.getValue().getStatus());
+        assertFalse(captor.getValue().playServicesAvailable());
     }
 
     @SmallTest
@@ -127,10 +126,40 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
-        _stateLatch.await(1000, TimeUnit.MILLISECONDS);
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
 
-        assertEquals(BaseStatus.Status.STARTED, _activityStatusEvent.getStatus());
+        ArgumentCaptor<ActivityRecognitionStatus> captor = ArgumentCaptor.forClass(ActivityRecognitionStatus.class);
+        verify(_bus,timeout(1000).times(1)).post(captor.capture());
+
+        assertEquals(BaseStatus.Status.STARTED, captor.getValue().getStatus());
+    }
+
+    @SmallTest
+    public void testServiceStartedMessageReceivedOnlyOnce() throws Exception {
+        when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
+
+        _command.execute(_app);
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+
+        ArgumentCaptor<ActivityRecognitionStatus> captor = ArgumentCaptor.forClass(ActivityRecognitionStatus.class);
+        verify(_bus,timeout(1000).times(1)).post(captor.capture());
+
+        assertEquals(BaseStatus.Status.STARTED, captor.getValue().getStatus());
+    }
+
+    @SmallTest
+    public void testServiceStoppedMessageReceivedOnlyOnce() throws Exception {
+        when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
+
+        _command.execute(_app);
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
+
+        ArgumentCaptor<ActivityRecognitionStatus> captor = ArgumentCaptor.forClass(ActivityRecognitionStatus.class);
+        verify(_bus,timeout(1000).times(1)).post(captor.capture());
+
+        assertEquals(BaseStatus.Status.STOPPED, captor.getValue().getStatus());
     }
 
     @SmallTest
@@ -138,10 +167,12 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
-        _stateLatch.await(1000, TimeUnit.MILLISECONDS);
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
 
-        assertEquals(BaseStatus.Status.STOPPED, _activityStatusEvent.getStatus());
+        ArgumentCaptor<ActivityRecognitionStatus> captor = ArgumentCaptor.forClass(ActivityRecognitionStatus.class);
+        verify(_bus,timeout(1000).times(1)).post(captor.capture());
+
+        assertEquals(BaseStatus.Status.STOPPED, captor.getValue().getStatus());
     }
 
     @SmallTest
@@ -149,7 +180,7 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
 
         verify(_googleApiClient,timeout(1000).times(1)).connect();
     }
@@ -159,7 +190,7 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
 
         verify(_googleApiClient,timeout(1000).times(1)).registerConnectionCallbacks(any(ActivityRecognitionServiceCommand.class));
     }
@@ -169,7 +200,7 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
 
         verify(_googleApiClient,timeout(1000).times(1)).registerConnectionFailedListener(any(ActivityRecognitionServiceCommand.class));
     }
@@ -179,7 +210,7 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
 
         verify(_googleApiClient,timeout(1000).times(1)).unregisterConnectionCallbacks(any(ActivityRecognitionServiceCommand.class));
     }
@@ -189,7 +220,7 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
 
         verify(_googleApiClient,timeout(1000).times(1)).unregisterConnectionFailedListener(any(ActivityRecognitionServiceCommand.class));
     }
@@ -199,7 +230,7 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
 
         _command.onConnected(new Bundle());
 
@@ -211,7 +242,7 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_playServices.isGooglePlayServicesAvailable(any(Context.class))).thenReturn(ConnectionResult.SUCCESS);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
 
         verify(_playServices,timeout(1000).times(1)).removeActivityUpdates(any(GoogleApiClient.class), any(PendingIntent.class));
     }
@@ -221,8 +252,8 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
-        _bus.post(new NewActivityEvent(DetectedActivity.ON_FOOT));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+        _command.onNewActivityEvent(new NewActivityEvent(DetectedActivity.ON_FOOT));
 
         verify(_serviceStarter,timeout(2000).times(1)).startLocationServices();
     }
@@ -232,8 +263,8 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(false);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
-        _bus.post(new NewActivityEvent(DetectedActivity.ON_FOOT));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+        _command.onNewActivityEvent(new NewActivityEvent(DetectedActivity.ON_FOOT));
 
         verify(_serviceStarter,timeout(2000).times(0)).startLocationServices();
     }
@@ -243,8 +274,8 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
-        _bus.post(new NewActivityEvent(DetectedActivity.STILL));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+        _command.onNewActivityEvent(new NewActivityEvent(DetectedActivity.STILL));
 
         verify(_mockTimer,timeout(2000).times(1)).setTimer(anyLong(),any(ActivityRecognitionServiceCommand.class));
     }
@@ -254,8 +285,8 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(false);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
-        _bus.post(new NewActivityEvent(DetectedActivity.STILL));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+        _command.onNewActivityEvent(new NewActivityEvent(DetectedActivity.STILL));
 
         verify(_mockTimer,timeout(2000).times(0)).setTimer(anyLong(),any(ActivityRecognitionServiceCommand.class));
     }
@@ -265,10 +296,10 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
 
         _command.execute(_app);
-        _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
+        _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
 
         when(_mockTimer.getActive()).thenReturn(true);
-        _bus.post(new NewActivityEvent(DetectedActivity.STILL));
+        _command.onNewActivityEvent(new NewActivityEvent(DetectedActivity.STILL));
 
         verify(_mockTimer,timeout(2000).times(0)).setTimer(anyLong(),any(ActivityRecognitionServiceCommand.class));
     }
@@ -278,7 +309,7 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
 
         _command.execute(_app);
-        _bus.post(new NewActivityEvent(DetectedActivity.ON_FOOT));
+        _command.onNewActivityEvent(new NewActivityEvent(DetectedActivity.ON_FOOT));
 
         verify(_mockTimer,timeout(2000).times(1)).cancel();
     }

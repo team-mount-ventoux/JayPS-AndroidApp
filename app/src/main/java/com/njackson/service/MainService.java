@@ -94,7 +94,6 @@ public class MainService extends Service implements ITimerHandler {
         for(IServiceCommand command: _serviceCommands) {
             if(command.getStatus() == BaseStatus.Status.STARTED) {
                 shouldContinue = true;
-                Log.d(TAG,"Command still running" + command.getClass().getName());
             }
         }
 

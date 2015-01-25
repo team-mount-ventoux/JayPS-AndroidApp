@@ -155,7 +155,7 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
     public void testSetsUpAutoStop() throws Exception {
         startService();
 
-        verify(_mockTimer,timeout(2000).times(1)).setTimer(1000, _service);
+        verify(_mockTimer,timeout(2000).times(1)).setRepeatingTimer(1000, _service);
     }
 
     @SmallTest
@@ -180,7 +180,7 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
 
         _service.handleTimeout();
 
-        verify(_mockTimer,timeout(1000).times(2)).cancel();
+        verify(_mockTimer,timeout(1000).times(1)).cancel();
     }
 
     @SmallTest

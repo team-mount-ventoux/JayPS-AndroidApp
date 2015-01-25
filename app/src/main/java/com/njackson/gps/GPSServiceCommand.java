@@ -56,7 +56,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private Location firstLocation = null;
     private ServiceNmeaListener _nmeaListener;
     private GPSSensorEventListener _sensorListener;
-    private BaseStatus.Status _currentStatus= BaseStatus.Status.STOPPED;
+    private BaseStatus.Status _currentStatus= BaseStatus.Status.DISABLED;
 
     @Subscribe
     public void onResetGPSStateEvent(ResetGPSState event) {
@@ -73,10 +73,12 @@ public class GPSServiceCommand implements IServiceCommand {
     public void onGPSChangeState(GPSChangeState event) {
         switch(event.getState()) {
             case START:
-                start(event.getRefreshInterval());
+                if(_currentStatus != BaseStatus.Status.STARTED)
+                    start(event.getRefreshInterval());
                 break;
             case STOP:
-                stop();
+                if(_currentStatus != BaseStatus.Status.STOPPED)
+                    stop();
                 break;
             case ANNOUNCE_STATE:
                 broadcastStatus(_currentStatus);
@@ -87,6 +89,7 @@ public class GPSServiceCommand implements IServiceCommand {
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
+        _advancedLocation = new AdvancedLocation();
     }
 
     @Override
@@ -233,10 +236,6 @@ public class GPSServiceCommand implements IServiceCommand {
         requestLocationUpdates(refreshInterval);
     }
 
-    private void broadcastStatus(BaseStatus.Status currentStatus) {
-        _bus.post(new GPSStatus(currentStatus));
-    }
-
     private LocationListener _locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
@@ -281,5 +280,9 @@ public class GPSServiceCommand implements IServiceCommand {
         NewLocation event = new AdvancedLocationToNewLocation(_advancedLocation, xpos, ypos, units);
 
         _bus.post(event);
+    }
+
+    private void broadcastStatus(BaseStatus.Status currentStatus) {
+        _bus.post(new GPSStatus(currentStatus));
     }
 }

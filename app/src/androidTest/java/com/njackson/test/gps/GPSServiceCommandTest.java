@@ -69,16 +69,6 @@ public class GPSServiceCommandTest extends AndroidTestCase {
     private SharedPreferences.Editor _mockEditor;
     private static IForegroundServiceStarter _mockServiceStarter;
     private static ITime _mockTime;
-
-    private GPSServiceCommand _service;
-    private Context _applicationContext;
-
-    private NewLocation _locationEventResults;
-
-    private GPSStatus _gpsStatusEvent;
-
-    private CountDownLatch _stateLatch;
-    private CountDownLatch _newLocationLatch;
     private static TestApplication _app;
     private GPSServiceCommand _serviceCommand;
 
@@ -115,23 +105,9 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         Context provideApplicationContext() {
             return _app;
         }
-    }
 
-    //Bus Subscriptions
-    @Subscribe
-    public void onNewLocationEvent(NewLocation event) {
-        _locationEventResults = event;
-        if (_newLocationLatch != null) _newLocationLatch.countDown();
-    }
-
-    @Subscribe
-    public void onGPSStatusEvent(GPSStatus event) {
-        _gpsStatusEvent = event;
-
-        if (event.getStatus().compareTo(BaseStatus.Status.STARTED) == 0) {
-            Log.d(TAG, "onGPSStatusEvent STARTED");
-            _stateLatch.countDown();
-        }
+        @Provides @Singleton
+        Bus providesBus() { return mock(Bus.class); }
     }
 
     @Override
@@ -143,13 +119,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         _app = spy(new TestApplication());
         _app.setObjectGraph(ObjectGraph.create(TestModule.class));
         _app.inject(this);
-        _bus.register(this);
 
         setupMocks();
-
-        _locationEventResults = null; // reset the event results
-        _stateLatch = new CountDownLatch(1);
-        _newLocationLatch = new CountDownLatch(1);
 
         _serviceCommand = new GPSServiceCommand();
     }
@@ -173,21 +144,78 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(false);
 
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(BaseChangeState.State.START));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.START));
 
-        _stateLatch.await(2000,TimeUnit.MILLISECONDS);
+        ArgumentCaptor<GPSStatus> captor = ArgumentCaptor.forClass(GPSStatus.class);
+        verify(_bus,timeout(1000).times(1)).post(captor.capture());
 
-        assertEquals(BaseStatus.Status.DISABLED, _gpsStatusEvent.getStatus());
+        assertEquals(BaseStatus.Status.DISABLED, captor.getValue().getStatus());
     }
+
+    @SmallTest
+    public void testStartEvent() throws Exception {
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+
+        _serviceCommand.execute(_app);
+        _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.START));
+
+        ArgumentCaptor<GPSStatus> captor = ArgumentCaptor.forClass(GPSStatus.class);
+        verify(_bus,timeout(1000).times(1)).post(captor.capture());
+
+        assertEquals(BaseStatus.Status.STARTED, captor.getValue().getStatus());
+    }
+
+    @SmallTest
+    public void testStartEventOnlySentOnce() throws Exception {
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+
+        _serviceCommand.execute(_app);
+        _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.START));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.START));
+
+        ArgumentCaptor<GPSStatus> captor = ArgumentCaptor.forClass(GPSStatus.class);
+        verify(_bus,timeout(1000).times(1)).post(captor.capture());
+
+        assertEquals(BaseStatus.Status.STARTED, captor.getValue().getStatus());
+    }
+
+    @SmallTest
+    public void testStopEvent() throws Exception {
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+
+        _serviceCommand.execute(_app);
+        _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.STOP));
+
+        ArgumentCaptor<GPSStatus> captor = ArgumentCaptor.forClass(GPSStatus.class);
+        verify(_bus,timeout(1000).times(1)).post(captor.capture());
+
+        assertEquals(BaseStatus.Status.STOPPED, captor.getValue().getStatus());
+    }
+
+    @SmallTest
+    public void testStopEventOnlySentOnce() throws Exception {
+        when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+
+        _serviceCommand.execute(_app);
+        _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.STOP));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.STOP));
+
+        ArgumentCaptor<GPSStatus> captor = ArgumentCaptor.forClass(GPSStatus.class);
+        verify(_bus,timeout(1000).times(1)).post(captor.capture());
+
+        assertEquals(BaseStatus.Status.STOPPED, captor.getValue().getStatus());
+    }
+
 
     @SmallTest
     public void testBroadcastStatusOnAnnounceEvent() throws Exception {
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(BaseChangeState.State.ANNOUNCE_STATE));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.ANNOUNCE_STATE));
 
-        _stateLatch.await(2000,TimeUnit.MILLISECONDS);
+        ArgumentCaptor<GPSStatus> captor = ArgumentCaptor.forClass(GPSStatus.class);
+        verify(_bus,timeout(1000).times(1)).post(captor.capture());
 
-        assertEquals(BaseStatus.Status.STOPPED, _gpsStatusEvent.getStatus());
+        assertEquals(BaseStatus.Status.DISABLED, captor.getValue().getStatus());
     }
 
     @SmallTest
@@ -195,7 +223,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
 
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(BaseChangeState.State.START));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.START));
 
         ArgumentCaptor<LocationListener> locationListenerCaptor = ArgumentCaptor.forClass(LocationListener.class);
         verify(_mockLocationManager,timeout(1000).times(1)).requestLocationUpdates(
@@ -208,15 +236,14 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         LocationListener listenerArgument = locationListenerCaptor.getValue();
         listenerArgument.onLocationChanged(location);
 
-        _newLocationLatch.await(2000, TimeUnit.MILLISECONDS);
-        assertNotNull(_locationEventResults);
+        verify(_bus,timeout(1000).times(2)).post(any(NewLocation.class));
     }
 
     @SmallTest
     public void testHandlesGPSLocationReset() throws Exception {
         _serviceCommand.execute(_app);
 
-        _bus.post(new ResetGPSState());
+        _serviceCommand.onResetGPSStateEvent(new ResetGPSState());
 
         verify(_mockEditor, timeout(200).times(1)).putFloat("GPS_DISTANCE", 0.0f);
         verify(_mockEditor,timeout(200).times(1)).commit();
@@ -226,7 +253,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
     public void testHandlesGPSStartCommand() throws Exception {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(GPSChangeState.State.START));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.START));
 
         verify(_mockLocationManager,timeout(2000).times(1)).requestLocationUpdates(
                 anyString(),
@@ -240,7 +267,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
 
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(GPSChangeState.State.START));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.START));
 
         ArgumentCaptor<LocationListener> locationListenerCaptor = ArgumentCaptor.forClass(LocationListener.class);
         verify(_mockLocationManager,timeout(200).times(1)).requestLocationUpdates(
@@ -250,7 +277,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
                 locationListenerCaptor.capture());
 
         int refreshInterval = 200;
-        _bus.post(new ChangeRefreshInterval(refreshInterval));
+        _serviceCommand.onGPSRefreshChangeEvent(new ChangeRefreshInterval(refreshInterval));
 
         verify(_mockLocationManager, timeout(200).times(1)).removeUpdates((LocationListener) anyObject());
         verify(_mockLocationManager, timeout(200).times(1)).requestLocationUpdates(
@@ -266,8 +293,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         _serviceCommand.execute(_app);
 
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(GPSChangeState.State.START));
-        _bus.post(new GPSChangeState(GPSChangeState.State.STOP));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.START));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.STOP));
 
         verify(_mockEditor, timeout(200).times(1)).commit();
     }
@@ -277,7 +304,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
 
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(GPSChangeState.State.START));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.START));
 
         verify(_mockLocationManager, timeout(2000).times(1)).addNmeaListener(any(GpsStatus.NmeaListener.class));
     }
@@ -287,8 +314,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
 
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(GPSChangeState.State.START));
-        _bus.post(new GPSChangeState(GPSChangeState.State.STOP));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.START));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.STOP));
 
         verify(_mockLocationManager, timeout(2000).times(1)).removeNmeaListener(any(GpsStatus.NmeaListener.class));
     }
@@ -298,7 +325,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
 
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(GPSChangeState.State.START));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.START));
 
         verify(_mockSensorManager,timeout(2000).times(1)).registerListener(any(GPSSensorEventListener.class),any(Sensor.class),anyInt());
     }
@@ -308,8 +335,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
 
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(GPSChangeState.State.START));
-        _bus.post(new GPSChangeState(GPSChangeState.State.STOP));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.START));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.STOP));
 
         verify(_mockSensorManager,timeout(2000).times(1)).unregisterListener(any(GPSSensorEventListener.class));
     }
@@ -320,7 +347,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
 
         _serviceCommand.execute(_app);
-        _bus.post(new GPSChangeState(GPSChangeState.State.START));
+        _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.START));
 
         verify(_mockEditor,timeout(1000).times(1)).putLong("GPS_LAST_START", 1000);
     }

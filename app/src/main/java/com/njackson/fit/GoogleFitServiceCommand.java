@@ -51,10 +51,12 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
     public void onChangeState(GoogleFitChangeState event) {
         switch(event.getState()) {
             case START:
-                start();
+                if(_currentStatus != BaseStatus.Status.STARTED)
+                    start();
                 break;
             case STOP:
-                stop();
+                if(_currentStatus != BaseStatus.Status.STOPPED)
+                    stop();
         }
     }
 

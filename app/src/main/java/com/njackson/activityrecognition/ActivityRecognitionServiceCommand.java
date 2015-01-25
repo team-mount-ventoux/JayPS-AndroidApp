@@ -71,10 +71,14 @@ public class ActivityRecognitionServiceCommand implements IServiceCommand,
     public void onChangeState(ActivityRecognitionChangeState event) {
         switch (event.getState()) {
             case START:
-                start();
+                if(_currentStatus != BaseStatus.Status.STARTED) {
+                    start();
+                }
                 break;
             case STOP:
-                stop();
+                if(_currentStatus != BaseStatus.Status.STOPPED) {
+                    stop();
+                }
         }
     }
 

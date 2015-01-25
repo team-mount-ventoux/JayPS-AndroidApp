@@ -4,8 +4,6 @@ package com.njackson.utils.services;
  * Created by njackson on 03/01/15.
  */
 public interface IServiceStarter {
-    public void startGoogleFitService();
-    public void stopGoogleFitService();
     public void startActivityService();
     public void stopActivityService();
     public void startLocationServices();

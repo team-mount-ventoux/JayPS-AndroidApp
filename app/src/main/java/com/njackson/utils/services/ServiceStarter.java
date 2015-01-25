@@ -70,21 +70,6 @@ public class ServiceStarter implements IServiceStarter {
     }
 
     @Override
-    public void startGoogleFitService() {
-        startMainServiceIfNotRunning(new DoneCallback() {
-            @Override
-            public void onDone(Object result) {
-                _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
-            }
-        });
-    }
-
-    @Override
-    public void stopGoogleFitService() {
-        _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
-    }
-
-    @Override
     public void startLocationServices() {
         startMainServiceIfNotRunning(new DoneCallback() {
             @Override
@@ -179,5 +164,13 @@ public class ServiceStarter implements IServiceStarter {
 
     private void stopLiveService() {
         _bus.post(new LiveChangeState(BaseChangeState.State.STOP));
+    }
+
+    private void startGoogleFitService() {
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
+    }
+
+    private void stopGoogleFitService() {
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
     }
 }
