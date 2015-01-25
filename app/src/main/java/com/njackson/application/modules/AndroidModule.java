@@ -24,6 +24,9 @@ import com.njackson.fragments.StartButtonFragment;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.gps.MainServiceForegroundStarter;
+import com.njackson.hrm.Hrm;
+import com.njackson.hrm.HrmServiceCommand;
+import com.njackson.hrm.IHrm;
 import com.njackson.live.ILiveTracking;
 import com.njackson.live.LiveServiceCommand;
 import com.njackson.live.LiveTracking;
@@ -85,6 +88,7 @@ import static android.content.Context.SENSOR_SERVICE;
         GoogleFitServiceCommand.class,
         ActivityRecognitionServiceCommand.class,
         PebbleDataReceiver.class,
+        HrmServiceCommand.class,
         })
 public class AndroidModule {
     private PebbleBikeApplication application = null;
@@ -145,6 +149,8 @@ public class AndroidModule {
 
     @Provides IOruxMaps providesOruxMaps() { return new OruxMaps(application); }
 
+    @Provides IHrm providesHrm() { return new Hrm(application); }
+
     @Provides
     @Named("LiveTrackingMmt")
     ILiveTracking provideLiveTrackingMmt() {
@@ -194,7 +200,8 @@ public class AndroidModule {
                 new ActivityRecognitionServiceCommand(),
                 new OruxMapsServiceCommand(),
                 new LiveServiceCommand(),
-                new GoogleFitServiceCommand()
+                new GoogleFitServiceCommand(),
+                new HrmServiceCommand()
         );
     }
 }
