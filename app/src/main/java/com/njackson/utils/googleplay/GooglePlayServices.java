@@ -33,7 +33,9 @@ public class GooglePlayServices implements IGooglePlayServices {
 
     @Override
     public void removeActivityUpdates(GoogleApiClient client, PendingIntent intent) {
-        ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(client,intent);
+        if(client.isConnected()) {
+            ActivityRecognition.ActivityRecognitionApi.removeActivityUpdates(client, intent);
+        }
     }
 
     @Override
