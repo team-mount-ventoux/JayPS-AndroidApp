@@ -35,30 +35,34 @@ public class ServiceStarter implements IServiceStarter {
     }
 
     @Override
-    public void startMainService() {
-        _context.startService(new Intent(_context, MainService.class));
-    }
-
-    @Override
-    public void stopMainService() {
-        _context.stopService(new Intent(_context, MainService.class));
-    }
-
-    @Override
-    public void startActivityServices() {
+    public void startActivityService() {
+        startMainServiceIfNotRunning();
         _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
     }
 
     @Override
-    public void stopActivityServices() {
+    public void stopActivityService() {
         _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.STOP));
     }
 
     @Override
+    public void startGoogleFitService() {
+        startMainServiceIfNotRunning();
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
+    }
+
+    @Override
+    public void stopGoogleFitService() {
+        _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
+    }
+
+    @Override
     public void startLocationServices() {
+        startMainServiceIfNotRunning();
         startGPSService();
         startLiveService();
-        startGoogleFitService();
+        startActivityServiceIfEnabled();
+        startGoogleFitServiceIfEnabled();
     }
 
     @Override
@@ -66,6 +70,7 @@ public class ServiceStarter implements IServiceStarter {
         stopGPSService();
         stopLiveService();
         stopGoogleFitService();
+        stopActivityServiceIfNotSticky();
     }
 
     @Override
@@ -82,6 +87,42 @@ public class ServiceStarter implements IServiceStarter {
             }
         }
         return false;
+    }
+
+    private void startGoogleFitServiceIfEnabled() {
+        boolean fit_start = _sharedPreferences.getBoolean("GOOGLE_FIT",false);
+        if(fit_start) {
+            startGoogleFitService();
+        }
+    }
+
+    private void startActivityServiceIfEnabled() {
+        boolean activity_start = _sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
+        boolean fit_start = _sharedPreferences.getBoolean("GOOGLE_FIT",false);
+        if(activity_start || fit_start) {
+            startActivityService();
+        }
+    }
+
+    private void stopActivityServiceIfNotSticky() {
+        boolean activity_start = _sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
+        if(!activity_start) {
+            stopActivityService();
+        }
+    }
+
+    protected void startMainServiceIfNotRunning() {
+        if(!serviceRunning(MainService.class)) {
+            startMainService();
+        }
+    }
+
+    protected void startMainService() {
+        _context.startService(new Intent(_context, MainService.class));
+    }
+
+    protected void stopMainService() {
+        _context.stopService(new Intent(_context, MainService.class));
     }
 
     protected void startGPSService() {
@@ -101,13 +142,4 @@ public class ServiceStarter implements IServiceStarter {
     private void stopLiveService() {
         _bus.post(new LiveChangeState(BaseChangeState.State.STOP));
     }
-
-    private void startGoogleFitService() {
-        _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
-    }
-
-    private void stopGoogleFitService() {
-        _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
-    }
-
 }

@@ -5,18 +5,14 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
 import com.njackson.application.PebbleBikeApplication;
-import com.njackson.fit.GoogleFitServiceCommand;
-import com.njackson.gps.GPSServiceCommand;
+import com.njackson.events.MainService.MainServiceStatus;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.gps.IForegroundServiceStarter;
-import com.njackson.live.LiveServiceCommand;
-import com.njackson.oruxmaps.OruxMapsServiceCommand;
-import com.njackson.pebble.PebbleServiceCommand;
+import com.njackson.utils.time.ITimer;
+import com.njackson.utils.time.ITimerHandler;
+import com.squareup.otto.Bus;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -24,12 +20,14 @@ import javax.inject.Inject;
 /**
  * Created by njackson on 24/01/15.
  */
-public class MainService extends Service {
+public class MainService extends Service implements ITimerHandler {
 
     private String TAG = "MainService";
 
     @Inject IForegroundServiceStarter _serviceStarter;
     @Inject List<IServiceCommand> _serviceCommands;
+    @Inject ITimer _timer;
+    @Inject Bus _bus;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -65,5 +63,38 @@ public class MainService extends Service {
         for(IServiceCommand command: _serviceCommands) {
             command.execute((PebbleBikeApplication)getApplication());
         }
+
+        setupAutoStop();
+
+        _bus.post(new MainServiceStatus(BaseStatus.Status.STARTED));
+    }
+
+    /*
+        If none of the commands are STARTED then this service will auto terminate
+     */
+    private void setupAutoStop() {
+        _timer.setTimer(1000,this);
+    }
+
+    @Override
+    public void handleTimeout() {
+        boolean shouldContinue = false;
+
+        for(IServiceCommand command: _serviceCommands) {
+            if(command.getStatus() == BaseStatus.Status.STARTED) {
+                shouldContinue = true;
+            }
+        }
+
+        if(!shouldContinue) {
+            stop();
+        }
+    }
+
+    // Activity manager is not invoked with tests we need to wrap stop self to test it
+    // has been called
+    private void stop() {
+        _bus.post(new MainServiceStatus(BaseStatus.Status.STOPPED));
+        this.stopSelf();
     }
 }

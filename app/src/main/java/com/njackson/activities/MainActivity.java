@@ -83,13 +83,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
         ((PebbleBikeApplication) getApplication()).inject(this);
 
         _analytics.trackAppOpened(getIntent());
-        _serviceStarter.startMainService();
-
-        boolean activity_start = _sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
-        boolean fit_start = _sharedPreferences.getBoolean("GOOGLE_FIT",false);
-        if(fit_start || activity_start) {
-            _serviceStarter.startActivityServices();
-        }
+        //_serviceStarter.refreshMainServiceState();
 
         ChangeLog cl = new ChangeLog(this);
         if (cl.isFirstRun()) {
@@ -138,13 +132,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.compareTo("ACTIVITY_RECOGNITION") == 0 || key.compareTo("GOOGLE_FIT") == 0) {
-            boolean activity_start = sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
-            boolean fit_start = sharedPreferences.getBoolean("GOOGLE_FIT",false);
-            if(activity_start || fit_start) {
-                _serviceStarter.startActivityServices();
-            } else {
-                _serviceStarter.stopActivityServices();
-            }
+            //_serviceStarter.refreshMainServiceState();
         }
     }
 }

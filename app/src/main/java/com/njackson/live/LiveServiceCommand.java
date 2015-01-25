@@ -10,6 +10,7 @@ import com.njackson.application.modules.ForApplication;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.LiveServiceCommand.LiveChangeState;
 import com.njackson.events.base.BaseChangeState;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -56,6 +57,11 @@ public class LiveServiceCommand implements IServiceCommand {
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
+    }
+
+    @Override
+    public BaseStatus.Status getStatus() {
+        return null;
     }
 
     private void start() {

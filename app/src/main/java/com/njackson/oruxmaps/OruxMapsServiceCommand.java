@@ -3,6 +3,7 @@ package com.njackson.oruxmaps;
 import android.content.SharedPreferences;
 import com.njackson.application.IInjectionContainer;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
@@ -28,6 +29,11 @@ public class OruxMapsServiceCommand implements IServiceCommand {
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
+    }
+
+    @Override
+    public BaseStatus.Status getStatus() {
+        return null;
     }
 
     @Subscribe

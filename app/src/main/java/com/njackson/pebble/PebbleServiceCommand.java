@@ -75,6 +75,11 @@ public class PebbleServiceCommand implements IServiceCommand {
         _bus.register(this);
     }
 
+    @Override
+    public BaseStatus.Status getStatus() {
+        return null;
+    }
+
     private void notifyPebbleGPSStopped() {
         PebbleDictionary dictionary = new PebbleDictionary();
         dictionary.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);

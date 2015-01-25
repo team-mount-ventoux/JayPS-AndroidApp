@@ -16,6 +16,7 @@ import com.njackson.application.modules.ForApplication;
 import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionChangeState;
 import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionStatus;
 import com.njackson.events.ActivityRecognitionCommand.NewActivityEvent;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
@@ -48,6 +49,7 @@ public class ActivityRecognitionServiceCommand implements IServiceCommand,
     public static final int DETECTION_INTERVAL_MILLISECONDS = MILLISECONDS_PER_SECOND * DETECTION_INTERVAL_SECONDS;
 
     private PendingIntent _activityRecognitionPendingIntent;
+    private BaseStatus _currentStatus;
 
     @Subscribe
     public void onNewActivityEvent(NewActivityEvent event) {
@@ -80,6 +82,11 @@ public class ActivityRecognitionServiceCommand implements IServiceCommand,
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
+    }
+
+    @Override
+    public BaseStatus.Status getStatus() {
+        return null;
     }
 
     public void start() {

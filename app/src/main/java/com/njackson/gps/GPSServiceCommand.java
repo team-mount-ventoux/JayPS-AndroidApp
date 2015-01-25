@@ -89,8 +89,13 @@ public class GPSServiceCommand implements IServiceCommand {
         _bus.register(this);
     }
 
+    @Override
+    public BaseStatus.Status getStatus() {
+        return null;
+    }
+
     private void start(int refreshInterval) {
-        Log.d(TAG,"Start");
+        Log.d(TAG, "Start");
 
         createNewAdvancedLocation();
         loadGPSStats();
@@ -157,7 +162,7 @@ public class GPSServiceCommand implements IServiceCommand {
     // save the state
     private void saveGPSStats() {
         SharedPreferences.Editor editor = _sharedPreferences.edit();
-        editor.putFloat("GPS_DISTANCE",_advancedLocation.getDistance());
+        editor.putFloat("GPS_DISTANCE", _advancedLocation.getDistance());
         editor.putLong("GPS_ELAPSEDTIME", _advancedLocation.getElapsedTime());
         editor.putFloat("GPS_ASCENT", (float) _advancedLocation.getAscent());
         editor.putFloat("GEOID_HEIGHT", (float) _advancedLocation.getGeoidHeight());

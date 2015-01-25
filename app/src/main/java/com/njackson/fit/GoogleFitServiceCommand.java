@@ -10,6 +10,7 @@ import com.njackson.application.IInjectionContainer;
 import com.njackson.events.ActivityRecognitionCommand.NewActivityEvent;
 import com.njackson.events.GoogleFitCommand.GoogleFitChangeState;
 import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
 import com.squareup.otto.Bus;
@@ -61,6 +62,11 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
+    }
+
+    @Override
+    public BaseStatus.Status getStatus() {
+        return null;
     }
 
     private void start() {
