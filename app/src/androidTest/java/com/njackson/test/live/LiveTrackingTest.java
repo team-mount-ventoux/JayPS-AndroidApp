@@ -2,6 +2,7 @@ package com.njackson.test.live;
 
 import android.location.Location;
 import android.test.AndroidTestCase;
+import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.live.LiveTracking;
@@ -94,5 +95,29 @@ public class LiveTrackingTest extends AndroidTestCase {
         liveTracking.setLogin("test1");
 
         assertEquals("test1", liveTracking.getLogin());
+    }
+    @LargeTest
+    // LargeTest => Network access
+    public void testLiveTrackingNetworkTest() throws Exception {
+        LiveTracking liveTracking = new LiveTracking(LiveTracking.TYPE_JAYPS, new Bus());
+        liveTracking.setLogin("test");
+        liveTracking.setPassword("test");
+
+        long time = 1420980000000l;
+        Location location = new Location("PebbleBike");
+        location.setAccuracy(5);
+        location.setLatitude(48);
+        location.setLongitude(3);
+        location.setTime(time);
+
+        liveTracking.addPoint(location, location, 200, 98);
+
+        Location location2 = new Location("PebbleBike");
+        location2.setAccuracy(5);
+        location2.setLatitude(48.001);
+        location2.setLongitude(3.0001);
+        location2.setTime(time + 70000);
+
+        liveTracking.addPoint(location, location2, 201, 120);
     }
 }

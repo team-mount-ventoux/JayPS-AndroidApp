@@ -40,15 +40,17 @@ public class LiveServiceCommand implements IServiceCommand {
 
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
-        if (_sharedPreferences.getBoolean("LIVE_TRACKING", false)) {
-            Location location = new NewLocationToAndroidLocation("PebbleBike", newLocation);
+        Location location = new NewLocationToAndroidLocation("PebbleBike", newLocation);
 
-            if (location.getTime() > 0) {
-                if (firstLocation == null) {
-                    firstLocation = location;
-                }
-
+        if (location.getTime() > 0) {
+            if (firstLocation == null) {
+                firstLocation = location;
+            }
+            if (_sharedPreferences.getBoolean("LIVE_TRACKING", false)) {
                 _liveTrackingJayps.addPoint(firstLocation, location, location.getAltitude(), 0);
+            }
+            if (_sharedPreferences.getBoolean("LIVE_TRACKING_MMT", false)) {
+                _liveTrackingMmt.addPoint(firstLocation, location, location.getAltitude(), 0);
             }
         }
     }
