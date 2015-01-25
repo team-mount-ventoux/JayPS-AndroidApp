@@ -84,9 +84,7 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
         Log.d(TAG,"Start");
     }
 
-    public void stop (){
-        _bus.unregister(this);
-
+    public void stop () {
         _googleAPIClient.unregisterConnectionFailedListener(this);
         _googleAPIClient.unregisterConnectionCallbacks(this);
 
