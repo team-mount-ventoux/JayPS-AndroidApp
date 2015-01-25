@@ -46,7 +46,7 @@ public class LiveServiceCommand implements IServiceCommand {
                 firstLocation = location;
             }
             if (_sharedPreferences.getBoolean("LIVE_TRACKING", false)) {
-                _liveTrackingJayps.addPoint(firstLocation, location, location.getAltitude(), 0);
+                _liveTrackingJayps.addPoint(firstLocation, location, location.getAltitude(), newLocation.getHeartRate());
             }
             if (_sharedPreferences.getBoolean("LIVE_TRACKING_MMT", false)) {
                 _liveTrackingMmt.addPoint(firstLocation, location, location.getAltitude(), 0);
