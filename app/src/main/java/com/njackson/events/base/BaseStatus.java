@@ -4,16 +4,16 @@ package com.njackson.events.base;
  * Created by njackson on 24/01/15.
  */
 public class BaseStatus {
-    public enum State {
+    public enum Status {
         STARTED,
         STOPPED,
         DISABLED
     }
 
-    public State _state;
-    public State getState() { return _state; }
+    public Status _status;
+    public Status getStatus() { return _status; }
 
-    public BaseStatus(State state) {
-        this._state = state;
+    public BaseStatus(Status status) {
+        this._status = status;
     }
 }

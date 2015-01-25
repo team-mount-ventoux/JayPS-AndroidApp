@@ -69,6 +69,11 @@ public class ServiceStarter implements IServiceStarter {
     }
 
     @Override
+    public void broadcastLocationState() {
+        _bus.post(new GPSChangeState(BaseChangeState.State.ANNOUNCE_STATE));
+    }
+
+    @Override
     public boolean serviceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) _context.getSystemService(_context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -82,13 +87,11 @@ public class ServiceStarter implements IServiceStarter {
     protected void startGPSService() {
         int refreshInterval = Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000"));
 
-        GPSChangeState state = new GPSChangeState(BaseChangeState.State.START, refreshInterval);
-        _bus.post(state);
+        _bus.post(new GPSChangeState(BaseChangeState.State.START, refreshInterval));
     }
 
     private void stopGPSService() {
-        GPSChangeState state = new GPSChangeState(BaseChangeState.State.STOP);
-        _bus.post(state);
+        _bus.post(new GPSChangeState(BaseChangeState.State.STOP));
     }
 
     private void startLiveService() {

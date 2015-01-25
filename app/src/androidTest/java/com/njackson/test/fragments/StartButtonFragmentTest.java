@@ -10,6 +10,7 @@ import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.fragments.StartButtonFragment;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.test.FragmentInstrumentTestCase2;
@@ -29,6 +30,8 @@ import dagger.ObjectGraph;
 import dagger.Provides;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -107,6 +110,13 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
     }
 
     @SmallTest
+    public void testChecksServiceStateOnResume() {
+        startFragment(new StartButtonFragment());
+
+        verify(_serviceStarter,timeout(2000).times(1)).broadcastLocationState();
+    }
+
+    @SmallTest
     public void test_StartButtonFiresStartEventWhenTouchedAndTextIsSTART() throws InterruptedException {
         startFragment(new StartButtonFragment());
 
@@ -141,39 +151,7 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
     }
 
     @SmallTest
-    public void test_StartButtonChangesTextToStopWhenTouched() throws InterruptedException {
-        startFragment(new StartButtonFragment());
-        _button = (Button) _activity.findViewById(R.id.start_button);
-        _activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                _button.setText(_activity.getString(R.string.startbuttonfragment_start));
-                _button.performClick();
-            }
-        });
-
-        Thread.sleep(100);
-        assertEquals("Start button text should be stop",_activity.getString(R.string.startbuttonfragment_stop),_button.getText());
-    }
-
-    @SmallTest
-    public void test_StartButtonChangesTextToStartWhenTouched() throws InterruptedException {
-        startFragment(new StartButtonFragment());
-        _button = (Button) _activity.findViewById(R.id.start_button);
-        _activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                _button.setText(R.string.startbuttonfragment_stop);
-                _button.performClick();
-            }
-        });
-
-        Thread.sleep(100);
-        assertEquals("Start button text should be start",_activity.getString(R.string.startbuttonfragment_start),_button.getText());
-    }
-
-    @SmallTest
-    public void test_GPSStartEventChangesTextToStartWhenFired() throws InterruptedException {
+    public void test_GPSStartEventChangesTextToStartWhenEventReceived() throws InterruptedException {
         startFragment(new StartButtonFragment());
         _button = (Button) _activity.findViewById(R.id.start_button);
         _activity.runOnUiThread(new Runnable() {
@@ -183,14 +161,14 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
             }
         });
 
-        _bus.post(new GPSStatus(GPSStatus.State.STOPPED));
+        _bus.post(new GPSStatus(BaseStatus.Status.STOPPED));
 
         Thread.sleep(100);
         assertEquals("Start button text should be start",_activity.getString(R.string.startbuttonfragment_start),_button.getText());
     }
 
     @SmallTest
-    public void test_GPSStopEventChangesTextToStopWhenFired() throws InterruptedException {
+    public void test_GPSStopEventChangesTextToStopWhenEventReceived() throws InterruptedException {
         startFragment(new StartButtonFragment());
         _button = (Button) _activity.findViewById(R.id.start_button);
         _activity.runOnUiThread(new Runnable() {
@@ -200,32 +178,9 @@ public class StartButtonFragmentTest extends FragmentInstrumentTestCase2 {
             }
         });
 
-        _bus.post(new GPSStatus(GPSStatus.State.STARTED));
+        _bus.post(new GPSStatus(BaseStatus.Status.STARTED));
 
         Thread.sleep(100);
         assertEquals("Start button text should be stop",_activity.getString(R.string.startbuttonfragment_stop),_button.getText());
     }
-
-    @SmallTest
-    public void test_ButtonStateStartedWhenGPSServiceRunning() throws InterruptedException {
-        when(_serviceStarter.serviceRunning(GPSServiceCommand.class)).thenReturn(true);
-
-        startFragment(new StartButtonFragment());
-        _button = (Button) _activity.findViewById(R.id.start_button);
-
-        Thread.sleep(100);
-        assertEquals("Start button text should be stop",_activity.getString(R.string.startbuttonfragment_stop),_button.getText());
-    }
-
-    @SmallTest
-    public void test_ButtonStateStoppedWhenGPSServiceStopped() throws InterruptedException {
-        when(_serviceStarter.serviceRunning(GPSServiceCommand.class)).thenReturn(false);
-
-        startFragment(new StartButtonFragment());
-        _button = (Button) _activity.findViewById(R.id.start_button);
-
-        Thread.sleep(100);
-        assertEquals("Start button text should be start",_activity.getString(R.string.startbuttonfragment_start),_button.getText());
-    }
-
 }

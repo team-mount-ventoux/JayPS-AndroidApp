@@ -1,7 +1,6 @@
 package com.njackson.gps;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 
@@ -11,18 +10,17 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 
 import com.njackson.adapters.AdvancedLocationToNewLocation;
 import com.njackson.application.IInjectionContainer;
-import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.modules.ForApplication;
 import com.njackson.events.GPSServiceCommand.ChangeRefreshInterval;
 import com.njackson.events.GPSServiceCommand.GPSChangeState;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.GPSServiceCommand.NewLocation;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
@@ -58,7 +56,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private Location firstLocation = null;
     private ServiceNmeaListener _nmeaListener;
     private GPSSensorEventListener _sensorListener;
-    private boolean _gpsStarted = false;
+    private BaseStatus.Status _currentStatus= BaseStatus.Status.STOPPED;
 
     @Subscribe
     public void onResetGPSStateEvent(ResetGPSState event) {
@@ -79,6 +77,9 @@ public class GPSServiceCommand implements IServiceCommand {
                 break;
             case STOP:
                 stop();
+                break;
+            case ANNOUNCE_STATE:
+                broadcastStatus(_currentStatus);
         }
     }
 
@@ -101,9 +102,11 @@ public class GPSServiceCommand implements IServiceCommand {
             registerSensorListener();
             setGPSStartTime();
 
-            _bus.post(new GPSStatus(GPSStatus.State.STARTED));
+            _currentStatus = BaseStatus.Status.STARTED;
+            broadcastStatus(_currentStatus);
         } else {
-            _bus.post(new GPSStatus(GPSStatus.State.DISABLED)); // GPS DISABLED
+            _currentStatus = BaseStatus.Status.DISABLED;
+            broadcastStatus(_currentStatus);
         }
     }
 
@@ -113,7 +116,8 @@ public class GPSServiceCommand implements IServiceCommand {
 
         stopLocationUpdates();
 
-        _bus.post(new GPSStatus(GPSStatus.State.STOPPED));
+        _currentStatus = BaseStatus.Status.STOPPED;
+        broadcastStatus(_currentStatus);
     }
 
     private void setGPSStartTime() {
@@ -186,12 +190,10 @@ public class GPSServiceCommand implements IServiceCommand {
     }
 
     private void requestLocationUpdates(long refresh_interval) {
-        if (_gpsStarted) {
+        if (_currentStatus != BaseStatus.Status.STARTED) {
             _locationMgr.removeUpdates(_locationListener);
         }
         _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, refresh_interval, 2.0f, _locationListener);
-
-        _gpsStarted = true;
     }
 
     private void registerNmeaListener() {
@@ -219,6 +221,10 @@ public class GPSServiceCommand implements IServiceCommand {
 
     private void changeRefreshInterval(int refreshInterval) {
         requestLocationUpdates(refreshInterval);
+    }
+
+    private void broadcastStatus(BaseStatus.Status currentStatus) {
+        _bus.post(new GPSStatus(currentStatus));
     }
 
     private LocationListener _locationListener = new LocationListener() {

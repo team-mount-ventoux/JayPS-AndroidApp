@@ -8,6 +8,7 @@ import com.njackson.events.LiveServiceCommand.LiveMessage;
 import com.njackson.events.PebbleServiceCommand.NewMessage;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.NewLocation;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.pebble.PebbleServiceCommand;
 import com.njackson.pebble.canvas.GPSData;
 import com.njackson.pebble.canvas.ICanvasWrapper;
@@ -127,7 +128,7 @@ public class PebbleServiceCommandTest extends AndroidTestCase {
     public void testServiceShowsWatchFaceOnGPSServiceStart() throws InterruptedException {
         _command.execute(_app);
 
-        _bus.post(new GPSStatus(GPSStatus.State.STARTED));
+        _bus.post(new GPSStatus(BaseStatus.Status.STARTED));
         Mockito.verify(_mockMessageManager,timeout(1000).times(1)).showWatchFace();
     }
 
@@ -135,7 +136,7 @@ public class PebbleServiceCommandTest extends AndroidTestCase {
     public void testUpdatePebbleGPSServiceStop() throws InterruptedException {
         _command.execute(_app);
 
-        _bus.post(new GPSStatus(GPSStatus.State.STOPPED));
+        _bus.post(new GPSStatus(BaseStatus.Status.STOPPED));
         Mockito.verify(_mockMessageManager,timeout(1000).times(1)).offer(any(PebbleDictionary.class));
     }
 

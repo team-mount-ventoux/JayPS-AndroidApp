@@ -32,7 +32,7 @@ public class OruxMapsServiceCommand implements IServiceCommand {
 
     @Subscribe
     public void onGPSStatusEvent(GPSStatus event) {
-        switch(event.getState()) {
+        switch(event.getStatus()) {
             case STARTED:
                 start();
                 break;

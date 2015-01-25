@@ -20,6 +20,7 @@ import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.base.BaseChangeState;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.gps.GPSSensorEventListener;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.gps.IForegroundServiceStarter;
@@ -127,7 +128,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
     public void onGPSStatusEvent(GPSStatus event) {
         _gpsStatusEvent = event;
 
-        if (event.getState().compareTo(GPSStatus.State.STARTED) == 0) {
+        if (event.getStatus().compareTo(BaseStatus.Status.STARTED) == 0) {
             Log.d(TAG, "onGPSStatusEvent STARTED");
             _stateLatch.countDown();
         }
@@ -176,7 +177,17 @@ public class GPSServiceCommandTest extends AndroidTestCase {
 
         _stateLatch.await(2000,TimeUnit.MILLISECONDS);
 
-        assertEquals(GPSStatus.State.DISABLED, _gpsStatusEvent.getState());
+        assertEquals(BaseStatus.Status.DISABLED, _gpsStatusEvent.getStatus());
+    }
+
+    @SmallTest
+    public void testBroadcastStatusOnAnnounceEvent() throws Exception {
+        _serviceCommand.execute(_app);
+        _bus.post(new GPSChangeState(BaseChangeState.State.ANNOUNCE_STATE));
+
+        _stateLatch.await(2000,TimeUnit.MILLISECONDS);
+
+        assertEquals(BaseStatus.Status.STOPPED, _gpsStatusEvent.getStatus());
     }
 
     @SmallTest

@@ -14,6 +14,7 @@ import com.njackson.events.PebbleServiceCommand.NewMessage;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.LiveServiceCommand.LiveMessage;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.pebble.canvas.GPSData;
 import com.njackson.pebble.canvas.ICanvasWrapper;
 import com.njackson.service.IServiceCommand;
@@ -48,11 +49,11 @@ public class PebbleServiceCommand implements IServiceCommand {
 
     @Subscribe
     public void onGPSServiceState(GPSStatus event) {
-        if(event.getState().compareTo(GPSStatus.State.STARTED) == 0) {
+        if(event.getStatus().compareTo(BaseStatus.Status.STARTED) == 0) {
             if (!_sharedPreferences.getString("CANVAS_MODE", "disable").equals("canvas_only")) {
                 _messageManager.showWatchFace();
             }
-        } else if (event.getState().compareTo(GPSStatus.State.STOPPED) == 0) {
+        } else if (event.getStatus().compareTo(BaseStatus.Status.STOPPED) == 0) {
             notifyPebbleGPSStopped();
         }
     }

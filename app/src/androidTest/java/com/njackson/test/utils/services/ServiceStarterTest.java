@@ -163,6 +163,16 @@ public class ServiceStarterTest extends AndroidTestCase {
     }
 
     @SmallTest
+    public void testBroadcastLocationStateSendsMessage() {
+        _serviceStarter.broadcastLocationState();
+
+        ArgumentCaptor<BaseChangeState> statusCaptor = ArgumentCaptor.forClass(BaseChangeState.class);
+
+        verify(_mockBus,times(1)).post(statusCaptor.capture());
+        assertEquals(BaseChangeState.State.ANNOUNCE_STATE, getStateFromCaptor(statusCaptor, GPSChangeState.class).getState());
+    }
+
+    @SmallTest
     public void testServiceRunningReturnsTrueWhenServiceStarted() throws Exception {
         ActivityManager manager = mock(ActivityManager.class);
         ArrayList<ActivityManager.RunningServiceInfo> runningServices = new ArrayList<ActivityManager.RunningServiceInfo>();

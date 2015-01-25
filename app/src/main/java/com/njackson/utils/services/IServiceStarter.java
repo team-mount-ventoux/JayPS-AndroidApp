@@ -10,5 +10,6 @@ public interface IServiceStarter {
     public void stopActivityServices();
     public void startLocationServices();
     public void stopLocationServices();
+    public void broadcastLocationState();
     public boolean serviceRunning(Class<?> serviceClass);
 }

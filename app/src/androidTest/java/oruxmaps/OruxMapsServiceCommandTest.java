@@ -76,7 +76,7 @@ public class OruxMapsServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("continue");
 
         _command.execute(_app);
-        _bus.post(new GPSStatus(BaseStatus.State.STARTED));
+        _bus.post(new GPSStatus(BaseStatus.Status.STARTED));
 
         verify(_mockOruxMaps, timeout(2000).times(1)).startRecordContinue();
     }
@@ -86,7 +86,7 @@ public class OruxMapsServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("new_segment");
 
         _command.execute(_app);
-        _bus.post(new GPSStatus(BaseStatus.State.STARTED));
+        _bus.post(new GPSStatus(BaseStatus.Status.STARTED));
 
         verify(_mockOruxMaps, timeout(2000).times(1)).startRecordNewSegment();
     }
@@ -96,7 +96,7 @@ public class OruxMapsServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("new_track");
 
         _command.execute(_app);
-        _bus.post(new GPSStatus(BaseStatus.State.STARTED));
+        _bus.post(new GPSStatus(BaseStatus.Status.STARTED));
 
         verify(_mockOruxMaps,timeout(2000).times(1)).startRecordNewTrack();
     }
@@ -108,7 +108,7 @@ public class OruxMapsServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("auto");
 
         _command.execute(_app);
-        _bus.post(new GPSStatus(BaseStatus.State.STARTED));
+        _bus.post(new GPSStatus(BaseStatus.Status.STARTED));
 
         verify(_mockOruxMaps,timeout(2000).times(1)).startRecordNewTrack();
     }
@@ -120,7 +120,7 @@ public class OruxMapsServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("auto");
 
         _command.execute(_app);
-        _bus.post(new GPSStatus(BaseStatus.State.STARTED));
+        _bus.post(new GPSStatus(BaseStatus.Status.STARTED));
 
         verify(_mockOruxMaps,timeout(2000).times(1)).startRecordNewSegment();
     }
@@ -130,7 +130,7 @@ public class OruxMapsServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("something");
 
         _command.execute(_app);
-        _bus.post(new GPSStatus(BaseStatus.State.STOPPED));
+        _bus.post(new GPSStatus(BaseStatus.Status.STOPPED));
 
         verify(_mockOruxMaps,timeout(2000).times(1)).stopRecord();
     }
@@ -140,7 +140,7 @@ public class OruxMapsServiceCommandTest extends AndroidTestCase {
         when(_sharedPreferences.getString("ORUXMAPS_AUTO", "disable")).thenReturn("disable");
 
         _command.execute(_app);
-        _bus.post(new GPSStatus(BaseStatus.State.STOPPED));
+        _bus.post(new GPSStatus(BaseStatus.Status.STOPPED));
 
         verify(_mockOruxMaps,timeout(2000).times(0)).stopRecord();
     }

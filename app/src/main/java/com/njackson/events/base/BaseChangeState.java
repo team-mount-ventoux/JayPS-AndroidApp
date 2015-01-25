@@ -6,7 +6,8 @@ package com.njackson.events.base;
 public class BaseChangeState {
     public enum State {
         START,
-        STOP
+        STOP,
+        ANNOUNCE_STATE
     }
 
     public State _state;

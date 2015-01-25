@@ -10,7 +10,7 @@ import com.njackson.R;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
-import com.njackson.gps.GPSServiceCommand;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Subscribe;
 
@@ -30,9 +30,9 @@ public class StartButtonFragment extends BaseFragment {
     @Subscribe
     public void onGPSServiceState(GPSStatus event) {
         final Button startButton = (Button) _view.findViewById(R.id.start_button);
-        if (event.getState().compareTo(GPSStatus.State.STOPPED) == 0) {
+        if (event.getStatus().compareTo(BaseStatus.Status.STOPPED) == 0) {
             makeStartButtonInStartState(startButton);
-        } else if (event.getState().compareTo(GPSStatus.State.STARTED) == 0) {
+        } else if (event.getStatus().compareTo(BaseStatus.Status.STARTED) == 0) {
             makeStartButtonInStopState(startButton);
         }
     }
@@ -49,22 +49,13 @@ public class StartButtonFragment extends BaseFragment {
 
         SetupOnClick(_view);
 
-        checkServiceRunningAndSetButton();
-
         return _view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        checkServiceRunningAndSetButton();
-    }
-
-    private void checkServiceRunningAndSetButton() {
-        if(_serviceStarter.serviceRunning(GPSServiceCommand.class)) {
-            final Button startButton = (Button) _view.findViewById(R.id.start_button);
-            makeStartButtonInStopState(startButton);
-        }
+        _serviceStarter.broadcastLocationState();
     }
 
     private void SetupOnClick(View view) {
@@ -74,10 +65,8 @@ public class StartButtonFragment extends BaseFragment {
             public void onClick(View view) {
                 if(startButton.getText() == getString(R.string.startbuttonfragment_start)) {
                     _bus.post(new StartButtonTouchedEvent());
-                    makeStartButtonInStopState(startButton);
                 } else {
                     _bus.post(new StopButtonTouchedEvent());
-                    makeStartButtonInStartState(startButton);
                 }
             }
         });
