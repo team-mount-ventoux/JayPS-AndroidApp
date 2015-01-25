@@ -20,6 +20,7 @@ import com.njackson.events.GPSServiceCommand.GPSChangeState;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.GPSServiceCommand.NewLocation;
+import com.njackson.events.HrmServiceCommand.HrmHeartRate;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.njackson.utils.time.ITime;
@@ -56,6 +57,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private Location firstLocation = null;
     private ServiceNmeaListener _nmeaListener;
     private GPSSensorEventListener _sensorListener;
+    private int _heartRate = 0;
     private BaseStatus.Status _currentStatus= BaseStatus.Status.STOPPED;
 
     @Subscribe
@@ -81,6 +83,12 @@ public class GPSServiceCommand implements IServiceCommand {
             case ANNOUNCE_STATE:
                 broadcastStatus(_currentStatus);
         }
+    }
+
+    @Subscribe
+    public void onNewHeartRate(HrmHeartRate event) {
+        Log.d(TAG, "onNewHeartRate:" + event.getHeartRate());
+        _heartRate = event.getHeartRate();
     }
 
     @Override
@@ -279,6 +287,9 @@ public class GPSServiceCommand implements IServiceCommand {
 
         }
         NewLocation event = new AdvancedLocationToNewLocation(_advancedLocation, xpos, ypos, units);
+        if (_heartRate > 0) {
+            event.setHeartRate(_heartRate);
+        }
 
         _bus.post(event);
     }

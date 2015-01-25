@@ -107,14 +107,14 @@ public class LiveTracking implements ILiveTracking {
 
     public boolean addPoint(Location firstLocation, Location location, double altitude, int heart_rate) {
         _firstLocation = firstLocation;
-        //Log.d(TAG, "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + altitude + "," + location.getTime() + "," + location.getAccuracy()+ ")");
+        //Log.d(TAG, "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + altitude + "," + location.getTime() + "," + location.getAccuracy() + "," + heart_rate + ")");
         if (location.getTime() - _prevTime < 5000) {
             // too early (dt<5s), do nothing
             return false;
         }
         _bufferPoints += (_bufferPoints != "" ? " " : "") + location.getLatitude() + " " + location.getLongitude() + " " + String.format(Locale.US, "%.1f", altitude) + " " + String.format("%d", (int) (location.getTime() / 1000));
         _bufferAccuracies += (_bufferAccuracies != "" ? " " : "") + String.format(Locale.US, "%.1f", location.getAccuracy());
-        if (heart_rate > 0) {
+        if (heart_rate > 0 && heart_rate < 255) {
             _bufferHeartRates += (_bufferHeartRates != "" ? " " : "") + heart_rate + " " + String.format("%d", (int) (location.getTime() / 1000));
         }
         if (location.getTime() - _prevTime < 30000) {
@@ -154,7 +154,7 @@ public class LiveTracking implements ILiveTracking {
         }
 
         protected void onPostExecute(Boolean result) {
-            if (debug) Log.d(TAG, "onPostExecute(" + result + ")");
+            //if (debug) Log.d(TAG, "onPostExecute(" + result + ")");
         }
     }
 
