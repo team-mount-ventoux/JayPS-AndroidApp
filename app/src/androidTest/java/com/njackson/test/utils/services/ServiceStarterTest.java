@@ -97,44 +97,6 @@ public class ServiceStarterTest extends AndroidTestCase {
     }
 
     @SmallTest
-    public void testStartGoogleFitStartsMainServiceIfNotRunning() throws Exception {
-        setupMockServiceStopped();
-        _serviceStarter.startGoogleFitService();
-
-        verify(_mockContext, times(1)).startService(any(Intent.class));
-    }
-
-    @SmallTest
-    public void testStartGoogleFitDoesNotStartsMainServiceIfRunning() throws Exception {
-        setupMockServiceRunning();
-        _serviceStarter.startGoogleFitService();
-
-        verify(_mockContext, times(0)).startService(any(Intent.class));
-    }
-
-    @SmallTest
-    public void testStartGoogleFitSendsMessage() throws Exception {
-        setupMockServiceRunning();
-        _serviceStarter.startGoogleFitService();
-
-        ArgumentCaptor<BaseChangeState> statusCaptor = ArgumentCaptor.forClass(BaseChangeState.class);
-
-        verify(_mockBus,times(1)).post(statusCaptor.capture());
-        assertEquals(BaseChangeState.State.START, getStateFromCaptor(statusCaptor, GoogleFitChangeState.class).getState());
-    }
-
-    @SmallTest
-    public void testStopGoogleFitSendsMessage() throws Exception {
-        setupMockServiceRunning();
-        _serviceStarter.stopGoogleFitService();
-
-        ArgumentCaptor<BaseChangeState> statusCaptor = ArgumentCaptor.forClass(BaseChangeState.class);
-
-        verify(_mockBus,times(1)).post(statusCaptor.capture());
-        assertEquals(BaseChangeState.State.STOP, getStateFromCaptor(statusCaptor, GoogleFitChangeState.class).getState());
-    }
-
-    @SmallTest
     public void testStartsLocationServicesStartsMainServiceIfNotRunning() throws Exception {
         setupMockServiceStopped();
         _serviceStarter.startLocationServices();

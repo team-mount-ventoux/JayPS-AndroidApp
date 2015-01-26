@@ -150,27 +150,11 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
-    public void testStartsActivityServiceOnCreateWhenGoogleFitPreferenceSet() {
-        when(_mockPreferences.getBoolean("GOOGLE_FIT",false)).thenReturn(true);
-        _activity = getActivity();
-
-        verify(_mockServiceStarter,times(1)).startActivityService();
-    }
-
-    @SmallTest
     public void testStartsActivityServiceOnCreateWhenActivityRecognitionPreferenceSet() {
         when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
         _activity = getActivity();
 
         verify(_mockServiceStarter, times(1)).startActivityService();
-    }
-
-    @SmallTest
-    public void testDoesNotStartsActivityServiceOnCreateWhenGoogleFitPreferenceNotSet() {
-        when(_mockPreferences.getBoolean("GOOGLE_FIT",false)).thenReturn(false);
-        _activity = getActivity();
-
-        verify(_mockServiceStarter,times(0)).startActivityService();
     }
 
     @SmallTest

@@ -85,8 +85,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
 
         _analytics.trackAppOpened(getIntent());
         boolean activity_start = _sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false);
-        boolean fit_start = _sharedPreferences.getBoolean("GOOGLE_FIT",false);
-        if(fit_start || activity_start) {
+        if(activity_start) {
             _serviceStarter.startActivityService();
         }
 
