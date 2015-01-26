@@ -12,6 +12,7 @@ import com.njackson.events.GoogleFitCommand.GoogleFitChangeState;
 import com.njackson.events.LiveServiceCommand.LiveChangeState;
 import com.njackson.events.MainService.MainServiceStatus;
 import com.njackson.events.base.BaseChangeState;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.fit.GoogleFitServiceCommand;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.live.LiveServiceCommand;
@@ -48,9 +49,11 @@ public class ServiceStarter implements IServiceStarter {
 
     @Subscribe
     public void onMainServiceStatus(MainServiceStatus event) {
-        _bus.unregister(this);
-        if(_deferred != null && !_deferred.isResolved()) {
-            _deferred.resolve(event);
+        if (event.getStatus() == BaseStatus.Status.STARTED) {
+            _bus.unregister(this);
+            if (_deferred != null && !_deferred.isResolved()) {
+                _deferred.resolve(event);
+            }
         }
     }
 
