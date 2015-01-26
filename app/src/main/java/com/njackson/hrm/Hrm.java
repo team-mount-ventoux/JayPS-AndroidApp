@@ -10,18 +10,27 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.util.Log;
 
+import com.njackson.application.IInjectionContainer;
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.HrmServiceCommand.HrmHeartRate;
+import com.njackson.utils.time.ITimer;
+import com.njackson.utils.time.ITimerHandler;
 import com.squareup.otto.Bus;
 
 import java.util.List;
 import java.util.UUID;
 
+import javax.inject.Inject;
+
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-public class Hrm implements IHrm {
+public class Hrm implements IHrm, ITimerHandler {
 
     private final String TAG = "PB-Hrm";
 
@@ -42,28 +51,76 @@ public class Hrm implements IHrm {
     public final static UUID UUID_HEART_RATE_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.HEART_RATE_MEASUREMENT);
 
     private boolean debug = true;
+    private boolean _hrmStarted = false;
+    @Inject ITimer _timer;
 
     public Hrm(Context context) {
         _context = context;
     }
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
 
+            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+                final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.ERROR);
+                switch (state) {
+                    case BluetoothAdapter.STATE_OFF:
+                        Log.d(TAG, "Bluetooth off");
+                        mBluetoothManager = null;
+                        //mBluetoothGatt.disconnect();
+                        mBluetoothGatt.close();
+                        mBluetoothGatt = null;
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        Log.d(TAG, "Turning Bluetooth off...");
+                        break;
+                    case BluetoothAdapter.STATE_ON:
+                        Log.d(TAG, "Bluetooth on");
+
+                        if (_hrmStarted) {
+                            reconnectLater();
+                        }
+
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        Log.d(TAG, "Turning Bluetooth on...");
+                        break;
+                }
+            }
+        }
+    };
     @Override
-    public void start(String hrm_address, Bus bus) {
+    public void start(String hrm_address, Bus bus, IInjectionContainer container) {
         Log.d(TAG, "start");
+
+        container.inject(this);
 
         _bus = bus;
         mBluetoothDeviceAddress = hrm_address;
+
+        _hrmStarted = true;
 
         Log.d(TAG, hrm_address);
 
         // start BLE Heart Rate Monitor
         initialize();
         connect(hrm_address);
+
+        _timer.cancel();
+
+        // Register for broadcasts on BluetoothAdapter state change
+        IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        _context.registerReceiver(mReceiver, filter);
     }
     @Override
     public void stop() {
         Log.d(TAG, "stop");
+        _hrmStarted = false;
         disconnect();
+
+        // Unregister broadcast listeners
+        _context.unregisterReceiver(mReceiver);
     }
 
 
@@ -125,9 +182,13 @@ public class Hrm implements IHrm {
             Log.w(TAG, "Device not found.  Unable to connect.");
             return false;
         }
-        // We want to directly connect to the device, so we are setting the autoConnect
-        // parameter to false.
-        mBluetoothGatt = device.connectGatt(_context, false, mGattCallback);
+        mBluetoothGatt = device.connectGatt(
+                _context,
+                // TODO(jay)
+                true, /* autoConnect Whether to directly connect to the remote device (false)
+                        or to automatically connect as soon as the remote device becomes available (true).*/
+                mGattCallback
+        );
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
@@ -147,8 +208,15 @@ public class Hrm implements IHrm {
             return;
         }
         mBluetoothGatt.disconnect();
+        mBluetoothGatt.close();
+        mBluetoothGatt = null;
     }
 
+    private void reconnectLater() {
+        if (!_timer.getActive()) {
+            _timer.setTimer(10000, this);
+        }
+    }
 
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
@@ -169,6 +237,14 @@ public class Hrm implements IHrm {
                 if (debug) Log.i(TAG, "Disconnected from GATT server.");
                 // TODO(jay) post something?
                 //broadcastUpdate(ACTION_GATT_DISCONNECTED);
+
+                if (_hrmStarted) {
+                    reconnectLater();
+
+                    /*if (debug) Log.i(TAG, "Trying to reconnect.");
+                    final boolean result = connect(mBluetoothDeviceAddress);
+                    if (debug) Log.d(TAG, "Connect request result=" + result);*/
+                }
             }
         }
 
@@ -293,7 +369,7 @@ public class Hrm implements IHrm {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
-        if (debug) Log.w(TAG, "setCharacteristicNotification");
+        //if (debug) Log.w(TAG, "setCharacteristicNotification");
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 
         // This is specific to Heart Rate Measurement.
@@ -305,4 +381,10 @@ public class Hrm implements IHrm {
         }
     }
 
+    @Override
+    public void handleTimeout() {
+        Log.d(TAG,"handleTimeout");
+        initialize();
+        final boolean result = connect(mBluetoothDeviceAddress);
+    }
 }

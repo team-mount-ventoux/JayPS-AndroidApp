@@ -89,6 +89,7 @@ import static android.content.Context.SENSOR_SERVICE;
         ActivityRecognitionServiceCommand.class,
         PebbleDataReceiver.class,
         HrmServiceCommand.class,
+        Hrm.class,
         })
 public class AndroidModule {
     private PebbleBikeApplication application = null;

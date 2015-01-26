@@ -24,11 +24,13 @@ public class HrmServiceCommand implements IServiceCommand {
     @Inject Bus _bus;
     @Inject SharedPreferences _sharedPreferences;
     @Inject IHrm _hrm;
+    IInjectionContainer _container;
 
     @Override
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
+        _container = container;
     }
 
     @Override
@@ -54,7 +56,7 @@ public class HrmServiceCommand implements IServiceCommand {
 
     private void start() {
         Log.d(TAG, "start");
-        _hrm.start(_sharedPreferences.getString("hrm_address", ""), _bus);
+        _hrm.start(_sharedPreferences.getString("hrm_address", ""), _bus, _container);
     }
 
     public void stop() {
