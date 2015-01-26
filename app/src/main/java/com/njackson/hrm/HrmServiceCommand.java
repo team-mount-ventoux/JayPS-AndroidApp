@@ -25,6 +25,7 @@ public class HrmServiceCommand implements IServiceCommand {
     @Inject SharedPreferences _sharedPreferences;
     @Inject IHrm _hrm;
     IInjectionContainer _container;
+    private BaseStatus.Status _currentStatus= BaseStatus.Status.DISABLED;
 
     @Override
     public void execute(IInjectionContainer container) {
@@ -47,20 +48,26 @@ public class HrmServiceCommand implements IServiceCommand {
     public void onGPSStatusEvent(GPSStatus event) {
         switch(event.getStatus()) {
             case STARTED:
-                start();
+                if(_currentStatus != BaseStatus.Status.STARTED) {
+                    start();
+                }
                 break;
             case STOPPED:
-                stop();
+                if(_currentStatus != BaseStatus.Status.STOPPED) {
+                    stop();
+                }
         }
     }
 
     private void start() {
         Log.d(TAG, "start");
         _hrm.start(_sharedPreferences.getString("hrm_address", ""), _bus, _container);
+        _currentStatus = BaseStatus.Status.STARTED;
     }
 
     public void stop() {
         Log.d(TAG, "stop");
         _hrm.stop();
+        _currentStatus = BaseStatus.Status.STOPPED;
     }
 }
