@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceActivity;
+import android.preference.PreferenceManager;
 import android.test.ActivityUnitTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -88,6 +90,10 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         _activity = getActivity();
         assertNotNull(_activity);
 
+        // change pref name to avoid to reset preferences on a real device
+        PreferenceManager prefMgr = _activity.getPreferenceManager();
+        prefMgr.setSharedPreferencesName("only_for_test");
+
         _installPreference = _activity.findPreference("INSTALL_WATCHFACE");
         assertNotNull(_installPreference);
 
@@ -170,6 +176,9 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
 
     @SmallTest
     public void testOnResumeSetsOruxMaps() {
+        _oruxMaps.setValue("continue");
+        assertNull(_oruxMaps.getSummary());
+
         getInstrumentation().callActivityOnResume(_activity);
 
         assertEquals("Continue record", _oruxMaps.getSummary());
@@ -177,6 +186,10 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
 
     @SmallTest
     public void testOnResumeSetsCanvas() {
+
+        _canvas.setValue("canvas_only");
+        assertNull(_canvas.getSummary());
+
         getInstrumentation().callActivityOnResume(_activity);
 
         assertEquals("Canvas only", _canvas.getSummary());
@@ -249,7 +262,6 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
 
     @SmallTest
     public void testOnPreferenceChangedSetsOruxMapsMode(){
-        when(_preferences.getString("ORUXMAPS_AUTO","")).thenReturn("continue");
         _oruxMaps.setValue("continue");
         _activity.onSharedPreferenceChanged(_preferences, "ORUXMAPS_AUTO");
 
@@ -258,7 +270,6 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
 
     @SmallTest
     public void testOnPreferenceChangedSetsCanvasMode(){
-        when(_preferences.getString("CANVAS_MODE","")).thenReturn("canvas_only");
         _canvas.setValue("canvas_only");
         _activity.onSharedPreferenceChanged(_preferences, "CANVAS_MODE");
 
