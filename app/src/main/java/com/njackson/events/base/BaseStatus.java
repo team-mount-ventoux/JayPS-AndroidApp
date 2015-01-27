@@ -5,6 +5,8 @@ package com.njackson.events.base;
  */
 public class BaseStatus {
     public enum Status {
+        NOT_INITIALIZED,
+        INITIALIZED,
         STARTED,
         STOPPED,
         DISABLED,
