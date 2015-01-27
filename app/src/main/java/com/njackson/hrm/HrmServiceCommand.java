@@ -25,13 +25,14 @@ public class HrmServiceCommand implements IServiceCommand {
     @Inject SharedPreferences _sharedPreferences;
     @Inject IHrm _hrm;
     IInjectionContainer _container;
-    private BaseStatus.Status _currentStatus= BaseStatus.Status.DISABLED;
+    private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
 
     @Override
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
         _container = container;
+        _currentStatus = BaseStatus.Status.INITIALIZED;
     }
 
     @Override

@@ -33,7 +33,7 @@ public class PebbleServiceCommand implements IServiceCommand {
     @Inject Bus _bus;
 
     private static final String TAG = "PB-PebbleService";
-    private BaseStatus.Status _currentStatus;
+    private BaseStatus.Status _currentStatus = BaseStatus.Status.NOT_INITIALIZED;
 
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
@@ -50,11 +50,11 @@ public class PebbleServiceCommand implements IServiceCommand {
 
     @Subscribe
     public void onGPSServiceState(GPSStatus event) {
-        if(event.getStatus().compareTo(BaseStatus.Status.STARTED) == 0) {
+        if(event.getStatus() == BaseStatus.Status.STARTED) {
             if (!_sharedPreferences.getString("CANVAS_MODE", "disable").equals("canvas_only")) {
                 _messageManager.showWatchFace();
             }
-        } else if (event.getStatus().compareTo(BaseStatus.Status.STOPPED) == 0) {
+        } else if (event.getStatus() == BaseStatus.Status.STOPPED) {
             notifyPebbleGPSStopped();
         }
     }
@@ -74,6 +74,7 @@ public class PebbleServiceCommand implements IServiceCommand {
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
+        _currentStatus = BaseStatus.Status.INITIALIZED;
     }
 
     @Override

@@ -64,6 +64,7 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
+        _currentStatus = BaseStatus.Status.INITIALIZED;
     }
 
     @Override

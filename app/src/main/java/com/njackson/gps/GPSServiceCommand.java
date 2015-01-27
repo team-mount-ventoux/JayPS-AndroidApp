@@ -58,7 +58,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private ServiceNmeaListener _nmeaListener;
     private GPSSensorEventListener _sensorListener;
 	private int _heartRate = 0;
-    private BaseStatus.Status _currentStatus= BaseStatus.Status.DISABLED;
+    private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
 
     @Subscribe
     public void onResetGPSStateEvent(ResetGPSState event) {
@@ -97,6 +97,8 @@ public class GPSServiceCommand implements IServiceCommand {
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
+        // GPSServiceCommand is disabled by default
+        _currentStatus = BaseStatus.Status.DISABLED;
         _advancedLocation = new AdvancedLocation();
     }
 

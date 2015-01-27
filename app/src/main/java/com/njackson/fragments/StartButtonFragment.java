@@ -30,9 +30,9 @@ public class StartButtonFragment extends BaseFragment {
     @Subscribe
     public void onGPSServiceState(GPSStatus event) {
         final Button startButton = (Button) _view.findViewById(R.id.start_button);
-        if (event.getStatus().compareTo(BaseStatus.Status.STOPPED) == 0) {
+        if (event.getStatus() == BaseStatus.Status.STOPPED) {
             makeStartButtonInStartState(startButton);
-        } else if (event.getStatus().compareTo(BaseStatus.Status.STARTED) == 0) {
+        } else if (event.getStatus() == BaseStatus.Status.STARTED) {
             makeStartButtonInStopState(startButton);
         }
     }

@@ -25,10 +25,13 @@ public class OruxMapsServiceCommand implements IServiceCommand {
 
     private final long TWELVE_HOURS_MS = 12 * 3600 * 1000;
 
+    private BaseStatus.Status _currentStatus = BaseStatus.Status.NOT_INITIALIZED;
+
     @Override
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
+        _currentStatus = BaseStatus.Status.INITIALIZED;
     }
 
     @Override
@@ -67,12 +70,14 @@ public class OruxMapsServiceCommand implements IServiceCommand {
                 _oruxMaps.startRecordNewSegment();
             }
         }
+        _currentStatus = BaseStatus.Status.STARTED;
     }
 
     public void stop() {
         if (!_sharedPreferences.getString("ORUXMAPS_AUTO", "disable").equals("disable")) {
             _oruxMaps.stopRecord();
         }
+        _currentStatus = BaseStatus.Status.STOPPED;
     }
 
     private boolean lastStartGreaterThan12Hours() {

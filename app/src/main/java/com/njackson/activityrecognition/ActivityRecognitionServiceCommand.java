@@ -49,7 +49,7 @@ public class ActivityRecognitionServiceCommand implements IServiceCommand,
     public static final int DETECTION_INTERVAL_MILLISECONDS = MILLISECONDS_PER_SECOND * DETECTION_INTERVAL_SECONDS;
 
     private PendingIntent _activityRecognitionPendingIntent;
-    private BaseStatus.Status _currentStatus;
+    private BaseStatus.Status _currentStatus = BaseStatus.Status.NOT_INITIALIZED;
 
     @Subscribe
     public void onNewActivityEvent(NewActivityEvent event) {
@@ -86,6 +86,7 @@ public class ActivityRecognitionServiceCommand implements IServiceCommand,
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
+        _currentStatus = BaseStatus.Status.INITIALIZED;
     }
 
     @Override
