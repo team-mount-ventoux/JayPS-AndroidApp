@@ -31,11 +31,11 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
     @Inject @Named("GoogleFit") GoogleApiClient _googleAPIClient;
     @Inject IGoogleFitSessionManager _sessionManager;
 
-    private BaseStatus.Status _currentStatus;
+    private BaseStatus.Status _currentStatus = BaseStatus.Status.NOT_INITIALIZED;
 
     @Subscribe
     public void onNewActivityEvent(NewActivityEvent event) {
-        if(_currentStatus.compareTo(BaseStatus.Status.STARTED) == 0) {
+        if(_currentStatus == BaseStatus.Status.STARTED) {
             switch (event.getActivityType()) {
                 case DetectedActivity.ON_BICYCLE:
                 case DetectedActivity.RUNNING:
