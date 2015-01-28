@@ -127,6 +127,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         setRefreshSummary();
         setLoginJaypsSummary();
         setLoginMmtSummary();
+        setLiveSummary();
         setOruxMapsSummary();
         setCanvasSummary();
     }
@@ -140,18 +141,26 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        Log.i(TAG, "onSharedPreferenceChanged");
+        Log.i(TAG, "onSharedPreferenceChanged" + s);
         if (s.equals("UNITS_OF_MEASURE")) {
             setUnitsSummary();
         }
         if (s.equals("REFRESH_INTERVAL")) {
             setRefreshSummary();
         }
+        if (s.equals("LIVE_TRACKING") || s.equals("LIVE_TRACKING_MMT")) {
+            setLiveSummary();
+        }
         if (s.equals("LIVE_TRACKING_LOGIN")) {
+            setLiveSummary();
             setLoginJaypsSummary();
         }
         if (s.equals("LIVE_TRACKING_MMT_LOGIN")) {
+            setLiveSummary();
             setLoginMmtSummary();
+        }
+        if (s.equals("LIVE_TRACKING_PASSWORD") || s.equals("LIVE_TRACKING_MMT_PASSWORD")) {
+            setLiveSummary();
         }
         if (s.equals("ORUXMAPS_AUTO")) {
             setOruxMapsSummary();
@@ -200,6 +209,22 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         String login = _sharedPreferences.getString("LIVE_TRACKING_MMT_LOGIN", "");
         Preference loginPref = findPreference("LIVE_TRACKING_MMT_LOGIN");
         loginPref.setSummary(login);
+    }
+
+    // TODO(jay) : call me when PreferenceScreen "live_screen" is closed
+    private void setLiveSummary() {
+        Boolean live_jayps = _sharedPreferences.getBoolean("LIVE_TRACKING", false) && !_sharedPreferences.getString("LIVE_TRACKING_LOGIN", "").equals("") && !_sharedPreferences.getString("LIVE_TRACKING_PASSWORD", "").equals("");
+        Boolean live_mmt = _sharedPreferences.getBoolean("LIVE_TRACKING_MMT", false) && !_sharedPreferences.getString("LIVE_TRACKING_MMT_LOGIN", "").equals("") && !_sharedPreferences.getString("LIVE_TRACKING_MMT_PASSWORD", "").equals("");
+        Preference live_screen = findPreference("live_screen");
+        String live = "Disable";
+        if (live_jayps && live_mmt) {
+            live = "JayPS & Map My Tracks";
+        } else if (live_jayps) {
+            live = "JayPS";
+        } else if (live_mmt) {
+            live = "Map My Track";
+        }
+        live_screen.setSummary(live);
     }
 
     private void setOruxMapsSummary() {
