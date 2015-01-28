@@ -25,4 +25,5 @@
     <item name="altitude_gps_status" type="id" />
     <item name="altitude_title_section" type="id" />
     <item name="altitude_status_value" type="id" />
+    <item name="main_altitiude" type="id" />
 </resources>

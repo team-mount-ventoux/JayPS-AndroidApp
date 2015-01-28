@@ -276,6 +276,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
                 anyFloat(),
                 locationListenerCaptor.capture());
 
+
         int refreshInterval = 200;
         _serviceCommand.onGPSRefreshChangeEvent(new ChangeRefreshInterval(refreshInterval));
 

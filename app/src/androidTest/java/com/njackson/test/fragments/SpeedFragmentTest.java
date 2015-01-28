@@ -2,7 +2,10 @@ package com.njackson.test.fragments;
 
 import android.content.SharedPreferences;
 import android.location.LocationManager;
+import android.os.Bundle;
+import android.test.UiThreadTest;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.njackson.R;
@@ -15,6 +18,8 @@ import com.squareup.otto.Bus;
 
 import org.mockito.Mockito;
 
+import java.util.Set;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -22,7 +27,12 @@ import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by server on 30/03/2014.
@@ -30,6 +40,7 @@ import static org.mockito.Mockito.mock;
 public class SpeedFragmentTest extends FragmentInstrumentTestCase2 {
 
     @Inject Bus _bus;
+    @Inject SharedPreferences _mockPreferences;
 
     private TextView _speedLabel;
     private TextView _speedText;
@@ -45,7 +56,7 @@ public class SpeedFragmentTest extends FragmentInstrumentTestCase2 {
     private TextView _avgspeedLabel;
     private TextView _avgspeedText;
     private TextView _avgspeedUnitsLabel;
-    private SharedPreferences _mock;
+    private SharedPreferences.Editor _mockEditor;
 
     @Module(
             includes = AndroidModule.class,
@@ -71,12 +82,13 @@ public class SpeedFragmentTest extends FragmentInstrumentTestCase2 {
     protected void setUp() throws Exception {
         super.setUp();
 
-        setupMocks();
         this.getInstrumentation().waitForIdleSync(); // this is needed for emulator versions 2.3 as the application is instantiated on a separate thread.
         TestApplication app = (TestApplication)this.getInstrumentation().getTargetContext().getApplicationContext();
 
         app.setObjectGraph(ObjectGraph.create(new TestModule()));
         app.inject(this);
+
+        setupMocks();
 
         setActivityInitialTouchMode(false);
 
@@ -103,7 +115,14 @@ public class SpeedFragmentTest extends FragmentInstrumentTestCase2 {
     private void setupMocks() {
         //Configure Mokito
         System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath());
-        _mock = Mockito.mock(SharedPreferences.class);
+
+        _mockEditor = mock(SharedPreferences.Editor.class);
+        when(_mockPreferences.edit()).thenReturn(_mockEditor);
+
+        when(_mockPreferences.getString("SPEEDFRAGMENT_SPEED", getInstrumentation().getTargetContext().getString(R.string.speedfragment_speed_value))).thenReturn("1.1");
+        when(_mockPreferences.getString("SPEEDFRAGMENT_AVGSPEED", getInstrumentation().getTargetContext().getString(R.string.speedfragment_avgspeed_value))).thenReturn("1.2");
+        when(_mockPreferences.getString("SPEEDFRAGMENT_DISTANCE", getInstrumentation().getTargetContext().getString(R.string.speedfragment_distance_value))).thenReturn("1.3");
+        when(_mockPreferences.getString("SPEEDFRAGMENT_TIME", getInstrumentation().getTargetContext().getString(R.string.speedfragment_time_value))).thenReturn("1.4");
     }
 
     @SmallTest
@@ -122,6 +141,92 @@ public class SpeedFragmentTest extends FragmentInstrumentTestCase2 {
         assertNotNull(_avgspeedLabel);
         assertNotNull(_avgspeedText);
         assertNotNull(_avgspeedUnitsLabel);
+    }
+
+    @SmallTest
+    @UiThreadTest
+    public void testLoadsInstanceStateSpeed() {
+        String text = _speedText.getText().toString();
+
+        assertEquals("1.1",text);
+    }
+
+    @SmallTest
+    @UiThreadTest
+    public void testLoadsInstanceStateAvgSpeed() {
+        String text = _avgspeedText.getText().toString();
+
+        assertEquals("1.2",text);
+    }
+
+    @SmallTest
+    @UiThreadTest
+    public void testLoadsInstanceStateDistanceSpeed() {
+        String text = _distanceText.getText().toString();
+
+        assertEquals("1.3",text);
+    }
+
+    @SmallTest
+    @UiThreadTest
+    public void testLoadsInstanceStateTime() {
+        String text = _timeText.getText().toString();
+
+        assertEquals("1.4",text);
+    }
+
+    @SmallTest
+    @UiThreadTest
+    public void testSavesInstanceStateCallsCommitAndEdit() {
+        Bundle mockOutState = new Bundle();
+        getInstrumentation().callActivityOnSaveInstanceState(_activity,mockOutState);
+
+        verify(_mockPreferences,times(1)).edit();
+        verify(_mockEditor,times(1)).commit();
+    }
+
+    @SmallTest
+    @UiThreadTest
+    public void testSavesInstanceStateSpeed() {
+        String speed = _speedText.getText().toString();
+
+        Bundle mockOutState = new Bundle();
+        getInstrumentation().callActivityOnSaveInstanceState(_activity,mockOutState);
+
+        verify(_mockEditor,times(1)).putString("SPEEDFRAGMENT_SPEED",speed);
+    }
+
+    @SmallTest
+    @UiThreadTest
+    public void testSavesInstanceStateAvgSpeed() {
+        String avgspeed = _avgspeedText.getText().toString();
+
+        Bundle mockOutState = new Bundle();
+        getInstrumentation().callActivityOnSaveInstanceState(_activity,mockOutState);
+
+        verify(_mockEditor,times(1)).putString("SPEEDFRAGMENT_AVGSPEED",avgspeed);
+    }
+
+    @SmallTest
+    @UiThreadTest
+    public void testSavesInstanceStateDistance() {
+        String distance = _distanceText.getText().toString();
+
+        Bundle mockOutState = new Bundle();
+        getInstrumentation().callActivityOnSaveInstanceState(_activity,mockOutState);
+
+        verify(_mockEditor,times(1)).putString("SPEEDFRAGMENT_DISTANCE",distance);
+    }
+
+    @SmallTest
+    @UiThreadTest
+    public void testSavesInstanceStateTime() {
+        String time = _timeText.getText().toString();
+
+        Bundle mockOutState = new Bundle();
+        getInstrumentation().callActivityOnSaveInstanceState(_activity,mockOutState);
+
+        verify(_mockEditor,times(1)).putString("SPEEDFRAGMENT_TIME",time);
     }
 
     @SmallTest

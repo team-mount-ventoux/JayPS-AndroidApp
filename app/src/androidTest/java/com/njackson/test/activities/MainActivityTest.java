@@ -198,7 +198,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         _activity = getActivity();
 
-        _bus.post(new GoogleFitStatus(BaseStatus.Status.UNABLE_TO_START, createConnectionResult()));
+        _bus.post(new GoogleFitStatus(BaseStatus.Status.STARTED, createConnectionResult()));
 
         verify(_mockPlayServices,timeout(2000).times(0)).connectionResultHasResolution(any(ConnectionResult.class));
         verify(_mockPlayServices,timeout(2000).times(0)).startConnectionResultResolution(any(ConnectionResult.class), any(MainActivity.class));
