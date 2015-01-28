@@ -31,11 +31,11 @@ public class LiveServiceCommand implements IServiceCommand {
     @Inject @Named("LiveTrackingMmt") ILiveTracking _liveTrackingMmt;
 
     Location firstLocation = null;
-    private BaseStatus.Status _currentStatus;
+    private BaseStatus.Status _currentStatus = BaseStatus.Status.NOT_INITIALIZED;
 
     @Subscribe
     public void onChangeStateEvent(LiveChangeState event) {
-        if(event.getState().compareTo(BaseChangeState.State.START) == 0) {
+        if(event.getState() == BaseChangeState.State.START) {
             start();
         }
     }
@@ -61,6 +61,7 @@ public class LiveServiceCommand implements IServiceCommand {
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
+        _currentStatus = BaseStatus.Status.INITIALIZED;
     }
 
     @Override

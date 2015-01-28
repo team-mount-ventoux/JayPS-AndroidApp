@@ -74,8 +74,6 @@ public class LiveServiceCommandTest extends AndroidTestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        _service = new LiveServiceCommand();
-
         System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
 
         _app = new TestApplication();

@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
 
     @Subscribe
     public void onRecognitionState(ActivityRecognitionStatus event) {
-        if(event.getStatus().compareTo(ActivityRecognitionStatus.Status.UNABLE_TO_START) == 0)
+        if(event.getStatus() == ActivityRecognitionStatus.Status.UNABLE_TO_START)
             Log.d(TAG, "PLAY_NOT_AVIALABLE");
     }
 
