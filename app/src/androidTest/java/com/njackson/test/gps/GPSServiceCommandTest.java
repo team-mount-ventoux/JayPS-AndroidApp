@@ -31,8 +31,7 @@ import com.squareup.otto.Subscribe;
 
 import org.mockito.ArgumentCaptor;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -130,6 +129,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         _mockServiceStarter = mock(IForegroundServiceStarter.class);
         _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
+        when(_mockPreferences.getFloat("GPS_FIRST_LOCATION_LAT", 0.0f)).thenReturn(1.0f);
+        when(_mockPreferences.getFloat("GPS_FIRST_LOCATION_LON", 0.0f)).thenReturn(0.0f);
     }
 
     @SmallTest
@@ -152,6 +153,22 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         assertEquals(BaseStatus.Status.DISABLED, captor.getValue().getStatus());
     }
 
+    private void checkStatus(List<GPSStatus> list, int nbRequired, BaseStatus.Status firstStatus) {
+        int nb = 0;
+        for (int i = 0; i < list.size(); i++) {
+            try {
+                GPSStatus status = list.get(i);
+                if (nb == 0) {
+                    assertEquals(firstStatus, status.getStatus());
+                }
+                nb++;
+            } catch (ClassCastException e) {
+                // other type
+            }
+        }
+        assertEquals(nbRequired, nb);
+    }
+
     @SmallTest
     public void testStartEvent() throws Exception {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
@@ -160,9 +177,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.START));
 
         ArgumentCaptor<GPSStatus> captor = ArgumentCaptor.forClass(GPSStatus.class);
-        verify(_bus,timeout(1000).times(1)).post(captor.capture());
-
-        assertEquals(BaseStatus.Status.STARTED, captor.getValue().getStatus());
+        verify(_bus,timeout(1000).atLeast(1)).post(captor.capture());
+        checkStatus(captor.getAllValues(), 1, BaseStatus.Status.STARTED);
     }
 
     @SmallTest
@@ -174,9 +190,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.START));
 
         ArgumentCaptor<GPSStatus> captor = ArgumentCaptor.forClass(GPSStatus.class);
-        verify(_bus,timeout(1000).times(1)).post(captor.capture());
-
-        assertEquals(BaseStatus.Status.STARTED, captor.getValue().getStatus());
+        verify(_bus,timeout(1000).atLeast(1)).post(captor.capture());
+        checkStatus(captor.getAllValues(), 1, BaseStatus.Status.STARTED);
     }
 
     @SmallTest
@@ -221,6 +236,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
     @SmallTest
     public void testBroadcastEventOnLocationChange() throws Exception {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
+        when(_mockPreferences.getFloat("GPS_FIRST_LOCATION_LAT", 0.0f)).thenReturn(1.0f);
+        when(_mockPreferences.getFloat("GPS_FIRST_LOCATION_LON", 0.0f)).thenReturn(3.0f);
 
         _serviceCommand.execute(_app);
         _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.START));
@@ -236,7 +253,20 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         LocationListener listenerArgument = locationListenerCaptor.getValue();
         listenerArgument.onLocationChanged(location);
 
-        verify(_bus,timeout(1000).times(2)).post(any(NewLocation.class));
+        ArgumentCaptor<NewLocation> captor = ArgumentCaptor.forClass(NewLocation.class);
+        verify(_bus,timeout(1000).atLeast(1)).post(captor.capture());
+
+        int nb = 0;
+        for (int i = 0; i < captor.getAllValues().size(); i++) {
+            try {
+                NewLocation newLocation = captor.getAllValues().get(i);
+                nb++;
+            } catch (ClassCastException e) {
+                // other type
+            }
+        }
+        assertEquals(2, nb);
+        // 2: one with onGPSChangeState (saved one), one with onLocationChanged
     }
 
     @SmallTest

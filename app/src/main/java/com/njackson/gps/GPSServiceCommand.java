@@ -127,6 +127,12 @@ public class GPSServiceCommand implements IServiceCommand {
 
             _currentStatus = BaseStatus.Status.STARTED;
             broadcastStatus(_currentStatus);
+
+            if (firstLocation != null) {
+                // send the saved values directly to update the watch
+                // TODO(jay) send xpos=0, ypos=0, it will display a "wrong" point on the map
+                broadcastLocation(0, 0);
+            }
         } else {
             _currentStatus = BaseStatus.Status.DISABLED;
             broadcastStatus(_currentStatus);
@@ -168,7 +174,7 @@ public class GPSServiceCommand implements IServiceCommand {
 
         _advancedLocation.setGeoidHeight(_sharedPreferences.getFloat("GEOID_HEIGHT", 0));
 
-        if (_sharedPreferences.contains("GPS_FIRST_LOCATION_LAT") && _sharedPreferences.contains("GPS_FIRST_LOCATION_LON")) {
+        if (_sharedPreferences.getFloat("GPS_FIRST_LOCATION_LAT", 0.0f) != 0.0f && _sharedPreferences.getFloat("GPS_FIRST_LOCATION_LON", 0.0f) != 0.0f) {
             firstLocation = new Location("PebbleBike");
             firstLocation.setLatitude(_sharedPreferences.getFloat("GPS_FIRST_LOCATION_LAT", 0.0f));
             firstLocation.setLongitude(_sharedPreferences.getFloat("GPS_FIRST_LOCATION_LON", 0.0f));
@@ -252,6 +258,7 @@ public class GPSServiceCommand implements IServiceCommand {
             _advancedLocation.onLocationChanged(location);
             if (firstLocation == null) {
                 firstLocation = location;
+                saveGPSStats();
             }
 
             double xpos = firstLocation.distanceTo(location) * Math.sin(firstLocation.bearingTo(location)/180*3.1415);
