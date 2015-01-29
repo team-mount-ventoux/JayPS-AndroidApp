@@ -145,7 +145,7 @@ public class AndroidModule {
         return new ServiceStarter(application, preferences, bus);
     }
 
-    @Provides
+    @Provides @Singleton
     public IMessageManager providesMessageManager() { return new MessageManager(application); }
 
     @Provides IOruxMaps providesOruxMaps() { return new OruxMaps(application); }

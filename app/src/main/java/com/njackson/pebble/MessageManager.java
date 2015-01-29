@@ -40,6 +40,8 @@ public class MessageManager implements IMessageManager, Runnable {
         _applicationContext = context;
         _thisThread = new Thread(this);
         _thisThread.start();
+
+        setupPebbbleHandlers();
     }
 
     private void removeMessageASync() {
@@ -128,7 +130,6 @@ public class MessageManager implements IMessageManager, Runnable {
 
     @Override
     public void run() {
-        setupPebbbleHandlers();
         Looper.prepare();
         messageHandler = new Handler();
         Looper.loop();
