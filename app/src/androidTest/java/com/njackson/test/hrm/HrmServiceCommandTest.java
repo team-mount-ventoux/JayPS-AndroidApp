@@ -7,7 +7,6 @@ import com.njackson.events.base.BaseStatus;
 import com.njackson.hrm.HrmServiceCommand;
 import com.njackson.hrm.IHrm;
 import com.njackson.test.application.TestApplication;
-import com.njackson.pebble.IMessageManager;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -32,7 +31,6 @@ public class HrmServiceCommandTest extends AndroidTestCase {
     private CountDownLatch _stateLatch;
 
     @Inject Bus _bus;
-    //@Inject IMessageManager _mockMessageManager;
     @Inject SharedPreferences _mockPreferences;
 
     private HrmStatus _state;
@@ -46,12 +44,6 @@ public class HrmServiceCommandTest extends AndroidTestCase {
             complete = false
     )
     class TestModule {
-        @Provides
-        @Singleton
-        public IMessageManager providesMessageManager() {
-            return mock(IMessageManager.class);
-        }
-
         @Provides
         @Singleton
         SharedPreferences provideSharedPreferences() {
@@ -84,7 +76,6 @@ public class HrmServiceCommandTest extends AndroidTestCase {
 
     @Override
     public void tearDown() throws Exception {
-        //reset(_mockMessageManager);
         super.tearDown();
     }
     private void setupMocks() {

@@ -43,6 +43,10 @@ public class MessageManager implements IMessageManager, Runnable {
     }
 
     private void removeMessageASync() {
+        if (messageHandler == null) {
+            Log.i (TAG, "messageHandler is null");
+            return;
+        }
         messageHandler.post(new Runnable() {
             @Override
             public void run() {
