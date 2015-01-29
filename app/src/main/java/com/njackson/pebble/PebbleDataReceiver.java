@@ -11,6 +11,7 @@ import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
 
 import android.content.Context;
+import android.util.Log;
 
 import javax.inject.Inject;
 
@@ -29,6 +30,7 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
 
     @Override
     public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
+        Log.i(TAG, "receiveData"+transactionId);
         ((PebbleBikeApplication)context.getApplicationContext()).inject(this);
 
         _messageManager.sendAckToPebble(transactionId);
@@ -50,14 +52,16 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
 
     private void handleVersion(Context context, PebbleDictionary data) {
         int version = data.getInteger(Constants.MSG_VERSION_PEBBLE).intValue();
-            if (version < Constants.LAST_VERSION_PEBBLE) {
-                String message = context.getString(R.string.message_pebble_new_watchface);
-                sendMessageToPebble(message);
-            }
+        Log.i(TAG, "handleVersion:" + version);
+        if (version < Constants.LAST_VERSION_PEBBLE) {
+            String message = context.getString(R.string.message_pebble_new_watchface);
+            sendMessageToPebble(message);
+        }
     }
 
     private void handleButtonData(Context context, PebbleDictionary data) {
         int button = data.getUnsignedIntegerAsLong(Constants.CMD_BUTTON_PRESS).intValue();
+        Log.i(TAG, "handleButtonData:" + button);
 
         if (button == Constants.ORUXMAPS_START_RECORD_CONTINUE_PRESS) {
             _oruxMaps.startRecordNewSegment();

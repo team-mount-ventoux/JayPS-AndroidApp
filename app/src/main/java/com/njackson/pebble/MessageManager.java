@@ -36,6 +36,8 @@ public class MessageManager implements IMessageManager, Runnable {
 
     private Thread _thisThread;
 
+    private boolean debug = true;
+
     public MessageManager(Context context) {
         _applicationContext = context;
         _thisThread = new Thread(this);
@@ -45,10 +47,6 @@ public class MessageManager implements IMessageManager, Runnable {
     }
 
     private void removeMessageASync() {
-        if (messageHandler == null) {
-            Log.i (TAG, "messageHandler is null");
-            return;
-        }
         messageHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -87,23 +85,33 @@ public class MessageManager implements IMessageManager, Runnable {
                 pebbleConnected();
             }
         });
+        PebbleKit.registerPebbleDisconnectedReceiver(_applicationContext, new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (debug) Log.i(TAG, "Pebble disconnected!");
+            }
+        });
     }
 
     private void notifyAckReceivedAsync(int transactionId) {
+        if (debug) Log.i(TAG, "notifyAckReceivedAsync("+transactionId+") transID:" + transID);
         removeMessageASync();
         consumeAsync();
     }
 
     private void notifyNackReceivedAsync(int transactionId) {
+        if (debug) Log.i(TAG, "notifyNackReceivedAsync("+transactionId+") transID:" + transID);
         removeMessageASync();
         consumeAsync();
     }
     private void pebbleConnected() {
+        if (debug) Log.i(TAG, "pebbleConnected transID:" + transID);
         removeMessageASync();
         consumeAsync();
     }
 
     private void consumeAsync() {
+        if (debug) Log.v(TAG, "consumeAsync");
         messageHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -118,7 +126,7 @@ public class MessageManager implements IMessageManager, Runnable {
                         }
                         transID = (transID + 1) % 256;
                         PebbleDictionary data = messageQueue.peek();
-                        // if (MainActivity.debug) Log.d(TAG, "sendDataToPebble s:" + messageQueue.size() + " transID:" + transID + " " + data.toJsonString());
+                        if (debug) Log.i(TAG, "sendDataToPebble s:" + messageQueue.size() + " transID:" + transID + " " + data.toJsonString());
                         PebbleKit.sendDataToPebbleWithTransactionId(_applicationContext, Constants.WATCH_UUID, data, transID);
                     }
 
@@ -137,6 +145,11 @@ public class MessageManager implements IMessageManager, Runnable {
 
     public boolean offer(final PebbleDictionary data) {
         final boolean success = messageQueue.offer(data);
+        if (debug) {
+            int s = messageQueue.size();
+            if (s > 1) Log.i(TAG, "offer s:" + s);
+        }
+
         if (success) {
             consumeAsync();
         }
@@ -149,10 +162,13 @@ public class MessageManager implements IMessageManager, Runnable {
         synchronized (messageQueue) {
             int s = messageQueue.size();
             if (s > sizeMax) {
-
+                if (debug) Log.i(TAG, "offerIfLow s:" + s + ">" + sizeMax);
                 return false;
             }
             success = messageQueue.offer(data);
+            if (debug) {
+                if (s > 1) Log.i(TAG, "offerIfLow s:" + s + "<=" + sizeMax);
+            }
         }
 
         if (success) {
@@ -174,6 +190,7 @@ public class MessageManager implements IMessageManager, Runnable {
 
     @Override
     public void sendAckToPebble(int transactionId) {
+        if (debug) Log.i(TAG, "sendAckToPebble("+transactionId+")");
         PebbleKit.sendAckToPebble(_applicationContext,transactionId);
     }
 
