@@ -129,11 +129,9 @@ public class GPSServiceCommand implements IServiceCommand {
             _currentStatus = BaseStatus.Status.STARTED;
             broadcastStatus(_currentStatus);
 
-            if (firstLocation != null) {
-                // send the saved values directly to update the watch
-                // TODO(jay) send xpos=0, ypos=0, it will display a "wrong" point on the map
-                broadcastLocation(0, 0);
-            }
+            // send the saved values directly to update the watch
+            // TODO(jay) send xpos=0, ypos=0, it will display a "wrong" point on the map
+            broadcastLocation(0, 0);
         } else {
             _currentStatus = BaseStatus.Status.DISABLED;
             broadcastStatus(_currentStatus);

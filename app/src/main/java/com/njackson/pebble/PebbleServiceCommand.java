@@ -32,19 +32,17 @@ public class PebbleServiceCommand implements IServiceCommand {
     @Inject SharedPreferences _sharedPreferences;
     @Inject Bus _bus;
 
-    private static final String TAG = "PB-PebbleService";
+    private static final String TAG = "PB-PebbleServiceCommand";
     private BaseStatus.Status _currentStatus = BaseStatus.Status.NOT_INITIALIZED;
 
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
-        if (newLocation.getTime() > 0) {
-            if (!_sharedPreferences.getString("CANVAS_MODE", "disable").equals("canvas_only")) {
-                sendLocationToPebble(newLocation);
-            }
+        if (!_sharedPreferences.getString("CANVAS_MODE", "disable").equals("canvas_only")) {
+            sendLocationToPebble(newLocation);
+        }
 
-            if (!_sharedPreferences.getString("CANVAS_MODE", "disable").equals("disable")) {
-                sendLocationToCanvas(newLocation);
-            }
+        if (!_sharedPreferences.getString("CANVAS_MODE", "disable").equals("disable")) {
+            sendLocationToCanvas(newLocation);
         }
     }
 
