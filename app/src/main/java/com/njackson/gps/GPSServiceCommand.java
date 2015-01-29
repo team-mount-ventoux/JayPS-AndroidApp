@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.njackson.Constants;
 import com.njackson.adapters.AdvancedLocationToNewLocation;
 import com.njackson.application.IInjectionContainer;
 import com.njackson.application.modules.ForApplication;
@@ -287,10 +288,9 @@ public class GPSServiceCommand implements IServiceCommand {
     };
 
     private void broadcastLocation(double xpos, double ypos) {
-
         int units = 0;
         try {
-            units = Integer.valueOf(_sharedPreferences.getString("UNITS_OF_MEASURE", "0"));
+            units = Integer.valueOf(_sharedPreferences.getString("UNITS_OF_MEASURE", "" + Constants.METRIC));
         } catch (NumberFormatException e) {
 
         }
