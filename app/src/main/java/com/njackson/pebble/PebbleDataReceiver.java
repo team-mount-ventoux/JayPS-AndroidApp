@@ -31,6 +31,8 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
         ((PebbleBikeApplication)context.getApplicationContext()).inject(this);
 
+        _messageManager.sendAckToPebble(transactionId);
+
         if (data.contains(Constants.CMD_BUTTON_PRESS)) {
             handleButtonData(context,data);
         }
@@ -44,7 +46,6 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
             start = true;
         }*/
 
-        _messageManager.sendAckToPebble(transactionId);
     }
 
     private void handleVersion(Context context, PebbleDictionary data) {
