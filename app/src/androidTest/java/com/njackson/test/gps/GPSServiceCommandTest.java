@@ -10,7 +10,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
-import android.util.Log;
 
 import com.njackson.application.modules.AndroidModule;
 import com.njackson.application.modules.ForApplication;
@@ -27,12 +26,8 @@ import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import org.mockito.ArgumentCaptor;
-
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -71,6 +66,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
     private static ITime _mockTime;
     private static TestApplication _app;
     private GPSServiceCommand _serviceCommand;
+    private TestApplication _mockApp;
 
     @Module(
             includes = AndroidModule.class,
@@ -115,8 +111,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         super.setUp();
 
         System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
-
-        _app = spy(new TestApplication());
+        _app = new TestApplication();
         _app.setObjectGraph(ObjectGraph.create(TestModule.class));
         _app.inject(this);
 
@@ -127,16 +122,17 @@ public class GPSServiceCommandTest extends AndroidTestCase {
 
     private void setupMocks() {
         _mockTime = mock(ITime.class);
+        _mockApp = mock(TestApplication.class);
         _mockServiceStarter = mock(IForegroundServiceStarter.class);
         _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
     }
 
     @SmallTest
-    public void testRegistersWithInjectionOnCreate() throws Exception {
+    public void testRegistersWithBusOnCreate() throws Exception {
         _serviceCommand.execute(_app);
 
-        verify(_app,times(1)).inject(_serviceCommand);
+        verify(_bus,times(1)).register(_serviceCommand);
     }
 
     @SmallTest
