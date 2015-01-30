@@ -52,6 +52,7 @@ public class PebbleServiceCommand implements IServiceCommand {
             if (!_sharedPreferences.getString("CANVAS_MODE", "disable").equals("canvas_only")) {
                 _messageManager.showWatchFace();
             }
+            notifyPebbleGPSStarted();
         } else if (event.getStatus() == BaseStatus.Status.STOPPED) {
             notifyPebbleGPSStopped();
         }
@@ -85,7 +86,14 @@ public class PebbleServiceCommand implements IServiceCommand {
         return _currentStatus;
     }
 
+    private void notifyPebbleGPSStarted() {
+        //Log.i(TAG, "notifyPebbleGPSStarted");
+        PebbleDictionary dictionary = new PebbleDictionary();
+        dictionary.addInt32(Constants.STATE_CHANGED,Constants.STATE_START);
+        sendDataToPebble(dictionary);
+    }
     private void notifyPebbleGPSStopped() {
+        //Log.i(TAG, "notifyPebbleGPSStopped");
         PebbleDictionary dictionary = new PebbleDictionary();
         dictionary.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
         sendDataToPebble(dictionary);
