@@ -14,6 +14,7 @@ import com.njackson.events.PebbleServiceCommand.NewMessage;
 import com.njackson.oruxmaps.IOruxMaps;
 import com.njackson.pebble.IMessageManager;
 import com.njackson.pebble.PebbleDataReceiver;
+import com.njackson.state.IGPSDataStore;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
@@ -41,6 +42,7 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
 
     @Inject Bus _bus;
     @Inject IServiceStarter _mockServiceStarter;
+    @Inject IGPSDataStore _mockDataStore;
 
     private static IMessageManager _mockMessageManager;
     private static IOruxMaps _mockOruxMaps;
@@ -52,7 +54,6 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
     private NewMessage _messageEvent;
     private CountDownLatch _stateLatch;
     private CountDownLatch _messageLatch;
-
 
     @Module(
             includes = AndroidModule.class,
@@ -69,6 +70,10 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
 
         @Provides
         IOruxMaps providesOruxMaps() { return _mockOruxMaps; }
+
+        @Provides
+        @Singleton
+        IGPSDataStore providesGPSDataStore() { return mock(IGPSDataStore.class); }
     }
 
     @Subscribe
@@ -179,6 +184,18 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
 
         _stateLatch.await(1000, TimeUnit.MILLISECONDS);
         assertNotNull(_refreshEvent);
+    }
+
+    @SmallTest
+    public void testReceiveDataWithREFRESH_PRESSResetsSavedData() throws InterruptedException {
+        PebbleDictionary dic = new PebbleDictionary();
+        dic.addUint32(Constants.CMD_BUTTON_PRESS, Constants.REFRESH_PRESS);
+
+        _pebbleDataReceiver.receiveData(_mockContext,12345,dic);
+
+        _stateLatch.await(1000, TimeUnit.MILLISECONDS);
+        verify(_mockDataStore,times(1)).resetAllValues();
+        verify(_mockDataStore,times(1)).commit();
     }
 
     @SmallTest

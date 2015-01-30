@@ -7,6 +7,7 @@ import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.PebbleServiceCommand.NewMessage;
 import com.njackson.oruxmaps.IOruxMaps;
+import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
 
@@ -23,6 +24,7 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     @Inject IMessageManager _messageManager;
     @Inject Bus _bus;
     @Inject IServiceStarter _serviceStarter;
+    @Inject IGPSDataStore _dataStore;
 
     public PebbleDataReceiver() {
         super(Constants.WATCH_UUID);
@@ -74,10 +76,14 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
         } else if (button == Constants.PLAY_PRESS) {
             _serviceStarter.startLocationServices();
         } else if (button == Constants.REFRESH_PRESS) {
-            _serviceStarter.startLocationServices();
-            //FIXME(nic) : reset shouldn't start record gps
+            resetSavedData();
             _bus.post(new ResetGPSState());
         }
+    }
+
+    private void resetSavedData() {
+        _dataStore.resetAllValues();
+        _dataStore.commit();
     }
 
     private void sendMessageToPebble(String message) {

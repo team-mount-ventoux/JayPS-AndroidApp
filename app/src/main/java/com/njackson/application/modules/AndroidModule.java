@@ -39,6 +39,8 @@ import com.njackson.pebble.canvas.CanvasWrapper;
 import com.njackson.pebble.canvas.ICanvasWrapper;
 import com.njackson.service.IServiceCommand;
 import com.njackson.service.MainService;
+import com.njackson.state.GPSDataStore;
+import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.googleplay.GoogleFitSessionManager;
 import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
@@ -122,6 +124,9 @@ public class AndroidModule {
     @Provides @Singleton SharedPreferences provideSharedPreferences() {
         return application.getSharedPreferences("com.njackson_preferences", Context.MODE_PRIVATE);
     }
+
+    @Provides @Singleton
+    IGPSDataStore providesGPSDataStore(SharedPreferences preferences) { return new GPSDataStore(preferences); }
 
     @Provides @Singleton @Named("GoogleActivity")
     GoogleApiClient provideActivityRecognitionClient() {

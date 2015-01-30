@@ -24,6 +24,7 @@ import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.HrmServiceCommand.HrmHeartRate;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
+import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -50,7 +51,7 @@ public class GPSServiceCommand implements IServiceCommand {
 
     @Inject LocationManager _locationMgr;
     @Inject SensorManager _sensorManager;
-    @Inject SharedPreferences _sharedPreferences;
+    @Inject IGPSDataStore _dataStore;
     @Inject Bus _bus;
     @Inject ITime _time;
 
@@ -98,8 +99,8 @@ public class GPSServiceCommand implements IServiceCommand {
     public void execute(IInjectionContainer container) {
         container.inject(this);
         _bus.register(this);
-        // GPSServiceCommand is disabled by default
-        _currentStatus = BaseStatus.Status.DISABLED;
+
+        _currentStatus = BaseStatus.Status.INITIALIZED;
         _advancedLocation = new AdvancedLocation();
     }
 
@@ -149,9 +150,8 @@ public class GPSServiceCommand implements IServiceCommand {
     }
 
     private void setGPSStartTime() {
-        SharedPreferences.Editor editor = _sharedPreferences.edit();
-        editor.putLong("GPS_LAST_START", _time.getCurrentTimeMilliseconds());
-        editor.commit();
+        _dataStore.setStartTime(_time.getCurrentTimeMilliseconds());
+        _dataStore.commit();
     }
 
     private boolean checkGPSEnabled(LocationManager locationMgr) {
@@ -162,21 +162,21 @@ public class GPSServiceCommand implements IServiceCommand {
     private void loadGPSStats() {
         Log.d(TAG, "loadGPSStats()");
 
-        _advancedLocation.setDistance(_sharedPreferences.getFloat("GPS_DISTANCE", 0.0f));
-        _advancedLocation.setElapsedTime(_sharedPreferences.getLong("GPS_ELAPSEDTIME", 0));
+        _advancedLocation.setDistance(_dataStore.getDistance());
+        _advancedLocation.setElapsedTime(_dataStore.getElapsedTime());
 
         try {
-            _advancedLocation.setAscent(_sharedPreferences.getFloat("GPS_ASCENT", 0.0f));
+            _advancedLocation.setAscent(_dataStore.getAscent());
         } catch (ClassCastException e) {
             _advancedLocation.setAscent(0.0);
         }
 
-        _advancedLocation.setGeoidHeight(_sharedPreferences.getFloat("GEOID_HEIGHT", 0));
+        _advancedLocation.setGeoidHeight(_dataStore.getGEOIDHeight());
 
-        if (_sharedPreferences.getFloat("GPS_FIRST_LOCATION_LAT", 0.0f) != 0.0f && _sharedPreferences.getFloat("GPS_FIRST_LOCATION_LON", 0.0f) != 0.0f) {
+        if (_dataStore.getFirstLocationLattitude() != 0.0f && _dataStore.getFirstLocationLongitude() != 0.0f) {
             firstLocation = new Location("PebbleBike");
-            firstLocation.setLatitude(_sharedPreferences.getFloat("GPS_FIRST_LOCATION_LAT", 0.0f));
-            firstLocation.setLongitude(_sharedPreferences.getFloat("GPS_FIRST_LOCATION_LON", 0.0f));
+            firstLocation.setLatitude(_dataStore.getFirstLocationLattitude());
+            firstLocation.setLongitude(_dataStore.getFirstLocationLongitude());
         } else {
             firstLocation = null;
         }
@@ -184,25 +184,21 @@ public class GPSServiceCommand implements IServiceCommand {
 
     // save the state
     private void saveGPSStats() {
-        SharedPreferences.Editor editor = _sharedPreferences.edit();
-        editor.putFloat("GPS_DISTANCE", _advancedLocation.getDistance());
-        editor.putLong("GPS_ELAPSEDTIME", _advancedLocation.getElapsedTime());
-        editor.putFloat("GPS_ASCENT", (float) _advancedLocation.getAscent());
-        editor.putFloat("GEOID_HEIGHT", (float) _advancedLocation.getGeoidHeight());
+        _dataStore.setDistance(_advancedLocation.getDistance());
+        _dataStore.setElapsedTime(_advancedLocation.getElapsedTime());
+        _dataStore.setAscent((float) _advancedLocation.getAscent());
+        _dataStore.setGEOIDHeight((float) _advancedLocation.getGeoidHeight());
         if (firstLocation != null) {
-            editor.putFloat("GPS_FIRST_LOCATION_LAT", (float) firstLocation.getLatitude());
-            editor.putFloat("GPS_FIRST_LOCATION_LON", (float) firstLocation.getLongitude());
+            _dataStore.setFirstLocationLattitude((float) firstLocation.getLatitude());
+            _dataStore.setFirstLocationLongitude((float) firstLocation.getLongitude());
         }
-        editor.commit();
+        _dataStore.commit();
     }
 
     // reset the saved state
     private void resetGPSStats() {
-        SharedPreferences.Editor editor = _sharedPreferences.edit();
-        editor.putFloat("GPS_DISTANCE", 0.0f);
-        editor.putLong("GPS_ELAPSEDTIME", 0);
-        editor.putFloat("GPS_ASCENT", 0.0f);
-        editor.commit();
+        _dataStore.resetAllValues();
+        _dataStore.commit();
 
         // GPS is running
         // reninit all properties
@@ -225,7 +221,7 @@ public class GPSServiceCommand implements IServiceCommand {
     }
 
     private void registerNmeaListener() {
-        _nmeaListener = new ServiceNmeaListener(_advancedLocation,_locationMgr, _sharedPreferences);
+        _nmeaListener = new ServiceNmeaListener(_advancedLocation,_locationMgr, _dataStore);
         _locationMgr.addNmeaListener(_nmeaListener);
     }
 
@@ -286,12 +282,8 @@ public class GPSServiceCommand implements IServiceCommand {
     };
 
     private void broadcastLocation(double xpos, double ypos) {
-        int units = 0;
-        try {
-            units = Integer.valueOf(_sharedPreferences.getString("UNITS_OF_MEASURE", "" + Constants.METRIC));
-        } catch (NumberFormatException e) {
+        int units = _dataStore.getMeasurementUnits();
 
-        }
         NewLocation event = new AdvancedLocationToNewLocation(_advancedLocation, xpos, ypos, units);
         if (_heartRate > 0) {
             event.setHeartRate(_heartRate);

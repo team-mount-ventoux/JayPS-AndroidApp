@@ -6,6 +6,7 @@ import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.gps.ServiceNmeaListener;
+import com.njackson.state.IGPSDataStore;
 
 import java.util.Date;
 
@@ -27,8 +28,7 @@ public class ServiceNmeaListenerTest extends AndroidTestCase {
     private AdvancedLocation _mockAdvancedLocation;
     private LocationManager _mockLocationManager;
     private ServiceNmeaListener _listener;
-    private SharedPreferences _preferences;
-    private SharedPreferences.Editor _editor;
+    private IGPSDataStore _dataStore;
 
     @Override
     public void setUp() throws Exception {
@@ -38,12 +38,9 @@ public class ServiceNmeaListenerTest extends AndroidTestCase {
 
         _mockAdvancedLocation = mock(AdvancedLocation.class);
         _mockLocationManager = mock(LocationManager.class);
-        _preferences = mock(SharedPreferences.class);
-        _editor = mock(SharedPreferences.Editor.class);
+        _dataStore = mock(IGPSDataStore.class);
 
-        when(_preferences.edit()).thenReturn(_editor);
-
-        _listener = new ServiceNmeaListener(_mockAdvancedLocation, _mockLocationManager, _preferences);
+        _listener = new ServiceNmeaListener(_mockAdvancedLocation, _mockLocationManager, _dataStore);
     }
 
     @SmallTest
@@ -71,8 +68,8 @@ public class ServiceNmeaListenerTest extends AndroidTestCase {
     public void testOnNmeaReceivedSetsSharedPrefrences(){
         _listener.onNmeaReceived(new Date().getTime(),"$GPGGA,1,2,3,4,5,6,7,8,9,10,11,12");
 
-        verify(_editor,times(1)).putFloat("GEOID_HEIGHT", 11.0f);
-        verify(_editor,times(1)).commit();
+        verify(_dataStore,times(1)).setGEOIDHeight(11f);
+        verify(_dataStore,times(1)).commit();
     }
 
 }

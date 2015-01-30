@@ -23,6 +23,8 @@ import com.njackson.events.base.BaseStatus;
 import com.njackson.gps.GPSSensorEventListener;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.gps.IForegroundServiceStarter;
+import com.njackson.state.GPSDataStore;
+import com.njackson.state.IGPSDataStore;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
@@ -62,8 +64,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
     @Inject Bus _bus = new Bus();
     @Inject LocationManager _mockLocationManager;
     @Inject SensorManager _mockSensorManager;
-    @Inject SharedPreferences _mockPreferences;
-    private SharedPreferences.Editor _mockEditor;
+    @Inject IGPSDataStore _mockDataStore;
+
     private static IForegroundServiceStarter _mockServiceStarter;
     private static ITime _mockTime;
     private static TestApplication _app;
@@ -89,8 +91,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
 
         @Provides
         @Singleton
-        SharedPreferences provideSharedPreferences() {
-            return mock(SharedPreferences.class);
+        IGPSDataStore provideGPSDataStore() {
+            return mock(GPSDataStore.class);
         }
 
         @Provides
@@ -126,10 +128,6 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         _mockTime = mock(ITime.class);
         _mockApp = mock(TestApplication.class);
         _mockServiceStarter = mock(IForegroundServiceStarter.class);
-        _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
-        when(_mockPreferences.edit()).thenReturn(_mockEditor);
-        when(_mockPreferences.getFloat("GPS_FIRST_LOCATION_LAT", 0.0f)).thenReturn(1.0f);
-        when(_mockPreferences.getFloat("GPS_FIRST_LOCATION_LON", 0.0f)).thenReturn(0.0f);
     }
 
     @SmallTest
@@ -229,14 +227,14 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         ArgumentCaptor<GPSStatus> captor = ArgumentCaptor.forClass(GPSStatus.class);
         verify(_bus,timeout(1000).times(1)).post(captor.capture());
 
-        assertEquals(BaseStatus.Status.DISABLED, captor.getValue().getStatus());
+        assertEquals(BaseStatus.Status.INITIALIZED, captor.getValue().getStatus());
     }
 
     @SmallTest
     public void testBroadcastEventOnLocationChange() throws Exception {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
-        when(_mockPreferences.getFloat("GPS_FIRST_LOCATION_LAT", 0.0f)).thenReturn(1.0f);
-        when(_mockPreferences.getFloat("GPS_FIRST_LOCATION_LON", 0.0f)).thenReturn(3.0f);
+        when(_mockDataStore.getFirstLocationLattitude()).thenReturn(1.0f);
+        when(_mockDataStore.getFirstLocationLongitude()).thenReturn(3.0f);
 
         _serviceCommand.execute(_app);
         _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.START));
@@ -274,8 +272,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
 
         _serviceCommand.onResetGPSStateEvent(new ResetGPSState());
 
-        verify(_mockEditor, timeout(200).times(1)).putFloat("GPS_DISTANCE", 0.0f);
-        verify(_mockEditor,timeout(200).times(1)).commit();
+        verify(_mockDataStore, timeout(200).times(1)).resetAllValues();
+        verify(_mockDataStore,timeout(200).times(1)).commit();
     }
 
     @SmallTest
@@ -326,7 +324,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.START));
         _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.STOP));
 
-        verify(_mockEditor, timeout(200).times(1)).commit();
+        verify(_mockDataStore, timeout(200).times(1)).commit();
     }
 
     @SmallTest
@@ -379,7 +377,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         _serviceCommand.execute(_app);
         _serviceCommand.onGPSChangeState(new GPSChangeState(GPSChangeState.State.START));
 
-        verify(_mockEditor,timeout(1000).times(1)).putLong("GPS_LAST_START", 1000);
+        verify(_mockDataStore,timeout(1000).times(1)).setStartTime(1000);
     }
 
     @SmallTest
