@@ -77,12 +77,16 @@ public class GPSServiceCommand implements IServiceCommand {
     public void onGPSChangeState(GPSChangeState event) {
         switch(event.getState()) {
             case START:
-                if(_currentStatus != BaseStatus.Status.STARTED)
+                if(_currentStatus != BaseStatus.Status.STARTED) {
                     start(event.getRefreshInterval());
+                }
+                broadcastStatus(_currentStatus);
                 break;
             case STOP:
-                if(_currentStatus != BaseStatus.Status.STOPPED)
+                if(_currentStatus != BaseStatus.Status.STOPPED) {
                     stop();
+                }
+                broadcastStatus(_currentStatus);
                 break;
             case ANNOUNCE_STATE:
                 broadcastStatus(_currentStatus);
@@ -128,14 +132,12 @@ public class GPSServiceCommand implements IServiceCommand {
             setGPSStartTime();
 
             _currentStatus = BaseStatus.Status.STARTED;
-            broadcastStatus(_currentStatus);
 
             // send the saved values directly to update the watch
             // TODO(jay) send xpos=0, ypos=0, it will display a "wrong" point on the map
             broadcastLocation(0, 0);
         } else {
             _currentStatus = BaseStatus.Status.DISABLED;
-            broadcastStatus(_currentStatus);
         }
     }
 
@@ -146,7 +148,6 @@ public class GPSServiceCommand implements IServiceCommand {
         stopLocationUpdates();
 
         _currentStatus = BaseStatus.Status.STOPPED;
-        broadcastStatus(_currentStatus);
     }
 
     private void setGPSStartTime() {

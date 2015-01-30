@@ -148,7 +148,8 @@ public class SpeedFragmentTest extends FragmentInstrumentTestCase2 {
     public void testLoadsInstanceStateSpeed() {
         String text = _speedText.getText().toString();
 
-        assertEquals("1.1",text);
+        // when the app is started, the instant speed is force to default value (0.0)
+        assertEquals(_activity.getString(R.string.speedfragment_speed_value),text);
     }
 
     @SmallTest
