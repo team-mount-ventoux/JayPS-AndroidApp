@@ -53,12 +53,10 @@ public class SpeedFragment extends BaseFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_speed, container, false);
 
-        /*
 		_restoreInstanceState = false;
 		if (savedInstanceState != null) {
             _restoreInstanceState = true;
         }
-        */
 
         return view;
     }
@@ -68,7 +66,7 @@ public class SpeedFragment extends BaseFragment {
         //Log.d(TAG, "onResume");
         super.onResume();
 
-        //restoreFromPreferences();
+        restoreFromPreferences();
     }
 
     @Override

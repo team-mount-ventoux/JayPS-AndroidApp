@@ -14,6 +14,7 @@ import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.changelog.CLChangeLog;
 import com.njackson.changelog.IChangeLog;
+import com.njackson.changelog.IChangeLogBuilder;
 import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
@@ -36,7 +37,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
     @Inject IServiceStarter _serviceStarter;
     @Inject IGooglePlayServices _playServices;
     @Inject SharedPreferences _sharedPreferences;
-    @Inject IChangeLog _changeLog;
+    @Inject IChangeLogBuilder _changeLogBuilder;
 
     private boolean _authInProgress;
 
@@ -93,12 +94,17 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
             _serviceStarter.startActivityService();
         }
 
-        if (_changeLog.isFirstRun()) {
-            _changeLog.getDialog().show();
-        }
+        showChangeLog();
 
         if (getIntent().getExtras() != null) {
             onNewIntent(getIntent());
+        }
+    }
+
+    private void showChangeLog() {
+        IChangeLog changeLog = _changeLogBuilder.setActivity(this).build();
+        if (changeLog.isFirstRun()) {
+            changeLog.getDialog().show();
         }
     }
 

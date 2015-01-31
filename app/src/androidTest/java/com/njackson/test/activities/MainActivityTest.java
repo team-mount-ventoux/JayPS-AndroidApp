@@ -18,6 +18,7 @@ import com.njackson.activities.MainActivity;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.modules.AndroidModule;
 import com.njackson.changelog.IChangeLog;
+import com.njackson.changelog.IChangeLogBuilder;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
@@ -63,8 +64,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     private SharedPreferences.Editor _mockEditor;
     private static IGooglePlayServices _mockPlayServices;
-    private static IChangeLog _mockChangeLog;
+    private static IChangeLogBuilder _mockChangeLogBuilder;
     private AlertDialog _mockAlertDialog;
+    private IChangeLog _mockChangeLog;
 
     @Module(
             includes = AndroidModule.class,
@@ -101,7 +103,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
 
         @Provides
-        IChangeLog providesChangeLog() { return _mockChangeLog; }
+        IChangeLogBuilder providesChangeLogBuilder() { return _mockChangeLogBuilder; }
     }
 
     private ResetGPSState _stateEvent;
@@ -137,10 +139,13 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         _mockPlayServices = mock(IGooglePlayServices.class);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
 
+        _mockChangeLogBuilder = mock(IChangeLogBuilder.class);
         _mockChangeLog = mock(IChangeLog.class);
         _mockAlertDialog = mock(AlertDialog.class);
 
         when(_mockChangeLog.getDialog()).thenReturn(_mockAlertDialog);
+        when(_mockChangeLogBuilder.setActivity(any(MainActivity.class))).thenReturn(_mockChangeLogBuilder);
+        when(_mockChangeLogBuilder.build()).thenReturn(_mockChangeLog);
     }
 
     private ConnectionResult createConnectionResult() {
@@ -180,9 +185,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
-    @UiThreadTest
     public void testUnRegistersForSharedPreferencesUpdatesOnDestroy() throws InterruptedException {
-        getInstrumentation().callActivityOnDestroy(getActivity());
+        _activity = getActivity();
+        _activity.finish();
 
         verify(_mockPreferences, timeout(2000).times(1)).unregisterOnSharedPreferenceChangeListener(any(MainActivity.class));
     }
@@ -321,6 +326,20 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         verify(_mockServiceStarter,times(0)).startActivityService();
         verify(_mockServiceStarter,times(0)).stopActivityService();
+    }
+
+    @SmallTest
+    public void testSetsActivityToChangeLogBuilderOnCreate() throws Exception {
+        _activity = getActivity();
+
+        verify(_mockChangeLogBuilder,times(1)).setActivity(any(MainActivity.class));
+    }
+
+    @SmallTest
+    public void testCallsBuildOnChangeLogBuilderOnCreate() throws Exception {
+        _activity = getActivity();
+
+        verify(_mockChangeLogBuilder,times(1)).build();
     }
 
     @SmallTest

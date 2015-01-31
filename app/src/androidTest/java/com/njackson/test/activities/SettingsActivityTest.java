@@ -1,5 +1,6 @@
 package com.njackson.test.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,8 +12,10 @@ import android.test.ActivityUnitTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.R;
+import com.njackson.activities.MainActivity;
 import com.njackson.activities.SettingsActivity;
 import com.njackson.application.modules.AndroidModule;
+import com.njackson.changelog.IChangeLogBuilder;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.messages.IMessageMaker;
@@ -45,6 +48,7 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
     private Preference _loginMntPref;
     private ListPreference _oruxMaps;
     private ListPreference _canvas;
+    private static IChangeLogBuilder _mockChangeLogBuilder;
 
     public SettingsActivityTest() {
         super(SettingsActivity.class);
@@ -60,6 +64,7 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
             complete = false
     )
     static class TestModule {
+
         @Provides @Singleton
         IInstallWatchFace providesWatchFaceInstall() {
             return mock(IInstallWatchFace.class);
@@ -70,6 +75,9 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         SharedPreferences provideSharedPreferences() {
             return mock(SharedPreferences.class);
         }
+
+        @Provides
+        IChangeLogBuilder providesChangeLogBuilder() { return _mockChangeLogBuilder; }
     }
 
     @Override
@@ -125,6 +133,9 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         when(_preferences.getString("ORUXMAPS_AUTO","")).thenReturn("continue");
         when(_preferences.getString("CANVAS_MODE","")).thenReturn("canvas_and_pbw");
         when(_preferences.getString("hrm_name", "")).thenReturn("test");
+
+        _mockChangeLogBuilder = mock(IChangeLogBuilder.class);
+        when(_mockChangeLogBuilder.setActivity(any(MainActivity.class))).thenReturn(_mockChangeLogBuilder);
     }
 
     @SmallTest

@@ -18,7 +18,9 @@ import com.njackson.application.MainThreadBus;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.activities.SettingsActivity;
 import com.njackson.changelog.CLChangeLog;
+import com.njackson.changelog.ChangeLogBuilder;
 import com.njackson.changelog.IChangeLog;
+import com.njackson.changelog.IChangeLogBuilder;
 import com.njackson.fit.GoogleFitServiceCommand;
 import com.njackson.fragments.AltitudeFragment;
 import com.njackson.fragments.SpeedFragment;
@@ -202,7 +204,7 @@ public class AndroidModule {
     ICanvasWrapper providesCanvasWrapper() { return new CanvasWrapper(); }
 
     @Provides
-    IChangeLog providesChangeLog() { return new CLChangeLog(new ChangeLog(application)); }
+    IChangeLogBuilder providesChangeLogBuilder() { return new ChangeLogBuilder(); }
 
     @Provides
     List<IServiceCommand> providesServiceCommands() {
