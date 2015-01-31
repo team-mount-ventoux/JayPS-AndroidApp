@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
 import android.test.ActivityInstrumentationTestCase2;
+import android.test.UiThreadTest;
 import android.test.suitebuilder.annotation.SmallTest;
 import android.util.Log;
 
@@ -166,10 +167,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
+    @UiThreadTest
     public void testUnRegistersForSharedPreferencesUpdatesOnDestroy() throws InterruptedException {
-        _activity = getActivity();
-
-        _activity.finish();
+        getInstrumentation().callActivityOnDestroy(getActivity());
 
         verify(_mockPreferences, timeout(2000).times(1)).unregisterOnSharedPreferenceChangeListener(any(MainActivity.class));
     }
