@@ -17,6 +17,8 @@ import com.njackson.analytics.Parse;
 import com.njackson.application.MainThreadBus;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.activities.SettingsActivity;
+import com.njackson.changelog.CLChangeLog;
+import com.njackson.changelog.IChangeLog;
 import com.njackson.fit.GoogleFitServiceCommand;
 import com.njackson.fragments.AltitudeFragment;
 import com.njackson.fragments.SpeedFragment;
@@ -68,6 +70,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import de.cketti.library.changelog.ChangeLog;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static android.content.Context.SENSOR_SERVICE;
@@ -197,6 +200,9 @@ public class AndroidModule {
 
     @Provides
     ICanvasWrapper providesCanvasWrapper() { return new CanvasWrapper(); }
+
+    @Provides
+    IChangeLog providesChangeLog() { return new CLChangeLog(new ChangeLog(application)); }
 
     @Provides
     List<IServiceCommand> providesServiceCommands() {

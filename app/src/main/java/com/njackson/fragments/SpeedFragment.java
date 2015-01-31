@@ -19,7 +19,9 @@ import javax.inject.Inject;
 public class SpeedFragment extends BaseFragment {
 
     private String TAG = "PB-SpeedFragment";
+
     @Inject SharedPreferences _sharedPreferences;
+
     private boolean _restoreInstanceState;
 
 
@@ -51,10 +53,12 @@ public class SpeedFragment extends BaseFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_speed, container, false);
 
+        /*
 		_restoreInstanceState = false;
 		if (savedInstanceState != null) {
             _restoreInstanceState = true;
         }
+        */
 
         return view;
     }
@@ -64,31 +68,13 @@ public class SpeedFragment extends BaseFragment {
         //Log.d(TAG, "onResume");
         super.onResume();
 
-        restoreFromPreferences();
+        //restoreFromPreferences();
     }
+
     @Override
     public void onPause() {
         //Log.d(TAG, "onPause");
         super.onPause();
-    }
-    private void restoreFromPreferences() {
-        //Log.d(TAG, "restoreFromPreferences");
-        TextView speedText = (TextView)getActivity().findViewById(R.id.speed_text);
-        if (_restoreInstanceState) {
-            speedText.setText(_sharedPreferences.getString("SPEEDFRAGMENT_SPEED", getString(R.string.speedfragment_speed_value)));
-        } else {
-            // start of the app, force instant speed to 0
-            speedText.setText(getString(R.string.speedfragment_speed_value));
-        }
-
-        TextView avgSpeed = (TextView)getActivity().findViewById(R.id.avgspeed_text);
-        avgSpeed.setText(_sharedPreferences.getString("SPEEDFRAGMENT_AVGSPEED", getString(R.string.speedfragment_avgspeed_value)));
-
-        TextView distance = (TextView)getActivity().findViewById(R.id.distance_text);
-        distance.setText(_sharedPreferences.getString("SPEEDFRAGMENT_DISTANCE", getString(R.string.speedfragment_distance_value)));
-
-        TextView time = (TextView)getActivity().findViewById(R.id.time_text);
-        time.setText(_sharedPreferences.getString("SPEEDFRAGMENT_TIME", getString(R.string.speedfragment_time_value)));
     }
 
     @Override
@@ -118,5 +104,25 @@ public class SpeedFragment extends BaseFragment {
         editor.commit();
 
         super.onSaveInstanceState(outState);
+    }
+
+    private void restoreFromPreferences() {
+        //Log.d(TAG, "restoreFromPreferences");
+        TextView speedText = (TextView)getActivity().findViewById(R.id.speed_text);
+        if (_restoreInstanceState) {
+            speedText.setText(_sharedPreferences.getString("SPEEDFRAGMENT_SPEED", getString(R.string.speedfragment_speed_value)));
+        } else {
+            // start of the app, force instant speed to 0
+            speedText.setText(getString(R.string.speedfragment_speed_value));
+        }
+
+        TextView avgSpeed = (TextView)getActivity().findViewById(R.id.avgspeed_text);
+        avgSpeed.setText(_sharedPreferences.getString("SPEEDFRAGMENT_AVGSPEED", getString(R.string.speedfragment_avgspeed_value)));
+
+        TextView distance = (TextView)getActivity().findViewById(R.id.distance_text);
+        distance.setText(_sharedPreferences.getString("SPEEDFRAGMENT_DISTANCE", getString(R.string.speedfragment_distance_value)));
+
+        TextView time = (TextView)getActivity().findViewById(R.id.time_text);
+        time.setText(_sharedPreferences.getString("SPEEDFRAGMENT_TIME", getString(R.string.speedfragment_time_value)));
     }
 }

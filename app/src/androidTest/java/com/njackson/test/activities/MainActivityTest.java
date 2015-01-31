@@ -1,5 +1,6 @@
 package com.njackson.test.activities;
 
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -16,6 +17,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.njackson.activities.MainActivity;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.modules.AndroidModule;
+import com.njackson.changelog.IChangeLog;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
@@ -61,6 +63,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     private SharedPreferences.Editor _mockEditor;
     private static IGooglePlayServices _mockPlayServices;
+    private static IChangeLog _mockChangeLog;
+    private AlertDialog _mockAlertDialog;
 
     @Module(
             includes = AndroidModule.class,
@@ -69,6 +73,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
             complete = false
     )
     static class TestModule {
+
         @Provides @Singleton
         LocationManager provideLocationManager() {
             return mock(LocationManager.class);
@@ -94,6 +99,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         @Provides @Singleton
         IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
+
+        @Provides
+        IChangeLog providesChangeLog() { return _mockChangeLog; }
     }
 
     private ResetGPSState _stateEvent;
@@ -128,6 +136,11 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
         _mockPlayServices = mock(IGooglePlayServices.class);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
+
+        _mockChangeLog = mock(IChangeLog.class);
+        _mockAlertDialog = mock(AlertDialog.class);
+
+        when(_mockChangeLog.getDialog()).thenReturn(_mockAlertDialog);
     }
 
     private ConnectionResult createConnectionResult() {
@@ -308,5 +321,23 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         verify(_mockServiceStarter,times(0)).startActivityService();
         verify(_mockServiceStarter,times(0)).stopActivityService();
+    }
+
+    @SmallTest
+    public void testShowsChangeLogWhenChangesOnCreate() throws Exception {
+        when(_mockChangeLog.isFirstRun()).thenReturn(true);
+
+        _activity = getActivity();
+
+        verify(_mockAlertDialog,times(1)).show();
+    }
+
+    @SmallTest
+    public void testDoesNOTShowChangeLogWhenNOChangesOnCreate() throws Exception {
+        when(_mockChangeLog.isFirstRun()).thenReturn(false);
+
+        _activity = getActivity();
+
+        verify(_mockAlertDialog,times(0)).show();
     }
 }
