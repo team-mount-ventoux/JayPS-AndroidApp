@@ -27,6 +27,7 @@ import dagger.Provides;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -136,7 +137,7 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
     public void testOnPauseRemovesListener() {
         getInstrumentation().callActivityOnPause(_activity);
 
-        verify(_preferences,times(1)).unregisterOnSharedPreferenceChangeListener(any(SharedPreferences.OnSharedPreferenceChangeListener.class));
+        verify(_preferences,timeout(500).times(1)).unregisterOnSharedPreferenceChangeListener(any(SharedPreferences.OnSharedPreferenceChangeListener.class));
     }
 
     @SmallTest
