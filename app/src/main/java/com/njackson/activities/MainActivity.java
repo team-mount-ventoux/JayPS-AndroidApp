@@ -12,6 +12,9 @@ import android.view.MenuItem;
 import com.njackson.R;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
+import com.njackson.changelog.CLChangeLog;
+import com.njackson.changelog.IChangeLog;
+import com.njackson.changelog.IChangeLogBuilder;
 import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
@@ -34,6 +37,8 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
     @Inject IServiceStarter _serviceStarter;
     @Inject IGooglePlayServices _playServices;
     @Inject SharedPreferences _sharedPreferences;
+    @Inject IChangeLogBuilder _changeLogBuilder;
+
     private boolean _authInProgress;
 
     @Subscribe
@@ -89,13 +94,17 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
             _serviceStarter.startActivityService();
         }
 
-        ChangeLog cl = new ChangeLog(this);
-        if (cl.isFirstRun()) {
-            cl.getLogDialog().show();
-        }
+        showChangeLog();
 
         if (getIntent().getExtras() != null) {
             onNewIntent(getIntent());
+        }
+    }
+
+    private void showChangeLog() {
+        IChangeLog changeLog = _changeLogBuilder.setActivity(this).build();
+        if (changeLog.isFirstRun()) {
+            changeLog.getDialog().show();
         }
     }
 
@@ -108,8 +117,8 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
 
     @Override
     protected void onPause() {
-        _bus.unregister(this);
         super.onPause();
+        _bus.unregister(this);
     }
 
     @Override

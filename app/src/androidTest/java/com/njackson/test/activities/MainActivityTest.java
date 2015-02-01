@@ -1,5 +1,6 @@
 package com.njackson.test.activities;
 
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -16,6 +17,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.njackson.activities.MainActivity;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.modules.AndroidModule;
+import com.njackson.changelog.IChangeLog;
+import com.njackson.changelog.IChangeLogBuilder;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
@@ -61,6 +64,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
     private SharedPreferences.Editor _mockEditor;
     private static IGooglePlayServices _mockPlayServices;
+    private static IChangeLogBuilder _mockChangeLogBuilder;
+    private AlertDialog _mockAlertDialog;
+    private IChangeLog _mockChangeLog;
 
     @Module(
             includes = AndroidModule.class,
@@ -69,6 +75,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
             complete = false
     )
     static class TestModule {
+
         @Provides @Singleton
         LocationManager provideLocationManager() {
             return mock(LocationManager.class);
@@ -94,6 +101,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         @Provides @Singleton
         IServiceStarter provideServiceStarter() { return mock(IServiceStarter.class); }
+
+        @Provides
+        IChangeLogBuilder providesChangeLogBuilder() { return _mockChangeLogBuilder; }
     }
 
     private ResetGPSState _stateEvent;
@@ -128,6 +138,14 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
         _mockPlayServices = mock(IGooglePlayServices.class);
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
+
+        _mockChangeLogBuilder = mock(IChangeLogBuilder.class);
+        _mockChangeLog = mock(IChangeLog.class);
+        _mockAlertDialog = mock(AlertDialog.class);
+
+        when(_mockChangeLog.getDialog()).thenReturn(_mockAlertDialog);
+        when(_mockChangeLogBuilder.setActivity(any(MainActivity.class))).thenReturn(_mockChangeLogBuilder);
+        when(_mockChangeLogBuilder.build()).thenReturn(_mockChangeLog);
     }
 
     private ConnectionResult createConnectionResult() {
@@ -167,9 +185,9 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
     }
 
     @SmallTest
-    @UiThreadTest
     public void testUnRegistersForSharedPreferencesUpdatesOnDestroy() throws InterruptedException {
-        getInstrumentation().callActivityOnDestroy(getActivity());
+        _activity = getActivity();
+        _activity.finish();
 
         verify(_mockPreferences, timeout(2000).times(1)).unregisterOnSharedPreferenceChangeListener(any(MainActivity.class));
     }
@@ -308,5 +326,37 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         verify(_mockServiceStarter,times(0)).startActivityService();
         verify(_mockServiceStarter,times(0)).stopActivityService();
+    }
+
+    @SmallTest
+    public void testSetsActivityToChangeLogBuilderOnCreate() throws Exception {
+        _activity = getActivity();
+
+        verify(_mockChangeLogBuilder,times(1)).setActivity(any(MainActivity.class));
+    }
+
+    @SmallTest
+    public void testCallsBuildOnChangeLogBuilderOnCreate() throws Exception {
+        _activity = getActivity();
+
+        verify(_mockChangeLogBuilder,times(1)).build();
+    }
+
+    @SmallTest
+    public void testShowsChangeLogWhenChangesOnCreate() throws Exception {
+        when(_mockChangeLog.isFirstRun()).thenReturn(true);
+
+        _activity = getActivity();
+
+        verify(_mockAlertDialog,times(1)).show();
+    }
+
+    @SmallTest
+    public void testDoesNOTShowChangeLogWhenNOChangesOnCreate() throws Exception {
+        when(_mockChangeLog.isFirstRun()).thenReturn(false);
+
+        _activity = getActivity();
+
+        verify(_mockAlertDialog,times(0)).show();
     }
 }
