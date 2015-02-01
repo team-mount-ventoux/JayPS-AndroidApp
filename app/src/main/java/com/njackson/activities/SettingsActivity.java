@@ -54,7 +54,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         });
 
         Preference resetPreference = findPreference("RESET_DATA");
-        installPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        resetPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 _dataStore.resetAllValues();

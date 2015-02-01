@@ -16,6 +16,7 @@ import com.njackson.activities.MainActivity;
 import com.njackson.activities.SettingsActivity;
 import com.njackson.application.modules.AndroidModule;
 import com.njackson.changelog.IChangeLogBuilder;
+import com.njackson.state.IGPSDataStore;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.messages.IMessageMaker;
@@ -78,6 +79,9 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
 
         @Provides
         IChangeLogBuilder providesChangeLogBuilder() { return _mockChangeLogBuilder; }
+
+        @Provides @Singleton
+        IGPSDataStore providesGPSDataStore(SharedPreferences preferences) { return mock(IGPSDataStore.class); }
     }
 
     @Override
