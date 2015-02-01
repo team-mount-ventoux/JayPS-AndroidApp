@@ -17,6 +17,7 @@ import com.njackson.Constants;
 import com.njackson.R;
 import com.njackson.activities.HRMScanActivity;
 import com.njackson.application.PebbleBikeApplication;
+import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.messages.ToastMessageMaker;
 
@@ -33,6 +34,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Inject IInstallWatchFace _installWatchFace;
     @Inject SharedPreferences _sharedPreferences;
+    @Inject IGPSDataStore _dataStore;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,17 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 return true;
             }
         });
+
+        Preference resetPreference = findPreference("RESET_DATA");
+        installPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                _dataStore.resetAllValues();
+                _dataStore.commit();
+                return true;
+            }
+        });
+
 
         final ChangeLog cl = new ChangeLog(this);
         Preference changelog = findPreference("CHANGE_LOG");
