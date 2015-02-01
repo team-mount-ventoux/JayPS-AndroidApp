@@ -126,13 +126,13 @@ public class GPSDataStore implements IGPSDataStore {
 
     @Override
     public void resetAllValues() {
-        _startTime = 0;
+        //_startTime = 0; // no reset needed, it's for orxumaps auto-start
         _distance = 0;
         _elapsedTime = 0;
         _ascent = 0;
-        _geoid = 0;
-        _lattitude = 0;
-        _longitude = 0;
+        //_geoid = 0; // no reset needed, it's for altitude correction
+        //_lattitude = 0; // no reset needed, it's for map origin (latitude => xpos conversion)
+        //_longitude = 0; // no reset needed, it's for map origin (longitude => ypos conversion)
     }
 
     @Override
