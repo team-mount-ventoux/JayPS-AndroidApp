@@ -28,7 +28,7 @@ public class GPSDataStoreTest extends AndroidTestCase {
 
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
 
-        when(_mockPreferences.getInt("UNITS_OF_MEASURE", Constants.METRIC)).thenReturn(11);
+        when(_mockPreferences.getString("UNITS_OF_MEASURE", "" + Constants.METRIC)).thenReturn("11");
         when(_mockPreferences.getLong("GPS_LAST_START", 0)).thenReturn(12l);
         when(_mockPreferences.getFloat("GPS_DISTANCE",0)).thenReturn(13f);
         when(_mockPreferences.getLong("GPS_ELAPSEDTIME",0)).thenReturn(14l);
@@ -161,7 +161,7 @@ public class GPSDataStoreTest extends AndroidTestCase {
         store.setMeasurementUnits(29);
         store.commit();
 
-        verify(_mockEditor,times(1)).putInt("UNITS_OF_MEASURE",29);
+        verify(_mockEditor,times(1)).putString("UNITS_OF_MEASURE", "29");
     }
 
     public void testCallsEditorCommitOnCommit() {

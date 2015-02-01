@@ -30,8 +30,8 @@ public class GPSDataStore implements IGPSDataStore {
 
     private void loadSavedData() {
         try {
-            _units = _sharedPreferences.getInt("UNITS_OF_MEASURE", Constants.METRIC);
-        }catch (Exception ex) {
+            _units = Integer.valueOf(_sharedPreferences.getString("UNITS_OF_MEASURE", "" + Constants.METRIC));
+        } catch (Exception ex) {
             _units = Constants.METRIC;
         }
 
@@ -139,7 +139,7 @@ public class GPSDataStore implements IGPSDataStore {
     public void commit() {
         SharedPreferences.Editor editor = _sharedPreferences.edit();
 
-        editor.putInt("UNITS_OF_MEASURE",_units);
+        editor.putString("UNITS_OF_MEASURE", "" +  _units);
         editor.putLong("GPS_LAST_START",_startTime);
         editor.putFloat("GPS_DISTANCE",_distance);
         editor.putLong("GPS_ELAPSEDTIME", _elapsedTime);
