@@ -97,6 +97,7 @@ import static android.content.Context.SENSOR_SERVICE;
         PebbleDataReceiver.class,
         HrmServiceCommand.class,
         Hrm.class,
+        SpeedFragment.class,
         })
 public class AndroidModule {
     private PebbleBikeApplication application = null;
@@ -131,7 +132,7 @@ public class AndroidModule {
     }
 
     @Provides @Singleton
-    IGPSDataStore providesGPSDataStore(SharedPreferences preferences) { return new GPSDataStore(preferences); }
+    IGPSDataStore providesGPSDataStore(SharedPreferences preferences) { return new GPSDataStore(preferences, application); }
 
     @Provides @Singleton @Named("GoogleActivity")
     GoogleApiClient provideActivityRecognitionClient() {

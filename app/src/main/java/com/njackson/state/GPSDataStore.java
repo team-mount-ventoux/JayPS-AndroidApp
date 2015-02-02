@@ -1,15 +1,21 @@
 package com.njackson.state;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.njackson.Constants;
+import com.njackson.R;
 
 /**
  * Created by njackson on 30/01/15.
  */
 public class GPSDataStore implements IGPSDataStore {
 
+    private static final String TAG = "PB-GPSDataStore";
+
     SharedPreferences _sharedPreferences;
+    Context _context;
 
     long _startTime = 0;
     float _distance = 0;
@@ -21,9 +27,10 @@ public class GPSDataStore implements IGPSDataStore {
     private int _units;
 
 
-    public GPSDataStore(SharedPreferences preferences) {
+    public GPSDataStore(SharedPreferences preferences, Context context) {
 
         _sharedPreferences = preferences;
+        _context = context;
         loadSavedData();
 
     }
@@ -133,6 +140,17 @@ public class GPSDataStore implements IGPSDataStore {
         //_geoid = 0; // no reset needed, it's for altitude correction
         //_lattitude = 0; // no reset needed, it's for map origin (latitude => xpos conversion)
         //_longitude = 0; // no reset needed, it's for map origin (longitude => ypos conversion)
+
+
+        // TODO(nic) move me to some other place?
+        SharedPreferences.Editor editor = _sharedPreferences.edit();
+
+        editor.putString("SPEEDFRAGMENT_SPEED", _context.getString(R.string.speedfragment_speed_value));
+        editor.putString("SPEEDFRAGMENT_AVGSPEED", _context.getString(R.string.speedfragment_avgspeed_value));
+        editor.putString("SPEEDFRAGMENT_DISTANCE", _context.getString(R.string.speedfragment_distance_value));
+        editor.putString("SPEEDFRAGMENT_TIME", _context.getString(R.string.speedfragment_time_value));
+
+        editor.commit();
     }
 
     @Override

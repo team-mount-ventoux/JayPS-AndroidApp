@@ -17,9 +17,11 @@ import com.njackson.Constants;
 import com.njackson.R;
 import com.njackson.activities.HRMScanActivity;
 import com.njackson.application.PebbleBikeApplication;
+import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.messages.ToastMessageMaker;
+import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
@@ -35,6 +37,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Inject IInstallWatchFace _installWatchFace;
     @Inject SharedPreferences _sharedPreferences;
     @Inject IGPSDataStore _dataStore;
+    @Inject Bus _bus;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             public boolean onPreferenceClick(Preference preference) {
                 _dataStore.resetAllValues();
                 _dataStore.commit();
+                _bus.post(new ResetGPSState());
                 return true;
             }
         });

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.njackson.R;
 import com.njackson.events.GPSServiceCommand.NewLocation;
+import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.utils.NumberConverter;
 import com.squareup.otto.Subscribe;
 
@@ -24,6 +25,10 @@ public class SpeedFragment extends BaseFragment {
 
     private boolean _restoreInstanceState;
 
+    @Subscribe
+    public void onResetGPSStateEvent(ResetGPSState event) {
+        restoreFromPreferences();
+    }
 
     @Subscribe
     public void onNewLocation(NewLocation event) {

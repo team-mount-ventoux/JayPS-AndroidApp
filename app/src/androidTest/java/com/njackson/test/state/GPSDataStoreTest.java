@@ -1,6 +1,8 @@
 package com.njackson.test.state;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.test.AndroidTestCase;
 
 import com.njackson.Constants;
@@ -18,15 +20,22 @@ public class GPSDataStoreTest extends AndroidTestCase {
 
     SharedPreferences _mockPreferences;
     SharedPreferences.Editor _mockEditor;
+    private Resources _mockResource;
+    private Context _mockContext;
 
     @Override
     public void setUp() throws Exception {
         super.setUp();
 
+        System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
+
         _mockPreferences = mock(SharedPreferences.class);
         _mockEditor = mock(SharedPreferences.Editor.class);
+        _mockResource = mock(Resources.class);
+        _mockContext = mock(Context.class);
 
         when(_mockPreferences.edit()).thenReturn(_mockEditor);
+        when(_mockContext.getResources()).thenReturn(_mockResource);
 
         when(_mockPreferences.getString("UNITS_OF_MEASURE", "" + Constants.METRIC)).thenReturn("11");
         when(_mockPreferences.getLong("GPS_LAST_START", 0)).thenReturn(12l);
@@ -39,55 +48,55 @@ public class GPSDataStoreTest extends AndroidTestCase {
     }
 
     public void testLoadsUnitsFromPreferencesOnStart() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
 
         assertEquals(11, store.getMeasurementUnits());
     }
 
     public void testLoadsStartTimeFromPreferencesOnStart() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
 
         assertEquals(12l, store.getStartTime());
     }
 
     public void testLoadsDistanceFromPreferencesOnStart() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
 
         assertEquals(13f, store.getDistance());
     }
 
     public void testLoadsElapsedTimeFromPreferencesOnStart() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
 
         assertEquals(14l, store.getElapsedTime());
     }
 
     public void testLoadsAscentFromPreferencesOnStart() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
 
         assertEquals(15f, store.getAscent());
     }
 
     public void testLoadsGEOIDFromPreferencesOnStart() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
 
         assertEquals(16f, store.getGEOIDHeight());
     }
 
     public void testLoadsLattitudeFromPreferencesOnStart() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
 
         assertEquals(17f, store.getFirstLocationLattitude());
     }
 
     public void testLoadsLongitudeFromPreferencesOnStart() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
 
         assertEquals(18f, store.getFirstLocationLongitude());
     }
 
     public void testResetsDataOnReset() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
 
         store.resetAllValues();
 
@@ -101,7 +110,7 @@ public class GPSDataStoreTest extends AndroidTestCase {
     }
 
     public void testSavesStartTimeToPreferencesOnCommit() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
         store.setStartTime(22l);
         store.commit();
 
@@ -109,7 +118,7 @@ public class GPSDataStoreTest extends AndroidTestCase {
     }
 
     public void testSavesDistanceToPreferencesOnCommit() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
         store.setDistance(23f);
         store.commit();
 
@@ -117,7 +126,7 @@ public class GPSDataStoreTest extends AndroidTestCase {
     }
 
     public void testSavesElapsedTimeToPreferencesOnCommit() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
         store.setElapsedTime(24l);
         store.commit();
 
@@ -125,7 +134,7 @@ public class GPSDataStoreTest extends AndroidTestCase {
     }
 
     public void testSavesAscentToPreferencesOnCommit() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
         store.setAscent(25f);
         store.commit();
 
@@ -133,7 +142,7 @@ public class GPSDataStoreTest extends AndroidTestCase {
     }
 
     public void testSavesGeoidToPreferencesOnCommit() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
         store.setGEOIDHeight(26f);
         store.commit();
 
@@ -141,7 +150,7 @@ public class GPSDataStoreTest extends AndroidTestCase {
     }
 
     public void testSavesLattitudeToPreferencesOnCommit() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
         store.setFirstLocationLattitude(27f);
         store.commit();
 
@@ -149,7 +158,7 @@ public class GPSDataStoreTest extends AndroidTestCase {
     }
 
     public void testSavesLongitudeToPreferencesOnCommit() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
         store.setFirstLocationLongitude(28f);
         store.commit();
 
@@ -157,7 +166,7 @@ public class GPSDataStoreTest extends AndroidTestCase {
     }
 
     public void testSavesUnitsToPreferencesOnCommit() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
         store.setMeasurementUnits(29);
         store.commit();
 
@@ -165,7 +174,7 @@ public class GPSDataStoreTest extends AndroidTestCase {
     }
 
     public void testCallsEditorCommitOnCommit() {
-        GPSDataStore store = new GPSDataStore(_mockPreferences);
+        GPSDataStore store = new GPSDataStore(_mockPreferences, _mockContext);
         store.commit();
 
         verify(_mockEditor,times(1)).commit();
