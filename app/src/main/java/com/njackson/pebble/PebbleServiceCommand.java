@@ -100,9 +100,9 @@ public class PebbleServiceCommand implements IServiceCommand {
     }
 
     private void sendLiveMessage(LiveMessage message) {
-        PebbleDictionary dic = new LiveMessageToPebbleDictionary(message);
+        LiveMessageToPebbleDictionary dic = new LiveMessageToPebbleDictionary(message);
 
-        sendDataToPebble(dic);
+        sendDataToPebble(dic, dic.getForceSend());
     }
 
     private void sendLocationToCanvas(NewLocation newLocation) {

@@ -9,6 +9,7 @@ import com.njackson.events.PebbleServiceCommand.NewMessage;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.base.BaseStatus;
+import com.njackson.live.LiveTracking;
 import com.njackson.pebble.PebbleServiceCommand;
 import com.njackson.pebble.canvas.GPSData;
 import com.njackson.pebble.canvas.ICanvasWrapper;
@@ -145,8 +146,10 @@ public class PebbleServiceCommandTest extends AndroidTestCase {
         _command.execute(_app);
 
         LiveMessage message = new LiveMessage();
-        message.setLive(new byte[]{});
-        _bus.post(new LiveMessage());
+        byte[] data = new byte[1 + LiveTracking.maxNumberOfFriend * LiveTracking.sizeOfAFriend];
+        data[0] = 1; // numberOfFriends
+        message.setLive(data);
+        _bus.post(message);
         Mockito.verify(_mockMessageManager,timeout(1000).times(1)).offer(any(PebbleDictionary.class));
     }
 

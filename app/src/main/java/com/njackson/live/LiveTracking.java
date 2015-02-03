@@ -104,7 +104,10 @@ public class LiveTracking implements ILiveTracking {
     public void setUrl(String url) {
         this._url = url;
     }
-
+    // TODO(nic) : remove me when bus provided by constructor works!
+    public void setBus(Bus bus) {
+        _bus = bus;
+    }
     public boolean addPoint(Location firstLocation, Location location, double altitude, int heart_rate) {
         _firstLocation = firstLocation;
         //Log.d(TAG, "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + altitude + "," + location.getTime() + "," + location.getAccuracy() + "," + heart_rate + ")");

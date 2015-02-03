@@ -3,6 +3,7 @@ package com.njackson.live;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.util.Log;
 
 import com.njackson.adapters.NewLocationToAndroidLocation;
 import com.njackson.application.IInjectionContainer;
@@ -22,7 +23,7 @@ import javax.inject.Named;
 
 public class LiveServiceCommand implements IServiceCommand {
 
-    private final String TAG = "PB-LiveService";
+    private final String TAG = "PB-LiveServiceCommand";
 
     @Inject @ForApplication Context _applicationContext;
     @Inject Bus _bus;
@@ -75,6 +76,7 @@ public class LiveServiceCommand implements IServiceCommand {
     }
 
     private void start() {
+        _liveTrackingJayps.setBus(_bus);
         _liveTrackingJayps.setLogin(_sharedPreferences.getString("LIVE_TRACKING_LOGIN", ""));
         _liveTrackingJayps.setPassword(_sharedPreferences.getString("LIVE_TRACKING_PASSWORD", ""));
         _liveTrackingJayps.setUrl(_sharedPreferences.getString("LIVE_TRACKING_URL", ""));
