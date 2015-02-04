@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-  <release version="2.0.0-alpha1" versioncode="200" >
-      <change>New version</change>
+  <release version="2.0.0-alpha1" versioncode="205" >
+      <change>New version 2: complete rewrite of the app since 1.x</change>
+      <change>Android: New UI</change>
+      <change>Google Fit integration</change>
+      <change>Bugfixes</change>
+      <change>Not working yet:</change>
+      <change>Altitude graph</change>
+      <change>Android: Imperial units</change>
   </release>
   <release version="1.6.0-beta2" versioncode="32" >
       <change>Canvas: add heart rate</change>
