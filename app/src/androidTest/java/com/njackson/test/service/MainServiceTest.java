@@ -1,5 +1,6 @@
 package com.njackson.test.service;
 
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
@@ -29,6 +30,7 @@ import dagger.ObjectGraph;
 import dagger.Provides;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -133,7 +135,7 @@ public class MainServiceTest extends ServiceTestCase<MainService> {
     public void testStartsServiceForeground() throws Exception {
         startService();
 
-        verify(_mockServiceStarter,timeout(2000).times(1)).startServiceForeground(any(MainService.class),anyString(),anyString());
+        verify(_mockServiceStarter,timeout(2000).times(1)).startServiceForeground(any(MainService.class),anyString(),anyString(),anyInt());
     }
 
     @SmallTest

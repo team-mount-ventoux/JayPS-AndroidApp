@@ -1,13 +1,16 @@
 package com.njackson.service;
 
+import android.app.Notification;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.MainService.MainServiceStatus;
 import com.njackson.events.base.BaseStatus;
+import com.njackson.gps.GPSServiceCommand;
 import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.utils.time.ITimer;
 import com.njackson.utils.time.ITimerHandler;
@@ -23,12 +26,17 @@ import javax.inject.Named;
  */
 public class MainService extends Service implements ITimerHandler {
 
-    private String TAG = "MainService";
+    private String TAG = "PB-MainService";
 
     @Inject IForegroundServiceStarter _serviceStarter;
     @Inject List<IServiceCommand> _serviceCommands;
     @Inject ITimer _timer;
     @Inject Bus _bus;
+
+    private static final int NOTIFICATION_VOID = 0;
+    private static final int NOTIFICATION_GPS = 1;
+    private static final int NOTIFICATION_ACTIVITY_RECOGNITION = 2;
+    private int _notification = NOTIFICATION_VOID;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -47,12 +55,14 @@ public class MainService extends Service implements ITimerHandler {
         Log.d(TAG, "Started Main Service");
 
         handleCommand(intent);
-        _serviceStarter.startServiceForeground(this, "Pebble Bike", "GPS started");
+        _serviceStarter.startServiceForeground(this, "Pebble Bike", "GPS started", Notification.PRIORITY_DEFAULT);
 
         // ensures that if the service is recycled then it is restarted with the same refresh interval
         // onStartCommand will always be called with a non-null intent
         return START_REDELIVER_INTENT;
     }
+
+
 
     @Override
     public void onDestroy () {
@@ -91,9 +101,28 @@ public class MainService extends Service implements ITimerHandler {
     public void handleTimeout() {
         boolean shouldContinue = false;
 
+        int notification = NOTIFICATION_VOID;
         for(IServiceCommand command: _serviceCommands) {
             if(command.getStatus() == BaseStatus.Status.STARTED) {
                 shouldContinue = true;
+
+                if (command.getClass() == ActivityRecognitionServiceCommand.class) {
+                    if (notification == NOTIFICATION_VOID) {
+                        notification = NOTIFICATION_ACTIVITY_RECOGNITION;
+                    }
+                }
+                if (command.getClass() == GPSServiceCommand.class) {
+                    notification = NOTIFICATION_GPS;
+                }
+            }
+        }
+        if (notification != _notification) {
+            _notification = notification;
+            if (_notification == NOTIFICATION_ACTIVITY_RECOGNITION) {
+                _serviceStarter.changeNotification(this, "Auto Start enabled", Notification.PRIORITY_MIN);
+            }
+            if (_notification == NOTIFICATION_GPS) {
+                _serviceStarter.changeNotification(this, "GPS started", Notification.PRIORITY_DEFAULT);
             }
         }
 
