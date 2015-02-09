@@ -13,6 +13,7 @@ import com.njackson.events.LiveServiceCommand.LiveChangeState;
 import com.njackson.events.MainService.MainServiceStatus;
 import com.njackson.events.base.BaseChangeState;
 import com.njackson.events.base.BaseStatus;
+import com.njackson.events.rx.MainServiceStatusObservable;
 import com.njackson.fit.GoogleFitServiceCommand;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.live.LiveServiceCommand;
@@ -27,8 +28,12 @@ import org.jdeferred.DoneCallback;
 import org.jdeferred.Promise;
 import org.jdeferred.impl.DeferredObject;
 
+import java.util.Observable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * Created by njackson on 03/01/15.
@@ -38,8 +43,7 @@ public class ServiceStarter implements IServiceStarter {
     private final Bus _bus;
     Context _context;
     SharedPreferences _sharedPreferences;
-    Promise _promise;
-    DeferredObject _deferred;
+    Subscription _deferred;
 
     public ServiceStarter(Context context, SharedPreferences preferences, Bus bus) {
         _context = context;
@@ -47,21 +51,11 @@ public class ServiceStarter implements IServiceStarter {
         _bus = bus;
     }
 
-    @Subscribe
-    public void onMainServiceStatus(MainServiceStatus event) {
-        if (event.getStatus() == BaseStatus.Status.STARTED) {
-            _bus.unregister(this);
-            if (_deferred != null && !_deferred.isResolved()) {
-                _deferred.resolve(event);
-            }
-        }
-    }
-
     @Override
     public void startActivityService() {
-        startMainServiceIfNotRunning(new DoneCallback() {
+        startMainServiceIfNotRunning(new Action1<BaseStatus.Status>() {
             @Override
-            public void onDone(Object result) {
+            public void call(BaseStatus.Status status) {
                 _bus.post(new ActivityRecognitionChangeState(BaseChangeState.State.START));
             }
         });
@@ -74,9 +68,9 @@ public class ServiceStarter implements IServiceStarter {
 
     @Override
     public void startLocationServices() {
-        startMainServiceIfNotRunning(new DoneCallback() {
+        startMainServiceIfNotRunning(new Action1<BaseStatus.Status>() {
             @Override
-            public void onDone(Object result) {
+            public void call(BaseStatus.Status status) {
                 startGPSService();
                 startLiveService();
                 startActivityServiceIfEnabled();
@@ -131,19 +125,18 @@ public class ServiceStarter implements IServiceStarter {
         }
     }
 
-    protected void startMainServiceIfNotRunning(DoneCallback callback) {
-        _deferred = new DeferredObject();
-        _deferred.then(callback);
-
+    protected void startMainServiceIfNotRunning(final Action1<BaseStatus.Status> action) {
         if(!serviceRunning(MainService.class)) {
+            _deferred = rx.Observable.create(new MainServiceStatusObservable(_bus))
+                    .first()
+                    .subscribe(action);
             startMainService();
         } else {
-            _deferred.resolve("Service Running");
+            action.call(BaseStatus.Status.STARTED);
         }
     }
 
     protected void startMainService() {
-        _bus.register(this);
         _context.startService(new Intent(_context, MainService.class));
     }
 
