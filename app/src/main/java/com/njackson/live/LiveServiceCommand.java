@@ -14,6 +14,7 @@ import com.njackson.events.LiveServiceCommand.LiveStatus;
 import com.njackson.events.base.BaseChangeState;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
+import com.njackson.state.IGPSDataStore;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -28,6 +29,7 @@ public class LiveServiceCommand implements IServiceCommand {
     @Inject @ForApplication Context _applicationContext;
     @Inject Bus _bus;
     @Inject SharedPreferences _sharedPreferences;
+    @Inject IGPSDataStore _dataStore;
     @Inject @Named("LiveTrackingJayPS") ILiveTracking _liveTrackingJayps;
     @Inject @Named("LiveTrackingMmt") ILiveTracking _liveTrackingMmt;
 
@@ -47,7 +49,13 @@ public class LiveServiceCommand implements IServiceCommand {
 
         if (location.getTime() > 0) {
             if (firstLocation == null) {
-                firstLocation = location;
+                if (_dataStore.getFirstLocationLattitude() != 0.0f && _dataStore.getFirstLocationLongitude() != 0.0f) {
+                    firstLocation = new Location("PebbleBike");
+                    firstLocation.setLatitude(_dataStore.getFirstLocationLattitude());
+                    firstLocation.setLongitude(_dataStore.getFirstLocationLongitude());
+                } else {
+                    // todo(jay) bug?
+                }
             }
             if (_sharedPreferences.getBoolean("LIVE_TRACKING", false)) {
                 _liveTrackingJayps.addPoint(firstLocation, location, location.getAltitude(), newLocation.getHeartRate());
