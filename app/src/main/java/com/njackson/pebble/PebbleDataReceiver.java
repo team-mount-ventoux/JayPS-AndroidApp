@@ -59,6 +59,7 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
             String message = context.getString(R.string.message_pebble_new_watchface);
             sendMessageToPebble(message);
         }
+        sendSavedData();
     }
 
     private void handleButtonData(Context context, PebbleDictionary data) {
@@ -85,8 +86,21 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
         _dataStore.resetAllValues();
         _dataStore.commit();
     }
-
+    private void sendSavedData() {
+        // use _messageManager and not _bus to be able to send data even if GPS is not started
+        // TODO(nic): refactor me!
+        _messageManager.sendSavedDataToPebble(
+                Constants.STATE_STOP, // TODO: send real state
+                _dataStore.getMeasurementUnits(),
+                _dataStore.getDistance(),
+                _dataStore.getElapsedTime(),
+                _dataStore.getAscent(),
+                _dataStore.getMaxSpeed()
+        );
+    }
     private void sendMessageToPebble(String message) {
-        _bus.post(new NewMessage(message));
+        // use _messageManager and not _bus to be able to send data even if GPS is not started
+        // TODO(nic): refactor me!
+        _messageManager.sendMessageToPebble(message);
     }
 }
