@@ -21,6 +21,7 @@ public class GPSDataStore implements IGPSDataStore {
     float _distance = 0;
     long _elapsedTime = 0;
     float _ascent = 0;
+    float _maxSpeed = 0;
     private float _geoid;
     private float _lattitude;
     private float _longitude;
@@ -46,6 +47,7 @@ public class GPSDataStore implements IGPSDataStore {
         _distance = _sharedPreferences.getFloat("GPS_DISTANCE", 0);
         _elapsedTime = _sharedPreferences.getLong("GPS_ELAPSEDTIME",0);
         _ascent = _sharedPreferences.getFloat("GPS_ASCENT", 0);
+        _maxSpeed = _sharedPreferences.getFloat("GPS_MAX_SPEED", 0);
         _geoid = _sharedPreferences.getFloat("GEOID_HEIGHT",0);
         _lattitude = _sharedPreferences.getFloat("GPS_FIRST_LOCATION_LAT",0);
         _longitude = _sharedPreferences.getFloat("GPS_FIRST_LOCATION_LON",0);
@@ -102,6 +104,16 @@ public class GPSDataStore implements IGPSDataStore {
     }
 
     @Override
+    public float getMaxSpeed() {
+        return _maxSpeed;
+    }
+
+    @Override
+    public void setMaxSpeed(float value) {
+        _maxSpeed = value;
+    }
+
+    @Override
     public float getGEOIDHeight() {
         return _geoid;
     }
@@ -137,6 +149,7 @@ public class GPSDataStore implements IGPSDataStore {
         _distance = 0;
         _elapsedTime = 0;
         _ascent = 0;
+        _maxSpeed = 0;
         //_geoid = 0; // no reset needed, it's for altitude correction
         //_lattitude = 0; // no reset needed, it's for map origin (latitude => xpos conversion)
         //_longitude = 0; // no reset needed, it's for map origin (longitude => ypos conversion)
@@ -162,6 +175,7 @@ public class GPSDataStore implements IGPSDataStore {
         editor.putFloat("GPS_DISTANCE",_distance);
         editor.putLong("GPS_ELAPSEDTIME", _elapsedTime);
         editor.putFloat("GPS_ASCENT", _ascent);
+        editor.putFloat("GPS_MAX_SPEED", _maxSpeed);
         editor.putFloat("GEOID_HEIGHT", _geoid);
         editor.putFloat("GPS_FIRST_LOCATION_LAT", _lattitude);
         editor.putFloat("GPS_FIRST_LOCATION_LON", _longitude);

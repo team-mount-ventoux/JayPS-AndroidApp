@@ -33,6 +33,8 @@ public class NewLocationToCanvasPluginGPSData extends GPSData {
         }
         this.speed = String.format("%.1f", event.getSpeed());
         this.speed += display_units ? (event.getUnits() == Constants.METRIC ? " km/h" : " mph") : "";
+        this.maxspeed = String.format("%.1f", event.getMaxSpeed());
+        this.maxspeed += display_units ? (event.getUnits() == Constants.METRIC ? " km/h" : " mph") : "";
         this.lat = String.format("%.3f", event.getLatitude());
         this.lon = String.format("%.3f", event.getLongitude());
         this.ascentrate = String.format("%.0f", event.getAscentRate() / 3600);

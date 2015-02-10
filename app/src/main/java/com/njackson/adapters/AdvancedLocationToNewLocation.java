@@ -19,6 +19,7 @@ public class AdvancedLocationToNewLocation extends NewLocation {
 
         this.setUnits(units);
         this.setSpeed(advancedLocation.getSpeed() * _speedConversion);
+        this.setMaxSpeed(advancedLocation.getMaxSpeed() * _speedConversion);
         this.setDistance(advancedLocation.getDistance()  * _distanceConversion);
         this.setAvgSpeed(advancedLocation.getAverageSpeed() * _speedConversion);
         this.setLatitude(advancedLocation.getLatitude());

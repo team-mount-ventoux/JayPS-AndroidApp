@@ -20,6 +20,10 @@ public interface IGPSDataStore {
     float getAscent();
     void setAscent(float value);
 
+    float getMaxSpeed();
+    void setMaxSpeed(float value);
+
+
     float getGEOIDHeight();
     void setGEOIDHeight(float value);
 

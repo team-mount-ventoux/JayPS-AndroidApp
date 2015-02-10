@@ -110,11 +110,12 @@
     <string-array name="canvas_format_mask_descs">
         <item>Distance</item>
         <item>Altitude</item>
-        <item>Average speed</item>
         <item>Ascent</item>
         <item>Bearing</item>
         <item>Elapsed time</item>
+        <item>Average speed</item>
         <item>Speed</item>
+        <item>Max speed</item>
         <item>Latitude</item>
         <item>Longitude</item>
         <item>Ascent rate</item>

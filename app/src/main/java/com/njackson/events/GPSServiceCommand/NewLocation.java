@@ -13,6 +13,14 @@ public class NewLocation {
         _speed = value;
     }
 
+    private float _maxSpeed;
+    public float getMaxSpeed() {
+        return _maxSpeed;
+    }
+    public void setMaxSpeed(float value) {
+        _maxSpeed = value;
+    }
+
     private float _distance;
     public float getDistance() {
         return _distance;
