@@ -3,10 +3,18 @@
     <string-array name="PREF_UNITS_ENTRIES">
         <item>@string/PREF_UNITS_UNIT_IMPERIAL</item>
         <item>@string/PREF_UNITS_UNIT_METRIC</item>
+        <item>@string/PREF_UNITS_UNIT_NAUTICAL_IMPERIAL</item>
+        <item>@string/PREF_UNITS_UNIT_NAUTICAL_METRIC</item>
+        <item>@string/PREF_UNITS_UNIT_RUNNING_IMPERIAL</item>
+        <item>@string/PREF_UNITS_UNIT_RUNNING_METRIC</item>
     </string-array>
     <string-array name="PREF_UNITS_ENTRY_VALUES">
         <item>0</item>
         <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
     </string-array>
 
     <string-array name="REFRESH_INTERVAL_ENTRIES">

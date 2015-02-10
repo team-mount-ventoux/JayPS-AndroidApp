@@ -38,6 +38,10 @@
     <string name="PREF_UNITS_DEFAULT">1</string>
     <string name="PREF_UNITS_UNIT_IMPERIAL">Imperial (miles)</string>
     <string name="PREF_UNITS_UNIT_METRIC">Metric (km/h)</string>
+    <string name="PREF_UNITS_UNIT_NAUTICAL_IMPERIAL">Nautical/Imperial (knots + feet)</string>
+    <string name="PREF_UNITS_UNIT_NAUTICAL_METRIC">Nautical/Metric (knots + meters)</string>
+    <string name="PREF_UNITS_UNIT_RUNNING_IMPERIAL">Running/Imperial (pace: time/mile)</string>
+    <string name="PREF_UNITS_UNIT_RUNNING_METRIC">Running/Metric (pace: time/km)</string>
 
 
     <string name="REFRESH_INTERVAL_TITLE">GPS Minimum time</string>
