@@ -9,6 +9,7 @@ import android.util.Log;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
+import com.njackson.adapters.AdvancedLocationToNewLocation;
 import com.njackson.adapters.NewLocationToPebbleDictionary;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 
@@ -19,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import fr.jayps.android.AdvancedLocation;
 
 /**
  * Manages a thread-safe message queue using a Looper worker thread to complete blocking tasks.
@@ -219,12 +222,17 @@ public class MessageManager implements IMessageManager, Runnable {
 
     @Override
     public void sendSavedDataToPebble(int state, int units, float distance, long elapsedTime, float ascent, float maxSpeed) {
-        NewLocation newLocation = new NewLocation();
-        newLocation.setUnits(units);
-        newLocation.setDistance(distance);
-        newLocation.setElapsedTimeSeconds((int) (elapsedTime / 1000));
-        newLocation.setAscent(ascent);
-        newLocation.setMaxSpeed(maxSpeed);
+
+        // use AdvancedLocation and than NewLocation to use units conversion in AdvancedLocationToNewLocation
+
+        AdvancedLocation advancedLocation = new AdvancedLocation();
+        advancedLocation.setDistance(distance);
+        advancedLocation.setElapsedTime(elapsedTime);
+        advancedLocation.setAscent(ascent);
+        advancedLocation.setMaxSpeed(maxSpeed);
+
+        NewLocation newLocation = new AdvancedLocationToNewLocation(advancedLocation, 0, 0, units);
+
         PebbleDictionary dictionary = new NewLocationToPebbleDictionary(
                 newLocation,
                 true, // TODO(jay)
