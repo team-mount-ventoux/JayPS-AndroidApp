@@ -9,12 +9,13 @@ public class Constants {
 
     public static final UUID WATCH_UUID = java.util.UUID.fromString("5dd35873-3bb6-44d6-8255-0e61bc3b97f5");
 
-    public static final int VERSION_ANDROID = 15;
-    public static final int LAST_VERSION_PEBBLE = 23;
+    public static final int VERSION_ANDROID = 207;
+    public static final int LAST_VERSION_PEBBLE = 200;
     public static final int MIN_VERSION_PEBBLE = 22;
 
     public static final int LIVE_TRACKING_FRIENDS = 0x10;
-    public static final int PEBBLE_LOCTATION_DATA = 0x13;
+    public static final int PEBBLE_LOCATION_DATA = 0x13;
+    public static final int PEBBLE_LOCATION_DATA_V2 = 0x25;
     public static final int STATE_CHANGED = 0x14;
     public static final int MSG_VERSION_PEBBLE = 0x15;
     public static final int MSG_VERSION_ANDROID = 0x16;

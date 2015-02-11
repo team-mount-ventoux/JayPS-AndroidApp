@@ -14,11 +14,11 @@ import com.njackson.events.GPSServiceCommand.NewLocation;
  */
 public class NewLocationToPebbleDictionary extends PebbleDictionary{
 
-    public static final short POS_UNITS=0;
-    public static final short POS_SERVICE_RUNNING=1; //Refactor Out
-    public static final short POS_DEBUG = 2; //Refactor Out
-    public static final short POS_LIVETRACKING = 3; //Refactor Out
-    public static final short POS_REFRESH = 4; //Refactor Out
+    public static final short POS_UNITS           = 0; // 3 bits
+    public static final short POS_SERVICE_RUNNING = 3; // 1 bit
+    public static final short POS_DEBUG           = 4; // 1 bit
+    public static final short POS_LIVETRACKING    = 5; // 1 bit
+    public static final short POS_REFRESH         = 6; // 2 bits
 
     public static final short BYTE_SETTINGS = 0;
     public static final short BYTE_ACCURACY = 1;
@@ -41,14 +41,16 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
     public static final short BYTE_SPEED2 = 18;
     public static final short BYTE_BEARING = 19;
     public static final short BYTE_HEARTRATE = 20;
+    public static final short BYTE_MAXSPEED1 = 21;
+    public static final short BYTE_MAXSPEED2 = 22;
 
     public NewLocationToPebbleDictionary(NewLocation event, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int heartRate) {
         // todo(jay) remove param heartRate
 
         PebbleDictionary dic = new PebbleDictionary();
-        byte[] data = new byte[21];
+        byte[] data = new byte[23];
 
-        data[BYTE_SETTINGS] = (byte) ((event.getUnits() % 2) * (1<<POS_UNITS)); // set the units
+        data[BYTE_SETTINGS] = (byte) ((event.getUnits() % 8) * (1<<POS_UNITS)); // set the units
 
         data[BYTE_SETTINGS] += (byte) ((serviceRunning ? 1: 0) * (1<<POS_SERVICE_RUNNING));
         data[BYTE_SETTINGS] += (byte) ((debug ? 1: 0) * (1<<POS_DEBUG));
@@ -62,11 +64,7 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
         } else if (refreshInterval > 1000) {
             refresh_code = 2; // ]1;5[
         }
-        data[BYTE_SETTINGS] += (byte) ((refresh_code % 4) * (1<<4)); // 2 bits
-
-        // unused bits
-        data[BYTE_SETTINGS] += (byte) (0 * (1<<6));
-        data[BYTE_SETTINGS] += (byte) (0 * (1<<7));
+        data[BYTE_SETTINGS] += (byte) ((refresh_code % 4) * (1<<POS_REFRESH)); // 2 bits
 
         data[BYTE_ACCURACY] = (byte) Math.ceil(event.getAccuracy());
 
@@ -112,6 +110,9 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
         data[BYTE_BEARING] = (byte) (((int)  (event.getBearing() / 360 * 256)) % 256);
         data[BYTE_HEARTRATE] = (byte) (heartRate % 256);
 
-        this.addBytes(Constants.PEBBLE_LOCTATION_DATA, data);
+        data[BYTE_MAXSPEED1] = (byte) (((int) (Math.floor(10 * event.getMaxSpeed()) / 1)) % 256);
+        data[BYTE_MAXSPEED2] = (byte) (((int) (Math.floor(10 * event.getMaxSpeed()) / 1)) / 256);
+
+        this.addBytes(Constants.PEBBLE_LOCATION_DATA_V2, data);
     }
 }

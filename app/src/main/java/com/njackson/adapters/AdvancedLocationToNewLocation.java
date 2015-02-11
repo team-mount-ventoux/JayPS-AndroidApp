@@ -20,9 +20,9 @@ public class AdvancedLocationToNewLocation extends NewLocation {
 
         this.setUnits(units);
         if (_speedInversion) {
-            this.setSpeed(1/(advancedLocation.getSpeed() * _speedConversion));
-            this.setMaxSpeed(1/(advancedLocation.getMaxSpeed() * _speedConversion));
-            this.setAvgSpeed(1/(advancedLocation.getAverageSpeed() * _speedConversion));
+            this.setSpeed(advancedLocation.getSpeed() > 0 ? 1/(advancedLocation.getSpeed() * _speedConversion) : 0);
+            this.setMaxSpeed(advancedLocation.getMaxSpeed() > 0 ? 1/(advancedLocation.getMaxSpeed() * _speedConversion) : 0);
+            this.setAvgSpeed(advancedLocation.getAverageSpeed() > 0 ? 1/(advancedLocation.getAverageSpeed() * _speedConversion) : 0);
         } else {
             this.setSpeed(advancedLocation.getSpeed() * _speedConversion);
             this.setMaxSpeed(advancedLocation.getMaxSpeed() * _speedConversion);
