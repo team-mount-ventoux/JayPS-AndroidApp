@@ -36,12 +36,15 @@ public class GPSDataStore implements IGPSDataStore {
 
     }
 
-    private void loadSavedData() {
+    public void reloadPreferencesFromSettings() {
         try {
             _units = Integer.valueOf(_sharedPreferences.getString("UNITS_OF_MEASURE", "" + Constants.METRIC));
         } catch (Exception ex) {
             _units = Constants.METRIC;
         }
+    }
+    private void loadSavedData() {
+        reloadPreferencesFromSettings();
 
         _startTime = _sharedPreferences.getLong("GPS_LAST_START",0);
         _distance = _sharedPreferences.getFloat("GPS_DISTANCE", 0);

@@ -5,6 +5,9 @@ package com.njackson.state;
  */
 public interface IGPSDataStore {
 
+    // reload data modified in PreferenceActivity
+    public void reloadPreferencesFromSettings();
+
     int getMeasurementUnits();
     void setMeasurementUnits(int value);
 
