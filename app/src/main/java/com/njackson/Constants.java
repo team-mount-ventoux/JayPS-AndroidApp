@@ -52,7 +52,7 @@ public class Constants {
     public static final float MS_TO_KNOT = 1.943844f;
     public static final float M_TO_KM = 0.001f;
     public static final float M_TO_MILES = 0.000621371192f;
-    public static final float M_TO_NM = 0.001852f;
+    public static final float M_TO_NM = 0.000539957f;
     public static final float M_TO_M = 1f;
     public static final float M_TO_FEET = 3.2808399f;
     public static final long ACTIVITY_RECOGNITION_STILL_TIME = 30000;
