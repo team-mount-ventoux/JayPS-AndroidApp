@@ -18,19 +18,19 @@ public class NumberConvertorTest extends AndroidTestCase {
     }
 
     public void testConvertsStringWith2DPSuccesfully() {
-        String convertedValue = _numberConverter.converFloatToString(23.345343f,2);
+        String convertedValue = _numberConverter.convertFloatToString(23.345343f,2);
 
         assertEquals(convertedValue,"23.35");
     }
 
     public void testConvertsStringWith0DPSuccesfully() {
-        String convertedValue = _numberConverter.converFloatToString(23.345343f,0);
+        String convertedValue = _numberConverter.convertFloatToString(23.345343f,0);
 
         assertEquals(convertedValue,"23");
     }
 
     public void testReturnsNaNWhenNotANumber() {
-        String convertedValue = _numberConverter.converFloatToString(Float.NaN,0);
+        String convertedValue = _numberConverter.convertFloatToString(Float.NaN,0);
 
         assertEquals(convertedValue,".");
     }
