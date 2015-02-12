@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.0.0-alpha2" versioncode="208" >
+        <change>New units: nautical and running</change>
+        <change>Improve Android notifications (Auto-Start and GPS)</change>
+        <change>Bugfixes</change>
+        <change>=> New watchface (click on "Install Watchface" in settings)</change>
+    </release>
   <release version="2.0.0-alpha1" versioncode="205" >
       <change>New version 2: complete rewrite of the app since 1.x</change>
       <change>Android: New UI</change>
