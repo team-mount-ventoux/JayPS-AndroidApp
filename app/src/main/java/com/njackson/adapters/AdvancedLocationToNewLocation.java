@@ -34,6 +34,7 @@ public class AdvancedLocationToNewLocation extends NewLocation {
         this.setAltitude(advancedLocation.getAltitude() * _altitudeConversion); // m
         this.setAscent(advancedLocation.getAscent() * _altitudeConversion); // m
         this.setAscentRate(3600f * advancedLocation.getAscentRate() * _altitudeConversion); // in m/h
+        this.setNbAscent(advancedLocation.getNbAscent());
         this.setSlope(100f * advancedLocation.getSlope()); // in %
         this.setAccuracy(advancedLocation.getAccuracy()); // m
         this.setTime(advancedLocation.getTime());

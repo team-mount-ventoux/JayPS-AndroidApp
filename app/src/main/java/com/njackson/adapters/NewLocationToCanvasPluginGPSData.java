@@ -1,6 +1,8 @@
 package com.njackson.adapters;
 
 
+import android.util.Log;
+
 import com.njackson.Constants;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.pebble.canvas.GPSData;
@@ -55,6 +57,7 @@ public class NewLocationToCanvasPluginGPSData extends GPSData {
         this.lon = String.format("%.3f", event.getLongitude());
         this.ascentrate = String.format("%.0f", event.getAscentRate() / 3600);
         this.ascentrate += display_units ? Units.getAscentRateUnits(event.getUnits()) : "";
+        this.nbascent =  String.format("%d", event.getNbAscent());
         this.slope = String.format("%.1f", event.getSlope());
         this.slope += display_units ? "%" : "";
         this.accuracy = String.format("%.0f", event.getAccuracy());

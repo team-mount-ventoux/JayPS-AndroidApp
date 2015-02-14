@@ -77,6 +77,14 @@ public class NewLocation {
         this._ascentRate = _ascentRate;
     }
 
+    private int _nbAscent;
+    public int getNbAscent() {
+        return _nbAscent;
+    }
+    public void setNbAscent(int _nbAscent) {
+        this._nbAscent = _nbAscent;
+    }
+
     private float _slope;
     public float getSlope() {
         return _slope;

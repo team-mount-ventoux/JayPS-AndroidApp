@@ -120,6 +120,7 @@
         <item>Latitude</item>
         <item>Longitude</item>
         <item>Ascent rate</item>
+        <item>Number of ascents</item>
         <item>Slope</item>
         <item>Accuracy</item>
         <item>Heart rate</item>

@@ -21,6 +21,7 @@ public class GPSDataStore implements IGPSDataStore {
     float _distance = 0;
     long _elapsedTime = 0;
     float _ascent = 0;
+    int _nbascent = 0;
     float _maxSpeed = 0;
     private float _geoid;
     private float _lattitude;
@@ -50,6 +51,7 @@ public class GPSDataStore implements IGPSDataStore {
         _distance = _sharedPreferences.getFloat("GPS_DISTANCE", 0);
         _elapsedTime = _sharedPreferences.getLong("GPS_ELAPSEDTIME",0);
         _ascent = _sharedPreferences.getFloat("GPS_ASCENT", 0);
+        _nbascent = _sharedPreferences.getInt("GPS_NB_ASCENT", 0);
         _maxSpeed = _sharedPreferences.getFloat("GPS_MAX_SPEED", 0);
         _geoid = _sharedPreferences.getFloat("GEOID_HEIGHT",0);
         _lattitude = _sharedPreferences.getFloat("GPS_FIRST_LOCATION_LAT",0);
@@ -104,6 +106,16 @@ public class GPSDataStore implements IGPSDataStore {
     @Override
     public void setAscent(float value) {
         _ascent = value;
+    }
+
+    @Override
+    public int getNbAscent() {
+        return _nbascent;
+    }
+
+    @Override
+    public void setNbAscent(int value) {
+        _nbascent = value;
     }
 
     @Override
@@ -178,6 +190,7 @@ public class GPSDataStore implements IGPSDataStore {
         editor.putFloat("GPS_DISTANCE",_distance);
         editor.putLong("GPS_ELAPSEDTIME", _elapsedTime);
         editor.putFloat("GPS_ASCENT", _ascent);
+        editor.putInt("GPS_NB_ASCENT", _nbascent);
         editor.putFloat("GPS_MAX_SPEED", _maxSpeed);
         editor.putFloat("GEOID_HEIGHT", _geoid);
         editor.putFloat("GPS_FIRST_LOCATION_LAT", _lattitude);

@@ -17,7 +17,7 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
     
     public static final int ID_CANVAS_PB = 1;
     
-    private static final String[] MASKS = { "%DIST", "%ALT", "%ASCE", "%BEAR", "%TIME", "%AVG", "%SPD", "%MSPD", "%LAT", "%LON", "%ASCR", "%SLOP", "%ACCU", "%HRM"};
+    private static final String[] MASKS = { "%DIST", "%ALT", "%ASCE", "%BEAR", "%TIME", "%AVG", "%SPD", "%MSPD", "%LAT", "%LON", "%ASCR", "%NBASC", "%SLOP", "%ACCU", "%HRM"};
     private static final int MASK_DISTANCE = 0;
     private static final int MASK_ALTITUDE = 1;
     private static final int MASK_ASCENT = 2;
@@ -29,9 +29,10 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
     private static final int MASK_LAT = 8;
     private static final int MASK_LON = 9;
     private static final int MASK_ASCENTRATE = 10;
-    private static final int MASK_SLOPE = 11;
-    private static final int MASK_ACCURACY = 12;
-    private static final int MASK_HEARTRATE = 13;
+    private static final int MASK_NBASCENT = 11;
+    private static final int MASK_SLOPE = 12;
+    private static final int MASK_ACCURACY = 13;
+    private static final int MASK_HEARTRATE = 14;
 
 
     
@@ -61,6 +62,7 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
         examples.add(current_data.lat);
         examples.add(current_data.lon);
         examples.add(current_data.ascentrate);
+        examples.add(current_data.nbascent);
         examples.add(current_data.slope);
         examples.add(current_data.accuracy);
         examples.add(current_data.heartrate);
@@ -108,6 +110,8 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
                 return current_data.lon;
             } else if (format_mask.equals(MASKS[MASK_ASCENTRATE])) {
                 return current_data.ascentrate;
+            } else if (format_mask.equals(MASKS[MASK_NBASCENT])) {
+                return current_data.nbascent;
             } else if (format_mask.equals(MASKS[MASK_SLOPE])) {
                 return current_data.slope;
             } else if (format_mask.equals(MASKS[MASK_ACCURACY])) {
@@ -144,6 +148,7 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
         current_data.lat = data.lat;
         current_data.lon = data.lon;
         current_data.ascentrate = data.ascentrate;
+        current_data.nbascent = data.nbascent;
         current_data.slope = data.slope;
         current_data.accuracy = data.accuracy;
         current_data.heartrate = data.heartrate;
