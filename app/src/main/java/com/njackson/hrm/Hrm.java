@@ -36,6 +36,7 @@ public class Hrm implements IHrm, ITimerHandler {
 
     private final Context _context;
     private Bus _bus;
+    private Csc _csc;
 
     private BluetoothManager mBluetoothManager;
     private BluetoothAdapter mBluetoothAdapter;
@@ -48,7 +49,7 @@ public class Hrm implements IHrm, ITimerHandler {
     private static final int STATE_CONNECTING = 1;
     private static final int STATE_CONNECTED = 2;
 
-    public final static UUID UUID_HEART_RATE_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.HEART_RATE_MEASUREMENT);
+    public final static UUID UUID_CSC_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.CSC_MEASUREMENT);
 
     private boolean debug = true;
     private boolean _hrmStarted = false;
@@ -56,6 +57,7 @@ public class Hrm implements IHrm, ITimerHandler {
 
     public Hrm(Context context) {
         _context = context;
+        _csc = new Csc();
     }
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
@@ -284,24 +286,37 @@ public class Hrm implements IHrm, ITimerHandler {
         // This is special handling for the Heart Rate Measurement profile.  Data parsing is
         // carried out as per profile specifications:
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
+        if (UUID_CSC_MEASUREMENT.equals(characteristic.getUuid())) {
             int flag = characteristic.getProperties();
-            int format = -1;
-            if ((flag & 0x01) != 0) {
-                format = BluetoothGattCharacteristic.FORMAT_UINT16;
-            } else {
-                format = BluetoothGattCharacteristic.FORMAT_UINT8;
-            }
-            final int heartRate = characteristic.getIntValue(format, 1);
-            Log.d(TAG, String.format("Received heart rate: %d", heartRate));
-            _bus.post(new HrmHeartRate(heartRate));
+            //Log.d(TAG, String.format("flag: %d", flag));
+            int cumulativeWheelRevolutions = 0;
+            int lastWheelEventTime = 0;
+            int cumulativeCrankRevolutions = 0;
+            int lastCrankEventTime = 0;
+
+           // if ((flag & 0x01) != 0) {
+                // Wheel Revolution Data Present
+                cumulativeWheelRevolutions = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT32 , 1);
+                lastWheelEventTime = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16 , 5);
+
+            //}
+            //if ((flag & 0x02) != 0) {
+                //Crank Revolution Data Presen
+                cumulativeCrankRevolutions = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 7);
+                lastCrankEventTime = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 9);
+            //}
+
+            _csc.onNewValues(cumulativeWheelRevolutions, lastWheelEventTime, cumulativeCrankRevolutions, lastCrankEventTime);
+
+            _bus.post(new HrmHeartRate((int) _csc.getCrankRpm()));
         } else {
             // For all other profiles, writes the data formatted in HEX.
             final byte[] data = characteristic.getValue();
             if (data != null && data.length > 0) {
                 final StringBuilder stringBuilder = new StringBuilder(data.length);
-                for(byte byteChar : data)
+                for(byte byteChar : data) {
                     stringBuilder.append(String.format("%02X ", byteChar));
+                }
                 //intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
                 // TODO(jay) post something?
                 if (debug) Log.d(TAG, "broadcastUpdate():" + new String(data) + "\n" + stringBuilder.toString());
@@ -319,8 +334,8 @@ public class Hrm implements IHrm, ITimerHandler {
             // Loops through available Characteristics.
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
 
-                if (UUID_HEART_RATE_MEASUREMENT.equals(gattCharacteristic.getUuid())) {
-                    //if (MainActivity.debug) Log.d(TAG, "UUID_HEART_RATE_MEASUREMENT!");
+                if (UUID_CSC_MEASUREMENT.equals(gattCharacteristic.getUuid())) {
+                    //if (MainActivity.debug) Log.d(TAG, "UUID_CSC_MEASUREMENT!");
                     int charaProp = gattCharacteristic.getProperties();
                     if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
                         // If there is an active notification on a characteristic, clear
@@ -373,7 +388,7 @@ public class Hrm implements IHrm, ITimerHandler {
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 
         // This is specific to Heart Rate Measurement.
-        if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
+        if (UUID_CSC_MEASUREMENT.equals(characteristic.getUuid())) {
             BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
                     UUID.fromString(BLESampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);

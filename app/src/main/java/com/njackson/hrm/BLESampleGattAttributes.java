@@ -7,9 +7,13 @@ import java.util.HashMap;
  */
 public class BLESampleGattAttributes {
     private static HashMap<String, String> attributes = new HashMap();
-    public static String HEART_RATE_SERVICE = "0000180d-0000-1000-8000-00805f9b34fb";
+    //public static String HEART_RATE_SERVICE = "0000180d-0000-1000-8000-00805f9b34fb";
+    // 0X2A37 https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
     public static String HEART_RATE_MEASUREMENT = "00002a37-0000-1000-8000-00805f9b34fb";
     public static String CLIENT_CHARACTERISTIC_CONFIG = "00002902-0000-1000-8000-00805f9b34fb";
+
+    // 0X2A5B https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.csc_measurement.xml
+    public static String CSC_MEASUREMENT = "00002a5b-0000-1000-8000-00805f9b34fb";
 
     static {
         // Sample Services.
