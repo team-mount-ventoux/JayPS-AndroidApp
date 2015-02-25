@@ -5,6 +5,9 @@ package com.njackson.state;
  */
 public interface IGPSDataStore {
 
+    // reload data modified in PreferenceActivity
+    public void reloadPreferencesFromSettings();
+
     int getMeasurementUnits();
     void setMeasurementUnits(int value);
 
@@ -19,6 +22,13 @@ public interface IGPSDataStore {
 
     float getAscent();
     void setAscent(float value);
+
+    int getNbAscent();
+    void setNbAscent(int value);
+
+    float getMaxSpeed();
+    void setMaxSpeed(float value);
+
 
     float getGEOIDHeight();
     void setGEOIDHeight(float value);

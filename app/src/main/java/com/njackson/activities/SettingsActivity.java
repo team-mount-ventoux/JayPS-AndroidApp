@@ -159,6 +159,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         Log.i(TAG, "onSharedPreferenceChanged" + s);
+        _dataStore.reloadPreferencesFromSettings();
         if (s.equals("UNITS_OF_MEASURE")) {
             setUnitsSummary();
         }
@@ -191,10 +192,18 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         String units = _sharedPreferences.getString("UNITS_OF_MEASURE", "0");
         Preference unitsPref = findPreference("UNITS_OF_MEASURE");
 
-        if(units.equals("0")) {
+        if (units.equals(""+Constants.IMPERIAL)) {
             unitsPref.setSummary(getString(R.string.PREF_UNITS_UNIT_IMPERIAL));
-        } else {
+        } else if (units.equals(""+Constants.METRIC)) {
             unitsPref.setSummary(getString(R.string.PREF_UNITS_UNIT_METRIC));
+        } else if (units.equals(""+Constants.NAUTICAL_IMPERIAL)) {
+            unitsPref.setSummary(getString(R.string.PREF_UNITS_UNIT_NAUTICAL_IMPERIAL));
+        } else if (units.equals(""+Constants.NAUTICAL_METRIC)) {
+            unitsPref.setSummary(getString(R.string.PREF_UNITS_UNIT_NAUTICAL_METRIC));
+        } else if (units.equals(""+Constants.RUNNING_IMPERIAL)) {
+            unitsPref.setSummary(getString(R.string.PREF_UNITS_UNIT_RUNNING_IMPERIAL));
+        } else if (units.equals(""+Constants.RUNNING_METRIC)) {
+            unitsPref.setSummary(getString(R.string.PREF_UNITS_UNIT_RUNNING_METRIC));
         }
     }
 

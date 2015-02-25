@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.njackson.R;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
+import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.NumberConverter;
+import com.njackson.utils.Units;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -22,6 +24,7 @@ public class SpeedFragment extends BaseFragment {
     private String TAG = "PB-SpeedFragment";
 
     @Inject SharedPreferences _sharedPreferences;
+    @Inject IGPSDataStore _dataStore;
 
     private boolean _restoreInstanceState;
 
@@ -34,14 +37,26 @@ public class SpeedFragment extends BaseFragment {
     public void onNewLocation(NewLocation event) {
         NumberConverter converter = new NumberConverter();
 
-        TextView speedText = (TextView)getActivity().findViewById(R.id.speed_text);
-        speedText.setText(converter.converFloatToString(event.getSpeed(),1));
+        TextView speed = (TextView)getActivity().findViewById(R.id.speed_text);
+        String speedText;
+        if (Units.isPace(event.getUnits())) {
+            speedText = converter.convertSpeedToPace(event.getSpeed());
+        } else {
+            speedText = converter.convertFloatToString(event.getSpeed(), 1);
+        }
+        speed.setText(speedText);
 
         TextView avgSpeed = (TextView)getActivity().findViewById(R.id.avgspeed_text);
-        avgSpeed.setText(converter.converFloatToString(event.getAverageSpeed(),1));
+        String avgSpeedText;
+        if (Units.isPace(event.getUnits())) {
+            avgSpeedText = converter.convertSpeedToPace(event.getAverageSpeed());
+        } else {
+            avgSpeedText = converter.convertFloatToString(event.getAverageSpeed(), 1);
+        }
+        avgSpeed.setText(avgSpeedText);
 
         TextView distance = (TextView)getActivity().findViewById(R.id.distance_text);
-        distance.setText(converter.converFloatToString(event.getDistance(),1));
+        distance.setText(converter.convertFloatToString(event.getDistance(),1));
 
         TextView time = (TextView)getActivity().findViewById(R.id.time_text);
         String timeText = DateUtils.formatElapsedTime(event.getElapsedTimeSeconds());
@@ -111,6 +126,8 @@ public class SpeedFragment extends BaseFragment {
 
     private void restoreFromPreferences() {
         //Log.d(TAG, "restoreFromPreferences");
+        int units = _dataStore.getMeasurementUnits();
+
         TextView speedText = (TextView)getActivity().findViewById(R.id.speed_text);
         if (_restoreInstanceState) {
             speedText.setText(_sharedPreferences.getString("SPEEDFRAGMENT_SPEED", getString(R.string.speedfragment_speed_value)));
@@ -119,11 +136,20 @@ public class SpeedFragment extends BaseFragment {
             speedText.setText(getString(R.string.speedfragment_speed_value));
         }
 
+        TextView speedTextUnits = (TextView)getActivity().findViewById(R.id.speed_units_label);
+        speedTextUnits.setText(Units.getSpeedUnits(units).toUpperCase());
+
         TextView avgSpeed = (TextView)getActivity().findViewById(R.id.avgspeed_text);
         avgSpeed.setText(_sharedPreferences.getString("SPEEDFRAGMENT_AVGSPEED", getString(R.string.speedfragment_avgspeed_value)));
 
+        TextView avgSpeedTextUnits = (TextView)getActivity().findViewById(R.id.avgspeed_units_label);
+        avgSpeedTextUnits.setText(Units.getSpeedUnits(units).toUpperCase());
+
         TextView distance = (TextView)getActivity().findViewById(R.id.distance_text);
         distance.setText(_sharedPreferences.getString("SPEEDFRAGMENT_DISTANCE", getString(R.string.speedfragment_distance_value)));
+
+        TextView distanceTextUnits = (TextView)getActivity().findViewById(R.id.distance_units_label);
+        distanceTextUnits.setText(Units.getDistanceUnits(units).toUpperCase());
 
         TextView time = (TextView)getActivity().findViewById(R.id.time_text);
         time.setText(_sharedPreferences.getString("SPEEDFRAGMENT_TIME", getString(R.string.speedfragment_time_value)));

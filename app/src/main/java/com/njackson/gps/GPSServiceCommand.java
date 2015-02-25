@@ -172,6 +172,9 @@ public class GPSServiceCommand implements IServiceCommand {
             _advancedLocation.setAscent(0.0);
         }
 
+        _advancedLocation.setNbAscent(_dataStore.getNbAscent());
+        _advancedLocation.setMaxSpeed(_dataStore.getMaxSpeed());
+
         _advancedLocation.setGeoidHeight(_dataStore.getGEOIDHeight());
 
         if (_dataStore.getFirstLocationLattitude() != 0.0f && _dataStore.getFirstLocationLongitude() != 0.0f) {
@@ -188,6 +191,8 @@ public class GPSServiceCommand implements IServiceCommand {
         _dataStore.setDistance(_advancedLocation.getDistance());
         _dataStore.setElapsedTime(_advancedLocation.getElapsedTime());
         _dataStore.setAscent((float) _advancedLocation.getAscent());
+        _dataStore.setNbAscent(_advancedLocation.getNbAscent());
+        _dataStore.setMaxSpeed(_advancedLocation.getMaxSpeed());
         _dataStore.setGEOIDHeight((float) _advancedLocation.getGeoidHeight());
         if (firstLocation != null) {
             _dataStore.setFirstLocationLattitude((float) firstLocation.getLatitude());

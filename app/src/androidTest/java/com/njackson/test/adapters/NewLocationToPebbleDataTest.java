@@ -36,7 +36,7 @@ public class NewLocationToPebbleDataTest extends AndroidTestCase{
         event.setSpeed(14.4f);
 
         PebbleDictionary dic = new NewLocationToPebbleDictionary(event, true, true, true, 5000, 123);
-        data = dic.getBytes(Constants.PEBBLE_LOCTATION_DATA);
+        data = dic.getBytes(Constants.PEBBLE_LOCATION_DATA_V2);
 
         assertNotNull("Data should not be null",data);
     }
@@ -46,19 +46,19 @@ public class NewLocationToPebbleDataTest extends AndroidTestCase{
     }
 
     public void testServiceRunningCorrectly() {
-        assertEquals("Expected service running bit to be true",true,bitIsSet(data[0], 1));
+        assertEquals("Expected service running bit to be true",true,bitIsSet(data[0], 3));
     }
 
     public void testDebugCorrectly() {
-        assertEquals("Expected debug bit to be true",true,bitIsSet(data[0],2));
+        assertEquals("Expected debug bit to be true",true,bitIsSet(data[0],4));
     }
 
     public void testLiveTracking() {
-        assertEquals("Expected live tracking bit to be true",true,bitIsSet(data[0],3));
+        assertEquals("Expected live tracking bit to be true",true,bitIsSet(data[0],5));
     }
 
     public void testRefresh() {
-        assertEquals("Expected refresh of 3",3,data[0] >> 4);
+        assertEquals("Expected refresh of 3",3,((data[0] >> 6) + 4) % 4); // +4 to avoid negative numbers after >> 6
     }
 
     public void testAccuracy() {

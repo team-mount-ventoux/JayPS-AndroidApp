@@ -17,4 +17,8 @@ public interface IMessageManager extends Runnable {
     public void sendAckToPebble(int transactionId);
 
     public void showSimpleNotificationOnWatch(String title, String text);
+
+    public void sendMessageToPebble(String message);
+
+    public void sendSavedDataToPebble(int state, int units, float distance, long elapsedTime, float ascent, float maxSpeed);
 }

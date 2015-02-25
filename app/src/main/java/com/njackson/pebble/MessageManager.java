@@ -9,6 +9,9 @@ import android.util.Log;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
+import com.njackson.adapters.AdvancedLocationToNewLocation;
+import com.njackson.adapters.NewLocationToPebbleDictionary;
+import com.njackson.events.GPSServiceCommand.NewLocation;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,6 +20,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import fr.jayps.android.AdvancedLocation;
 
 /**
  * Manages a thread-safe message queue using a Looper worker thread to complete blocking tasks.
@@ -210,4 +215,34 @@ public class MessageManager implements IMessageManager, Runnable {
         _applicationContext.sendBroadcast(i);
     }
 
+    @Override
+    public void sendMessageToPebble(String message) {
+        showSimpleNotificationOnWatch("Pebble Bike", message);
+    }
+
+    @Override
+    public void sendSavedDataToPebble(int state, int units, float distance, long elapsedTime, float ascent, float maxSpeed) {
+
+        // use AdvancedLocation and than NewLocation to use units conversion in AdvancedLocationToNewLocation
+
+        AdvancedLocation advancedLocation = new AdvancedLocation();
+        advancedLocation.setDistance(distance);
+        advancedLocation.setElapsedTime(elapsedTime);
+        advancedLocation.setAscent(ascent);
+        advancedLocation.setMaxSpeed(maxSpeed);
+
+        NewLocation newLocation = new AdvancedLocationToNewLocation(advancedLocation, 0, 0, units);
+
+        PebbleDictionary dictionary = new NewLocationToPebbleDictionary(
+                newLocation,
+                true, // TODO(jay)
+                true, // TODO(jay) debug
+                true, // TODO(jay) live
+                1000, // TODO(jay) refresh interval
+                255 // 255: no Heart Rate available
+        );
+        dictionary.addInt32(Constants.STATE_CHANGED, state);
+        dictionary.addInt32(Constants.MSG_VERSION_ANDROID, Constants.VERSION_ANDROID);
+        offer(dictionary);
+    }
 }

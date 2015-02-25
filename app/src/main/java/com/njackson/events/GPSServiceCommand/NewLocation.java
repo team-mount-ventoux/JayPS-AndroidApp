@@ -13,6 +13,14 @@ public class NewLocation {
         _speed = value;
     }
 
+    private float _maxSpeed;
+    public float getMaxSpeed() {
+        return _maxSpeed;
+    }
+    public void setMaxSpeed(float value) {
+        _maxSpeed = value;
+    }
+
     private float _distance;
     public float getDistance() {
         return _distance;
@@ -67,6 +75,14 @@ public class NewLocation {
     }
     public void setAscentRate(float _ascentRate) {
         this._ascentRate = _ascentRate;
+    }
+
+    private int _nbAscent;
+    public int getNbAscent() {
+        return _nbAscent;
+    }
+    public void setNbAscent(int _nbAscent) {
+        this._nbAscent = _nbAscent;
     }
 
     private float _slope;

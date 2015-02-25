@@ -30,7 +30,9 @@ import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,9 +53,7 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
     private TestApplication _app;
     private PebbleDataReceiver _pebbleDataReceiver;
     private ResetGPSState _refreshEvent;
-    private NewMessage _messageEvent;
     private CountDownLatch _stateLatch;
-    private CountDownLatch _messageLatch;
 
     @Module(
             includes = AndroidModule.class,
@@ -82,12 +82,6 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
         _stateLatch.countDown();
     }
 
-    @Subscribe
-    public void onNewMessage(NewMessage event) {
-        _messageEvent = event;
-        _messageLatch.countDown();
-    }
-
     @Override
     public void setUp() throws Exception {
         super.setUp();
@@ -103,7 +97,6 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
 
         _pebbleDataReceiver = new PebbleDataReceiver();
         _stateLatch = new CountDownLatch(1);
-        _messageLatch = new CountDownLatch(1);
     }
 
     private void setupMocks() {
@@ -205,9 +198,7 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
 
         _pebbleDataReceiver.receiveData(_mockContext,12345,dic);
 
-        _messageLatch.await(500, TimeUnit.MILLISECONDS);
-        assertNull(_messageEvent);
-    }
+        verify(_mockMessageManager, timeout(1000).times(0)).sendMessageToPebble(any(String.class));    }
 
     @SmallTest
     public void testReceiveDataWithMSG_VERSION_PEBBLEAndVersionLessThanCurrentSendsMessage() throws InterruptedException {
@@ -218,8 +209,7 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
 
         _pebbleDataReceiver.receiveData(_mockContext,12345,dic);
 
-        _messageLatch.await(500, TimeUnit.MILLISECONDS);
-        assertEquals("some message", _messageEvent.getMessage());
+        verify(_mockMessageManager, timeout(1000).times(1)).sendMessageToPebble(any(String.class));
     }
 
 }
