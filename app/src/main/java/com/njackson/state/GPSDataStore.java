@@ -164,6 +164,7 @@ public class GPSDataStore implements IGPSDataStore {
         _distance = 0;
         _elapsedTime = 0;
         _ascent = 0;
+        _nbascent = 0;
         _maxSpeed = 0;
         //_geoid = 0; // no reset needed, it's for altitude correction
         //_lattitude = 0; // no reset needed, it's for map origin (latitude => xpos conversion)
