@@ -5,32 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
 import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionChangeState;
 import com.njackson.events.GPSServiceCommand.GPSChangeState;
 import com.njackson.events.GoogleFitCommand.GoogleFitChangeState;
 import com.njackson.events.LiveServiceCommand.LiveChangeState;
-import com.njackson.events.MainService.MainServiceStatus;
 import com.njackson.events.base.BaseChangeState;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.events.rx.MainServiceStatusObservable;
-import com.njackson.fit.GoogleFitServiceCommand;
-import com.njackson.gps.GPSServiceCommand;
-import com.njackson.live.LiveServiceCommand;
-import com.njackson.oruxmaps.OruxMapsServiceCommand;
-import com.njackson.pebble.PebbleServiceCommand;
 import com.njackson.service.MainService;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
-
-import org.jdeferred.DeferredManager;
-import org.jdeferred.DoneCallback;
-import org.jdeferred.Promise;
-import org.jdeferred.impl.DeferredObject;
-
-import java.util.Observable;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import rx.Subscription;
 import rx.functions.Action1;

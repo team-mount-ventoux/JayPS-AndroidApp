@@ -3,6 +3,7 @@ package com.njackson.application;
 import android.app.Application;
 import android.util.Log;
 
+import com.njackson.analytics.IAnalytics;
 import com.njackson.application.modules.AndroidModule;
 import com.parse.Parse;
 import com.parse.ParseCrashReporting;
@@ -11,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import dagger.ObjectGraph;
 
 /**
@@ -18,15 +21,22 @@ import dagger.ObjectGraph;
  */
 public class PebbleBikeApplication extends Application implements IInjectionContainer {
 
-    private static final String TAG = "PB-PebbleBikeApplication";
+    private static final String TAG = "PB-PebbleBikeApp";
 
     protected ObjectGraph graph;
 
-    @Override public void onCreate() {
-        super.onCreate();
+    @Inject IAnalytics _parseAnalytics;
 
-        ParseCrashReporting.enable(this);
-        Parse.initialize(this, "NIwEkYlaiestozg1sel0U9cDQk0AR5qLi8sSouxn", "5FzfXeSMyWnaXmy41zVzatF1dwdjLfP11gtLi5jf");
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
+    @Override
+    public void onLowMemory() {
+        Log.d(TAG,"Low Memory");
+        _parseAnalytics.trackALowMemory();
+        super.onLowMemory();
     }
 
     protected List<Object> getModules() {
@@ -45,6 +55,12 @@ public class PebbleBikeApplication extends Application implements IInjectionCont
     private void createObjectGraph() {
         Log.d(TAG, "Create object graph");
         graph = ObjectGraph.create(getModules().toArray());
+        setupAnalytics();
+    }
+
+    private void setupAnalytics() {
+        inject(this);
+        _parseAnalytics.enable(this);
     }
 
 }

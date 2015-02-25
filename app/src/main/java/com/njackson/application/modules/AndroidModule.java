@@ -81,6 +81,7 @@ import static android.content.Context.SENSOR_SERVICE;
  * Created by server on 30/03/2014.
  */
 @Module(library = true,complete=false,injects = {
+        PebbleBikeApplication.class,
         MainActivity.class,
         SettingsActivity.class,
         StartButtonFragment.class,

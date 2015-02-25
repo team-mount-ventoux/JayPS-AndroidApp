@@ -40,7 +40,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:6.5.87'
     compile 'com.google.android.gms:play-services-fitness:6.5.87'
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    compile 'org.jdeferred:jdeferred-android:1.2.3'
     compile 'io.reactivex:rxjava:1.0.3'
     compile fileTree(dir: 'libs', include: 'Parse-*.jar')
     compile fileTree(dir: 'libs', include: 'ParseCrashReporting-*.jar')
