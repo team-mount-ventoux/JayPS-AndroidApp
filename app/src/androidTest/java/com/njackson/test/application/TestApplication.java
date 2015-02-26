@@ -20,4 +20,9 @@ public class TestApplication extends PebbleBikeApplication {
         this.graph = graph;
     }
 
+    public void setupAnalytics() {
+        super.setupAnalytics();
+    }
+
+
 }

@@ -27,6 +27,6 @@ public class Parse implements IAnalytics {
     }
 
     @Override
-    public void trackALowMemory() { ParseAnalytics.trackEventInBackground("LowMemory"); }
+    public void trackLowMemory() { ParseAnalytics.trackEventInBackground("LowMemory"); }
 
 }

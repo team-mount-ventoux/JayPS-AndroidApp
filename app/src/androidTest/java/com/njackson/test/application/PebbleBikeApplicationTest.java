@@ -1,10 +1,9 @@
 package com.njackson.test.application;
 
 import android.test.ApplicationTestCase;
+import android.test.suitebuilder.annotation.SmallTest;
 
 import com.njackson.analytics.IAnalytics;
-import com.njackson.analytics.Parse;
-import com.njackson.application.PebbleBikeApplication;
 import com.njackson.application.modules.AndroidModule;
 
 import javax.inject.Inject;
@@ -15,6 +14,8 @@ import dagger.ObjectGraph;
 import dagger.Provides;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * Created by njackson on 25/02/15.
@@ -27,7 +28,7 @@ public class PebbleBikeApplicationTest extends ApplicationTestCase<TestApplicati
 
     @Module(
             includes = AndroidModule.class,
-            injects = PebbleBikeApplicationTest.class,
+            injects = {PebbleBikeApplicationTest.class, TestApplication.class},
             overrides = true,
             complete = false
     )
@@ -56,5 +57,19 @@ public class PebbleBikeApplicationTest extends ApplicationTestCase<TestApplicati
         _app  = getApplication();
         _app.setObjectGraph(ObjectGraph.create(TestModule.class));
         _app.inject(this);
+    }
+
+    @SmallTest
+    public void testEnablesAnalytics() {
+        _app.setupAnalytics();
+        verify(_parseAnalytics,times(1)).enable(_app);
+    }
+
+    @SmallTest
+    public void testOnLowMemoryCallsAnalytics() {
+        _app.setupAnalytics();
+        _app.onLowMemory();
+
+        verify(_parseAnalytics,times(1)).trackLowMemory();
     }
 }

@@ -12,5 +12,5 @@ public interface IAnalytics {
     void enable(Application application);
     void trackAppOpened(Intent intent);
     void trackAppDestroy();
-    void trackALowMemory();
+    void trackLowMemory();
 }

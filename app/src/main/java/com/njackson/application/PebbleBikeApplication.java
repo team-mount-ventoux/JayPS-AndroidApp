@@ -5,11 +5,8 @@ import android.util.Log;
 
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.modules.AndroidModule;
-import com.parse.Parse;
-import com.parse.ParseCrashReporting;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -35,7 +32,7 @@ public class PebbleBikeApplication extends Application implements IInjectionCont
     @Override
     public void onLowMemory() {
         Log.d(TAG,"Low Memory");
-        _parseAnalytics.trackALowMemory();
+        _parseAnalytics.trackLowMemory();
         super.onLowMemory();
     }
 
@@ -58,7 +55,7 @@ public class PebbleBikeApplication extends Application implements IInjectionCont
         setupAnalytics();
     }
 
-    private void setupAnalytics() {
+    protected void setupAnalytics() {
         inject(this);
         _parseAnalytics.enable(this);
     }
