@@ -23,6 +23,17 @@
     <string name="PREF_RESET_DATA">Reset data</string>
     <string name="PREF_RESET_DATA_SUMMARY">Reset distance, time, speed and ascent</string>
 
+    <string name="PREF_TRACKS_CATEGORY_TITLE">Tracks</string>
+    <string name="PREF_ENABLE_TRACKS_TITLE">Enable tracks</string>
+    <string name="PREF_ENABLE_TRACKS_SUMMARY">Auto save locations when gps is started</string>
+    <string name="PREF_EXPORT_GPX_TITLE">Export as GPX</string>
+    <string name="PREF_EXPORT_GPX_SUMMARY"></string>
+    <string name="PREF_RESET_TRACKS_TITLE">Reset tracks</string>
+    <string name="PREF_RESET_TRACKS_SUMMARY">Delete all saved tracks</string>
+
+    <string name="ALERT_RESET_TRACKS_TITLE">Reset Tracks</string>
+    <string name="ALERT_RESET_TRACKS_MESSAGE">Do you really want to delete all saved tracks?</string>
+
     <string name="PREF_OPTIONS_CATEGORY_TITLE">Options</string>
     <string name="PREF_ABOUT_CATEGORY_TITLE">About</string>
 

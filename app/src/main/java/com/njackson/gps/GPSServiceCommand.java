@@ -54,6 +54,7 @@ public class GPSServiceCommand implements IServiceCommand {
     @Inject IGPSDataStore _dataStore;
     @Inject Bus _bus;
     @Inject ITime _time;
+    @Inject SharedPreferences _sharedPreferences;
 
     private AdvancedLocation _advancedLocation;
     private Location firstLocation = null;
@@ -105,7 +106,7 @@ public class GPSServiceCommand implements IServiceCommand {
         _bus.register(this);
 
         _currentStatus = BaseStatus.Status.INITIALIZED;
-        _advancedLocation = new AdvancedLocation();
+        createNewAdvancedLocation();
     }
 
     @Override
@@ -215,8 +216,9 @@ public class GPSServiceCommand implements IServiceCommand {
 
     private void createNewAdvancedLocation() {
         _advancedLocation = new AdvancedLocation(_applicationContext);
-        _advancedLocation.debugLevel = 0; //debug ? 2 : 0;
+        _advancedLocation.debugLevel = _sharedPreferences.getBoolean("PREF_DEBUG", false) ? 1 : 0;
         _advancedLocation.debugTagPrefix = "PB-";
+        _advancedLocation.setSaveLocation(_sharedPreferences.getBoolean("ENABLE_TRACKS", false));
     }
 
     private void requestLocationUpdates(long refresh_interval) {

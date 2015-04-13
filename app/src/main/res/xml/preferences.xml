@@ -11,6 +11,27 @@
         android:title="@string/PREF_RESET_DATA"
         android:summary="@string/PREF_RESET_DATA_SUMMARY"
         />
+
+    <PreferenceCategory
+        android:title="@string/PREF_TRACKS_CATEGORY_TITLE"
+        >
+        <CheckBoxPreference
+            android:key="ENABLE_TRACKS"
+            android:title="@string/PREF_ENABLE_TRACKS_TITLE"
+            android:summary="@string/PREF_ENABLE_TRACKS_SUMMARY"
+            android:defaultValue="false"
+            />
+        <Preference
+            android:key="EXPORT_GPX"
+            android:title="@string/PREF_EXPORT_GPX_TITLE"
+            android:summary="@string/PREF_EXPORT_GPX_SUMMARY"
+            />
+        <Preference
+            android:key="RESET_TRACKS"
+            android:title="@string/PREF_RESET_TRACKS_TITLE"
+            android:summary="@string/PREF_RESET_TRACKS_SUMMARY"
+            />
+    </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/PREF_OPTIONS_CATEGORY_TITLE"
         >

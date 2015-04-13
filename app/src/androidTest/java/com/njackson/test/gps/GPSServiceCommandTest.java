@@ -62,6 +62,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
     private static final String TAG = "PB-GPSServiceTest";
 
     @Inject Bus _bus = new Bus();
+    @Inject SharedPreferences _mockPreferences;
     @Inject LocationManager _mockLocationManager;
     @Inject SensorManager _mockSensorManager;
     @Inject IGPSDataStore _mockDataStore;
@@ -78,7 +79,13 @@ public class GPSServiceCommandTest extends AndroidTestCase {
             overrides = true,
             complete = false
     )
-    static class TestModule {
+    class TestModule {
+        @Provides
+        @Singleton
+        SharedPreferences provideSharedPreferences() {
+            return mock(SharedPreferences.class);
+        }
+
         @Provides
         @Singleton
         LocationManager provideLocationManager() {
@@ -103,7 +110,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
 
         @Provides @Singleton @ForApplication
         Context provideApplicationContext() {
-            return _app;
+            return getContext();
         }
 
         @Provides @Singleton
@@ -116,7 +123,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
 
         System.setProperty("dexmaker.dexcache", getContext().getCacheDir().getPath());
         _app = new TestApplication();
-        _app.setObjectGraph(ObjectGraph.create(TestModule.class));
+        _app.setObjectGraph(ObjectGraph.create(new TestModule()));
         _app.inject(this);
 
         setupMocks();
@@ -128,6 +135,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         _mockTime = mock(ITime.class);
         _mockApp = mock(TestApplication.class);
         _mockServiceStarter = mock(IForegroundServiceStarter.class);
+        when(_mockPreferences.getBoolean("PREF_DEBUG", false)).thenReturn(false);
+        when(_mockPreferences.getBoolean("ENABLE_TRACKS", false)).thenReturn(false);
     }
 
     @SmallTest
