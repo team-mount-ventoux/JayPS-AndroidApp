@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.njackson.Constants;
 import com.njackson.adapters.AdvancedLocationToNewLocation;
+import com.njackson.adapters.NewLocationToSavedLocation;
 import com.njackson.application.IInjectionContainer;
 import com.njackson.application.modules.ForApplication;
 import com.njackson.events.GPSServiceCommand.ChangeRefreshInterval;
@@ -21,6 +22,7 @@ import com.njackson.events.GPSServiceCommand.GPSChangeState;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.GPSServiceCommand.NewLocation;
+import com.njackson.events.GPSServiceCommand.SavedLocation;
 import com.njackson.events.HrmServiceCommand.HrmHeartRate;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
@@ -62,6 +64,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private GPSSensorEventListener _sensorListener;
 	private int _heartRate = 0;
     private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
+    private SavedLocation _savedLocation = null;
 
     @Subscribe
     public void onResetGPSStateEvent(ResetGPSState event) {
@@ -297,10 +300,17 @@ public class GPSServiceCommand implements IServiceCommand {
             event.setHeartRate(_heartRate);
         }
 
+        _savedLocation = new NewLocationToSavedLocation(event);
+
         _bus.post(event);
     }
 
     private void broadcastStatus(BaseStatus.Status currentStatus) {
+        //Log.d(TAG, "broadcastStatus:" + currentStatus.toString());
         _bus.post(new GPSStatus(currentStatus));
+        if (_savedLocation != null) {
+            Log.d(TAG, "broadcastStatus: rebroadcast _savedLocation");
+            _bus.post(_savedLocation);
+        }
     }
 }

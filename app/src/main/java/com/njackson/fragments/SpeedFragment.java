@@ -10,8 +10,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.njackson.R;
+import com.njackson.events.GPSServiceCommand.MyLocation;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
+import com.njackson.events.GPSServiceCommand.SavedLocation;
 import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.NumberConverter;
 import com.njackson.utils.Units;
@@ -35,6 +37,15 @@ public class SpeedFragment extends BaseFragment {
 
     @Subscribe
     public void onNewLocation(NewLocation event) {
+        //Log.d(TAG, "onNewLocation time:" + event.getElapsedTimeSeconds() + " class:"+event.getClass());
+        updateFragment(event);
+    }
+    @Subscribe
+    public void onSavedLocation(SavedLocation event) {
+        //Log.d(TAG, "onSavedLocation time:" + event.getElapsedTimeSeconds() + " class:"+event.getClass());
+        updateFragment(event);
+    }
+    private void updateFragment(MyLocation event) {
         NumberConverter converter = new NumberConverter();
 
         TextView speed = (TextView)getActivity().findViewById(R.id.speed_text);
@@ -61,6 +72,8 @@ public class SpeedFragment extends BaseFragment {
         TextView time = (TextView)getActivity().findViewById(R.id.time_text);
         String timeText = DateUtils.formatElapsedTime(event.getElapsedTimeSeconds());
         time.setText(timeText);
+
+        //Log.d(TAG, "updateFragment time:" + event.getElapsedTimeSeconds());
     }
 
     public SpeedFragment() {
@@ -119,6 +132,8 @@ public class SpeedFragment extends BaseFragment {
         TextView time = (TextView)getActivity().findViewById(R.id.time_text);
         editor.putString("SPEEDFRAGMENT_TIME",time.getText().toString());
 
+        //Log.d(TAG, "onSaveInstanceState time:" + time.getText().toString());
+
         editor.commit();
 
         super.onSaveInstanceState(outState);
@@ -153,5 +168,7 @@ public class SpeedFragment extends BaseFragment {
 
         TextView time = (TextView)getActivity().findViewById(R.id.time_text);
         time.setText(_sharedPreferences.getString("SPEEDFRAGMENT_TIME", getString(R.string.speedfragment_time_value)));
+        //Log.d(TAG, "restoreFromPreferences time:" + _sharedPreferences.getString("SPEEDFRAGMENT_TIME", getString(R.string.speedfragment_time_value)));
+        //Log.d(TAG, "_dataStore.getElapsedTime():" + _dataStore.getElapsedTime());
     }
 }
