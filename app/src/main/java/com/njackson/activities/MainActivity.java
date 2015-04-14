@@ -1,5 +1,7 @@
 package com.njackson.activities;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
@@ -8,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.njackson.R;
 import com.njackson.analytics.IAnalytics;
@@ -16,6 +19,7 @@ import com.njackson.changelog.CLChangeLog;
 import com.njackson.changelog.IChangeLog;
 import com.njackson.changelog.IChangeLogBuilder;
 import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionStatus;
+import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
@@ -53,8 +57,10 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
 
     @Subscribe
     public void onRecognitionState(ActivityRecognitionStatus event) {
-        if(event.getStatus() == ActivityRecognitionStatus.Status.UNABLE_TO_START)
-            Log.d(TAG, "PLAY_NOT_AVIALABLE");
+        if(event.getStatus() == ActivityRecognitionStatus.Status.UNABLE_TO_START) {
+            Toast.makeText(this, "Google Play Services is not available", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "PLAY_NOT_AVAILABLE");
+        }
     }
 
     @Subscribe
@@ -66,6 +72,31 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
             }
 
             handleGoogleFitFailure(event);
+        }
+    }
+    @Subscribe
+    public void onGPSServiceState(GPSStatus event) {
+        if (event.getStatus() == BaseStatus.Status.DISABLED) {
+
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+                    .setCancelable(false)
+                    .setPositiveButton("Goto Settings Page To Enable GPS",
+                            new DialogInterface.OnClickListener(){
+                                public void onClick(DialogInterface dialog, int id){
+                                    Intent callGPSSettingIntent = new Intent(
+                                            android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                    startActivity(callGPSSettingIntent);
+                                }
+                            });
+            alertDialogBuilder.setNegativeButton("Cancel",
+                    new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int id){
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = alertDialogBuilder.create();
+            alert.show();
         }
     }
 

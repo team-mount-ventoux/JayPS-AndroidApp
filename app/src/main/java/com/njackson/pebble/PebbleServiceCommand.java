@@ -55,6 +55,8 @@ public class PebbleServiceCommand implements IServiceCommand {
             notifyPebbleGPSStarted();
         } else if (event.getStatus() == BaseStatus.Status.STOPPED) {
             notifyPebbleGPSStopped();
+        } else if (event.getStatus() == BaseStatus.Status.DISABLED) {
+            notifyPebbleGPSDisable();
         }
     }
 
@@ -97,6 +99,11 @@ public class PebbleServiceCommand implements IServiceCommand {
         PebbleDictionary dictionary = new PebbleDictionary();
         dictionary.addInt32(Constants.STATE_CHANGED,Constants.STATE_STOP);
         sendDataToPebble(dictionary);
+    }
+
+    private void notifyPebbleGPSDisable() {
+        _messageManager.showSimpleNotificationOnWatch("Pebble Bike", "GPS is disabled on your phone. Please enable it.");
+
     }
 
     private void sendLiveMessage(LiveMessage message) {
