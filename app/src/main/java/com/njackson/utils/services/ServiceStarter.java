@@ -4,9 +4,11 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionChangeState;
 import com.njackson.events.GPSServiceCommand.GPSChangeState;
+import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GoogleFitCommand.GoogleFitChangeState;
 import com.njackson.events.LiveServiceCommand.LiveChangeState;
 import com.njackson.events.base.BaseChangeState;
@@ -22,6 +24,8 @@ import rx.functions.Action1;
  * Created by njackson on 03/01/15.
  */
 public class ServiceStarter implements IServiceStarter {
+
+    private String TAG = "PB-ServiceStarter";
 
     private final Bus _bus;
     Context _context;
@@ -72,7 +76,13 @@ public class ServiceStarter implements IServiceStarter {
 
     @Override
     public void broadcastLocationState() {
-        _bus.post(new GPSChangeState(BaseChangeState.State.ANNOUNCE_STATE));
+        if (serviceRunning(MainService.class)) {
+            //Log.d(TAG, "broadcastLocationState/main service running, broadcast ANNOUNCE_STATE");
+            _bus.post(new GPSChangeState(BaseChangeState.State.ANNOUNCE_STATE));
+        } else {
+            //Log.d(TAG, "broadcastLocationState/main service not running, broadcast STOPPED");
+            _bus.post(new GPSStatus(BaseStatus.Status.STOPPED));
+        }
     }
 
     @Override
