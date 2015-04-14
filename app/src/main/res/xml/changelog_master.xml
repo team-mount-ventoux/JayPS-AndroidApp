@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.0.0-alpha4" versioncode="212" >
+        <change>GPX export: new filename + auto-create segments and tracks</change>
+        <change>GPX export: now compatible with Strava (iso 8601 time)</change>
+        <change>Notification when GPS is disabled</change>
+        <change>Bugfix: start/stop button status</change>
+        <change>Bugfix: time/distance values when app is resumed</change>
+    </release>
     <release version="2.0.0-alpha3" versioncode="211" >
         <change>Save tracks and export them as GPX</change>
         <change>Canvas plugin: number of ascents</change>
