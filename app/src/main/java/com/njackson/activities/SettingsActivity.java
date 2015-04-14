@@ -87,7 +87,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                         String gpx = advancedLocation.getGPX();
 
                         try {
-                            File newFile = new File(getCacheDir(), "test.gpx");
+                            File newFile = new File(getCacheDir(), "track.gpx");
                             FileWriter fileWriter = new FileWriter(newFile);
                             fileWriter.write(gpx);
                             fileWriter.close();
