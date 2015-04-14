@@ -10,16 +10,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.njackson.R;
+import com.njackson.adapters.AdvancedLocationToNewLocation;
+import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.MyLocation;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.GPSServiceCommand.SavedLocation;
+import com.njackson.events.base.BaseStatus;
 import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.NumberConverter;
 import com.njackson.utils.Units;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
+
+import fr.jayps.android.AdvancedLocation;
 
 public class SpeedFragment extends BaseFragment {
 
@@ -35,6 +40,20 @@ public class SpeedFragment extends BaseFragment {
         restoreFromPreferences();
     }
 
+    @Subscribe
+    public void onGPSServiceState(GPSStatus event) {
+        //Log.d(TAG, "onGPSServiceState:" + event.getStatus().toString());
+        if (event.getStatus() == BaseStatus.Status.STOPPED) {
+            // GPS is off, get stored values
+
+            AdvancedLocation advancedLocation = new AdvancedLocation();
+            advancedLocation.setDistance(_dataStore.getDistance());
+            advancedLocation.setElapsedTime(_dataStore.getElapsedTime());
+
+            NewLocation newlocation = new AdvancedLocationToNewLocation(advancedLocation, 0, 0, _dataStore.getMeasurementUnits());
+            updateFragment(newlocation);
+        }
+    }
     @Subscribe
     public void onNewLocation(NewLocation event) {
         //Log.d(TAG, "onNewLocation time:" + event.getElapsedTimeSeconds() + " class:"+event.getClass());
