@@ -16,7 +16,7 @@ public class NewAltitudeEventTest extends TestCase {
         Exception exception = null;
 
         try {
-            NewAltitude event = new NewAltitude(new float[15], 2323);
+            NewAltitude event = new NewAltitude(new int[15]);
         }catch (Exception e) {
             exception = e;
         }
@@ -29,7 +29,7 @@ public class NewAltitudeEventTest extends TestCase {
         Exception exception = null;
 
         try {
-            NewAltitude event = new NewAltitude(new float[13], 2323);
+            NewAltitude event = new NewAltitude(new int[13]);
         }catch (Exception e) {
             exception = e;
         }
@@ -42,7 +42,7 @@ public class NewAltitudeEventTest extends TestCase {
         Exception exception = null;
 
         try {
-            NewAltitude event = new NewAltitude(null, 2323);
+            NewAltitude event = new NewAltitude(null);
         }catch (Exception e) {
             exception = e;
         }
@@ -55,7 +55,7 @@ public class NewAltitudeEventTest extends TestCase {
         Exception exception = null;
 
         try {
-            NewAltitude event = new NewAltitude(new float[14], 2323);
+            NewAltitude event = new NewAltitude(new int[14]);
         }catch (Exception e) {
             exception = e;
         }

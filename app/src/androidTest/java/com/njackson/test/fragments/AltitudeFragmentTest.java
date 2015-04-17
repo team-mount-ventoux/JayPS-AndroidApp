@@ -79,7 +79,7 @@ public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
 
     @MediumTest
     public void test_Activity_Responds_To_NewAltitudeEvent() {
-        _bus.post(new NewAltitude(new float[14],0));
+        _bus.post(new NewAltitude(new int[14]));
 
     }
 
