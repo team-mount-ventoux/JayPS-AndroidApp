@@ -12,6 +12,7 @@ public interface IGPSDataStore {
     void setMeasurementUnits(int value);
 
     long getStartTime();
+    long getPrevStartTime();
     void setStartTime(long value);
 
     float getDistance();

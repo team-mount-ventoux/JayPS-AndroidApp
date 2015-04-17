@@ -18,6 +18,7 @@ public class GPSDataStore implements IGPSDataStore {
     Context _context;
 
     long _startTime = 0;
+    long _prevStartTime = 0;
     float _distance = 0;
     long _elapsedTime = 0;
     float _ascent = 0;
@@ -72,9 +73,14 @@ public class GPSDataStore implements IGPSDataStore {
     public long getStartTime() {
         return _startTime;
     }
+    @Override
+    public long getPrevStartTime() {
+        return _prevStartTime;
+    }
 
     @Override
     public void setStartTime(long value) {
+        _prevStartTime = _startTime;
         _startTime = value;
     }
 

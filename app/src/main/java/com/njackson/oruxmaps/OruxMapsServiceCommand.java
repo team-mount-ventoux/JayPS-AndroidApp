@@ -1,10 +1,13 @@
 package com.njackson.oruxmaps;
 
 import android.content.SharedPreferences;
+import android.util.Log;
+
 import com.njackson.application.IInjectionContainer;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
+import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -21,6 +24,7 @@ public class OruxMapsServiceCommand implements IServiceCommand {
     @Inject IOruxMaps _oruxMaps;
     @Inject Bus _bus;
     @Inject SharedPreferences _sharedPreferences;
+    @Inject IGPSDataStore _dataStore;
     @Inject ITime _time;
 
     private final long TWELVE_HOURS_MS = 12 * 3600 * 1000;
@@ -81,7 +85,7 @@ public class OruxMapsServiceCommand implements IServiceCommand {
     }
 
     private boolean lastStartGreaterThan12Hours() {
-        long last_start = _sharedPreferences.getLong("GPS_LAST_START", 0);
+        long last_start = _dataStore.getPrevStartTime();
         return (_time.getCurrentTimeMilliseconds() - last_start) > TWELVE_HOURS_MS;
     }
 }
