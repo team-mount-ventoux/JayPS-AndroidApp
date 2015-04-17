@@ -20,6 +20,7 @@ import com.njackson.application.modules.ForApplication;
 import com.njackson.events.GPSServiceCommand.ChangeRefreshInterval;
 import com.njackson.events.GPSServiceCommand.GPSChangeState;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
+import com.njackson.events.GPSServiceCommand.NewAltitude;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.GPSServiceCommand.SavedLocation;
@@ -27,6 +28,7 @@ import com.njackson.events.HrmServiceCommand.HrmHeartRate;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.njackson.state.IGPSDataStore;
+import com.njackson.utils.AltitudeGraphReduce;
 import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -57,6 +59,7 @@ public class GPSServiceCommand implements IServiceCommand {
     @Inject Bus _bus;
     @Inject ITime _time;
     @Inject SharedPreferences _sharedPreferences;
+    @Inject AltitudeGraphReduce _altitudeGraphReduce;
 
     private AdvancedLocation _advancedLocation;
     private Location firstLocation = null;
@@ -303,6 +306,14 @@ public class GPSServiceCommand implements IServiceCommand {
         _savedLocation = new NewLocationToSavedLocation(event);
 
         _bus.post(event);
+
+        if (_advancedLocation.getAltitude() != 0.0) {
+            _altitudeGraphReduce.addAltitude((int) _advancedLocation.getAltitude(), _advancedLocation.getElapsedTime(), _advancedLocation.getDistance());
+
+            NewAltitude newAltitude = new NewAltitude(_altitudeGraphReduce.getGraphData());
+
+            _bus.post(newAltitude);
+        }
     }
 
     private void broadcastStatus(BaseStatus.Status currentStatus) {

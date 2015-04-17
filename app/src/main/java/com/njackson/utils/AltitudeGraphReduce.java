@@ -1,5 +1,7 @@
 package com.njackson.utils;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -12,8 +14,6 @@ import java.util.ArrayList;
 public class AltitudeGraphReduce {
     
     private static final String TAG = "PB-AltitudeGraphReduce";
-
-    private static AltitudeGraphReduce _instance;
 
     private ArrayList<Integer> _altitudeBins = new ArrayList<Integer>();
     private long _lastAltitudeBinChange = -1;
@@ -54,16 +54,19 @@ public class AltitudeGraphReduce {
     }
 
     public void addAltitude(int altitude, long time, float distance) {
+        //Log.d(TAG, "addAltitude(" + altitude + "," +  time +  "," + distance + ")");
         // time: elapsed time, in millisecond, and not current time
         if(_lastAltitudeBinChange == -1) {
             _altitudeBins.add(altitude); // initialise the first bin
             _lastAltitudeBinChange = time;
         }
 
-        if(altitude > _altitudeMax)
+        if (altitude > _altitudeMax) {
             _altitudeMax = altitude;
-        if(altitude < _altitudeMin)
+        }
+        if (altitude < _altitudeMin) {
             _altitudeMin = altitude;
+        }
 
         if (_lastAltitudeBinChange + _altitudeBinSizeMs > time) {
             _altitudeBins.set(

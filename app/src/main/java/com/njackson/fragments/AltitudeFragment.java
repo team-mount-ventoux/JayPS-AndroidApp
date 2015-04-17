@@ -47,19 +47,17 @@ public class AltitudeFragment extends BaseFragment {
 
     @Subscribe
     public void onNewAltitudeEvent(NewAltitude event) {
-        setAltitude(_prevValues,1,true);
+        setAltitude(event.getAltitudes(), true);
     }
 
     // sets the bars in the animation so the given values
     // final height is a percentage of the parent container height based on value[n] / maxValue
-    public void setAltitude(float[] values, int maxValue, boolean animate){
+    public void setAltitude(int[] values, boolean animate){
 
         // get a list of the imageviews
         ImageView[] views = findAltitudeBars();
-        float[] displayValues = calculatePercentages(values, maxValue,views);
-        animateAltitudeBars(views,displayValues);
-
-        Log.d(TAG,"Height:" + _view.getHeight());
+        float[] displayValues = calculatePercentages(values, views);
+        animateAltitudeBars(views, displayValues);
     }
 
     private void animateAltitudeBars(ImageView[] views, float[] displayValues) {
@@ -77,19 +75,56 @@ public class AltitudeFragment extends BaseFragment {
 
     }
 
-    private float[] calculatePercentages(float[] values, int maxValue,ImageView[] views) {
+    private float[] calculatePercentages(int[] values, ImageView[] views) {
 
         float[] percentages = new float[values.length];
-        int frameHeight = _view.getHeight();
+        // parent container is too big or not fully displayed ?
+        int frameHeight = _view.getHeight() / 2;
+
+        int minValue = Integer.MAX_VALUE;
+        int maxValue = Integer.MIN_VALUE;
         for(int v = 0; v < values.length;v++) {
-
-            float currentHeight = views[v].getHeight();
-            float sizePercentage = ((float)values[v] / (float)maxValue);
-            float newHeight =  sizePercentage* frameHeight;
-            percentages[v] = newHeight / currentHeight;
-
+            if (values[v] != 0) {
+                // 0: not yet used
+                if (values[v] > maxValue) {
+                    maxValue = values[v];
+                }
+                if (values[v] < minValue) {
+                    minValue = values[v];
+                }
+            }
         }
+/*
+        String s = "";
+        for(int v = 0; v < values.length;v++) {
+            s += " " + values[v];
+        }
+        Log.d(TAG, "calculatePercentages " + s + " //" + minValue + " " + maxValue);
+*/
+        for(int v = 0; v < values.length;v++) {
+            float currentHeight = views[v].getHeight();
+            if (values[v] != 0) {
+                float sizePercentage = maxValue != minValue ? ((float) (values[v] - minValue) / (float) (maxValue - minValue)) : 0.5f;
+                float newHeight = sizePercentage * frameHeight;
+                if (newHeight < currentHeight) {
+                    newHeight = currentHeight;
+                }
 
+                percentages[v] = newHeight / currentHeight;
+
+                //Log.d(TAG, "views["+v+"]:" + views[v].getHeight() + "sizePercent:" + sizePercentage+ ", newHeight:" + newHeight + ",percent:" + percentages[v]);
+            } else {
+                // 0: not yet used
+                percentages[v] = 1;
+            }
+        }
+/*
+        s = "";
+        for(int v = 0; v < values.length;v++) {
+            s += " " + ((int)percentages[v]);
+        }
+        Log.d(TAG, "calculatePercentages  " + s);
+*/
         return percentages;
 
     }

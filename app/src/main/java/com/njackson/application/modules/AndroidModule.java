@@ -45,6 +45,7 @@ import com.njackson.service.IServiceCommand;
 import com.njackson.service.MainService;
 import com.njackson.state.GPSDataStore;
 import com.njackson.state.IGPSDataStore;
+import com.njackson.utils.AltitudeGraphReduce;
 import com.njackson.utils.googleplay.GoogleFitSessionManager;
 import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
@@ -156,6 +157,8 @@ public class AndroidModule {
     IServiceStarter provideServiceStarter(Bus bus, SharedPreferences preferences) {
         return new ServiceStarter(application, preferences, bus);
     }
+    @Provides @Singleton
+    AltitudeGraphReduce providesAltitudeGraphReduce() { return new AltitudeGraphReduce(); }
 
     @Provides @Singleton
     public IMessageManager providesMessageManager() { return new MessageManager(application); }

@@ -9,15 +9,16 @@ public class NewAltitude {
 
     private final int VALUES_SIZE = 14;
 
-    private float[] _altitudeValues;
-    private int _maxAltitude;
+    private int[] _altitudeValues;
 
+    public int[] getAltitudes() {
+        return _altitudeValues;
+    }
 
-    public NewAltitude(float[] altitudeValues, int maxAltitude) {
+    public NewAltitude(int[] altitudeValues) {
         if(altitudeValues == null || altitudeValues.length != VALUES_SIZE)
             throw new InvalidParameterException("Constructor requires altitude values with size" + VALUES_SIZE);
 
         _altitudeValues = altitudeValues;
-        _maxAltitude = maxAltitude;
     }
 }
