@@ -2,7 +2,7 @@ package com.njackson.test.events.GPSService;
 
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.njackson.events.GPSServiceCommand.NewAltitiude;
+import com.njackson.events.GPSServiceCommand.NewAltitude;
 
 import junit.framework.TestCase;
 
@@ -16,7 +16,7 @@ public class NewAltitudeEventTest extends TestCase {
         Exception exception = null;
 
         try {
-            NewAltitiude event = new NewAltitiude(new float[15], 2323);
+            NewAltitude event = new NewAltitude(new float[15], 2323);
         }catch (Exception e) {
             exception = e;
         }
@@ -29,7 +29,7 @@ public class NewAltitudeEventTest extends TestCase {
         Exception exception = null;
 
         try {
-            NewAltitiude event = new NewAltitiude(new float[13], 2323);
+            NewAltitude event = new NewAltitude(new float[13], 2323);
         }catch (Exception e) {
             exception = e;
         }
@@ -42,7 +42,7 @@ public class NewAltitudeEventTest extends TestCase {
         Exception exception = null;
 
         try {
-            NewAltitiude event = new NewAltitiude(null, 2323);
+            NewAltitude event = new NewAltitude(null, 2323);
         }catch (Exception e) {
             exception = e;
         }
@@ -55,7 +55,7 @@ public class NewAltitudeEventTest extends TestCase {
         Exception exception = null;
 
         try {
-            NewAltitiude event = new NewAltitiude(new float[14], 2323);
+            NewAltitude event = new NewAltitude(new float[14], 2323);
         }catch (Exception e) {
             exception = e;
         }

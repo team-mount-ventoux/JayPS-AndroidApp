@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 
 import com.njackson.R;
 import com.njackson.application.modules.AndroidModule;
-import com.njackson.events.GPSServiceCommand.NewAltitiude;
+import com.njackson.events.GPSServiceCommand.NewAltitude;
 import com.njackson.fragments.AltitudeFragment;
 import com.njackson.test.FragmentInstrumentTestCase2;
 import com.njackson.test.application.TestApplication;
@@ -79,7 +79,7 @@ public class AltitudeFragmentTest extends FragmentInstrumentTestCase2 {
 
     @MediumTest
     public void test_Activity_Responds_To_NewAltitudeEvent() {
-        _bus.post(new NewAltitiude(new float[14],0));
+        _bus.post(new NewAltitude(new float[14],0));
 
     }
 

@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.njackson.R;
-import com.njackson.events.GPSServiceCommand.NewAltitiude;
+import com.njackson.events.GPSServiceCommand.NewAltitude;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -46,7 +46,7 @@ public class AltitudeFragment extends BaseFragment {
     }
 
     @Subscribe
-    public void onNewAltitudeEvent(NewAltitiude event) {
+    public void onNewAltitudeEvent(NewAltitude event) {
         setAltitude(_prevValues,1,true);
     }
 
@@ -56,7 +56,7 @@ public class AltitudeFragment extends BaseFragment {
 
         // get a list of the imageviews
         ImageView[] views = findAltitudeBars();
-        float[] displayValues = caluclatePercentages(values, maxValue,views);
+        float[] displayValues = calculatePercentages(values, maxValue,views);
         animateAltitudeBars(views,displayValues);
 
         Log.d(TAG,"Height:" + _view.getHeight());
@@ -77,7 +77,7 @@ public class AltitudeFragment extends BaseFragment {
 
     }
 
-    private float[] caluclatePercentages(float[] values, int maxValue,ImageView[] views) {
+    private float[] calculatePercentages(float[] values, int maxValue,ImageView[] views) {
 
         float[] percentages = new float[values.length];
         int frameHeight = _view.getHeight();
