@@ -68,6 +68,7 @@ public class GPSServiceCommand implements IServiceCommand {
 	private int _heartRate = 0;
     private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
     private SavedLocation _savedLocation = null;
+    private NewAltitude _savedNewAltitude = null;
 
     @Subscribe
     public void onResetGPSStateEvent(ResetGPSState event) {
@@ -313,6 +314,8 @@ public class GPSServiceCommand implements IServiceCommand {
             NewAltitude newAltitude = new NewAltitude(_altitudeGraphReduce.getGraphData());
 
             _bus.post(newAltitude);
+
+            _savedNewAltitude = newAltitude;
         }
     }
 
@@ -322,6 +325,10 @@ public class GPSServiceCommand implements IServiceCommand {
         if (_savedLocation != null) {
             Log.d(TAG, "broadcastStatus: rebroadcast _savedLocation");
             _bus.post(_savedLocation);
+        }
+        if (_savedNewAltitude != null) {
+            Log.d(TAG, "broadcastStatus: rebroadcast _savedNewAltitude");
+            _bus.post(_savedNewAltitude);
         }
     }
 }
