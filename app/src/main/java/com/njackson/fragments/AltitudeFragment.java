@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 
 import com.njackson.R;
 import com.njackson.events.GPSServiceCommand.NewAltitude;
+import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -48,6 +49,12 @@ public class AltitudeFragment extends BaseFragment {
     @Subscribe
     public void onNewAltitudeEvent(NewAltitude event) {
         setAltitude(event.getAltitudes(), true);
+    }
+
+    @Subscribe
+    public void onResetGPSStateEvent(ResetGPSState event) {
+        // _altitudeGraphReduce is reseted in GPSServiceCommand, we only reset the display here
+        setAltitude(new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, true);
     }
 
     // sets the bars in the animation so the given values

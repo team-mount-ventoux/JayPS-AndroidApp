@@ -219,6 +219,8 @@ public class GPSServiceCommand implements IServiceCommand {
         createNewAdvancedLocation();
 
         loadGPSStats();
+
+        _altitudeGraphReduce.resetData();
     }
 
     private void createNewAdvancedLocation() {
