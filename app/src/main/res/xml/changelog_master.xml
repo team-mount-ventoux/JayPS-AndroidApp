@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.0.0-alpha5" versioncode="215" >
+        <change>Altitude graph</change>
+        <change>Bugfix: Send real gps status at start up (autostart off)</change>
+        <change>Android: GPS Status</change>
+        <change>Bugfix: Oruxmaps autostart</change>
+    </release>
     <release version="2.0.0-alpha4" versioncode="212" >
         <change>GPX export: new filename + auto-create segments and tracks</change>
         <change>GPX export: now compatible with Strava (iso 8601 time)</change>
