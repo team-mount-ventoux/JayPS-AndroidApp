@@ -22,6 +22,7 @@ import com.njackson.activities.HRMScanActivity;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.state.IGPSDataStore;
+import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.messages.ToastMessageMaker;
 import com.squareup.otto.Bus;
@@ -47,6 +48,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Inject IInstallWatchFace _installWatchFace;
     @Inject SharedPreferences _sharedPreferences;
     @Inject IGPSDataStore _dataStore;
+    @Inject IServiceStarter _serviceStarter;
     @Inject Bus _bus;
 
     @Override
@@ -191,9 +193,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             setHrmSummary();
 
             if (!hrm_address.equals("")) {
-                //todo(jay) if (MainActivity.getInstance().checkServiceRunning()) {
+                if (_serviceStarter.isLocationServicesRunning()) {
                     Toast.makeText(getApplicationContext(), "Please restart GPS to display heart rate", Toast.LENGTH_LONG).show();
-                //}
+                }
             }
         }
     }
