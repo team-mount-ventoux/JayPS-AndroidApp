@@ -161,7 +161,7 @@ public class AndroidModule {
     AltitudeGraphReduce providesAltitudeGraphReduce() { return new AltitudeGraphReduce(); }
 
     @Provides @Singleton
-    public IMessageManager providesMessageManager() { return new MessageManager(application); }
+    public IMessageManager providesMessageManager(SharedPreferences preferences) { return new MessageManager(preferences, application); }
 
     @Provides IOruxMaps providesOruxMaps() { return new OruxMaps(application); }
 

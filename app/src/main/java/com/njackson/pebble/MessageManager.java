@@ -3,6 +3,7 @@ package com.njackson.pebble;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -20,6 +21,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
+import javax.inject.Inject;
 
 import fr.jayps.android.AdvancedLocation;
 
@@ -43,7 +46,11 @@ public class MessageManager implements IMessageManager, Runnable {
 
     private boolean debug = true;
 
-    public MessageManager(Context context) {
+    @Inject SharedPreferences _sharedPreferences;
+
+    public MessageManager(SharedPreferences preferences, Context context) {
+        _sharedPreferences = preferences;
+        debug = _sharedPreferences.getBoolean("PREF_DEBUG", false);
         _applicationContext = context;
         _thisThread = new Thread(this);
         _thisThread.start();
@@ -236,9 +243,9 @@ public class MessageManager implements IMessageManager, Runnable {
         PebbleDictionary dictionary = new NewLocationToPebbleDictionary(
                 newLocation,
                 isLocationServicesRunning,
-                true, // TODO(jay) debug
-                true, // TODO(jay) live
-                1000, // TODO(jay) refresh interval
+                _sharedPreferences.getBoolean("PREF_DEBUG", false),
+                _sharedPreferences.getBoolean("LIVE_TRACKING", false),
+                Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "1000")),
                 255 // 255: no Heart Rate available
         );
         dictionary.addInt32(Constants.MSG_VERSION_ANDROID, Constants.VERSION_ANDROID);
