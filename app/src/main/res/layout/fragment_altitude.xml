@@ -35,7 +35,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_action_bars"
+                    android:src="@layout/gps_status"
                     android:contentDescription="graph"
                     android:id="@id/altitude_graph"
                     android:tint="#8eb7f5" />
@@ -46,7 +46,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@id/altitude_status_value"
-                    android:text="@string/altitude_status_good"/>
+                    android:text="@string/altitude_status_disable"/>
                 </LinearLayout>
 
 

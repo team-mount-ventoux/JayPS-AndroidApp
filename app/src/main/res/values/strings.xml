@@ -16,7 +16,11 @@
     <string name="startbuttonfragment_stop">STOP</string>
     <string name="altiudefragment_altitude">ALTITUDE</string>
     <string name="altiudefragment_gpsstatus">GPS STATUS</string>
+    <string name="altitude_status_disable">-</string>
+    <string name="altitude_status_excellent">EXCELLENT</string>
     <string name="altitude_status_good">GOOD</string>
+    <string name="altitude_status_medium">MEDIUM</string>
+    <string name="altitude_status_poor">POOR</string>
     <string name="PREF_INSTALL_CATEGORY_TITLE">Install Watchface</string>
     <string name="PREF_INSTALL_WATCHFACE_SDK2">Install</string>
     <string name="PREF_INSTALL_WATCHFACE_SDK2_SUMMARY">Installs the watchface for the SDK2 version of PebbleBike</string>

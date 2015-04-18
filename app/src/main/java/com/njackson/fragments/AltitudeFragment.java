@@ -1,5 +1,6 @@
 package com.njackson.fragments;
 
+import android.graphics.drawable.ClipDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,9 +11,11 @@ import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.njackson.R;
 import com.njackson.events.GPSServiceCommand.NewAltitude;
+import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.squareup.otto.Subscribe;
 
@@ -55,6 +58,40 @@ public class AltitudeFragment extends BaseFragment {
     public void onResetGPSStateEvent(ResetGPSState event) {
         // _altitudeGraphReduce is reseted in GPSServiceCommand, we only reset the display here
         setAltitude(new int[] {0,0,0,0,0,0,0,0,0,0,0,0,0,0}, true);
+    }
+    @Subscribe
+    public void onNewLocation(NewLocation event) {
+        setGPSStatus(event.getAccuracy());
+
+    }
+
+    private void setGPSStatus(float accuracy) {
+        String gpsStatus = "";
+        int level = 0;
+        if (accuracy == 0) {
+            gpsStatus = getString(R.string.altitude_status_disable);
+            level = 0;
+        } else if (accuracy <= 4) {
+            gpsStatus = getString(R.string.altitude_status_excellent);
+            level = 10000;
+        } else if (accuracy <= 6) {
+            gpsStatus = getString(R.string.altitude_status_good);
+            level = 7200;
+        } else if (accuracy <= 10) {
+            gpsStatus = getString(R.string.altitude_status_medium);
+            level = 5000;
+        } else {
+            gpsStatus = getString(R.string.altitude_status_poor);
+            level = 2500;
+        }
+
+        TextView altitudeStatus = (TextView)getActivity().findViewById(R.id.altitude_status_value);
+        altitudeStatus.setText(gpsStatus);
+
+        // mask a part of the image (orientation horizontal, gravity left, 0 to 10000)
+        ImageView img = (ImageView) getActivity().findViewById(R.id.altitude_graph);
+        ClipDrawable mImageDrawable = (ClipDrawable) img.getDrawable();
+        mImageDrawable.setLevel(level);
     }
 
     // sets the bars in the animation so the given values
