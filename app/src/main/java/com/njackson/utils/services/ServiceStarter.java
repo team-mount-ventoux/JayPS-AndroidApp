@@ -54,6 +54,10 @@ public class ServiceStarter implements IServiceStarter {
     }
 
     @Override
+    public boolean isLocationServicesRunning() {
+        return serviceRunning(MainService.class);
+    }
+    @Override
     public void startLocationServices() {
         startMainServiceIfNotRunning(new Action1<BaseStatus.Status>() {
             @Override

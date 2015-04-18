@@ -6,6 +6,7 @@ package com.njackson.utils.services;
 public interface IServiceStarter {
     public void startActivityService();
     public void stopActivityService();
+    public boolean isLocationServicesRunning();
     public void startLocationServices();
     public void stopLocationServices();
     public void broadcastLocationState();

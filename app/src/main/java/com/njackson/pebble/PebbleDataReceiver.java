@@ -88,9 +88,11 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     }
     private void sendSavedData() {
         // use _messageManager and not _bus to be able to send data even if GPS is not started
-        // TODO(nic): refactor me!
+
+        boolean isLocationServicesRunning = _serviceStarter.isLocationServicesRunning();
+
         _messageManager.sendSavedDataToPebble(
-                Constants.STATE_STOP, // TODO: send real state
+                isLocationServicesRunning,
                 _dataStore.getMeasurementUnits(),
                 _dataStore.getDistance(),
                 _dataStore.getElapsedTime(),

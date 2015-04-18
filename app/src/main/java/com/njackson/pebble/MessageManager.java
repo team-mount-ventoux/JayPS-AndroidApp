@@ -221,7 +221,7 @@ public class MessageManager implements IMessageManager, Runnable {
     }
 
     @Override
-    public void sendSavedDataToPebble(int state, int units, float distance, long elapsedTime, float ascent, float maxSpeed) {
+    public void sendSavedDataToPebble(boolean isLocationServicesRunning, int units, float distance, long elapsedTime, float ascent, float maxSpeed) {
 
         // use AdvancedLocation and than NewLocation to use units conversion in AdvancedLocationToNewLocation
 
@@ -235,13 +235,12 @@ public class MessageManager implements IMessageManager, Runnable {
 
         PebbleDictionary dictionary = new NewLocationToPebbleDictionary(
                 newLocation,
-                true, // TODO(jay)
+                isLocationServicesRunning,
                 true, // TODO(jay) debug
                 true, // TODO(jay) live
                 1000, // TODO(jay) refresh interval
                 255 // 255: no Heart Rate available
         );
-        dictionary.addInt32(Constants.STATE_CHANGED, state);
         dictionary.addInt32(Constants.MSG_VERSION_ANDROID, Constants.VERSION_ANDROID);
         offer(dictionary);
     }
