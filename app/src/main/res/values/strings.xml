@@ -25,7 +25,9 @@
     <string name="PREF_INSTALL_WATCHFACE_SDK2">Install</string>
     <string name="PREF_INSTALL_WATCHFACE_SDK2_SUMMARY">Installs the watchface for the SDK2 version of PebbleBike</string>
     <string name="PREF_RESET_DATA">Reset data</string>
-    <string name="PREF_RESET_DATA_SUMMARY">Reset distance, time, speed and ascent</string>
+    <string name="PREF_RESET_DATA_SUMMARY">data distance, time, speed and ascent</string>
+    <string name="ALERT_RESET_DATA_TITLE">Reset data</string>
+    <string name="ALERT_RESET_DATA_MESSAGE">Do you really want to reset distance, time, speed and ascent?</string>
 
     <string name="PREF_TRACKS_CATEGORY_TITLE">Tracks</string>
     <string name="PREF_ENABLE_TRACKS_TITLE">Enable tracks</string>

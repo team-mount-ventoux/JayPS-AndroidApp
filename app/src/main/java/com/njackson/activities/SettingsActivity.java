@@ -72,9 +72,19 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         resetPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                _dataStore.resetAllValues();
-                _dataStore.commit();
-                _bus.post(new ResetGPSState());
+                new AlertDialog.Builder(preference.getContext())
+                        .setTitle(R.string.ALERT_RESET_DATA_TITLE)
+                        .setMessage(R.string.ALERT_RESET_DATA_MESSAGE)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                _dataStore.resetAllValues();
+                                _dataStore.commit();
+                                _bus.post(new ResetGPSState());
+                                Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null).show();
                 return true;
             }
         });
