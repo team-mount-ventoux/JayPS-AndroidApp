@@ -45,6 +45,7 @@ public class MessageManager implements IMessageManager, Runnable {
     private Thread _thisThread;
 
     private boolean debug = true;
+    private Boolean _hasStarted = Boolean.valueOf(false);
 
     @Inject SharedPreferences _sharedPreferences;
 
@@ -59,19 +60,21 @@ public class MessageManager implements IMessageManager, Runnable {
     }
 
     private void removeMessageASync() {
-        messageHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (isMessagePending) {
-                    isMessagePending = Boolean.valueOf(false);
-                    if (messageQueue.size() == 0) {
-                        // if possible (?): bug
-                        return;
+        synchronized (_hasStarted) {
+            messageHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (isMessagePending) {
+                        isMessagePending = Boolean.valueOf(false);
+                        if (messageQueue.size() == 0) {
+                            // if possible (?): bug
+                            return;
+                        }
+                        messageQueue.remove();
                     }
-                    messageQueue.remove();
                 }
-            }
-        });
+            });
+        }
     }
 
     private void setupPebbbleHandlers() {
@@ -124,34 +127,40 @@ public class MessageManager implements IMessageManager, Runnable {
 
     private void consumeAsync() {
         if (debug) Log.v(TAG, "consumeAsync");
-        messageHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (isMessagePending) {
-                    if (isMessagePending.booleanValue()) {
-                        return;
-                    }
-
-                    synchronized (messageQueue) {
-                        if (messageQueue.size() == 0) {
+        synchronized (_hasStarted) {
+            messageHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (isMessagePending) {
+                        if (isMessagePending.booleanValue()) {
                             return;
                         }
-                        transID = (transID + 1) % 256;
-                        PebbleDictionary data = messageQueue.peek();
-                        if (debug) Log.i(TAG, "sendDataToPebble s:" + messageQueue.size() + " transID:" + transID + " " + data.toJsonString());
-                        PebbleKit.sendDataToPebbleWithTransactionId(_applicationContext, Constants.WATCH_UUID, data, transID);
-                    }
 
-                    isMessagePending = Boolean.valueOf(true);
+                        synchronized (messageQueue) {
+                            if (messageQueue.size() == 0) {
+                                return;
+                            }
+                            transID = (transID + 1) % 256;
+                            PebbleDictionary data = messageQueue.peek();
+                        if (debug) Log.i(TAG, "sendDataToPebble s:" + messageQueue.size() + " transID:" + transID + " " + data.toJsonString());
+                            PebbleKit.sendDataToPebbleWithTransactionId(_applicationContext, Constants.WATCH_UUID, data, transID);
+                        }
+
+                        isMessagePending = Boolean.valueOf(true);
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
     public void run() {
-        Looper.prepare();
-        messageHandler = new Handler();
+        synchronized (_hasStarted) {
+            //SystemClock.sleep(7000); // uncomment to simulate the race condition
+            Looper.prepare();
+            messageHandler = new Handler();
+        }
+        _hasStarted = Boolean.valueOf(true);
         Looper.loop();
     }
 
