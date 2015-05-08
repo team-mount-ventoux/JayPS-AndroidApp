@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.0.0-beta1" versioncode="217" >
+        <change>Advanced GPX export</change>
+        <change>Bugfix: first start crash</change>
+        <change>Bugfix: HRM crash</change>
+    </release>
     <release version="2.0.0-alpha5" versioncode="215" >
         <change>Altitude graph</change>
         <change>Bugfix: Send real gps status at start up (autostart off)</change>
