@@ -1,6 +1,7 @@
 package com.njackson.test.hrm;
 
 import com.njackson.application.modules.AndroidModule;
+import com.njackson.application.modules.ForApplication;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.HrmServiceCommand.HrmStatus;
 import com.njackson.events.base.BaseStatus;
@@ -13,6 +14,7 @@ import com.squareup.otto.Subscribe;
 
 import static org.mockito.Mockito.*;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
@@ -51,6 +53,11 @@ public class HrmServiceCommandTest extends AndroidTestCase {
         }
 
         @Provides @Singleton IHrm provideHrm() { return mock(IHrm.class); }
+
+        @Provides @Singleton @ForApplication
+        Context provideApplicationContext() {
+            return getContext();
+        }
     }
     @Subscribe
     public void onChangeStateEvent(HrmStatus state) {
@@ -82,16 +89,17 @@ public class HrmServiceCommandTest extends AndroidTestCase {
         when(_mockPreferences.getString("hrm_address", "")).thenReturn("12");
     }
 
-    @SmallTest
-    public void testOnStartSendsServiceUnableToStartWhenDisable() throws Exception {
-        when(_mockPreferences.getString("hrm_address", "")).thenReturn("");
-        _service.execute(_app);
-
-        _bus.post(new GPSStatus(BaseStatus.Status.STARTED));
-        _stateLatch.await(1000, TimeUnit.MILLISECONDS);
-
-        assertEquals(BaseStatus.Status.UNABLE_TO_START, _state.getStatus());
-    }
+// we no longer start HrmServiceCommand if hrm_address is not setted
+//    @SmallTest
+//    public void testOnStartSendsServiceUnableToStartWhenDisable() throws Exception {
+//        when(_mockPreferences.getString("hrm_address", "")).thenReturn("");
+//        _service.execute(_app);
+//
+//        _bus.post(new GPSStatus(BaseStatus.Status.STARTED));
+//        _stateLatch.await(1000, TimeUnit.MILLISECONDS);
+//
+//        assertEquals(BaseStatus.Status.UNABLE_TO_START, _state.getStatus());
+//    }
 
     @SmallTest
     public void testOnStartSendsServiceStartedWhenEnable() throws Exception {
