@@ -172,8 +172,12 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         setHrmSummary();
 
         // check to determine whether BLE is supported on the device.
-        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            Preference pref_hrm = findPreference("PREF_HRM");
+        // note: double check FEATURE_BLUETOOTH_LE + android version because the 1st test (hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) seems to return true on some 4.1 & 4.2
+        if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
+            && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2 // BLE requires 4.3 (Api level 18)
+        ) {
+
+                Preference pref_hrm = findPreference("PREF_HRM");
             pref_hrm.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {

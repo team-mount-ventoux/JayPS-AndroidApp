@@ -2,6 +2,7 @@ package com.njackson.hrm;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.util.Log;
 
 import com.njackson.application.IInjectionContainer;
@@ -31,14 +32,25 @@ public class HrmServiceCommand implements IServiceCommand {
     @Override
     public void execute(IInjectionContainer container) {
         container.inject(this);
-        _bus.register(this);
-        _container = container;
-        _currentStatus = BaseStatus.Status.INITIALIZED;
+        if (isHrmActivated()) {
+            _bus.register(this);
+            _container = container;
+            _currentStatus = BaseStatus.Status.INITIALIZED;
+        }
     }
 
     @Override
     public void dispose() {
-        _bus.unregister(this);
+        if (isHrmActivated()) {
+            _bus.unregister(this);
+        }
+    }
+
+    private boolean isHrmActivated() {
+        return _applicationContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
+                // note: double check FEATURE_BLUETOOTH_LE + android version because the 1st test (hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) seems to return true on some 4.1 & 4.2
+                && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2 // BLE requires 4.3 (Api level 18)
+                && !_sharedPreferences.getString("hrm_address", "").equals("");
     }
 
     @Override
