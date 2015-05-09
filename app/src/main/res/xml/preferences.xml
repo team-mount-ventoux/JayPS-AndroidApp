@@ -46,6 +46,11 @@
                 android:title="@string/PREF_RESET_TRACKS_TITLE"
                 android:summary="@string/PREF_RESET_TRACKS_SUMMARY"
                 />
+            <CheckBoxPreference
+                android:key="ADVANCED_GPX"
+                android:title="Advanced GPX Export"
+                android:summary="Add ascent, GPS and pressure sensor altitudes"
+                android:defaultValue="false" />
         </PreferenceCategory>
 
         <PreferenceCategory

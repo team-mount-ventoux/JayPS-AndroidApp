@@ -88,7 +88,7 @@
     <string name="PREF_TWITTER_URL">https://twitter.com/intent/tweet?text=I\'m+using+@PebbleBike&amp;url=http://www.pebblebike.com</string>
 
     <string name="PREF_DEBUG_TITLE">Debug</string>
-    <string name="PREF_DEBUG_SUMMARY">More logs for developers and advanced GPX export</string>
+    <string name="PREF_DEBUG_SUMMARY">More logs for developers</string>
 
     <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_TITLE">JayPS Live Tracking</string>
     <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_SUMMARY"></string>

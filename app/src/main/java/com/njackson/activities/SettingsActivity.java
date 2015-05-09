@@ -97,7 +97,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 new Thread(new Runnable() {
                     public void run() {
                         AdvancedLocation advancedLocation = new AdvancedLocation(getApplicationContext());
-                        String gpx = advancedLocation.getGPX(_sharedPreferences.getBoolean("PREF_DEBUG", false));
+                        String gpx = advancedLocation.getGPX(_sharedPreferences.getBoolean("ADVANCED_GPX", false));
 
                         try {
                             File newFile = new File(getCacheDir(), "track.gpx");
