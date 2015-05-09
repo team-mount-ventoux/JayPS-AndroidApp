@@ -1,6 +1,7 @@
 package com.njackson.application;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.njackson.analytics.IAnalytics;
@@ -23,6 +24,7 @@ public class PebbleBikeApplication extends Application implements IInjectionCont
     protected ObjectGraph graph;
 
     @Inject IAnalytics _parseAnalytics;
+    @Inject SharedPreferences _sharedPreferences;
 
     @Override
     public void onCreate() {
@@ -57,7 +59,9 @@ public class PebbleBikeApplication extends Application implements IInjectionCont
 
     protected void setupAnalytics() {
         inject(this);
-        _parseAnalytics.enable(this);
+        if (_sharedPreferences.getBoolean("PREF_REPORT_CRASH", false)) {
+            _parseAnalytics.enable(this);
+        }
     }
 
 }

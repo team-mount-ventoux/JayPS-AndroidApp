@@ -225,7 +225,7 @@
         <CheckBoxPreference
             android:key="PREF_REPORT_CRASH"
             android:title="Crash reports"
-            android:summary=""
+            android:summary="Send anonymous crash reports to help developers to improve the app"
             android:defaultValue="true" />
 
     </PreferenceScreen>
