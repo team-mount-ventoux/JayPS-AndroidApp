@@ -16,6 +16,7 @@
     <PreferenceScreen
         android:key="tracks_screen"
         android:title="Tracks"
+        android:summary="Units, GPX, autostart"
         android:persistent="false">
 
         <ListPreference
@@ -62,6 +63,7 @@
     <PreferenceScreen
         android:key="sensors_screen"
         android:title="Sensors"
+        android:summary="GPS, HRM, Altitude"
         android:persistent="false">
 
         <ListPreference
@@ -103,6 +105,7 @@
     <PreferenceScreen
         android:key="integration_screen"
         android:title="Integration"
+        android:summary="Live Tracking, OruxMaps, Canvas"
         android:persistent="false">
 
         <PreferenceScreen
@@ -210,6 +213,7 @@
     <PreferenceScreen
         android:key="advanced_screen"
         android:title="Advanced"
+        android:summary="Debug options"
         android:persistent="false">
 
         <CheckBoxPreference
@@ -230,6 +234,7 @@
     <PreferenceScreen
         android:key="about_screen"
         android:title="About"
+        android:summary="More information"
         android:persistent="false">
 
         <Preference
