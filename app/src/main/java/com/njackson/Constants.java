@@ -46,7 +46,7 @@ public class Constants {
     public static final int RUNNING_IMPERIAL = 0x4;
     public static final int RUNNING_METRIC = 0x5;
 
-    public static final int REFRESH_INTERVAL_DEFAULT = 500;
+    public static final int REFRESH_INTERVAL_DEFAULT = 1000;
 
     public static final float MS_TO_KPH = 3.6f;
     public static final float MS_TO_MPH = 2.23693629f;

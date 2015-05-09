@@ -231,7 +231,7 @@ public class GPSServiceCommand implements IServiceCommand {
     }
 
     private void requestLocationUpdates(long refresh_interval) {
-        if (_currentStatus != BaseStatus.Status.STARTED) {
+        if (_currentStatus == BaseStatus.Status.STARTED) {
             _locationMgr.removeUpdates(_locationListener);
         }
         _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, refresh_interval, 2.0f, _locationListener);
