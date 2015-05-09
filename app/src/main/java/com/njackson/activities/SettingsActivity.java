@@ -321,16 +321,18 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     private void setLiveSummary() {
         Boolean live_jayps = _sharedPreferences.getBoolean("LIVE_TRACKING", false) && !_sharedPreferences.getString("LIVE_TRACKING_LOGIN", "").equals("") && !_sharedPreferences.getString("LIVE_TRACKING_PASSWORD", "").equals("");
         Boolean live_mmt = _sharedPreferences.getBoolean("LIVE_TRACKING_MMT", false) && !_sharedPreferences.getString("LIVE_TRACKING_MMT_LOGIN", "").equals("") && !_sharedPreferences.getString("LIVE_TRACKING_MMT_PASSWORD", "").equals("");
-        Preference live_screen = findPreference("live_screen");
+        Preference live_jayps_screen = findPreference("live_jayps_screen");
         String live = "Disable";
-        if (live_jayps && live_mmt) {
-            live = "JayPS & Map My Tracks";
-        } else if (live_jayps) {
-            live = "JayPS";
-        } else if (live_mmt) {
-            live = "Map My Track";
+        if (live_jayps) {
+            live = "Enable";
         }
-        live_screen.setSummary(live);
+        live_jayps_screen.setSummary(live);
+        Preference live_mmt_screen = findPreference("live_mmt_screen");
+        live = "Disable";
+        if (live_mmt) {
+            live = "Enable";
+        }
+        live_mmt_screen.setSummary(live);
     }
 
     private void setOruxMapsSummary() {
