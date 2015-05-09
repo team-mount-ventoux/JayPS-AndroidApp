@@ -13,4 +13,5 @@ public interface IAnalytics {
     void trackAppOpened(Intent intent);
     void trackAppDestroy();
     void trackLowMemory();
+    void trackSkippedMessage();
 }

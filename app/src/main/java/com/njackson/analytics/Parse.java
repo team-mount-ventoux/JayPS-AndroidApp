@@ -41,4 +41,10 @@ public class Parse implements IAnalytics {
         }
     }
 
+    @Override
+    public void trackSkippedMessage() {
+        if (_enabled) {
+            ParseAnalytics.trackEventInBackground("SkippedMessage");
+        }
+    }
 }

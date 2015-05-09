@@ -12,6 +12,7 @@ import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
 import com.njackson.adapters.AdvancedLocationToNewLocation;
 import com.njackson.adapters.NewLocationToPebbleDictionary;
+import com.njackson.analytics.IAnalytics;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 
 import org.json.JSONArray;
@@ -46,8 +47,11 @@ public class MessageManager implements IMessageManager, Runnable {
 
     private boolean debug = true;
     private Boolean _hasStarted = Boolean.valueOf(false);
+    private boolean _isConnected = false;
+    private int _skipped = 0;
 
     @Inject SharedPreferences _sharedPreferences;
+    @Inject IAnalytics _parseAnalytics;
 
     public MessageManager(SharedPreferences preferences, Context context) {
         _sharedPreferences = preferences;
@@ -82,6 +86,7 @@ public class MessageManager implements IMessageManager, Runnable {
             @Override
             public void receiveAck(final Context context, final int transactionId) {
                 notifyAckReceivedAsync(transactionId);
+                _isConnected = true;
             }
         };
         PebbleKit.registerReceivedAckHandler(_applicationContext, ackReceiver);
@@ -90,6 +95,7 @@ public class MessageManager implements IMessageManager, Runnable {
             @Override
             public void receiveNack(final Context context, final int transactionId) {
                 notifyNackReceivedAsync(transactionId);
+                _isConnected = true;
             }
         };
         PebbleKit.registerReceivedNackHandler(_applicationContext, nackReceiver);
@@ -97,12 +103,14 @@ public class MessageManager implements IMessageManager, Runnable {
         PebbleKit.registerPebbleConnectedReceiver(_applicationContext, new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                _isConnected = true;
                 pebbleConnected();
             }
         });
         PebbleKit.registerPebbleDisconnectedReceiver(_applicationContext, new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                _isConnected = false;
                 if (debug) Log.i(TAG, "Pebble disconnected!");
             }
         });
@@ -184,6 +192,13 @@ public class MessageManager implements IMessageManager, Runnable {
             int s = messageQueue.size();
             if (s > sizeMax) {
                 if (debug) Log.i(TAG, "offerIfLow s:" + s + ">" + sizeMax);
+                if (_isConnected) {
+                    _skipped++;
+                    if (_skipped == 100) {
+                        // only track 100th message
+                        _parseAnalytics.trackSkippedMessage();
+                    }
+                }
                 return false;
             }
             success = messageQueue.offer(data);
