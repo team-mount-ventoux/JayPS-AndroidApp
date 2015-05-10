@@ -46,6 +46,7 @@ import com.njackson.service.MainService;
 import com.njackson.state.GPSDataStore;
 import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.AltitudeGraphReduce;
+import com.njackson.utils.BootUpReceiver;
 import com.njackson.utils.googleplay.GoogleFitSessionManager;
 import com.njackson.utils.googleplay.GooglePlayServices;
 import com.njackson.utils.googleplay.IGoogleFitSessionManager;
@@ -101,6 +102,7 @@ import static android.content.Context.SENSOR_SERVICE;
         Hrm.class,
         SpeedFragment.class,
         MessageManager.class,
+        BootUpReceiver.class,
         })
 public class AndroidModule {
     private PebbleBikeApplication application = null;
