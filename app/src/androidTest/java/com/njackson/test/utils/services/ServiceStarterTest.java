@@ -164,7 +164,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockBus,atLeast(1)).post(statusCaptor.capture());
         assertEquals(BaseChangeState.State.STOP, getStateFromCaptor(statusCaptor, LiveChangeState.class).getState());
     }
-
+/* Disable Google Fit for v2 (shifted to v2.1+)
     @SmallTest
     public void testStartsGoogleFitServiceWhenEnabled() throws Exception {
         when(_mockPreferences.getBoolean("GOOGLE_FIT",false)).thenReturn(true);
@@ -176,7 +176,8 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockBus,atLeast(1)).post(statusCaptor.capture());
         assertEquals(BaseChangeState.State.START, getStateFromCaptor(statusCaptor, GoogleFitChangeState.class).getState());
     }
-
+*/
+/* Disable Google Fit for v2 (shifted to v2.1+)
     @SmallTest
     public void testDoesNOTStartsGoogleFitServiceWhenEnabled() throws Exception {
         when(_mockPreferences.getBoolean("GOOGLE_FIT",false)).thenReturn(false);
@@ -188,7 +189,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockBus,atLeast(1)).post(statusCaptor.capture());
         assertNull(getStateFromCaptor(statusCaptor, GoogleFitChangeState.class));
     }
-
+*/
     @SmallTest
     public void testStopsGoogleFitService() throws Exception {
         setupMockServiceRunning();
@@ -210,7 +211,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockBus,atLeast(1)).post(statusCaptor.capture());
         assertEquals(BaseChangeState.State.START, getStateFromCaptor(statusCaptor, ActivityRecognitionChangeState.class).getState());
     }
-
+/* Disable Google Fit for v2 (shifted to v2.1+)
     @SmallTest
     public void testStartsActivityServiceWhenGoogleFitEnabled() throws Exception {
         when(_mockPreferences.getBoolean("GOOGLE_FIT",false)).thenReturn(true);
@@ -222,7 +223,7 @@ public class ServiceStarterTest extends AndroidTestCase {
         verify(_mockBus,atLeast(1)).post(statusCaptor.capture());
         assertEquals(BaseChangeState.State.START, getStateFromCaptor(statusCaptor, ActivityRecognitionChangeState.class).getState());
     }
-
+*/
     @SmallTest
     public void testDoesNOTActivityServiceWhenEnabled() throws Exception {
         when(_mockPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(false);

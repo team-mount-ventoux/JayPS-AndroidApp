@@ -167,6 +167,7 @@
             </PreferenceCategory>
         </PreferenceScreen>
 
+<!-- Disable Google Fit for v2 (shifted to v2.1+)
         <PreferenceScreen
             android:key="googlefit_screen"
             android:title="Google Fit"
@@ -178,7 +179,7 @@
                 android:summary="@string/PREF_GOOGLE_FIT_SUMMARY"
                 android:defaultValue="false" />
         </PreferenceScreen>
-
+-->
         <PreferenceScreen
             android:key="orux_screen"
             android:title="OruxMaps Integration"

@@ -292,7 +292,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         verify(_mockServiceStarter,times(1)).startActivityService();
     }
-
+/* Disable Google Fit for v2 (shifted to v2.1+)
     @SmallTest
     public void testStopsActivityRecognitionServiceWhenGOOGLE_FITPreferenceChanged() throws Exception {
         when(_mockPreferences.getBoolean("GOOGLE_FIT", false)).thenReturn(true);
@@ -305,7 +305,8 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         verify(_mockServiceStarter,times(1)).stopActivityService();
     }
-
+*/
+/* Disable Google Fit for v2 (shifted to v2.1+)
     @SmallTest
     public void testStartsActivityRecognitionServiceWhenGOOGLE_FITPreferenceChanged() throws Exception {
         when(_mockPreferences.getBoolean("GOOGLE_FIT", false)).thenReturn(false);
@@ -318,7 +319,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
 
         verify(_mockServiceStarter,times(1)).startActivityService();
     }
-
+*/
     @SmallTest
     public void testDoesNothingWhenIncorrectPreferenceChanged() throws Exception {
         _activity = getActivity();

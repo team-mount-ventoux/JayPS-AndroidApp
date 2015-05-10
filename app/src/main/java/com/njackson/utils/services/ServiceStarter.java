@@ -102,10 +102,12 @@ public class ServiceStarter implements IServiceStarter {
     }
 
     private void startGoogleFitServiceIfEnabled() {
+        /* Disable Google Fit for v2 (shifted to v2.1+)
         boolean fit_start = _sharedPreferences.getBoolean("GOOGLE_FIT",false);
         if(fit_start) {
             startGoogleFitService();
         }
+        */
     }
 
     private void startActivityServiceIfEnabled() {
