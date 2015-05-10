@@ -168,7 +168,7 @@ public class PebbleServiceCommandTest extends AndroidTestCase {
 
         _bus.post(event);
 
-        verify(_mockMessageManager, timeout(2000).times(1)).offer(any(PebbleDictionary.class));
+        verify(_mockMessageManager, timeout(2000).times(1)).offerIfLow(any(PebbleDictionary.class), anyInt());
     }
 
     @SmallTest

@@ -220,7 +220,13 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             setUnitsSummary();
         }
         if (s.equals("REFRESH_INTERVAL")) {
-            _bus.post(new ChangeRefreshInterval(Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", String.valueOf(Constants.REFRESH_INTERVAL_DEFAULT)))));
+            int refresh_interval = 0;
+            try {
+                refresh_interval = Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", String.valueOf(Constants.REFRESH_INTERVAL_DEFAULT)));
+            }catch (NumberFormatException nfe) {
+                refresh_interval = Constants.REFRESH_INTERVAL_DEFAULT;
+            }
+            _bus.post(new ChangeRefreshInterval(refresh_interval));
             setRefreshSummary();
         }
         if (s.equals("LIVE_TRACKING") || s.equals("LIVE_TRACKING_MMT")) {
@@ -265,7 +271,13 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
     private void setRefreshSummary() {
-        int refresh_interval = Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", String.valueOf(Constants.REFRESH_INTERVAL_DEFAULT)));
+        int refresh_interval = 0;
+
+        try {
+            refresh_interval = Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "500"));
+        }catch (NumberFormatException nfe) {
+            refresh_interval = Constants.REFRESH_INTERVAL_DEFAULT;
+        }
 
         Preference refreshPref = findPreference("REFRESH_INTERVAL");
 

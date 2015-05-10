@@ -1,5 +1,6 @@
 package com.njackson.test.application;
 
+import android.content.SharedPreferences;
 import android.test.ApplicationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
@@ -16,6 +17,7 @@ import dagger.Provides;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Created by njackson on 25/02/15.
@@ -25,6 +27,7 @@ public class PebbleBikeApplicationTest extends ApplicationTestCase<TestApplicati
     private TestApplication _app;
 
     @Inject IAnalytics _parseAnalytics;
+    @Inject SharedPreferences _mockPreferences;
 
     @Module(
             includes = AndroidModule.class,
@@ -37,6 +40,12 @@ public class PebbleBikeApplicationTest extends ApplicationTestCase<TestApplicati
         @Singleton
         IAnalytics providesAnalytics() {
             return mock(IAnalytics.class);
+        }
+
+        @Provides
+        @Singleton
+        SharedPreferences provideSharedPreferences() {
+            return mock(SharedPreferences.class);
         }
     }
 
@@ -57,6 +66,11 @@ public class PebbleBikeApplicationTest extends ApplicationTestCase<TestApplicati
         _app  = getApplication();
         _app.setObjectGraph(ObjectGraph.create(TestModule.class));
         _app.inject(this);
+
+        setupMocks();
+    }
+    private void setupMocks() {
+        when(_mockPreferences.getBoolean("PREF_REPORT_CRASH", false)).thenReturn(true);
     }
 
     @SmallTest

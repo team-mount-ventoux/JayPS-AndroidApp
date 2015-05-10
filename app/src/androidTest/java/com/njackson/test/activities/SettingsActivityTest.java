@@ -241,7 +241,7 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         when(_preferences.getString("REFRESH_INTERVAL","0")).thenReturn("abcdse");
         _activity.onSharedPreferenceChanged(_preferences, "REFRESH_INTERVAL");
 
-        assertEquals("500 ms", _refreshPref.getSummary());
+        assertEquals("1 s", _refreshPref.getSummary());
     }
 
     @SmallTest
