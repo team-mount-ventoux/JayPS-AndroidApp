@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.0.0-beta2" versioncode="219" >
+        <change>Reorganize settings</change>
+        <change>Improve data transmission to Pebble</change>
+        <change>Faster GPX export</change>
+        <change>Merge reset data and reset tracks (GPX)</change>
+        <change>Launch activity autostart when phone boots (if enable)</change>
+        <change>Remove Google Fit (shifted to v2.1+)</change>
+    </release>
     <release version="2.0.0-beta1" versioncode="217" >
         <change>Advanced GPX export</change>
         <change>Bugfix: first start crash</change>
