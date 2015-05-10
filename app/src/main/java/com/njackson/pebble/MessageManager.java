@@ -203,6 +203,8 @@ public class MessageManager implements IMessageManager, Runnable {
                 }
                 return false;
             }
+            // reset counter if we can queue the message
+            _skipped = 0;
             success = messageQueue.offer(data);
             if (debug) {
                 if (s > 1) Log.i(TAG, "offerIfLow s:" + s + "<=" + sizeMax);
