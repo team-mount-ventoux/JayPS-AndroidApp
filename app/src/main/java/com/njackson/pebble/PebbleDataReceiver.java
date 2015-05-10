@@ -16,6 +16,8 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
+import fr.jayps.android.AdvancedLocation;
+
 public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.PebbleDataReceiver {
 
     private static final String TAG = "PB-PebbleDataReceiver";
@@ -77,14 +79,17 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
         } else if (button == Constants.PLAY_PRESS) {
             _serviceStarter.startLocationServices();
         } else if (button == Constants.REFRESH_PRESS) {
-            resetSavedData();
+            resetSavedData(context);
             _bus.post(new ResetGPSState());
         }
     }
 
-    private void resetSavedData() {
+    private void resetSavedData(Context context) {
         _dataStore.resetAllValues();
         _dataStore.commit();
+
+        AdvancedLocation advancedLocation = new AdvancedLocation(context);
+        advancedLocation.resetGPX();
     }
     private void sendSavedData() {
         // use _messageManager and not _bus to be able to send data even if GPS is not started

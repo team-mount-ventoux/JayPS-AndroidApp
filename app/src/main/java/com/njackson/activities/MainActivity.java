@@ -20,11 +20,14 @@ import com.njackson.changelog.IChangeLog;
 import com.njackson.changelog.IChangeLogBuilder;
 import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionStatus;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
+import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
 import com.njackson.events.base.BaseStatus;
+import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.googleplay.IGooglePlayServices;
+import com.njackson.utils.gpx.GpxExport;
 import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -32,6 +35,7 @@ import com.squareup.otto.Subscribe;
 import javax.inject.Inject;
 
 import de.cketti.library.changelog.ChangeLog;
+import fr.jayps.android.AdvancedLocation;
 
 public class MainActivity extends FragmentActivity  implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -42,6 +46,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
     @Inject IGooglePlayServices _playServices;
     @Inject SharedPreferences _sharedPreferences;
     @Inject IChangeLogBuilder _changeLogBuilder;
+    @Inject IGPSDataStore _dataStore;
 
     private boolean _authInProgress;
 
@@ -169,6 +174,31 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+        }
+        if (id == R.id.action_export_gpx) {
+            if (_sharedPreferences.getBoolean("ENABLE_TRACKS", false)) {
+                GpxExport.export(getApplicationContext(), _sharedPreferences.getBoolean("ADVANCED_GPX", false));
+            } else {
+                Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the export", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (id == R.id.action_reset) {
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.ALERT_RESET_DATA_TITLE)
+                    .setMessage(R.string.ALERT_RESET_DATA_MESSAGE)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            _dataStore.resetAllValues();
+                            _dataStore.commit();
+                            _bus.post(new ResetGPSState());
+                            AdvancedLocation advancedLocation = new AdvancedLocation(getApplicationContext());
+                            advancedLocation.resetGPX();
+                            Toast.makeText(getApplicationContext(), "Done", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null).show();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
