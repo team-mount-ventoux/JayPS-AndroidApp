@@ -69,6 +69,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
     private SavedLocation _savedLocation = null;
     private NewAltitude _savedNewAltitude = null;
+    private int _nbLocationReceived = 0;
 
     @Subscribe
     public void onResetGPSStateEvent(ResetGPSState event) {
@@ -270,6 +271,11 @@ public class GPSServiceCommand implements IServiceCommand {
             _advancedLocation.onLocationChanged(location);
             if (firstLocation == null) {
                 firstLocation = location;
+                saveGPSStats();
+            }
+            _nbLocationReceived++;
+            if (_nbLocationReceived % 100 == 0) {
+                // save stats every 100 new locations
                 saveGPSStats();
             }
 
