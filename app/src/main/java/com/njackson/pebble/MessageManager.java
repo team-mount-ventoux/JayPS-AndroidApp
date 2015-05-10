@@ -196,8 +196,8 @@ public class MessageManager implements IMessageManager, Runnable {
                 if (debug) Log.i(TAG, "offerIfLow s:" + s + ">" + sizeMax);
                 if (_isConnected) {
                     _skipped++;
-                    if (_skipped == 100) {
-                        // only track 100th message
+                    if (_skipped == 10) {
+                        // only track 10th message
                         _parseAnalytics.trackSkippedMessage();
                     }
                 }
