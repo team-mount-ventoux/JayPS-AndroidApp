@@ -13,6 +13,7 @@ import com.njackson.Constants;
 import com.njackson.adapters.AdvancedLocationToNewLocation;
 import com.njackson.adapters.NewLocationToPebbleDictionary;
 import com.njackson.analytics.IAnalytics;
+import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 
 import org.json.JSONArray;
@@ -61,6 +62,7 @@ public class MessageManager implements IMessageManager, Runnable {
         _thisThread.start();
 
         setupPebbbleHandlers();
+        ((PebbleBikeApplication) context).inject(this);
     }
 
     private void removeMessageASync() {

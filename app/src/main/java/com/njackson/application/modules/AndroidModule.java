@@ -100,6 +100,7 @@ import static android.content.Context.SENSOR_SERVICE;
         HrmServiceCommand.class,
         Hrm.class,
         SpeedFragment.class,
+        MessageManager.class,
         })
 public class AndroidModule {
     private PebbleBikeApplication application = null;
