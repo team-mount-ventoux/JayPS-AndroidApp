@@ -129,7 +129,7 @@ public class PebbleServiceCommand implements IServiceCommand {
                 Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", String.valueOf(Constants.REFRESH_INTERVAL_DEFAULT))),
                 newLocation.getHeartRate()
         );
-        sendDataToPebble(dictionary);
+        sendDataToPebbleIfPossible(dictionary);
     }
 
     private void sendDataToPebble(PebbleDictionary data) {
