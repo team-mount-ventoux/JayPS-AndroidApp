@@ -48,11 +48,11 @@ public class InstallPebbleWatchFace implements IInstallWatchFace{
         Intent startupIntent = new Intent();
         startupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startupIntent.setAction(Intent.ACTION_VIEW);
-        startupIntent.setType("application/octet-stream");
-        startupIntent.setData(uri);
+        startupIntent.setDataAndType(uri, "application/octet-stream");
 
-        ComponentName distantActivity = new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity");
-        startupIntent.setComponent(distantActivity);
+        // For Pebble ComponentName distantActivity = new ComponentName("com.getpebble.android", "com.getpebble.android.ui.UpdateActivity");
+        // For Pebble Time ComponentName distantActivity = new ComponentName("com.getpebble.android.basalt", "com.getpebble.android.ui.UpdateActivity");
+        //startupIntent.setComponent(distantActivity);
 
         return startupIntent;
     }

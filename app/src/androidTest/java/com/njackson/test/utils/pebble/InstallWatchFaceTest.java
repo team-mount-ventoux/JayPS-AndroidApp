@@ -41,7 +41,7 @@ public class InstallWatchFaceTest extends AndroidTestCase {
 
         assertEquals(uri.getHost(),"dl.pebblebike.com");
     }
-
+/* no longer using startupIntent.setComponent()
     @SmallTest
     public void testCreateIntentReturnsValidIntent() {
         Intent intent = _install.createIntent(null);
@@ -49,7 +49,7 @@ public class InstallWatchFaceTest extends AndroidTestCase {
         assertEquals(intent.getComponent().getClassName(),"com.getpebble.android.ui.UpdateActivity");
         assertEquals(intent.getComponent().getPackageName(),"com.getpebble.android");
     }
-
+*/
     @SmallTest
     public void testExecuteWhenApplicationInstalledStartsActivity() {
         Context mockContext = mock(Context.class);
