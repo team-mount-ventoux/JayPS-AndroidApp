@@ -34,7 +34,7 @@
                 android:key="ENABLE_TRACKS"
                 android:title="@string/PREF_ENABLE_TRACKS_TITLE"
                 android:summary="@string/PREF_ENABLE_TRACKS_SUMMARY"
-                android:defaultValue="false"
+                android:defaultValue="true"
                 />
             <Preference
                 android:key="EXPORT_GPX"
