@@ -152,7 +152,7 @@ public class MessageManager implements IMessageManager, Runnable {
                             }
                             transID = (transID + 1) % 256;
                             PebbleDictionary data = messageQueue.peek();
-                        if (debug) Log.i(TAG, "sendDataToPebble s:" + messageQueue.size() + " transID:" + transID + " " + data.toJsonString());
+                            if (debug) Log.i(TAG, "sendDataToPebble s:" + messageQueue.size() + " transID:" + transID + " " + data.toJsonString());
                             PebbleKit.sendDataToPebbleWithTransactionId(_applicationContext, Constants.WATCH_UUID, data, transID);
                         }
 
@@ -196,9 +196,15 @@ public class MessageManager implements IMessageManager, Runnable {
                 if (debug) Log.i(TAG, "offerIfLow s:" + s + ">" + sizeMax);
                 if (_isConnected) {
                     _skipped++;
-                    if (_skipped == 10) {
-                        // only track 10th message
+                    if (_skipped == 50) {
+                        // only track 50th message
                         _parseAnalytics.trackSkippedMessage();
+                    }
+                    if (_skipped % 20 == 19) {
+                        // once every 20 messages, try to send next message in the queue
+                        // avoid blocking situation if ack/nack are lost
+                        removeMessageASync();
+                        consumeAsync();
                     }
                 }
                 return false;
