@@ -151,7 +151,6 @@ public class GPSServiceCommand implements IServiceCommand {
     }
 
     public void stop (){
-        Log.d(TAG, "Destroy GPS Service");
         saveGPSStats();
 
         stopLocationUpdates();
@@ -170,8 +169,6 @@ public class GPSServiceCommand implements IServiceCommand {
 
     // load the saved state
     private void loadGPSStats() {
-        Log.d(TAG, "loadGPSStats()");
-
         _advancedLocation.setDistance(_dataStore.getDistance());
         _advancedLocation.setElapsedTime(_dataStore.getElapsedTime());
 

@@ -52,7 +52,6 @@ public class PebbleBikeApplication extends Application implements IInjectionCont
     }
 
     private void createObjectGraph() {
-        Log.d(TAG, "Create object graph");
         graph = ObjectGraph.create(getModules().toArray());
         setupAnalytics();
     }

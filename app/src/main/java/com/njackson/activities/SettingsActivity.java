@@ -214,7 +214,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-        Log.i(TAG, "onSharedPreferenceChanged" + s);
+        //Log.i(TAG, "onSharedPreferenceChanged" + s);
         _dataStore.reloadPreferencesFromSettings();
         if (s.equals("UNITS_OF_MEASURE")) {
             setUnitsSummary();

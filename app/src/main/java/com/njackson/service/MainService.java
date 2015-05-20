@@ -66,7 +66,6 @@ public class MainService extends Service implements ITimerHandler {
 
     @Override
     public void onDestroy () {
-        Log.d(TAG,"Destroy");
         _serviceStarter.stopServiceForeground(this);
 
         disposeCommands();
@@ -135,7 +134,6 @@ public class MainService extends Service implements ITimerHandler {
     // Activity manager is not invoked with tests we need to wrap stop self to test it
     // has been called
     private void stop() {
-        Log.d(TAG,"STOP ALL");
         _bus.post(new MainServiceStatus(BaseStatus.Status.STOPPED));
         this.stopSelf();
     }
