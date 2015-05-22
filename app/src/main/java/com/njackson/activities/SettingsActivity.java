@@ -322,12 +322,16 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         ListPreference oruxPref = (ListPreference) findPreference("ORUXMAPS_AUTO");
         CharSequence listDesc = oruxPref.getEntry();
         oruxPref.setSummary(listDesc);
+        Preference orux_screen = findPreference("orux_screen");
+        orux_screen.setSummary(listDesc);
     }
 
     private void setCanvasSummary() {
         ListPreference canvasPref = (ListPreference) findPreference("CANVAS_MODE");
         CharSequence listDesc = canvasPref.getEntry();
         canvasPref.setSummary(listDesc);
+        Preference canvas_screen = findPreference("canvas_screen");
+        canvas_screen.setSummary(listDesc);
     }
 
     private void setHrmSummary() {
