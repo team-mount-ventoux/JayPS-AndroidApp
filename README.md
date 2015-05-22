@@ -1,8 +1,8 @@
 PebbleBike-AndroidApp
 =====================
 
-[![Build Status](https://travis-ci.org/pebble-bike/PebbleBike-AndroidApp.svg?branch=v2)](https://travis-ci.org/pebble-bike/PebbleBike-AndroidApp)
-[![Coverage Status](https://coveralls.io/repos/pebble-bike/PebbleBike-AndroidApp/badge.png?branch=v2)](https://coveralls.io/r/pebble-bike/PebbleBike-AndroidApp?branch=v2)
+[![Build Status](https://travis-ci.org/pebble-bike/PebbleBike-AndroidApp.svg?branch=master)](https://travis-ci.org/pebble-bike/PebbleBike-AndroidApp)
+[![Coverage Status](https://coveralls.io/repos/pebble-bike/PebbleBike-AndroidApp/badge.png?branch=master)](https://coveralls.io/r/pebble-bike/PebbleBike-AndroidApp?branch=v2)
 
 [Pebble Bike](http://www.pebblebike.com) is a GPS cycle computer for your Pebble smart watch. It uses your phone's GPS to send speed, distance and altitude data to your Pebble. You can also see your track directly on your Pebble.
 
