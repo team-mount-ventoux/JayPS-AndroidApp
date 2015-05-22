@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.0.0csc" versioncode="222" >
+        <change>BLE Cycling Speed and Cadence (CSC) (experimental)</change>
+        <change> * Tested with a Wahoo BlueSC</change>
+        <change> * Crank RPM is sent as a "heart rate" for the moment (HRM won't work!)</change>
+        <change>=> You may have to wipe the app data if you want to return to an official alpha with HRM support</change>
+    </release>
     <release version="2.0.0" versioncode="221" >
         <change>Android: New UI</change>
         <change>Save tracks and export them as GPX</change>
