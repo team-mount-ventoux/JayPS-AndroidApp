@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.njackson.Constants;
 import com.njackson.R;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
@@ -130,6 +133,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
             _serviceStarter.startActivityService();
         }
 
+        detectNewVersion();
         showChangeLog();
 
         if (getIntent().getExtras() != null) {
@@ -141,6 +145,43 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
         IChangeLog changeLog = _changeLogBuilder.setActivity(this).build();
         if (changeLog.isFirstRun()) {
             changeLog.getDialog().show();
+        }
+    }
+    private void detectNewVersion() {
+
+        // Get last version code
+        int mLastVersionCode = _sharedPreferences.getInt("VERSION_CODE", 0);
+        int mCurrentVersionCode = 0;
+
+        // Get current version code
+        try {
+            PackageInfo packageInfo = getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), 0);
+            mCurrentVersionCode = packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            mCurrentVersionCode = 0;
+        }
+
+        if (mLastVersionCode < mCurrentVersionCode) {
+            Log.d(TAG, "newVersion: " + mLastVersionCode + " -> " + mCurrentVersionCode);
+
+            SharedPreferences.Editor editor = _sharedPreferences.edit();
+
+            if (mLastVersionCode == 0) {
+                // first run or migration from v1
+                // try to import saved data from v1
+                SharedPreferences settings = getSharedPreferences(Constants.PREFS_NAME_V1, 0);
+                _dataStore.setStartTime(settings.getLong("GPS_LAST_START", 0));
+                _dataStore.setDistance(settings.getFloat("GPS_DISTANCE", 0));
+                _dataStore.setElapsedTime(settings.getLong("GPS_ELAPSEDTIME", 0));
+                _dataStore.setAscent((float) settings.getFloat("GPS_ASCENT", 0));
+                _dataStore.commit();
+
+                editor.putString("hrm_name", settings.getString("hrm_name", ""));
+                editor.putString("hrm_address", settings.getString("hrm_address", ""));
+            }
+            // save new version code
+            editor.putInt("VERSION_CODE", mCurrentVersionCode);
+            editor.commit();
         }
     }
 
