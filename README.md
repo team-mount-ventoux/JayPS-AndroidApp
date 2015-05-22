@@ -4,6 +4,21 @@ PebbleBike-AndroidApp
 [![Build Status](https://travis-ci.org/pebble-bike/PebbleBike-AndroidApp.svg?branch=v2)](https://travis-ci.org/pebble-bike/PebbleBike-AndroidApp)
 [![Coverage Status](https://coveralls.io/repos/pebble-bike/PebbleBike-AndroidApp/badge.png?branch=v2)](https://coveralls.io/r/pebble-bike/PebbleBike-AndroidApp?branch=v2)
 
+[Pebble Bike](http://www.pebblebike.com) is a GPS cycle computer for your Pebble smart watch. It uses your phone's GPS to send speed, distance and altitude data to your Pebble. You can also see your track directly on your Pebble.
+
+Pebble Bike also has an innovative auto start feature which will auto start the bike computer on your watch when it detects you are riding a bike, using low battery technology pebble bike checks your activity every 30 seconds, so low power in fact you can leave this switched on all day.
+
+Pebble Bike has a Live Tracking function that sends your position every 30 seconds to the internet. If you're using it with your friends, it can receive theirs positions and display them with your own track, directly on your Pebble.
+
+Licensed under [MIT License](http://opensource.org/licenses/MIT)
+
+## Contributors
+* JayPS (https://github.com/jay3)  
+* Nic Jackson (https://github.com/nicholasjackson)
+
+## Watchface
+See also the [Pebble Bike Watch Face](https://github.com/pebble-bike/PebbleBike-PebbleWatchFace).
+
 ##Info
 Pebble bike v2 is pretty much a complete re-write to implement best practice in terms of coding.  In an attempt to improve stability and reduce crashes when we develop the application futher we decided that we needed to re-architect the appliction.  
 
