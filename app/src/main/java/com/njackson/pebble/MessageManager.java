@@ -4,6 +4,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -274,6 +276,15 @@ public class MessageManager implements IMessageManager, Runnable {
 
         NewLocation newLocation = new AdvancedLocationToNewLocation(advancedLocation, 0, 0, units);
 
+        // Get current version code
+        int versionCode = 0;
+        try {
+            PackageInfo packageInfo = _applicationContext.getPackageManager().getPackageInfo(_applicationContext.getPackageName(), 0);
+            versionCode = packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            versionCode = 0;
+        }
+
         PebbleDictionary dictionary = new NewLocationToPebbleDictionary(
                 newLocation,
                 isLocationServicesRunning,
@@ -282,7 +293,7 @@ public class MessageManager implements IMessageManager, Runnable {
                 Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", String.valueOf(Constants.REFRESH_INTERVAL_DEFAULT))),
                 255 // 255: no Heart Rate available
         );
-        dictionary.addInt32(Constants.MSG_VERSION_ANDROID, Constants.VERSION_ANDROID);
+        dictionary.addInt32(Constants.MSG_VERSION_ANDROID, versionCode);
         offer(dictionary);
     }
 }
