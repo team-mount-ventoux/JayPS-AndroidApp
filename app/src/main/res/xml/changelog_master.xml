@@ -1,63 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="2.0.0-beta3" versioncode="220" >
-        <change>Improve data transmission to Pebble</change>
-        <change>Pebble Time compatibility</change>
-        <change>=> New watchface (click on "Install Watchface" in settings)</change>
-    </release>
-    <release version="2.0.0-beta2" versioncode="219" >
-        <change>Reorganize settings</change>
-        <change>Improve data transmission to Pebble</change>
-        <change>Faster GPX export</change>
-        <change>Merge reset data and reset tracks (GPX)</change>
-        <change>Launch activity autostart when phone boots (if enable)</change>
-        <change>Remove Google Fit (shifted to v2.1+)</change>
-    </release>
-    <release version="2.0.0-beta1" versioncode="217" >
-        <change>Advanced GPX export</change>
-        <change>Bugfix: first start crash</change>
-        <change>Bugfix: HRM crash</change>
-    </release>
-    <release version="2.0.0-alpha5" versioncode="215" >
-        <change>Altitude graph</change>
-        <change>Bugfix: Send real gps status at start up (autostart off)</change>
-        <change>Android: GPS Status</change>
-        <change>Bugfix: Oruxmaps autostart</change>
-    </release>
-    <release version="2.0.0-alpha4" versioncode="212" >
-        <change>GPX export: new filename + auto-create segments and tracks</change>
-        <change>GPX export: now compatible with Strava (iso 8601 time)</change>
-        <change>Notification when GPS is disabled</change>
-        <change>Bugfix: start/stop button status</change>
-        <change>Bugfix: time/distance values when app is resumed</change>
-    </release>
-    <release version="2.0.0-alpha3" versioncode="211" >
+    <release version="2.0.0" versioncode="221" >
+        <change>Android: New UI</change>
         <change>Save tracks and export them as GPX</change>
-        <change>Canvas plugin: number of ascents</change>
-        <change>Installation: remove unwanted new permission</change>
-    </release>
-    <release version="2.0.0-alpha2" versioncode="208" >
+        <change>Customizable screens with Canvas plugin</change>
+        <change>Pebble Time compatibility</change>
+        <change>New version 2: complete rewrite of the app since 1.x</change>
         <change>New units: nautical and running</change>
-        <change>Improve Android notifications (Auto-Start and GPS)</change>
-        <change>Bugfixes</change>
+        <change>Improve data transmission to Pebble</change>
         <change>=> New watchface (click on "Install Watchface" in settings)</change>
-    </release>
-  <release version="2.0.0-alpha1" versioncode="205" >
-      <change>New version 2: complete rewrite of the app since 1.x</change>
-      <change>Android: New UI</change>
-      <change>Google Fit integration</change>
-      <change>Bugfixes</change>
-      <change>Not working yet:</change>
-      <change>Altitude graph</change>
-      <change>Android: Imperial units</change>
-  </release>
-  <release version="1.6.0-beta2" versioncode="32" >
-      <change>Canvas: add heart rate</change>
-      <change>Canvas: add units</change>
-      <change>Security fix (hide passwords)</change>
-  </release>
-  <release version="1.6.0-beta1" versioncode="31" >
-      <change>Canvas plugin</change>
   </release>
   <release version="1.5.0" versioncode="30" >
       <change>Map My Tracks integration</change>

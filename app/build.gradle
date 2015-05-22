@@ -9,8 +9,8 @@ android {
         applicationId "com.njackson"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 220
-        versionName "v2.0.0-beta3"
+        versionCode 221
+        versionName "v2.0.0"
         testInstrumentationRunner "com.njackson.test.MyInstrumentationTestRunner"
     }
 

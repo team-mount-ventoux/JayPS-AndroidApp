@@ -117,6 +117,7 @@ public class ActivityRecognitionServiceCommand implements IServiceCommand,
     }
 
     public void stop (){
+        // TODO(jay) stop me only if running
         Log.d(TAG,"Destroy Activity Recognition Service");
 
         _recognitionClient.unregisterConnectionCallbacks(this);
