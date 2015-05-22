@@ -66,6 +66,10 @@
     <string name="ORUXMAPS_AUTO_DIALOG_TITLE">Link OruxMaps start</string>
     <string name="ORUXMAPS_AUTO_DEFAULT">disable</string>
 
+    <string name="PREF_ORUXMAPS">Install OruxMaps</string>
+    <string name="PREF_ORUXMAPS_SUMMARY">Install app from Google Play</string>
+    <string name="PREF_ORUXMAPS_URL">https://play.google.com/store/apps/details?id=com.orux.oruxmaps</string>
+
     <string name="CANVAS_MODE_TITLE">Canvas mode</string>
     <string name="CANVAS_MODE_DIALOG_TITLE">Canvas Mode</string>
     <string name="CANVAS_MODE_DEFAULT">disable</string>
@@ -74,7 +78,7 @@
 
     <string name="PREF_CANVAS">Install Canvas</string>
     <string name="PREF_CANVAS_SUMMARY">Install app from Google Play</string>
-    <string name="PREF_CANVAS_URL">https://play.google.com/store/apps/details?id=com.pennas.pebblecanvas&amp;hl=en</string>
+    <string name="PREF_CANVAS_URL">https://play.google.com/store/apps/details?id=com.pennas.pebblecanvas</string>
 
     <string name="PREF_HRM_CATEGORY_TITLE">BLE Heart Rate Monitor</string>
     <string name="PREF_HRM_TITLE">Sensor</string>
