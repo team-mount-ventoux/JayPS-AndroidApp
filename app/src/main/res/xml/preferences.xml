@@ -210,6 +210,14 @@
                 android:title="@string/CANVAS_DISPLAY_UNITS_TITLE"
                 android:summary="@string/CANVAS_DISPLAY_UNITS_SUMMARY"
                 android:defaultValue="true" />
+            <Preference
+                android:key="CANVAS_URL"
+                android:title="@string/PREF_CANVAS"
+                android:summary="@string/PREF_CANVAS_SUMMARY"
+                >
+                <intent android:action="android.intent.action.VIEW"
+                    android:data="@string/PREF_CANVAS_URL" />
+            </Preference>
         </PreferenceScreen>
 
     </PreferenceScreen>

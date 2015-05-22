@@ -72,6 +72,10 @@
     <string name="CANVAS_DISPLAY_UNITS_TITLE">Display units</string>
     <string name="CANVAS_DISPLAY_UNITS_SUMMARY">Display units in Canvas</string>
 
+    <string name="PREF_CANVAS">Install Canvas</string>
+    <string name="PREF_CANVAS_SUMMARY">Install app from Google Play</string>
+    <string name="PREF_CANVAS_URL">https://play.google.com/store/apps/details?id=com.pennas.pebblecanvas&amp;hl=en</string>
+
     <string name="PREF_HRM_CATEGORY_TITLE">BLE Heart Rate Monitor</string>
     <string name="PREF_HRM_TITLE">Sensor</string>
 
