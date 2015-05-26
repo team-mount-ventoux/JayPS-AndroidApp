@@ -168,7 +168,14 @@ public class AndroidModule {
 
     @Provides IOruxMaps providesOruxMaps() { return new OruxMaps(application); }
 
-    @Provides IHrm providesHrm() { return new Hrm(application); }
+    @Provides IHrm providesHrm() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            // BLE requires 4.3 (Api level 18)
+            return new Hrm(application);
+        } else {
+            return null;
+        }
+    }
 
     @Provides
     @Named("LiveTrackingMmt")
