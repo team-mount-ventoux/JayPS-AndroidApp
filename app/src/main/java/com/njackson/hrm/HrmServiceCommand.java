@@ -52,8 +52,8 @@ public class HrmServiceCommand implements IServiceCommand {
             // BLE requires 4.3 (Api level 18)
             try {
                 Log.d(TAG, "BLE OK");
-            } catch (Exception e) {
-                Log.e(TAG, "Exception: " + e.getMessage());
+            } catch (NoClassDefFoundError e) {
+                Log.e(TAG, "NoClassDefFoundError: " + e.getMessage());
             }
         } else {
             Log.d(TAG, "BLE not available");
