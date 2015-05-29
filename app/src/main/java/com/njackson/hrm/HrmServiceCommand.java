@@ -47,6 +47,17 @@ public class HrmServiceCommand implements IServiceCommand {
     }
 
     private boolean isHrmActivated() {
+        Log.d(TAG, "SDK_INT=" + android.os.Build.VERSION.SDK_INT);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            // BLE requires 4.3 (Api level 18)
+            try {
+                Log.d(TAG, "BLE OK");
+            } catch (Exception e) {
+                Log.e(TAG, "Exception: " + e.getMessage());
+            }
+        } else {
+            Log.d(TAG, "BLE not available");
+        }
         return _applicationContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
                 // note: double check FEATURE_BLUETOOTH_LE + android version because the 1st test (hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) seems to return true on some 4.1 & 4.2
                 && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2 // BLE requires 4.3 (Api level 18)

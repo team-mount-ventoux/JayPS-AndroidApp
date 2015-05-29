@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
+import android.util.Log;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.RecordingApi;
@@ -105,6 +107,9 @@ import static android.content.Context.SENSOR_SERVICE;
         BootUpReceiver.class,
         })
 public class AndroidModule {
+
+    private final String TAG = "PB-AndroidModule";
+
     private PebbleBikeApplication application = null;
 
     public AndroidModule(){}
@@ -169,12 +174,16 @@ public class AndroidModule {
     @Provides IOruxMaps providesOruxMaps() { return new OruxMaps(application); }
 
     @Provides IHrm providesHrm() {
+        Log.d(TAG, "SDK_INT=" + android.os.Build.VERSION.SDK_INT);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
             // BLE requires 4.3 (Api level 18)
-            return new Hrm(application);
-        } else {
-            return null;
+            try {
+                return new Hrm(application);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception: " + e.getMessage());
+            }
         }
+        return null;
     }
 
     @Provides
