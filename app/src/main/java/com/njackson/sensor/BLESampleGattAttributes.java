@@ -1,4 +1,4 @@
-package com.njackson.hrm;
+package com.njackson.sensor;
 
 import java.util.HashMap;
 

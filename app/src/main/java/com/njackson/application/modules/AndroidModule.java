@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.SensorManager;
 import android.location.LocationManager;
+import android.util.Log;
+
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.RecordingApi;
@@ -17,9 +19,7 @@ import com.njackson.analytics.Parse;
 import com.njackson.application.MainThreadBus;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.activities.SettingsActivity;
-import com.njackson.changelog.CLChangeLog;
 import com.njackson.changelog.ChangeLogBuilder;
-import com.njackson.changelog.IChangeLog;
 import com.njackson.changelog.IChangeLogBuilder;
 import com.njackson.fit.GoogleFitServiceCommand;
 import com.njackson.fragments.AltitudeFragment;
@@ -28,9 +28,9 @@ import com.njackson.fragments.StartButtonFragment;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.gps.MainServiceForegroundStarter;
-import com.njackson.hrm.Hrm;
-import com.njackson.hrm.HrmServiceCommand;
-import com.njackson.hrm.IHrm;
+import com.njackson.sensor.Ble;
+import com.njackson.sensor.BLEServiceCommand;
+import com.njackson.sensor.IBle;
 import com.njackson.live.ILiveTracking;
 import com.njackson.live.LiveServiceCommand;
 import com.njackson.live.LiveTracking;
@@ -74,7 +74,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import de.cketti.library.changelog.ChangeLog;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static android.content.Context.SENSOR_SERVICE;
@@ -98,13 +97,15 @@ import static android.content.Context.SENSOR_SERVICE;
         GoogleFitServiceCommand.class,
         ActivityRecognitionServiceCommand.class,
         PebbleDataReceiver.class,
-        HrmServiceCommand.class,
-        Hrm.class,
+        BLEServiceCommand.class,
+        Ble.class,
         SpeedFragment.class,
         MessageManager.class,
         BootUpReceiver.class,
         })
 public class AndroidModule {
+    private final String TAG = "PB-AndroidModule";
+
     private PebbleBikeApplication application = null;
 
     public AndroidModule(){}
@@ -168,10 +169,17 @@ public class AndroidModule {
 
     @Provides IOruxMaps providesOruxMaps() { return new OruxMaps(application); }
 
-    @Provides IHrm providesHrm() {
+    @Provides
+    IBle providesHrm() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
             // BLE requires 4.3 (Api level 18)
-            return new Hrm(application);
+            try {
+                return new Ble(application);
+            } catch (NoClassDefFoundError e) {
+                // bug with some 4.1/4.2 devices that report Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2 !!!
+                Log.e(TAG, "NoClassDefFoundError: " + e.getMessage());
+                return null;
+            }
         } else {
             return null;
         }
@@ -230,7 +238,7 @@ public class AndroidModule {
                 new OruxMapsServiceCommand(),
                 new LiveServiceCommand(),
                 new GoogleFitServiceCommand(),
-                new HrmServiceCommand()
+                new BLEServiceCommand()
         );
     }
 }

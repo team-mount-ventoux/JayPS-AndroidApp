@@ -2,11 +2,9 @@ package com.njackson.test.hrm;
 
 import com.njackson.application.modules.AndroidModule;
 import com.njackson.application.modules.ForApplication;
-import com.njackson.events.GPSServiceCommand.GPSStatus;
-import com.njackson.events.HrmServiceCommand.HrmStatus;
-import com.njackson.events.base.BaseStatus;
-import com.njackson.hrm.HrmServiceCommand;
-import com.njackson.hrm.IHrm;
+import com.njackson.events.BleServiceCommand.BleStatus;
+import com.njackson.sensor.BLEServiceCommand;
+import com.njackson.sensor.IBle;
 import com.njackson.test.application.TestApplication;
 
 import com.squareup.otto.Bus;
@@ -17,10 +15,8 @@ import static org.mockito.Mockito.*;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.test.AndroidTestCase;
-import android.test.suitebuilder.annotation.SmallTest;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -29,19 +25,19 @@ import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
 
-public class HrmServiceCommandTest extends AndroidTestCase {
+public class BleServiceCommandTest extends AndroidTestCase {
     private CountDownLatch _stateLatch;
 
     @Inject Bus _bus;
     @Inject SharedPreferences _mockPreferences;
 
-    private HrmStatus _state;
-    private HrmServiceCommand _service;
+    private BleStatus _state;
+    private BLEServiceCommand _service;
     private TestApplication _app;
 
     @Module(
             includes = AndroidModule.class,
-            injects = HrmServiceCommandTest.class,
+            injects = BleServiceCommandTest.class,
             overrides = true,
             complete = false
     )
@@ -52,7 +48,8 @@ public class HrmServiceCommandTest extends AndroidTestCase {
             return mock(SharedPreferences.class);
         }
 
-        @Provides @Singleton IHrm provideHrm() { return mock(IHrm.class); }
+        @Provides @Singleton
+        IBle provideHrm() { return mock(IBle.class); }
 
         @Provides @Singleton @ForApplication
         Context provideApplicationContext() {
@@ -60,7 +57,7 @@ public class HrmServiceCommandTest extends AndroidTestCase {
         }
     }
     @Subscribe
-    public void onChangeStateEvent(HrmStatus state) {
+    public void onChangeStateEvent(BleStatus state) {
         _state = state;
         _stateLatch.countDown();
     }
@@ -78,7 +75,7 @@ public class HrmServiceCommandTest extends AndroidTestCase {
         setupMocks();
 
         _stateLatch = new CountDownLatch(1);
-        _service = new HrmServiceCommand();
+        _service = new BLEServiceCommand();
     }
 
     @Override

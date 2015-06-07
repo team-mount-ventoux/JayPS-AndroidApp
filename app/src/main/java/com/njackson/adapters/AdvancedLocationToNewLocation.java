@@ -43,6 +43,7 @@ public class AdvancedLocationToNewLocation extends NewLocation {
         this.setYpos(ypos);
         this.setBearing(advancedLocation.getBearing());
         this.setHeartRate(255); // 255: no Heart Rate available
+        this.setCadence(255); // 255: no cadence available
     }
 
     private void createUnits(int units) {

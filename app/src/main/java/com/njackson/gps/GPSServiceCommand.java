@@ -12,11 +12,11 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.njackson.Constants;
 import com.njackson.adapters.AdvancedLocationToNewLocation;
 import com.njackson.adapters.NewLocationToSavedLocation;
 import com.njackson.application.IInjectionContainer;
 import com.njackson.application.modules.ForApplication;
+import com.njackson.events.BleServiceCommand.BleCadence;
 import com.njackson.events.GPSServiceCommand.ChangeRefreshInterval;
 import com.njackson.events.GPSServiceCommand.GPSChangeState;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
@@ -24,7 +24,7 @@ import com.njackson.events.GPSServiceCommand.NewAltitude;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.GPSServiceCommand.SavedLocation;
-import com.njackson.events.HrmServiceCommand.HrmHeartRate;
+import com.njackson.events.BleServiceCommand.BleHeartRate;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.njackson.state.IGPSDataStore;
@@ -66,6 +66,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private ServiceNmeaListener _nmeaListener;
     private GPSSensorEventListener _sensorListener;
 	private int _heartRate = 0;
+    private int _cadence = 0;
     private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
     private SavedLocation _savedLocation = null;
     private NewAltitude _savedNewAltitude = null;
@@ -103,9 +104,15 @@ public class GPSServiceCommand implements IServiceCommand {
     }
 
     @Subscribe
-    public void onNewHeartRate(HrmHeartRate event) {
+    public void onNewHeartRate(BleHeartRate event) {
         Log.d(TAG, "onNewHeartRate:" + event.getHeartRate());
         _heartRate = event.getHeartRate();
+    }
+
+    @Subscribe
+    public void onNewCadence(BleCadence event) {
+        Log.d(TAG, "onNewCadence:" + event.getCadence());
+        _cadence = event.getCadence();
     }
 
     @Override
@@ -265,7 +272,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private LocationListener _locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            _advancedLocation.onLocationChanged(location);
+            _advancedLocation.onLocationChanged(location, _heartRate, _cadence);
             if (firstLocation == null) {
                 firstLocation = location;
                 saveGPSStats();
@@ -307,6 +314,9 @@ public class GPSServiceCommand implements IServiceCommand {
         NewLocation event = new AdvancedLocationToNewLocation(_advancedLocation, xpos, ypos, units);
         if (_heartRate > 0) {
             event.setHeartRate(_heartRate);
+        }
+        if (_cadence > 0) {
+            event.setCadence(_cadence);
         }
 
         _savedLocation = new NewLocationToSavedLocation(event);

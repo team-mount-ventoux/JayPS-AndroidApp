@@ -140,4 +140,8 @@ public abstract class MyLocation {
     private int _HeartRate = 0;
     public int getHeartRate() { return this._HeartRate; }
     public void setHeartRate(int heartRate) { this._HeartRate = heartRate;}
+
+    private int _cadence = 0;
+    public int getCadence() { return this._cadence; }
+    public void setCadence(int cadence) { this._cadence = cadence;}
 }

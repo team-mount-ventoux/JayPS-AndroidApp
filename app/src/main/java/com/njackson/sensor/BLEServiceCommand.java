@@ -1,4 +1,4 @@
-package com.njackson.hrm;
+package com.njackson.sensor;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,24 +8,24 @@ import android.util.Log;
 import com.njackson.application.IInjectionContainer;
 import com.njackson.application.modules.ForApplication;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
-import com.njackson.events.HrmServiceCommand.HrmStatus;
+import com.njackson.events.BleServiceCommand.BleStatus;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 
-public class HrmServiceCommand implements IServiceCommand {
+public class BLEServiceCommand implements IServiceCommand {
 
-    private final String TAG = "PB-HrmServiceCommand";
+    private final String TAG = "PB-BleServiceCommand";
 
     @Inject @ForApplication Context _applicationContext;
     @Inject Bus _bus;
     @Inject SharedPreferences _sharedPreferences;
-    @Inject IHrm _hrm;
+    @Inject
+    IBle _hrm;
     IInjectionContainer _container;
     private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
 
@@ -82,7 +82,7 @@ public class HrmServiceCommand implements IServiceCommand {
         } else {
             _currentStatus = BaseStatus.Status.UNABLE_TO_START;
         }
-        _bus.post(new HrmStatus(_currentStatus));
+        _bus.post(new BleStatus(_currentStatus));
     }
 
     public void stop() {
@@ -93,6 +93,6 @@ public class HrmServiceCommand implements IServiceCommand {
         }
         _hrm.stop();
         _currentStatus = BaseStatus.Status.STOPPED;
-        _bus.post(new HrmStatus(_currentStatus));
+        _bus.post(new BleStatus(_currentStatus));
     }
 }

@@ -3,9 +3,7 @@ package com.njackson.test.hrm;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.njackson.hrm.Csc;
-
-import fr.jayps.android.AdvancedLocation;
+import com.njackson.sensor.Csc;
 
 public class CscTest extends AndroidTestCase {
 

@@ -15,5 +15,6 @@ public class NewLocationToAndroidLocation extends Location {
         this.setLatitude(location.getLatitude());
         this.setLongitude(location.getLongitude());
         this.setTime(location.getTime());
+        this.setAltitude(location.getAltitude());
     }
 }
