@@ -21,23 +21,23 @@ public class AdvancedLocationTest extends AndroidTestCase {
         Location location = new Location("PebbleBike");
         location.setAccuracy(35);
         location.setSpeed(28f);
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
 
         assertEquals(13f, advancedLocation.getMaxSpeed());
 
         location.setAccuracy(5);
         location.setSpeed(22f);
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
 
         assertEquals(22f, advancedLocation.getMaxSpeed());
 
         location.setSpeed(18f);
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
 
         assertEquals(22f, advancedLocation.getMaxSpeed());
 
         location.setSpeed(45f);
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
 
         assertEquals(45f, advancedLocation.getMaxSpeed());
     }
@@ -57,49 +57,49 @@ public class AdvancedLocationTest extends AndroidTestCase {
         location.setAccuracy(AdvancedLocation.MAX_ACCURACY_FOR_NB_ASCENT+1);
         location.setAltitude(250);
         location.setTime(time); time += 30000; location.setLatitude(latitude); latitude += 0.001;
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
         assertEquals(5, advancedLocation.getNbAscent());
 
         location.setAccuracy(AdvancedLocation.MAX_ACCURACY_FOR_NB_ASCENT-1);
         location.setAltitude(250);
         location.setTime(time); time += 30000; location.setLatitude(latitude); latitude += 0.001;
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
         assertEquals(5, advancedLocation.getNbAscent());
 
         location.setAltitude(250);
         location.setTime(time); time += 30000; location.setLatitude(latitude); latitude += 0.001;
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
         assertEquals(5, advancedLocation.getNbAscent());
 
         location.setAltitude(250+AdvancedLocation.NB_ASCENT_DELTA_ALTITUDE-1);
         location.setTime(time); time += 30000; location.setLatitude(latitude); latitude += 0.001;
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
         assertEquals(5, advancedLocation.getNbAscent());
 
         location.setAltitude(450);
         location.setTime(time); time += 30000; location.setLatitude(latitude); latitude += 0.001;
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
         assertEquals(6, advancedLocation.getNbAscent());
 
         double min = 20;
         location.setAltitude(min);
         location.setTime(time); time += 30000; location.setLatitude(latitude); latitude += 0.001;
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
         assertEquals(6, advancedLocation.getNbAscent());
 
         location.setAltitude(min+AdvancedLocation.NB_ASCENT_DELTA_ALTITUDE-5);
         location.setTime(time); time += 30000; location.setLatitude(latitude); latitude += 0.001;
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
         assertEquals(6, advancedLocation.getNbAscent());
 
         location.setAltitude(min+AdvancedLocation.NB_ASCENT_DELTA_ALTITUDE-150);
         location.setTime(time); time += 30000; location.setLatitude(latitude); latitude += 0.001;
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
         assertEquals(6, advancedLocation.getNbAscent());
 
         location.setAltitude(min+AdvancedLocation.NB_ASCENT_DELTA_ALTITUDE+3);
         location.setTime(time); time += 30000; location.setLatitude(latitude); latitude += 0.001;
-        advancedLocation.onLocationChanged(location);
+        advancedLocation.onLocationChanged(location, 0, 0);
         assertEquals(7, advancedLocation.getNbAscent());
     }
 }
