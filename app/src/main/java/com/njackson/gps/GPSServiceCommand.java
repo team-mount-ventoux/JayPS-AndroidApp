@@ -66,6 +66,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private ServiceNmeaListener _nmeaListener;
     private GPSSensorEventListener _sensorListener;
 	private int _heartRate = 0;
+    private int _cadence = 0;
     private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
     private SavedLocation _savedLocation = null;
     private NewAltitude _savedNewAltitude = null;
@@ -107,7 +108,13 @@ public class GPSServiceCommand implements IServiceCommand {
         Log.d(TAG, "onNewHeartRate:" + event.getHeartRate());
         _heartRate = event.getHeartRate();
     }
-
+/*
+    @Subscribe
+    public void onNewCadence(Cadence event) {
+        Log.d(TAG, "onNewCadence:" + event.getCadence());
+        _cadence = event.getCadence();
+    }
+*/
     @Override
     public void execute(IInjectionContainer container) {
         container.inject(this);
@@ -265,7 +272,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private LocationListener _locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            _advancedLocation.onLocationChanged(location);
+            _advancedLocation.onLocationChanged(location, _heartRate, _cadence);
             if (firstLocation == null) {
                 firstLocation = location;
                 saveGPSStats();
@@ -307,6 +314,9 @@ public class GPSServiceCommand implements IServiceCommand {
         NewLocation event = new AdvancedLocationToNewLocation(_advancedLocation, xpos, ypos, units);
         if (_heartRate > 0) {
             event.setHeartRate(_heartRate);
+        }
+        if (_cadence > 0) {
+            event.setCadence(_cadence);
         }
 
         _savedLocation = new NewLocationToSavedLocation(event);
