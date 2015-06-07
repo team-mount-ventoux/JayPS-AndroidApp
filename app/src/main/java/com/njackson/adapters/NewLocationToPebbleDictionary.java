@@ -44,7 +44,7 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
     public static final short BYTE_MAXSPEED1 = 21;
     public static final short BYTE_MAXSPEED2 = 22;
 
-    public NewLocationToPebbleDictionary(NewLocation event, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int heartRate) {
+    public NewLocationToPebbleDictionary(NewLocation event, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int heartRate, int cadence) {
         // todo(jay) remove param heartRate
 
         PebbleDictionary dic = new PebbleDictionary();
@@ -108,7 +108,12 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
         data[BYTE_SPEED1] = (byte) (((int) (Math.floor(10 * event.getSpeed()) / 1)) % 256);
         data[BYTE_SPEED2] = (byte) (((int) (Math.floor(10 * event.getSpeed()) / 1)) / 256);
         data[BYTE_BEARING] = (byte) (((int)  (event.getBearing() / 360 * 256)) % 256);
-        data[BYTE_HEARTRATE] = (byte) (heartRate % 256);
+        if (cadence < 255) {
+            // CSC sensor is configured and cadence is received, sent it instead of hr (both are not supported yet at the same time)
+            data[BYTE_HEARTRATE] = (byte) (cadence % 256);
+        } else {
+            data[BYTE_HEARTRATE] = (byte) (heartRate % 256);
+        }
 
         data[BYTE_MAXSPEED1] = (byte) (((int) (Math.floor(10 * event.getMaxSpeed()) / 1)) % 256);
         data[BYTE_MAXSPEED2] = (byte) (((int) (Math.floor(10 * event.getMaxSpeed()) / 1)) / 256);

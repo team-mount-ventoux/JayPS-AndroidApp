@@ -35,7 +35,7 @@ public class NewLocationToPebbleDataTest extends AndroidTestCase{
         event.setSlope(13.3f);
         event.setSpeed(14.4f);
 
-        PebbleDictionary dic = new NewLocationToPebbleDictionary(event, true, true, true, 5000, 123);
+        PebbleDictionary dic = new NewLocationToPebbleDictionary(event, true, true, true, 5000, 123, 255); // 255: no cadence, so hr is really sent
         data = dic.getBytes(Constants.PEBBLE_LOCATION_DATA_V2);
 
         assertNotNull("Data should not be null",data);

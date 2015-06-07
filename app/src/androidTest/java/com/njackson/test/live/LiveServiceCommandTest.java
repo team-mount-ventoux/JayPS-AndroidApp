@@ -105,7 +105,7 @@ public class LiveServiceCommandTest extends AndroidTestCase {
         event.setTime(1000);
         _bus.post(event);
 
-        verify(_mockLiveTrackingJay,timeout(2000).times(1)).addPoint(any(Location.class), any(Location.class), anyDouble(), anyInt());
+        verify(_mockLiveTrackingJay,timeout(2000).times(1)).addPoint(any(Location.class), any(Location.class), anyInt(), anyInt());
     }
 
     @SmallTest
@@ -117,7 +117,7 @@ public class LiveServiceCommandTest extends AndroidTestCase {
         event.setTime(0);
         _bus.post(event);
 
-        verify(_mockLiveTrackingJay,timeout(2000).times(0)).addPoint(any(Location.class), any(Location.class), anyDouble(), anyInt());
+        verify(_mockLiveTrackingJay,timeout(2000).times(0)).addPoint(any(Location.class), any(Location.class), anyInt(), anyInt());
     }
 
     @SmallTest
@@ -128,7 +128,7 @@ public class LiveServiceCommandTest extends AndroidTestCase {
         NewLocation event = new NewLocation();
         _bus.post(event);
 
-        verify(_mockLiveTrackingJay,timeout(2000).times(0)).addPoint(any(Location.class), any(Location.class), anyDouble(), anyInt());
+        verify(_mockLiveTrackingJay,timeout(2000).times(0)).addPoint(any(Location.class), any(Location.class), anyInt(), anyInt());
     }
 
     @SmallTest

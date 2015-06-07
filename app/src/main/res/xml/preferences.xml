@@ -68,7 +68,7 @@
     <PreferenceScreen
         android:key="sensors_screen"
         android:title="Sensors"
-        android:summary="GPS, HRM, Altitude"
+        android:summary="GPS, HRM/CSC, Altitude"
         android:persistent="false">
 
         <ListPreference

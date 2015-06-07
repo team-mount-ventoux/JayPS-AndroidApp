@@ -1,4 +1,4 @@
-package com.njackson.hrm;
+package com.njackson.sensor;
 
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
@@ -18,8 +18,8 @@ import android.os.Build;
 import android.util.Log;
 
 import com.njackson.application.IInjectionContainer;
-import com.njackson.application.PebbleBikeApplication;
-import com.njackson.events.HrmServiceCommand.HrmHeartRate;
+import com.njackson.events.BleServiceCommand.BleCadence;
+import com.njackson.events.BleServiceCommand.BleHeartRate;
 import com.njackson.utils.time.ITimer;
 import com.njackson.utils.time.ITimerHandler;
 import com.squareup.otto.Bus;
@@ -30,9 +30,9 @@ import java.util.UUID;
 import javax.inject.Inject;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-public class Hrm implements IHrm, ITimerHandler {
+public class Ble implements IBle, ITimerHandler {
 
-    private final String TAG = "PB-Hrm";
+    private final String TAG = "PB-Ble";
 
     private final Context _context;
     private Bus _bus;
@@ -49,13 +49,14 @@ public class Hrm implements IHrm, ITimerHandler {
     private static final int STATE_CONNECTING = 1;
     private static final int STATE_CONNECTED = 2;
 
+    public final static UUID UUID_HEART_RATE_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.HEART_RATE_MEASUREMENT);
     public final static UUID UUID_CSC_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.CSC_MEASUREMENT);
 
     private boolean debug = true;
-    private boolean _hrmStarted = false;
+    private boolean _bleStarted = false;
     @Inject ITimer _timer;
 
-    public Hrm(Context context) {
+    public Ble(Context context) {
         _context = context;
         _csc = new Csc();
     }
@@ -80,7 +81,7 @@ public class Hrm implements IHrm, ITimerHandler {
                     case BluetoothAdapter.STATE_ON:
                         Log.d(TAG, "Bluetooth on");
 
-                        if (_hrmStarted) {
+                        if (_bleStarted) {
                             reconnectLater();
                         }
 
@@ -93,21 +94,21 @@ public class Hrm implements IHrm, ITimerHandler {
         }
     };
     @Override
-    public void start(String hrm_address, Bus bus, IInjectionContainer container) {
+    public void start(String ble_address, Bus bus, IInjectionContainer container) {
         Log.d(TAG, "start");
 
         container.inject(this);
 
         _bus = bus;
-        mBluetoothDeviceAddress = hrm_address;
+        mBluetoothDeviceAddress = ble_address;
 
-        _hrmStarted = true;
+        _bleStarted = true;
 
-        Log.d(TAG, hrm_address);
+        Log.d(TAG, ble_address);
 
         // start BLE Heart Rate Monitor
         initialize();
-        connect(hrm_address);
+        connect(ble_address);
 
         _timer.cancel();
 
@@ -118,7 +119,7 @@ public class Hrm implements IHrm, ITimerHandler {
     @Override
     public void stop() {
         Log.d(TAG, "stop");
-        _hrmStarted = false;
+        _bleStarted = false;
         disconnect();
 
         // Unregister broadcast listeners
@@ -240,7 +241,7 @@ public class Hrm implements IHrm, ITimerHandler {
                 // TODO(jay) post something?
                 //broadcastUpdate(ACTION_GATT_DISCONNECTED);
 
-                if (_hrmStarted) {
+                if (_bleStarted) {
                     reconnectLater();
 
                     /*if (debug) Log.i(TAG, "Trying to reconnect.");
@@ -286,7 +287,18 @@ public class Hrm implements IHrm, ITimerHandler {
         // This is special handling for the Heart Rate Measurement profile.  Data parsing is
         // carried out as per profile specifications:
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        if (UUID_CSC_MEASUREMENT.equals(characteristic.getUuid())) {
+        if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
+            int flag = characteristic.getProperties();
+            int format = -1;
+            if ((flag & 0x01) != 0) {
+                format = BluetoothGattCharacteristic.FORMAT_UINT16;
+            } else {
+                format = BluetoothGattCharacteristic.FORMAT_UINT8;
+            }
+            final int heartRate = characteristic.getIntValue(format, 1);
+            Log.d(TAG, String.format("Received heart rate: %d", heartRate));
+            _bus.post(new BleHeartRate(heartRate));
+        } else if (UUID_CSC_MEASUREMENT.equals(characteristic.getUuid())) {
             int flag = characteristic.getProperties();
             //Log.d(TAG, String.format("flag: %d", flag));
             int cumulativeWheelRevolutions = 0;
@@ -308,7 +320,9 @@ public class Hrm implements IHrm, ITimerHandler {
 
             _csc.onNewValues(cumulativeWheelRevolutions, lastWheelEventTime, cumulativeCrankRevolutions, lastCrankEventTime);
 
-            _bus.post(new HrmHeartRate((int) _csc.getCrankRpm()));
+            Log.d(TAG, String.format("Received cadence: %d", (int) _csc.getCrankRpm()));
+
+            _bus.post(new BleCadence((int) _csc.getCrankRpm()));
         } else {
             // For all other profiles, writes the data formatted in HEX.
             final byte[] data = characteristic.getValue();
@@ -334,8 +348,10 @@ public class Hrm implements IHrm, ITimerHandler {
             // Loops through available Characteristics.
             for (BluetoothGattCharacteristic gattCharacteristic : gattCharacteristics) {
 
-                if (UUID_CSC_MEASUREMENT.equals(gattCharacteristic.getUuid())) {
-                    //if (MainActivity.debug) Log.d(TAG, "UUID_CSC_MEASUREMENT!");
+                if (UUID_HEART_RATE_MEASUREMENT.equals(gattCharacteristic.getUuid())
+                    || UUID_CSC_MEASUREMENT.equals(gattCharacteristic.getUuid())
+                ) {
+                    //if (MainActivity.debug) Log.d(TAG, "UUID_HEART_RATE_MEASUREMENT!");
                     int charaProp = gattCharacteristic.getProperties();
                     if ((charaProp | BluetoothGattCharacteristic.PROPERTY_READ) > 0) {
                         // If there is an active notification on a characteristic, clear
@@ -388,7 +404,9 @@ public class Hrm implements IHrm, ITimerHandler {
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
 
         // This is specific to Heart Rate Measurement.
-        if (UUID_CSC_MEASUREMENT.equals(characteristic.getUuid())) {
+        if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())
+            || UUID_CSC_MEASUREMENT.equals(characteristic.getUuid())
+        ) {
             BluetoothGattDescriptor descriptor = characteristic.getDescriptor(
                     UUID.fromString(BLESampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);

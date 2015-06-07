@@ -49,6 +49,7 @@ public class LiveTracking implements ILiveTracking {
     private String _bufferPoints = "";
     private String _bufferAccuracies = "";
     private String _bufferHeartRates = "";
+    private String _bufferCadences = "";
     private String _login = "";
     private String _password = "";
     private String _url = "";
@@ -108,29 +109,32 @@ public class LiveTracking implements ILiveTracking {
     public void setBus(Bus bus) {
         _bus = bus;
     }
-    public boolean addPoint(Location firstLocation, Location location, double altitude, int heart_rate) {
+    public boolean addPoint(Location firstLocation, Location location, int heart_rate, int cadence) {
         _firstLocation = firstLocation;
-        //Log.d(TAG, "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + altitude + "," + location.getTime() + "," + location.getAccuracy() + "," + heart_rate + ")");
+        //Log.d(TAG, "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getTime() + "," + location.getAccuracy() + "," + heart_rate + "," + cadence + ")");
         if (location.getTime() - _prevTime < 5000) {
             // too early (dt<5s), do nothing
             return false;
         }
-        _bufferPoints += (_bufferPoints != "" ? " " : "") + location.getLatitude() + " " + location.getLongitude() + " " + String.format(Locale.US, "%.1f", altitude) + " " + String.format("%d", (int) (location.getTime() / 1000));
+        _bufferPoints += (_bufferPoints != "" ? " " : "") + location.getLatitude() + " " + location.getLongitude() + " " + String.format(Locale.US, "%.1f", location.getAltitude()) + " " + String.format("%d", (int) (location.getTime() / 1000));
         _bufferAccuracies += (_bufferAccuracies != "" ? " " : "") + String.format(Locale.US, "%.1f", location.getAccuracy());
         if (heart_rate > 0 && heart_rate < 255) {
             _bufferHeartRates += (_bufferHeartRates != "" ? " " : "") + heart_rate + " " + String.format("%d", (int) (location.getTime() / 1000));
         }
+        if (cadence > 0 && cadence < 255) {
+            _bufferCadences += (_bufferCadences != "" ? " " : "") + cadence + " " + String.format("%d", (int) (location.getTime() / 1000));
+        }
         if (location.getTime() - _prevTime < 30000) {
             // too early (5s<dt<30s), save point to send it later
             if (debug) {
-                Log.d(TAG, "too early: skip addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + altitude + "," + location.getTime() + ")");
+                Log.d(TAG, "too early: skip addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getTime() + ")");
 			}
             return false;
         }
         // ok
         _prevTime = location.getTime();
         this._lastLocation = location;
-        new SendLiveTask().execute(new SendLiveTaskParams(_bufferPoints, _bufferAccuracies, _bufferHeartRates));
+        new SendLiveTask().execute(new SendLiveTaskParams(_bufferPoints, _bufferAccuracies, _bufferHeartRates, _bufferCadences));
         return true;
     }
 
@@ -138,11 +142,13 @@ public class LiveTracking implements ILiveTracking {
         String points;
         String accuracies;
         String heartrates;
+        String cadences;
 
-        public SendLiveTaskParams(String points, String accuracies, String heartrates) {
+        public SendLiveTaskParams(String points, String accuracies, String heartrates, String cadences) {
             this.points = points;
             this.accuracies = accuracies;
             this.heartrates = heartrates;
+            this.cadences = cadences;
         }
     }
 
@@ -151,7 +157,7 @@ public class LiveTracking implements ILiveTracking {
             int count = params.length;
             boolean result = false;
             for (int i = 0; i < count; i++) {
-                result = result || _send(params[i].points, params[i].accuracies, params[i].heartrates);
+                result = result || _send(params[i].points, params[i].accuracies, params[i].heartrates, params[i].cadences);
             }
             return result;
         }
@@ -161,8 +167,8 @@ public class LiveTracking implements ILiveTracking {
         }
     }
 
-    private boolean _send(String points, String accuracies, String heartrates) {
-        if (debug) Log.d(TAG, "send(" + points + ", " + accuracies + ", " + heartrates + ")");
+    private boolean _send(String points, String accuracies, String heartrates, String cadences) {
+        if (debug) Log.d(TAG, "send(" + points + ", " + accuracies + ", " + heartrates + ", " + cadences + ")");
         try {
             String request = _activity_id == "" ? "start_activity" : "update_activity";
             String postParameters = "";
@@ -190,6 +196,9 @@ public class LiveTracking implements ILiveTracking {
             }
             if (heartrates != "") {
                 postParameters += "&hr=" + heartrates;
+            }
+            if (cadences != "") {
+                postParameters += "&cad=" + cadences;
             }
             String tmp_url = "";
             if (_type == TYPE_JAYPS) {
@@ -325,7 +334,7 @@ public class LiveTracking implements ILiveTracking {
                 }
             }
 
-            _bufferPoints=_bufferAccuracies=_bufferHeartRates="";
+            _bufferPoints=_bufferAccuracies=_bufferHeartRates=_bufferCadences="";
 
             return nbReceivedFriends>0;
         } catch (Exception e) {

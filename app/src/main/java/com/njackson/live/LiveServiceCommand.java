@@ -58,10 +58,10 @@ public class LiveServiceCommand implements IServiceCommand {
                 }
             }
             if (_sharedPreferences.getBoolean("LIVE_TRACKING", false)) {
-                _liveTrackingJayps.addPoint(firstLocation, location, location.getAltitude(), newLocation.getHeartRate());
+                _liveTrackingJayps.addPoint(firstLocation, location, newLocation.getHeartRate(), newLocation.getCadence());
             }
             if (_sharedPreferences.getBoolean("LIVE_TRACKING_MMT", false)) {
-                _liveTrackingMmt.addPoint(firstLocation, location, location.getAltitude(), 0);
+                _liveTrackingMmt.addPoint(firstLocation, location, newLocation.getHeartRate(), newLocation.getCadence());
             }
         }
     }
