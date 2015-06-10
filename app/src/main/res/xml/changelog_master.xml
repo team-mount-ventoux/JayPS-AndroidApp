@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.0.2" versioncode="227" >
+        <change>BLE Cycling Speed and Cadence (CSC)</change>
+        <change>GPX: add heart rate and cadence</change>
+        <change>Improve accuracy for altitude from pressure sensor</change>
+        <change>Map My Tracks: send altitude and heart rate</change>
+        <change>Bugfix: prevent crashes</change>
+    </release>
     <release version="2.0.1" versioncode="223" >
         <change>Bugfix: prevent crashes for Android 4.1 and 4.2</change>
     </release>
