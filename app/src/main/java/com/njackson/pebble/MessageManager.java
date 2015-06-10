@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import com.getpebble.android.kit.PebbleKit;
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -139,6 +140,16 @@ public class MessageManager implements IMessageManager, Runnable {
 
     private void consumeAsync() {
         if (debug) Log.v(TAG, "consumeAsync");
+        boolean needToWait = false;
+        synchronized (_hasStarted) {
+            if (_hasStarted.booleanValue() == false) {
+                needToWait = true;
+            }
+        }
+        if (needToWait) {
+            Log.d(TAG, "Race condition, wait for run()");
+            SystemClock.sleep(2000);
+        }
         synchronized (_hasStarted) {
             messageHandler.post(new Runnable() {
                 @Override
@@ -167,8 +178,8 @@ public class MessageManager implements IMessageManager, Runnable {
 
     @Override
     public void run() {
+        //SystemClock.sleep(1000); // uncomment to simulate the race condition
         synchronized (_hasStarted) {
-            //SystemClock.sleep(7000); // uncomment to simulate the race condition
             Looper.prepare();
             messageHandler = new Handler();
         }
