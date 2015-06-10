@@ -59,7 +59,7 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
         int version = data.getInteger(Constants.MSG_VERSION_PEBBLE).intValue();
         Log.i(TAG, "handleVersion:" + version + " min:" + Constants.MIN_VERSION_PEBBLE + " last:" + Constants.LAST_VERSION_PEBBLE);
         if (version < Constants.LAST_VERSION_PEBBLE) {
-            String message = context.getString(R.string.message_pebble_new_watchface);
+            String message = context.getString(R.string.message_pebble_new_watchapp);
             Toast.makeText(context, message, Toast.LENGTH_LONG).show();
             if (version < Constants.MIN_VERSION_PEBBLE) {
                 sendMessageToPebble(message);
