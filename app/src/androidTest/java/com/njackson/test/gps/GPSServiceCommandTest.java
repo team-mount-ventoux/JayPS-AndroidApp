@@ -216,6 +216,8 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         when(_mockLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)).thenReturn(true);
         when(_mockDataStore.getFirstLocationLattitude()).thenReturn(1.0f);
         when(_mockDataStore.getFirstLocationLongitude()).thenReturn(3.0f);
+        long ts = 1200000000000l;
+        when(_mockTime.getCurrentTimeMilliseconds()).thenReturn(ts);
 
         _serviceCommand.execute(_app);
         _serviceCommand.onGPSChangeState(new GPSChangeState(BaseChangeState.State.START));
@@ -229,6 +231,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
 
         Location location = new Location("location");
         LocationListener listenerArgument = locationListenerCaptor.getValue();
+        when(_mockTime.getCurrentTimeMilliseconds()).thenReturn(ts+10000);
         listenerArgument.onLocationChanged(location);
 
         ArgumentCaptor<NewLocation> captor = ArgumentCaptor.forClass(NewLocation.class);

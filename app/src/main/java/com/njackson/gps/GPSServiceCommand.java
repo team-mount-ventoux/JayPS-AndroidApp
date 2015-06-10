@@ -72,6 +72,9 @@ public class GPSServiceCommand implements IServiceCommand {
     private NewAltitude _savedNewAltitude = null;
     private int _nbLocationReceived = 0;
 
+    private long _last_post_newlocation  = 0;
+    private int _refresh_interval = 0;
+
     @Subscribe
     public void onResetGPSStateEvent(ResetGPSState event) {
         //stop service stopLocationUpdates();
@@ -80,6 +83,7 @@ public class GPSServiceCommand implements IServiceCommand {
 
     @Subscribe
     public void onGPSRefreshChangeEvent(ChangeRefreshInterval event) {
+        _refresh_interval = event.getRefreshInterval();
         changeRefreshInterval(event.getRefreshInterval());
     }
 
@@ -88,6 +92,7 @@ public class GPSServiceCommand implements IServiceCommand {
         switch(event.getState()) {
             case START:
                 if(_currentStatus != BaseStatus.Status.STARTED) {
+                    _refresh_interval = event.getRefreshInterval();
                     start(event.getRefreshInterval());
                 }
                 broadcastStatus(_currentStatus);
@@ -107,12 +112,14 @@ public class GPSServiceCommand implements IServiceCommand {
     public void onNewHeartRate(BleHeartRate event) {
         Log.d(TAG, "onNewHeartRate:" + event.getHeartRate());
         _heartRate = event.getHeartRate();
+        broadcastLocation(null);
     }
 
     @Subscribe
     public void onNewCadence(BleCadence event) {
         Log.d(TAG, "onNewCadence:" + event.getCadence());
         _cadence = event.getCadence();
+        broadcastLocation(null);
     }
 
     @Override
@@ -151,7 +158,7 @@ public class GPSServiceCommand implements IServiceCommand {
 
             // send the saved values directly to update the watch
             // TODO(jay) send xpos=0, ypos=0, it will display a "wrong" point on the map
-            broadcastLocation(0, 0);
+            broadcastLocation(null);
         } else {
             _currentStatus = BaseStatus.Status.DISABLED;
         }
@@ -251,6 +258,8 @@ public class GPSServiceCommand implements IServiceCommand {
         _sensorListener = new GPSSensorEventListener(_advancedLocation,_sensorManager,new Callable() {
             @Override
             public Object call() throws Exception {
+                //Log.d(TAG, "call:" + _advancedLocation.getAltitudeFromPressure());
+                broadcastLocation(null);
                 return null;
             }
         });
@@ -283,12 +292,7 @@ public class GPSServiceCommand implements IServiceCommand {
                 saveGPSStats();
             }
 
-            double xpos = firstLocation.distanceTo(location) * Math.sin(firstLocation.bearingTo(location)/180*3.1415);
-            double ypos = firstLocation.distanceTo(location) * Math.cos(firstLocation.bearingTo(location)/180*3.1415);
-
-            xpos = Math.floor(xpos/10);
-            ypos = Math.floor(ypos/10);
-            broadcastLocation(xpos, ypos);
+            broadcastLocation(location);
         }
 
         @Override
@@ -308,10 +312,18 @@ public class GPSServiceCommand implements IServiceCommand {
 
     };
 
-    private void broadcastLocation(double xpos, double ypos) {
+    private double _xpos = 0;
+    private double _ypos = 0;
+    private void broadcastLocation(Location location) {
+        if (firstLocation != null && location != null) {
+            _xpos = firstLocation.distanceTo(location) * Math.sin(firstLocation.bearingTo(location) / 180 * 3.1415);
+            _xpos = Math.floor(_xpos / 10);
+            _ypos = firstLocation.distanceTo(location) * Math.cos(firstLocation.bearingTo(location) / 180 * 3.1415);
+            _ypos = Math.floor(_ypos / 10);
+        }
         int units = _dataStore.getMeasurementUnits();
 
-        NewLocation event = new AdvancedLocationToNewLocation(_advancedLocation, xpos, ypos, units);
+        NewLocation event = new AdvancedLocationToNewLocation(_advancedLocation, _xpos, _ypos, units);
         if (_heartRate > 0) {
             event.setHeartRate(_heartRate);
         }
@@ -321,7 +333,12 @@ public class GPSServiceCommand implements IServiceCommand {
 
         _savedLocation = new NewLocationToSavedLocation(event);
 
-        _bus.post(event);
+        if (_time.getCurrentTimeMilliseconds() - _last_post_newlocation > _refresh_interval * 0.95) {
+            // 0.95 to avoid skipping wanted data
+            //Log.d(TAG, "ts:" + _time.getCurrentTimeMilliseconds() + " _refresh_interval:" + _refresh_interval);
+            _last_post_newlocation = _time.getCurrentTimeMilliseconds();
+            _bus.post(event);
+        }
 
         if (_advancedLocation.getAltitude() != 0.0) {
             _altitudeGraphReduce.addAltitude((int) _advancedLocation.getAltitude(), _advancedLocation.getElapsedTime(), _advancedLocation.getDistance());
