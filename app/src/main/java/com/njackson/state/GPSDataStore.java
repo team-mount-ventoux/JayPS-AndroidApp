@@ -24,6 +24,8 @@ public class GPSDataStore implements IGPSDataStore {
     float _ascent = 0;
     int _nbascent = 0;
     float _maxSpeed = 0;
+    private float _altitudeCalibrationDelta;
+    private long _altitudeCalibrationDeltaTime;
     private float _geoid;
     private float _lattitude;
     private float _longitude;
@@ -54,6 +56,8 @@ public class GPSDataStore implements IGPSDataStore {
         _ascent = _sharedPreferences.getFloat("GPS_ASCENT", 0);
         _nbascent = _sharedPreferences.getInt("GPS_NB_ASCENT", 0);
         _maxSpeed = _sharedPreferences.getFloat("GPS_MAX_SPEED", 0);
+        _altitudeCalibrationDelta = _sharedPreferences.getFloat("ALTITUDE_CALIBRATION_DELTA", 0);
+        _altitudeCalibrationDeltaTime = _sharedPreferences.getLong("ALTITUDE_CALIBRATION_DELTA_TIME",0);
         _geoid = _sharedPreferences.getFloat("GEOID_HEIGHT",0);
         _lattitude = _sharedPreferences.getFloat("GPS_FIRST_LOCATION_LAT",0);
         _longitude = _sharedPreferences.getFloat("GPS_FIRST_LOCATION_LON",0);
@@ -135,6 +139,23 @@ public class GPSDataStore implements IGPSDataStore {
     }
 
     @Override
+    public float getAltitudeCalibrationDelta(long time) {
+        if (time - _altitudeCalibrationDeltaTime < 1000 * 3600) {
+            // last saved value is not older than X seconds
+            return _altitudeCalibrationDelta;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public void setAltitudeCalibrationDelta(float value, long time)
+    {
+        _altitudeCalibrationDelta = value;
+        _altitudeCalibrationDeltaTime = time;
+    }
+
+    @Override
     public float getGEOIDHeight() {
         return _geoid;
     }
@@ -172,6 +193,7 @@ public class GPSDataStore implements IGPSDataStore {
         _ascent = 0;
         _nbascent = 0;
         _maxSpeed = 0;
+        //_altitudeCalibrationDelta = 0; // no reset needed, it's for altitude correction
         //_geoid = 0; // no reset needed, it's for altitude correction
         //_lattitude = 0; // no reset needed, it's for map origin (latitude => xpos conversion)
         //_longitude = 0; // no reset needed, it's for map origin (longitude => ypos conversion)
@@ -199,6 +221,8 @@ public class GPSDataStore implements IGPSDataStore {
         editor.putFloat("GPS_ASCENT", _ascent);
         editor.putInt("GPS_NB_ASCENT", _nbascent);
         editor.putFloat("GPS_MAX_SPEED", _maxSpeed);
+        editor.putFloat("ALTITUDE_CALIBRATION_DELTA", _altitudeCalibrationDelta);
+        editor.putLong("ALTITUDE_CALIBRATION_DELTA_TIME", _altitudeCalibrationDeltaTime);
         editor.putFloat("GEOID_HEIGHT", _geoid);
         editor.putFloat("GPS_FIRST_LOCATION_LAT", _lattitude);
         editor.putFloat("GPS_FIRST_LOCATION_LON", _longitude);

@@ -196,6 +196,7 @@ public class GPSServiceCommand implements IServiceCommand {
         _advancedLocation.setMaxSpeed(_dataStore.getMaxSpeed());
 
         _advancedLocation.setGeoidHeight(_dataStore.getGEOIDHeight());
+        _advancedLocation.setAltitudeCalibrationDelta(_dataStore.getAltitudeCalibrationDelta(_time.getCurrentTimeMilliseconds()));
 
         if (_dataStore.getFirstLocationLattitude() != 0.0f && _dataStore.getFirstLocationLongitude() != 0.0f) {
             firstLocation = new Location("PebbleBike");
@@ -214,6 +215,7 @@ public class GPSServiceCommand implements IServiceCommand {
         _dataStore.setNbAscent(_advancedLocation.getNbAscent());
         _dataStore.setMaxSpeed(_advancedLocation.getMaxSpeed());
         _dataStore.setGEOIDHeight((float) _advancedLocation.getGeoidHeight());
+        _dataStore.setAltitudeCalibrationDelta((float) _advancedLocation.getAltitudeCalibrationDelta(), _time.getCurrentTimeMilliseconds());
         if (firstLocation != null) {
             _dataStore.setFirstLocationLattitude((float) firstLocation.getLatitude());
             _dataStore.setFirstLocationLongitude((float) firstLocation.getLongitude());

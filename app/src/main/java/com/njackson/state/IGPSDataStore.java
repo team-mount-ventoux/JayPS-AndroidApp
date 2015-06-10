@@ -30,6 +30,8 @@ public interface IGPSDataStore {
     float getMaxSpeed();
     void setMaxSpeed(float value);
 
+    float getAltitudeCalibrationDelta(long time);
+    void setAltitudeCalibrationDelta(float value, long time);
 
     float getGEOIDHeight();
     void setGEOIDHeight(float value);
