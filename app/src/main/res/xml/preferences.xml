@@ -276,6 +276,14 @@
                 android:data="@string/PREF_USERVOICE_URL" />
         </Preference>
         <Preference
+            android:key="googleplus"
+            android:title="@string/PREF_GOOGLEPLUS"
+            android:summary="@string/PREF_GOOGLEPLUS_SUMMARY"
+            >
+            <intent android:action="android.intent.action.VIEW"
+                android:data="@string/PREF_GOOGLEPLUS_URL" />
+        </Preference>
+        <Preference
             android:key="twitter"
             android:title="@string/PREF_TWITTER"
             android:summary="@string/PREF_TWITTER_SUMMARY"

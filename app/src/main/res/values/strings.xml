@@ -91,6 +91,10 @@
     <string name="PREF_USERVOICE_SUMMARY">Create and vote for new features</string>
     <string name="PREF_USERVOICE_URL">http://pebblebike.uservoice.com/?utm_source=PebbleBikeApp</string>
 
+    <string name="PREF_GOOGLEPLUS">Google+ Community</string>
+    <string name="PREF_GOOGLEPLUS_SUMMARY">Exchange ideas and test new versions</string>
+    <string name="PREF_GOOGLEPLUS_URL">https://plus.google.com/communities/101059137889634445614</string>
+
     <string name="PREF_TWITTER">Twitter</string>
     <string name="PREF_TWITTER_SUMMARY">Share on twitter</string>
     <string name="PREF_TWITTER_URL">https://twitter.com/intent/tweet?text=I\'m+using+@PebbleBike&amp;url=http://www.pebblebike.com</string>
