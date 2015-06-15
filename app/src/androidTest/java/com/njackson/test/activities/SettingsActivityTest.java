@@ -20,6 +20,7 @@ import com.njackson.state.IGPSDataStore;
 import com.njackson.test.application.TestApplication;
 import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.messages.IMessageMaker;
+import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -82,11 +83,15 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
 
         @Provides @Singleton
         IGPSDataStore providesGPSDataStore(SharedPreferences preferences) { return mock(IGPSDataStore.class); }
+
+        @Provides @Singleton
+        Bus providesBus() { return mock(Bus.class); }
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath());
 
         TestApplication app = new TestApplication();
         app.setObjectGraph(ObjectGraph.create(TestModule.class));

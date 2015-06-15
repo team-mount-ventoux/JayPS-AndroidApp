@@ -20,6 +20,8 @@ import com.njackson.Constants;
 import com.njackson.R;
 import com.njackson.activities.HRMScanActivity;
 import com.njackson.application.PebbleBikeApplication;
+import com.njackson.events.BleServiceCommand.BleCadence;
+import com.njackson.events.BleServiceCommand.BleHeartRate;
 import com.njackson.events.GPSServiceCommand.ChangeRefreshInterval;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.state.IGPSDataStore;
@@ -28,6 +30,7 @@ import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.messages.ToastMessageMaker;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -189,10 +192,21 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         }
     }
+    @Subscribe
+    public void onNewHeartRate(BleHeartRate event) {
+        setHrmTitle(getApplicationContext().getString(R.string.PREF_HRM_TITLE) + " - Heart rate: " + event.getHeartRate());
+    }
+
+    @Subscribe
+    public void onNewCadence(BleCadence event) {
+        //Log.d(TAG, "onNewCadence:" + event.getCadence());
+        setHrmTitle(getApplicationContext().getString(R.string.PREF_HRM_TITLE) + " - Cadence: " + event.getCadence());
+    }
 
 	@Override
     protected void onResume() {
         super.onResume();
+        _bus.register(this);
 
         _sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
@@ -210,6 +224,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         _sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 
         super.onPause();
+        _bus.unregister(this);
     }
 
     @Override
@@ -333,7 +348,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         Preference canvas_screen = findPreference("canvas_screen");
         canvas_screen.setSummary(listDesc);
     }
-
+    private void setHrmTitle(String title) {
+        Preference hrmPref = findPreference("PREF_HRM");
+        hrmPref.setTitle(title);
+    }
     private void setHrmSummary() {
         String summary = _sharedPreferences.getString("hrm_name", "");
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -342,7 +360,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         if (summary.equals("")) {
             summary = "Click to choose a sensor";
         }
-        Preference loginPref = findPreference("PREF_HRM");
-        loginPref.setSummary(summary);
+        Preference hrmPref = findPreference("PREF_HRM");
+        hrmPref.setSummary(summary);
     }
 }
