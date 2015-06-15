@@ -62,6 +62,15 @@ public class NewLocationToCanvasPluginGPSData extends GPSData {
         this.slope += display_units ? "%" : "";
         this.accuracy = String.format("%.0f", event.getAccuracy());
         this.accuracy += display_units ? "m" : "";
-        this.heartrate = String.format("%d", event.getHeartRate());
+        if (event.getHeartRate() < 255) {
+            this.heartrate = String.format("%d", event.getHeartRate());
+        } else {
+            this.heartrate = "-";
+        }
+        if (event.getCadence() < 255) {
+            this.cadence = String.format("%d", event.getCadence());
+        } else {
+            this.cadence = "-";
+        }
     }
 }

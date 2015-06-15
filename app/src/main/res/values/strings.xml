@@ -153,6 +153,7 @@
         <item>Slope</item>
         <item>Accuracy</item>
         <item>Heart rate</item>
+        <item>Cadence</item>
     </string-array>
 
     <!-- messages -->
