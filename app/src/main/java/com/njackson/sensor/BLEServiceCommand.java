@@ -28,12 +28,15 @@ public class BLEServiceCommand implements IServiceCommand {
     IBle _hrm;
     IInjectionContainer _container;
     private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
+    private boolean _registrered_bus = false;
 
     @Override
     public void execute(IInjectionContainer container) {
         container.inject(this);
+        _registrered_bus = false;
         if (isHrmActivated()) {
             _bus.register(this);
+            _registrered_bus = true;
             _container = container;
             _currentStatus = BaseStatus.Status.INITIALIZED;
         }
@@ -41,8 +44,9 @@ public class BLEServiceCommand implements IServiceCommand {
 
     @Override
     public void dispose() {
-        if (isHrmActivated()) {
+        if (isHrmActivated() && _registrered_bus) {
             _bus.unregister(this);
+            _registrered_bus = false;
         }
     }
 
