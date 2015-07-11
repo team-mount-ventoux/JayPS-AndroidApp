@@ -48,7 +48,7 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
         // now playing (text)
         TextPluginDefinition tplug = new TextPluginDefinition();
         tplug.id = ID_CANVAS_PB;
-        tplug.name = "Pebble Bike";
+        tplug.name = "Ventoo";
         tplug.format_mask_descriptions = new ArrayList<String>(Arrays.asList(context.getResources().getStringArray(R.array.canvas_format_mask_descs)));
         // populate example content for each field (optional) to be display in the format mask editor
         ArrayList<String> examples = new ArrayList<String>();

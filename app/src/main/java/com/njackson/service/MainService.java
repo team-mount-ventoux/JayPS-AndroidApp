@@ -55,7 +55,7 @@ public class MainService extends Service implements ITimerHandler {
         Log.d(TAG, "Started Main Service");
 
         handleCommand(intent);
-        _serviceStarter.startServiceForeground(this, "Pebble Bike", "GPS started", Notification.PRIORITY_DEFAULT);
+        _serviceStarter.startServiceForeground(this, "Ventoo", "GPS started", Notification.PRIORITY_DEFAULT);
 
         // ensures that if the service is recycled then it is restarted with the same refresh interval
         // onStartCommand will always be called with a non-null intent

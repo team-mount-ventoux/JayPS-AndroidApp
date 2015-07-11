@@ -20,7 +20,7 @@ public class LiveTrackingFriend {
     private Location _location;
 
     public LiveTrackingFriend() {
-        _location = new Location("PebbleBike");
+        _location = new Location("Ventoo");
     }
     public String toString() {
         return id + " " + _receivedTimestamp + " " + lat + "/" + lon + "--" + ts + "//" + dt;

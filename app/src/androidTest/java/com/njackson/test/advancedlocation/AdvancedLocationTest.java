@@ -18,7 +18,7 @@ public class AdvancedLocationTest extends AndroidTestCase {
         advancedLocation.setMaxSpeed(13f);
         assertEquals(13f, advancedLocation.getMaxSpeed());
 
-        Location location = new Location("PebbleBike");
+        Location location = new Location("Ventoo");
         location.setAccuracy(35);
         location.setSpeed(28f);
         advancedLocation.onLocationChanged(location, 0, 0);
@@ -51,7 +51,7 @@ public class AdvancedLocationTest extends AndroidTestCase {
         advancedLocation.setNbAscent(5);
         assertEquals(5, advancedLocation.getNbAscent());
 
-        Location location = new Location("PebbleBike");
+        Location location = new Location("Ventoo");
         long time = 1000000l;
         double latitude = 0;
         location.setAccuracy(AdvancedLocation.MAX_ACCURACY_FOR_NB_ASCENT+1);

@@ -15,7 +15,7 @@ public class LiveTrackingTest extends AndroidTestCase {
     @SmallTest
     public void testLiveTrackingGetMsgLiveShort() throws Exception {
         LiveTracking liveTracking = new LiveTracking(LiveTracking.TYPE_JAYPS, new Bus());
-        Location location = new Location("PebbleBike");
+        Location location = new Location("Ventoo");
         location.setAccuracy(5);
         location.setLatitude(48);
         location.setLongitude(3);
@@ -30,7 +30,7 @@ public class LiveTrackingTest extends AndroidTestCase {
         LiveTracking liveTracking = new LiveTracking(LiveTracking.TYPE_JAYPS, new Bus());
 
         long time = 1420980000000l;
-        Location location = new Location("PebbleBike");
+        Location location = new Location("Ventoo");
         location.setAccuracy(5);
         location.setLatitude(48);
         location.setLongitude(3);
@@ -79,7 +79,7 @@ public class LiveTrackingTest extends AndroidTestCase {
         liveTracking.parseResponse("start_activity", response);
         assertEquals(2, liveTracking.numberOfFriends);
 
-        Location location2 = new Location("PebbleBike");
+        Location location2 = new Location("Ventoo");
         location2.setAccuracy(5);
         location2.setLatitude(48.001);
         location2.setLongitude(3.0001);
@@ -104,7 +104,7 @@ public class LiveTrackingTest extends AndroidTestCase {
         liveTracking.setPassword("test");
 
         long time = 1420980000000l;
-        Location location = new Location("PebbleBike");
+        Location location = new Location("Ventoo");
         location.setAccuracy(5);
         location.setLatitude(48);
         location.setLongitude(3);
@@ -112,7 +112,7 @@ public class LiveTrackingTest extends AndroidTestCase {
 
         liveTracking.addPoint(location, location, 200, 98);
 
-        Location location2 = new Location("PebbleBike");
+        Location location2 = new Location("Ventoo");
         location2.setAccuracy(5);
         location2.setLatitude(48.001);
         location2.setLongitude(3.0001);

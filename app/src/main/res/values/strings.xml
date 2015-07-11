@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Pebble Bike</string>
-    <string name="MAIN_TITLE">Pebble Bike v2.0.2</string>
+    <string name="app_name">Ventoo</string>
+    <string name="MAIN_TITLE">Ventoo v2.0.2</string>
     <string name="action_settings">Settings</string>
     <string name="speedfragment_time_label">TIME</string>
     <string name="speedfragment_time_value">00:00</string>
@@ -44,7 +44,7 @@
     <string name="PREF_ABOUT_CATEGORY_TITLE">About</string>
 
     <string name="PREF_AUTOSTART_TITLE">Auto Start</string>
-    <string name="PREF_AUTOSTART_SUMMARY">Select this item if you would like pebble bike to autostart everytime you
+    <string name="PREF_AUTOSTART_SUMMARY">Select this item if you would like Ventoo to autostart everytime you
         start cycling
     </string>
     <string name="PREF_UNITS_TITLE">Units</string>
@@ -85,11 +85,11 @@
 
     <string name="PREF_ABOUT_TITLE">@string/MAIN_TITLE</string>
     <string name="PREF_ABOUT_SUMMARY">http://www.pebblebike.com</string>
-    <string name="PREF_ABOUT_URL">http://www.pebblebike.com/?utm_source=PebbleBikeApp</string>
+    <string name="PREF_ABOUT_URL">http://www.pebblebike.com/?utm_source=VentooApp</string>
 
     <string name="PREF_USERVOICE">New features</string>
     <string name="PREF_USERVOICE_SUMMARY">Create and vote for new features</string>
-    <string name="PREF_USERVOICE_URL">http://pebblebike.uservoice.com/?utm_source=PebbleBikeApp</string>
+    <string name="PREF_USERVOICE_URL">http://pebblebike.uservoice.com/?utm_source=VentooApp</string>
 
     <string name="PREF_GOOGLEPLUS">Google+ Community</string>
     <string name="PREF_GOOGLEPLUS_SUMMARY">Exchange ideas and test new versions</string>
@@ -134,7 +134,7 @@
     <string name="ble_unknown_characteristic">Unknown characteristic</string>
     <string name="ble_unknown_service">Unknown service</string>
     <string name="PREF_GOOGLE_FIT_TITLE">Google Fit</string>
-    <string name="PREF_GOOGLE_FIT_SUMMARY">Enable Google Fit recording for all your Pebble Bike activity</string>
+    <string name="PREF_GOOGLE_FIT_SUMMARY">Enable Google Fit recording for all your Ventoo activity</string>
 
     <!-- Canvas Plugin -->
     <string-array name="canvas_format_mask_descs">
@@ -157,5 +157,5 @@
     </string-array>
 
     <!-- messages -->
-    <string name="message_pebble_new_watchapp">A new watchapp is available. Please install it from the Pebble Bike android application settings</string>
+    <string name="message_pebble_new_watchapp">A new watchapp is available. Please install it from the Ventoo android application settings</string>
 </resources>
