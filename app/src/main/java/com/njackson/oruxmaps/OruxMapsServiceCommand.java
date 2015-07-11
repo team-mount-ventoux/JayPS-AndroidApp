@@ -86,6 +86,7 @@ public class OruxMapsServiceCommand implements IServiceCommand {
 
     private boolean lastStartGreaterThan12Hours() {
         long last_start = _dataStore.getPrevStartTime();
+        Log.d(TAG, "last_start=" + last_start + " now=" + _time.getCurrentTimeMilliseconds());
         return (_time.getCurrentTimeMilliseconds() - last_start) > TWELVE_HOURS_MS;
     }
 }

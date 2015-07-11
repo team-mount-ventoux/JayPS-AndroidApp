@@ -333,7 +333,7 @@ public class Ble implements IBle, ITimerHandler {
                 }
                 //intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
                 // TODO(jay) post something?
-                if (debug) Log.d(TAG, "broadcastUpdate():" + new String(data) + "\n" + stringBuilder.toString());
+                if (debug) Log.d(TAG, "unused characteristics3:" + characteristic.getUuid() + "=>" + stringBuilder.toString());
             }
         }
     }
@@ -368,6 +368,8 @@ public class Ble implements IBle, ITimerHandler {
                         //if (MainActivity.debug) Log.d(TAG, "setCharacteristicNotification: " + gattCharacteristic.getUuid().toString());
                         setCharacteristicNotification(gattCharacteristic, true);
                     }
+                } else {
+                    if (debug) Log.i(TAG, "unused characteristics:" + gattCharacteristic.getUuid());
                 }
             }
         }
@@ -411,6 +413,8 @@ public class Ble implements IBle, ITimerHandler {
                     UUID.fromString(BLESampleGattAttributes.CLIENT_CHARACTERISTIC_CONFIG));
             descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
             mBluetoothGatt.writeDescriptor(descriptor);
+        } else {
+            if (debug) Log.i(TAG, "unused characteristics2:" + characteristic.getUuid());
         }
     }
 

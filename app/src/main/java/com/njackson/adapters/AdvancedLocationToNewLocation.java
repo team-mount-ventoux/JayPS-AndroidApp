@@ -1,5 +1,7 @@
 package com.njackson.adapters;
 
+import android.util.Log;
+
 import com.njackson.Constants;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 
@@ -10,6 +12,7 @@ import fr.jayps.android.AdvancedLocation;
  */
 public class AdvancedLocationToNewLocation extends NewLocation {
 
+    private static String TAG = "PB-AdvancedLocationToNewLocation";
     private static boolean _speedInversion = false;
     private static float _speedConversion;
     private static float _distanceConversion;

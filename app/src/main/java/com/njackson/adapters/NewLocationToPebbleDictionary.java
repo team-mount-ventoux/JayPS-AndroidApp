@@ -1,5 +1,7 @@
 package com.njackson.adapters;
 
+import android.util.Log;
+
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
 import com.njackson.events.GPSServiceCommand.NewLocation;
@@ -13,6 +15,7 @@ import com.njackson.events.GPSServiceCommand.NewLocation;
  * watch face that this needs to be changed at the same time
  */
 public class NewLocationToPebbleDictionary extends PebbleDictionary{
+    private static String TAG = "PB-NewLocationToPebbleDictionary";
 
     public static final short POS_UNITS           = 0; // 3 bits
     public static final short POS_SERVICE_RUNNING = 3; // 1 bit
