@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <Preference
-        android:key="INSTALL_WATCHFACE"
-        android:title="@string/PREF_INSTALL_WATCHFACE_SDK2"
-        android:summary="@string/PREF_INSTALL_WATCHFACE_SDK2_SUMMARY"
-        />
+    <PreferenceScreen
+        android:key="install_screen"
+        android:title="Install"
+        android:summary="Install the watchface on your Pebble"
+        android:persistent="false">
+        <PreferenceCategory
+            android:title="@string/PREF_INSTALL_CATEGORY_TITLE"
+            >
+            <Preference
+                android:key="INSTALL_WATCHFACE_DEEPLINK"
+                android:title="@string/PREF_INSTALL_WATCHFACE_DEEPLINK"
+                android:summary="@string/PREF_INSTALL_WATCHFACE_DEEPLINK_SUMMARY"
+                >
+                <intent android:action="android.intent.action.VIEW"
+                    android:data="@string/PREF_INSTALL_WATCHFACE_DEEPLINK_URL" />
+            </Preference>
+            <Preference
+                android:key="INSTALL_WATCHFACE"
+                android:title="@string/PREF_INSTALL_WATCHFACE_WEBSITE"
+                android:summary="@string/PREF_INSTALL_WATCHFACE_WEBSITE_SUMMARY"
+                />
+        </PreferenceCategory>
+    </PreferenceScreen>
     <Preference
         android:key="RESET_DATA"
         android:title="@string/PREF_RESET_DATA"
@@ -283,6 +301,16 @@
             <intent android:action="android.intent.action.VIEW"
                 android:data="@string/PREF_GOOGLEPLUS_URL" />
         </Preference>
+
+        <Preference
+            android:key="pebble_store"
+            android:title="@string/PREF_PEBBLE_STORE"
+            android:summary="@string/PREF_PEBBLE_STORE_SUMMARY"
+            >
+            <intent android:action="android.intent.action.VIEW"
+                android:data="@string/PREF_PEBBLE_STORE_URL" />
+        </Preference>
+
         <Preference
             android:key="twitter"
             android:title="@string/PREF_TWITTER"

@@ -21,9 +21,12 @@
     <string name="altitude_status_good">GOOD</string>
     <string name="altitude_status_medium">MEDIUM</string>
     <string name="altitude_status_poor">POOR</string>
-    <string name="PREF_INSTALL_CATEGORY_TITLE">Install Watch App</string>
-    <string name="PREF_INSTALL_WATCHFACE_SDK2">Install</string>
-    <string name="PREF_INSTALL_WATCHFACE_SDK2_SUMMARY">Installs the watchapp on the Pebble</string>
+    <string name="PREF_INSTALL_CATEGORY_TITLE">Install the watchface on your Pebble</string>
+    <string name="PREF_INSTALL_WATCHFACE_DEEPLINK">Installation from the Pebble Store [default]</string>
+    <string name="PREF_INSTALL_WATCHFACE_DEEPLINK_SUMMARY">Please vote for the app</string>
+    <string name="PREF_INSTALL_WATCHFACE_DEEPLINK_URL">pebble://appstore/529289cee07df1fa76000009</string>
+    <string name="PREF_INSTALL_WATCHFACE_WEBSITE">Installation from the developers website</string>
+    <string name="PREF_INSTALL_WATCHFACE_WEBSITE_SUMMARY"></string>
     <string name="PREF_RESET_DATA">Reset data &amp; GPX</string>
     <string name="PREF_RESET_DATA_SUMMARY">Distance, time, speed and ascent</string>
     <string name="ALERT_RESET_DATA_TITLE">Reset data and GPX</string>
@@ -97,7 +100,11 @@
 
     <string name="PREF_TWITTER">Twitter</string>
     <string name="PREF_TWITTER_SUMMARY">Share on twitter</string>
-    <string name="PREF_TWITTER_URL">https://twitter.com/intent/tweet?text=I\'m+using+@PebbleBike&amp;url=http://www.pebblebike.com</string>
+    <string name="PREF_TWITTER_URL">https://twitter.com/intent/tweet?text=I\'m+using+@VentooBike&amp;url=http://www.pebblebike.com</string>
+
+    <string name="PREF_PEBBLE_STORE">Pebble Store</string>
+    <string name="PREF_PEBBLE_STORE_SUMMARY">Please vote for the app</string>
+    <string name="PREF_PEBBLE_STORE_URL">pebble://appstore/529289cee07df1fa76000009</string>
 
     <string name="PREF_DEBUG_TITLE">Debug</string>
     <string name="PREF_DEBUG_SUMMARY">More logs for developers</string>
