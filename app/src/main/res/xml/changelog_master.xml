@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="2.1.0-beta1" versioncode="252" >
-        <change>New name for the app. Pebble Bike is now Ventoo</change>
-        <change>Configurable screens on the Pebble</change>
-        <change>BLE Cycling Speed and Cadence (CSC)</change>
+    <release version="2.1.0" versioncode="253" >
+        <change><![CDATA[<b>New name for the app. Pebble Bike is now Ventoo!</b>]]></change>
+        <change><![CDATA[<b>Configurable screens on the Pebble</b>]]></change>
+        <change><![CDATA[<b>BLE Cycling Speed and Cadence (CSC)</b>]]></change>
         <change>GPX: add heart rate and cadence</change>
         <change>Improve accuracy for altitude from pressure sensor</change>
         <change>Map My Tracks: send altitude and heart rate</change>
-        <change>=> New watchface (click on "Install Watchface" in settings)</change>
+        <change><![CDATA[<b>=> New watchface (click on "Install Watchface" in settings)</b>]]></change>
     </release>
     <release version="2.0.1" versioncode="223" >
         <change>Bugfix: prevent crashes for Android 4.1 and 4.2</change>
     </release>
     <release version="2.0.0" versioncode="221" >
-        <change>Android: New UI</change>
-        <change>Save tracks and export them as GPX</change>
-        <change>Customizable screens with Canvas plugin</change>
+        <change><![CDATA[<b>Android: New UI</b>]]></change>
+        <change><![CDATA[<b>Save tracks and export them as GPX</b>]]></change>
+        <change><![CDATA[<b>Customizable screens with Canvas plugin</b>]]></change>
         <change>Pebble Time compatibility</change>
         <change>New version 2: complete rewrite of the app since 1.x</change>
         <change>New units: nautical and running</change>
