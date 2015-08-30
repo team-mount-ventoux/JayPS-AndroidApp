@@ -54,7 +54,7 @@ public class BLEServiceCommand implements IServiceCommand {
         return _applicationContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
                 // note: double check FEATURE_BLUETOOTH_LE + android version because the 1st test (hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) seems to return true on some 4.1 & 4.2
                 && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2 // BLE requires 4.3 (Api level 18)
-                && !_sharedPreferences.getString("hrm_address", "").equals("");
+                && (!_sharedPreferences.getString("hrm_address", "").equals("") || !_sharedPreferences.getString("hrm_address2", "").equals(""));
     }
 
     @Override
@@ -80,8 +80,8 @@ public class BLEServiceCommand implements IServiceCommand {
     private void start() {
         Log.d(TAG, "start");
 
-        if (!_sharedPreferences.getString("hrm_address", "").equals("")) {
-            _hrm.start(_sharedPreferences.getString("hrm_address", ""), _bus, _container);
+        if (!_sharedPreferences.getString("hrm_address", "").equals("") || !_sharedPreferences.getString("hrm_address2", "").equals("")) {
+            _hrm.start(_sharedPreferences.getString("hrm_address", ""), _sharedPreferences.getString("hrm_address2", ""), _bus, _container);
             _currentStatus = BaseStatus.Status.STARTED;
         } else {
             _currentStatus = BaseStatus.Status.UNABLE_TO_START;

@@ -156,13 +156,25 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2 // BLE requires 4.3 (Api level 18)
         ) {
 
-                Preference pref_hrm = findPreference("PREF_HRM");
-            pref_hrm.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            Preference pref_ble1 = findPreference("PREF_BLE1");
+            pref_ble1.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference preference) {
-                    if (preference.getKey().equals("PREF_HRM")) {
+                    if (preference.getKey().equals("PREF_BLE1")) {
                         final Intent intent = new Intent(getApplicationContext(), HRMScanActivity.class);
                         startActivityForResult(intent, 1);
+                    }
+                    return false;
+                }
+            });
+
+            Preference pref_ble2 = findPreference("PREF_BLE2");
+            pref_ble2.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    if (preference.getKey().equals("PREF_BLE2")) {
+                        final Intent intent = new Intent(getApplicationContext(), HRMScanActivity.class);
+                        startActivityForResult(intent, 2);
                     }
                     return false;
                 }
@@ -170,7 +182,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1) {
+        if (requestCode > 0) {
+            int sensorNumber = requestCode;
+            Log.d(TAG, "onActivityResult sensorNumber="+sensorNumber);
+
             String hrm_name = "";
             String hrm_address = "";
             if(resultCode == RESULT_OK) {
@@ -179,8 +194,13 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
 
             SharedPreferences.Editor editor = _sharedPreferences.edit();
-            editor.putString("hrm_name", hrm_name);
-            editor.putString("hrm_address", hrm_address);
+            if (sensorNumber == 2) {
+                editor.putString("hrm_name2", hrm_name);
+                editor.putString("hrm_address2", hrm_address);
+            } else {
+                editor.putString("hrm_name", hrm_name);
+                editor.putString("hrm_address", hrm_address);
+            }
             editor.commit();
 
             setHrmSummary();
@@ -194,13 +214,15 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
     @Subscribe
     public void onNewHeartRate(BleHeartRate event) {
-        setHrmTitle(getApplicationContext().getString(R.string.PREF_HRM_TITLE) + " - Heart rate: " + event.getHeartRate());
+        //todo(jay): which sensor?
+        setHrmTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE1) + " - Heart rate: " + event.getHeartRate());
     }
 
     @Subscribe
     public void onNewCadence(BleCadence event) {
+        //todo(jay): which sensor?
         //Log.d(TAG, "onNewCadence:" + event.getCadence());
-        setHrmTitle(getApplicationContext().getString(R.string.PREF_HRM_TITLE) + " - Cadence: " + event.getCadence());
+        setHrmTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE1) + " - Cadence: " + event.getCadence());
     }
 
 	@Override
@@ -349,18 +371,26 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         canvas_screen.setSummary(listDesc);
     }
     private void setHrmTitle(String title) {
-        Preference hrmPref = findPreference("PREF_HRM");
+        Preference hrmPref = findPreference("PREF_BLE1");
         hrmPref.setTitle(title);
     }
     private void setHrmSummary() {
         String summary = _sharedPreferences.getString("hrm_name", "");
+        String summary2 = _sharedPreferences.getString("hrm_name2", "");
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             summary = getResources().getString(R.string.ble_not_supported);
+            summary2 = getResources().getString(R.string.ble_not_supported);
         }
         if (summary.equals("")) {
             summary = "Click to choose a sensor";
         }
-        Preference hrmPref = findPreference("PREF_HRM");
+        Preference hrmPref = findPreference("PREF_BLE1");
         hrmPref.setSummary(summary);
+
+        if (summary2.equals("")) {
+            summary2 = "Click to choose a sensor";
+        }
+        Preference hrmPref2 = findPreference("PREF_BLE2");
+        hrmPref2.setSummary(summary2);
     }
 }

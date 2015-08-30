@@ -98,11 +98,16 @@
             android:defaultValue="@string/REFRESH_INTERVAL_DEFAULT" />
 
         <PreferenceCategory
-            android:title="@string/PREF_HRM_CATEGORY_TITLE"
+            android:title="@string/PREF_BLE_CATEGORY_TITLE"
             >
             <Preference
-                android:key="PREF_HRM"
-                android:title="@string/PREF_HRM_TITLE"
+                android:key="PREF_BLE1"
+                android:title="@string/PREF_BLE_TITLE1"
+                android:summary=""
+                />
+            <Preference
+                android:key="PREF_BLE2"
+                android:title="@string/PREF_BLE_TITLE2"
                 android:summary=""
                 />
         </PreferenceCategory>
