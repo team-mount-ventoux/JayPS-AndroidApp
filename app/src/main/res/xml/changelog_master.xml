@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.2.0-beta1" versioncode="261" >
+        <change><![CDATA[<b>BLE: support for multiple devices at the same time (HRM+CSC)</b>]]></change>
+        <change><![CDATA[<b>BLE: support for multiple data from the same device (TickrX)</b>]]></change>
+        <change>BLE: support for temperature (Wahoo Blue SC) - Canvas only</change>
+        <change>BLE Running Speed and Cadence (RSC) - TickrX, experimental, Canvas only</change>
+        <change><![CDATA[<b>=> New watchface (click on "Install Watchface from the developers website" in settings)</b>]]></change>
+    </release>
     <release version="2.1.0" versioncode="253" >
         <change><![CDATA[<b>New name for the app. Pebble Bike is now Ventoo!</b>]]></change>
         <change><![CDATA[<b>Configurable screens on the Pebble</b>]]></change>
