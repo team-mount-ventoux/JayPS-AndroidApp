@@ -34,9 +34,11 @@ public class NewLocationToPebbleDataTest extends AndroidTestCase{
         event.setLongitude(12.2);
         event.setSlope(13.3f);
         event.setSpeed(14.4f);
+        event.setHeartRate(123);
+        event.setCyclingCadence(134);
 
-        PebbleDictionary dic = new NewLocationToPebbleDictionary(event, true, true, true, 5000, 123, 255); // 255: no cadence, so hr is really sent
-        data = dic.getBytes(Constants.PEBBLE_LOCATION_DATA_V2);
+        PebbleDictionary dic = new NewLocationToPebbleDictionary(event, true, true, true, 5000);
+        data = dic.getBytes(Constants.PEBBLE_LOCATION_DATA_V3);
 
         assertNotNull("Data should not be null",data);
     }
@@ -139,6 +141,9 @@ public class NewLocationToPebbleDataTest extends AndroidTestCase{
 
     public void testHeartrate() {
         assertEquals("Heartrate: Expected value 123",123,data[NewLocationToPebbleDictionary.BYTE_HEARTRATE]);
+    }
+    public void testCyclingCadence() {
+        assertEquals("Cycling Cadence: Expected value 134",(byte) 134,data[NewLocationToPebbleDictionary.BYTE_CADENCE]);
     }
 
     private boolean bitIsSet(byte b, int position)
