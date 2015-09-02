@@ -18,8 +18,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.njackson.application.IInjectionContainer;
-import com.njackson.events.BleServiceCommand.BleCadence;
-import com.njackson.events.BleServiceCommand.BleHeartRate;
+import com.njackson.events.BleServiceCommand.BleSensorData;
 import com.squareup.otto.Bus;
 
 import java.util.Iterator;
@@ -406,7 +405,9 @@ public class Ble implements IBle {
             }
             final int heartRate = characteristic.getIntValue(format, 1);
             res = String.format("Received heart rate: %d", heartRate);
-            _bus.post(new BleHeartRate(heartRate));
+            BleSensorData sensorData = new BleSensorData();
+            sensorData.setHeartRate(heartRate);
+            _bus.post(sensorData);
         } else if (UUID_CSC_MEASUREMENT.equals(characteristic.getUuid())) {
             int flag = characteristic.getProperties();
             //Log.d(TAG, String.format("flag: %d", flag));
@@ -431,7 +432,9 @@ public class Ble implements IBle {
 
             res = String.format("Received cadence: %d", (int) _csc.getCrankRpm());
 
-            _bus.post(new BleCadence((int) _csc.getCrankRpm()));
+            BleSensorData sensorData = new BleSensorData();
+            sensorData.setCyclingCadence((int) _csc.getCrankRpm());
+            _bus.post(sensorData);
         } else if (UUID_BATTERY_LEVEL.equals(characteristic.getUuid())) {
             final int battery = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0);
             res = String.format("Received battery: %d", battery);
@@ -446,14 +449,24 @@ public class Ble implements IBle {
                 units = "Fahrenheit";
                 offset = 2;
             }
-            final float temperature = characteristic.getFloatValue(BluetoothGattCharacteristic.FORMAT_FLOAT, offset);
+            float temperature = characteristic.getFloatValue(BluetoothGattCharacteristic.FORMAT_FLOAT, offset);
             res = String.format("Received temperature: %f %s", temperature, units);
+            if (offset == 2) {
+                // force conversion to celsius
+                temperature = ((temperature - 32) * 5) / 9;
+            }
+            BleSensorData sensorData = new BleSensorData();
+            sensorData.setTemperature(temperature);
+            _bus.post(sensorData);
         } else if (UUID_RSC_MEASUREMENT.equals(characteristic.getUuid())) {
             int speed = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 1);
             int cadence = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 3);
 
             res = String.format("Received running speeed: %d m/s, running cadence: %d", speed, cadence);
-            _bus.post(new BleCadence((int) cadence));
+            BleSensorData sensorData = new BleSensorData();
+            sensorData.setRunningCadence((int) cadence);
+            _bus.post(sensorData);
+
         } else {
             // For all other profiles, writes the data formatted in HEX.
             final byte[] data = characteristic.getValue();

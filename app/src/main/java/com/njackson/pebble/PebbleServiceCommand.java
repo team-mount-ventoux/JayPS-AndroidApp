@@ -126,9 +126,7 @@ public class PebbleServiceCommand implements IServiceCommand {
                 true, // forced to true, we're receiving location (can a location arrive after stop event?)
                 _sharedPreferences.getBoolean("PREF_DEBUG", false),
                 _sharedPreferences.getBoolean("LIVE_TRACKING", false),
-                Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", String.valueOf(Constants.REFRESH_INTERVAL_DEFAULT))),
-                newLocation.getHeartRate(),
-                newLocation.getCadence()
+                Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", String.valueOf(Constants.REFRESH_INTERVAL_DEFAULT)))
         );
         sendDataToPebbleIfPossible(dictionary);
     }

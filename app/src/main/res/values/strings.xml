@@ -161,7 +161,9 @@
         <item>Slope</item>
         <item>Accuracy</item>
         <item>Heart rate</item>
-        <item>Cadence</item>
+        <item>Cycling Cadence</item>
+        <item>Running Cadence</item>
+        <item>Temperature</item>
     </string-array>
 
     <!-- messages -->

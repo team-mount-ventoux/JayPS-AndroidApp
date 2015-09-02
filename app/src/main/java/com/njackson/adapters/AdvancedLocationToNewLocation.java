@@ -31,7 +31,7 @@ public class AdvancedLocationToNewLocation extends NewLocation {
             this.setMaxSpeed(advancedLocation.getMaxSpeed() * _speedConversion);
             this.setAvgSpeed(advancedLocation.getAverageSpeed() * _speedConversion);
         }
-        this.setDistance(advancedLocation.getDistance()  * _distanceConversion);
+        this.setDistance(advancedLocation.getDistance() * _distanceConversion);
         this.setLatitude(advancedLocation.getLatitude());
         this.setLongitude(advancedLocation.getLongitude());
         this.setAltitude(advancedLocation.getAltitude() * _altitudeConversion); // m
@@ -46,7 +46,8 @@ public class AdvancedLocationToNewLocation extends NewLocation {
         this.setYpos(ypos);
         this.setBearing(advancedLocation.getBearing());
         this.setHeartRate(255); // 255: no Heart Rate available
-        this.setCadence(255); // 255: no cadence available
+        this.setCyclingCadence(255); // 255: no cadence available
+        this.setRunningCadence(255); // 255: no cadence available
     }
 
     private void createUnits(int units) {

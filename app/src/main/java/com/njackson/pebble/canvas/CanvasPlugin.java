@@ -17,7 +17,7 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
     
     public static final int ID_CANVAS_PB = 1;
     
-    private static final String[] MASKS = { "%DIST", "%ALT", "%ASCE", "%BEAR", "%TIME", "%AVG", "%SPD", "%MSPD", "%LAT", "%LON", "%ASCR", "%NBASC", "%SLOP", "%ACCU", "%HRM", "%CAD"};
+    private static final String[] MASKS = { "%DIST", "%ALT", "%ASCE", "%BEAR", "%TIME", "%AVG", "%SPD", "%MSPD", "%LAT", "%LON", "%ASCR", "%NBASC", "%SLOP", "%ACCU", "%HRM", "%CAD", "%RCAD", "%TEMP"};
     private static final int MASK_DISTANCE = 0;
     private static final int MASK_ALTITUDE = 1;
     private static final int MASK_ASCENT = 2;
@@ -33,10 +33,10 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
     private static final int MASK_SLOPE = 12;
     private static final int MASK_ACCURACY = 13;
     private static final int MASK_HEARTRATE = 14;
-    private static final int MASK_CADENCE = 15;
+    private static final int MASK_CYCLING_CADENCE = 15;
+    private static final int MASK_RUNNING_CADENCE = 16;
+    private static final int MASK_TEMPERATURE = 17;
 
-
-    
     // send plugin metadata to Canvas when requested
     @Override
     protected ArrayList<PluginDefinition> get_plugin_definitions(Context context) {
@@ -67,7 +67,10 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
         examples.add(current_data.slope);
         examples.add(current_data.accuracy);
         examples.add(current_data.heartrate);
-        examples.add(current_data.cadence);
+        examples.add(current_data.cyclingCadence);
+        examples.add(current_data.runningCadence);
+        examples.add(current_data.temperature);
+
         tplug.format_mask_examples = examples;
         tplug.format_masks = new ArrayList<String>(Arrays.asList(MASKS));
         tplug.default_format_string = "%DIST %ALT %AVG";
@@ -120,8 +123,12 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
                 return current_data.accuracy;
             } else if (format_mask.equals(MASKS[MASK_HEARTRATE])) {
                 return current_data.heartrate;
-            } else if (format_mask.equals(MASKS[MASK_CADENCE])) {
-                return current_data.cadence;
+            } else if (format_mask.equals(MASKS[MASK_CYCLING_CADENCE])) {
+                return current_data.cyclingCadence;
+            } else if (format_mask.equals(MASKS[MASK_RUNNING_CADENCE])) {
+                return current_data.runningCadence;
+            } else if (format_mask.equals(MASKS[MASK_TEMPERATURE])) {
+                return current_data.temperature;
             }
         }
         Log.i(TAG, "no matching mask found");
@@ -156,7 +163,9 @@ public class CanvasPlugin extends PebbleCanvasPlugin {
         current_data.slope = data.slope;
         current_data.accuracy = data.accuracy;
         current_data.heartrate = data.heartrate;
-        current_data.cadence = data.cadence;
+        current_data.cyclingCadence = data.cyclingCadence;
+        current_data.runningCadence = data.runningCadence;
+        current_data.temperature = data.temperature;
         notify_canvas_updates_available(ID_CANVAS_PB, context);
     }
 }

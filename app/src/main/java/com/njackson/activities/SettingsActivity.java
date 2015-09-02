@@ -20,8 +20,7 @@ import com.njackson.Constants;
 import com.njackson.R;
 import com.njackson.activities.HRMScanActivity;
 import com.njackson.application.PebbleBikeApplication;
-import com.njackson.events.BleServiceCommand.BleCadence;
-import com.njackson.events.BleServiceCommand.BleHeartRate;
+import com.njackson.events.BleServiceCommand.BleSensorData;
 import com.njackson.events.GPSServiceCommand.ChangeRefreshInterval;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.state.IGPSDataStore;
@@ -213,16 +212,19 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
     }
     @Subscribe
-    public void onNewHeartRate(BleHeartRate event) {
+    public void onNewBleSensorData(BleSensorData event) {
         //todo(jay): which sensor?
-        setHrmTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE1) + " - Heart rate: " + event.getHeartRate());
-    }
-
-    @Subscribe
-    public void onNewCadence(BleCadence event) {
-        //todo(jay): which sensor?
-        //Log.d(TAG, "onNewCadence:" + event.getCadence());
-        setHrmTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE1) + " - Cadence: " + event.getCadence());
+        switch (event.getType()) {
+            case BleSensorData.SENSOR_HRM:
+                setHrmTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE1) + " - Heart rate: " + event.getHeartRate());
+                break;
+            case BleSensorData.SENSOR_CSC:
+                setHrmTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE1) + " - Cadence: " + event.getCyclingCadence());
+                break;
+            case BleSensorData.SENSOR_RSC:
+                setHrmTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE1) + " - Cadence: " + event.getRunningCadence());
+                break;
+        }
     }
 
 	@Override

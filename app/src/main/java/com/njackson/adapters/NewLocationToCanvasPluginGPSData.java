@@ -67,10 +67,21 @@ public class NewLocationToCanvasPluginGPSData extends GPSData {
         } else {
             this.heartrate = "-";
         }
-        if (event.getCadence() < 255) {
-            this.cadence = String.format("%d", event.getCadence());
+        if (event.getCyclingCadence() < 255) {
+            this.cyclingCadence = String.format("%d", event.getCyclingCadence());
         } else {
-            this.cadence = "-";
+            this.cyclingCadence = "-";
+        }
+        if (event.getRunningCadence() < 255) {
+            this.runningCadence = String.format("%d", event.getRunningCadence());
+        } else {
+            this.runningCadence = "-";
+        }
+        if (event.getTemperature() < 255) {
+            this.temperature = String.format("%.1f", event.getTemperature());
+            this.temperature += display_units ? Units.getTemperatureUnits(event.getUnits()) : "";
+        } else {
+            this.temperature = "-";
         }
     }
 }

@@ -301,9 +301,7 @@ public class MessageManager implements IMessageManager, Runnable {
                 isLocationServicesRunning,
                 _sharedPreferences.getBoolean("PREF_DEBUG", false),
                 _sharedPreferences.getBoolean("LIVE_TRACKING", false),
-                Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", String.valueOf(Constants.REFRESH_INTERVAL_DEFAULT))),
-                255, // 255: no Heart Rate available
-                255 // 255: no cadence available
+                Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", String.valueOf(Constants.REFRESH_INTERVAL_DEFAULT)))
         );
         dictionary.addInt32(Constants.MSG_VERSION_ANDROID, versionCode);
         offer(dictionary);

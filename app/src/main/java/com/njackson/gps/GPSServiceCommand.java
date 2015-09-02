@@ -16,7 +16,7 @@ import com.njackson.adapters.AdvancedLocationToNewLocation;
 import com.njackson.adapters.NewLocationToSavedLocation;
 import com.njackson.application.IInjectionContainer;
 import com.njackson.application.modules.ForApplication;
-import com.njackson.events.BleServiceCommand.BleCadence;
+import com.njackson.events.BleServiceCommand.BleSensorData;
 import com.njackson.events.GPSServiceCommand.ChangeRefreshInterval;
 import com.njackson.events.GPSServiceCommand.GPSChangeState;
 import com.njackson.events.GPSServiceCommand.GPSStatus;
@@ -24,7 +24,6 @@ import com.njackson.events.GPSServiceCommand.NewAltitude;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.GPSServiceCommand.SavedLocation;
-import com.njackson.events.BleServiceCommand.BleHeartRate;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.njackson.state.IGPSDataStore;
@@ -66,7 +65,9 @@ public class GPSServiceCommand implements IServiceCommand {
     private ServiceNmeaListener _nmeaListener;
     private GPSSensorEventListener _sensorListener;
 	private int _heartRate = 0;
-    private int _cadence = 0;
+    private int _cyclingCadence = 0;
+    private int _runningCadence = 0;
+    private double _temperature = 0;
     private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
     private SavedLocation _savedLocation = null;
     private NewAltitude _savedNewAltitude = null;
@@ -109,16 +110,29 @@ public class GPSServiceCommand implements IServiceCommand {
     }
 
     @Subscribe
-    public void onNewHeartRate(BleHeartRate event) {
-        Log.d(TAG, "onNewHeartRate:" + event.getHeartRate());
-        _heartRate = event.getHeartRate();
-        broadcastLocation(null);
-    }
+    public void onNewBleSensorData(BleSensorData event) {
+        switch (event.getType()) {
+            case BleSensorData.SENSOR_HRM:
+                _heartRate = event.getHeartRate();
+                Log.d(TAG, "onNewBleSensorData _heartRate:" + _heartRate);
+                break;
+            case BleSensorData.SENSOR_CSC:
+                _cyclingCadence = event.getCyclingCadence();
+                Log.d(TAG, "onNewBleSensorData _cadence:" + _cyclingCadence);
+                break;
+            case BleSensorData.SENSOR_RSC:
+                _runningCadence = event.getRunningCadence();
+                Log.d(TAG, "onNewBleSensorData _runningCadence:" + _runningCadence);
+                break;
 
-    @Subscribe
-    public void onNewCadence(BleCadence event) {
-        Log.d(TAG, "onNewCadence:" + event.getCadence());
-        _cadence = event.getCadence();
+            case BleSensorData.SENSOR_TEMPERATURE:
+                _temperature = event.getTemperature();
+                Log.d(TAG, "onNewBleSensorData _temperature:" + _temperature);
+                break;
+            default:
+                Log.d(TAG, "onNewBleSensorData type unknown:" + event.getType());
+                break;
+        }
         broadcastLocation(null);
     }
 
@@ -283,7 +297,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private LocationListener _locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            _advancedLocation.onLocationChanged(location, _heartRate, _cadence);
+            _advancedLocation.onLocationChanged(location, _heartRate, _cyclingCadence);
             if (firstLocation == null) {
                 firstLocation = location;
                 saveGPSStats();
@@ -329,8 +343,14 @@ public class GPSServiceCommand implements IServiceCommand {
         if (_heartRate > 0) {
             event.setHeartRate(_heartRate);
         }
-        if (_cadence > 0) {
-            event.setCadence(_cadence);
+        if (_cyclingCadence > 0) {
+            event.setCyclingCadence(_cyclingCadence);
+        }
+        if (_runningCadence > 0) {
+            event.setRunningCadence(_runningCadence);
+        }
+        if (_temperature > 0) {
+            event.setTemperature(_temperature);
         }
 
         _savedLocation = new NewLocationToSavedLocation(event);

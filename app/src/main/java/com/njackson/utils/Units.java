@@ -89,4 +89,17 @@ public class Units {
         }
         return "";
     }
+    public static String getTemperatureUnits(int units) {
+        switch(units) {
+            case Constants.IMPERIAL:
+            case Constants.NAUTICAL_IMPERIAL:
+            case Constants.RUNNING_IMPERIAL:
+                return "°F";
+            case  Constants.METRIC:
+            case Constants.NAUTICAL_METRIC:
+            case Constants.RUNNING_METRIC:
+                return "°C";
+        }
+        return "";
+    }
 }

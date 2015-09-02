@@ -141,7 +141,16 @@ public abstract class MyLocation {
     public int getHeartRate() { return this._HeartRate; }
     public void setHeartRate(int heartRate) { this._HeartRate = heartRate;}
 
-    private int _cadence = 0;
-    public int getCadence() { return this._cadence; }
-    public void setCadence(int cadence) { this._cadence = cadence;}
+    private int _cyclingCadence = 0;
+    public int getCyclingCadence() { return this._cyclingCadence; }
+    public void setCyclingCadence(int cyclingCadence) { this._cyclingCadence = cyclingCadence;}
+
+    private int _runningCadence = 0;
+    public int getRunningCadence() { return this._runningCadence; }
+    public void setRunningCadence(int runningCadence) { this._runningCadence = runningCadence;}
+
+    private double _temperature = 0;
+    public double getTemperature() { return this._temperature; }
+    public void setTemperature(double temperature) { this._temperature = temperature;}
+
 }

@@ -46,12 +46,14 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
     public static final short BYTE_HEARTRATE = 20;
     public static final short BYTE_MAXSPEED1 = 21;
     public static final short BYTE_MAXSPEED2 = 22;
+    public static final short BYTE_CADENCE = 23;
 
-    public NewLocationToPebbleDictionary(NewLocation event, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int heartRate, int cadence) {
-        // todo(jay) remove param heartRate
+    public NewLocationToPebbleDictionary(NewLocation event, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval) {
+
+        int location_data_version = Constants.PEBBLE_LOCATION_DATA_V3;
 
         PebbleDictionary dic = new PebbleDictionary();
-        byte[] data = new byte[23];
+        byte[] data = new byte[24];
 
         data[BYTE_SETTINGS] = (byte) ((event.getUnits() % 8) * (1<<POS_UNITS)); // set the units
 
@@ -111,16 +113,26 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
         data[BYTE_SPEED1] = (byte) (((int) (Math.floor(10 * event.getSpeed()) / 1)) % 256);
         data[BYTE_SPEED2] = (byte) (((int) (Math.floor(10 * event.getSpeed()) / 1)) / 256);
         data[BYTE_BEARING] = (byte) (((int)  (event.getBearing() / 360 * 256)) % 256);
-        if (cadence < 255) {
-            // CSC sensor is configured and cadence is received, sent it instead of hr (both are not supported yet at the same time)
-            data[BYTE_HEARTRATE] = (byte) (cadence % 256);
+
+        data[BYTE_HEARTRATE] = (byte) (event.getHeartRate() % 256);
+        if (location_data_version >= Constants.PEBBLE_LOCATION_DATA_V3) {
+            data[BYTE_CADENCE] = (byte) (event.getCyclingCadence() % 256);
         } else {
-            data[BYTE_HEARTRATE] = (byte) (heartRate % 256);
+            // old protocol, only one field (BYTE_HEARTRATE) for both hr and cadence
+            if (event.getCyclingCadence() < 255) {
+                // CSC sensor is configured and cadence is received, sent it instead of hr (both are not supported yet at the same time)
+                data[BYTE_HEARTRATE] = (byte) (event.getCyclingCadence() % 256);
+            }
         }
 
         data[BYTE_MAXSPEED1] = (byte) (((int) (Math.floor(10 * event.getMaxSpeed()) / 1)) % 256);
         data[BYTE_MAXSPEED2] = (byte) (((int) (Math.floor(10 * event.getMaxSpeed()) / 1)) / 256);
 
-        this.addBytes(Constants.PEBBLE_LOCATION_DATA_V2, data);
+        this.addBytes(location_data_version, data);
+
+        if (location_data_version >= Constants.PEBBLE_LOCATION_DATA_V3 && event.getTemperature() != 0) {
+            this.addInt16(Constants.PEBBLE_MSG_SENSOR_TEMPERATURE, (short) Math.floor(10 * event.getTemperature()));
+        }
+
     }
 }
