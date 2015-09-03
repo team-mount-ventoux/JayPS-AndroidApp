@@ -12,6 +12,7 @@ import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     @Inject Bus _bus;
     @Inject IServiceStarter _serviceStarter;
     @Inject IGPSDataStore _dataStore;
+    @Inject SharedPreferences _sharedPreferences;
 
     public PebbleDataReceiver() {
         super(Constants.WATCH_UUID);
@@ -65,6 +67,11 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
                 sendMessageToPebble(message);
             }
         }
+        // save watchface version for later use in different services/commands
+        SharedPreferences.Editor editor = _sharedPreferences.edit();
+        editor.putInt("WATCHFACE_VERSION", version);
+        editor.commit();
+
         sendSavedData();
     }
 

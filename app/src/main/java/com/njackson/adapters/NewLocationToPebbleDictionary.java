@@ -48,9 +48,13 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
     public static final short BYTE_MAXSPEED2 = 22;
     public static final short BYTE_CADENCE = 23;
 
-    public NewLocationToPebbleDictionary(NewLocation event, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval) {
+    public NewLocationToPebbleDictionary(NewLocation event, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int watchfaceVersion) {
 
-        int location_data_version = Constants.PEBBLE_LOCATION_DATA_V3;
+        int location_data_version = Constants.PEBBLE_LOCATION_DATA_V2;
+        if (watchfaceVersion >= Constants.MIN_VERSION_PEBBLE_FOR_LOCATION_DATA_V3) {
+            location_data_version = Constants.PEBBLE_LOCATION_DATA_V3;
+        }
+        //Log.d(TAG, "watchfaceVersion=" + watchfaceVersion + " location_data_version=" + location_data_version);
 
         PebbleDictionary dic = new PebbleDictionary();
         byte[] data = new byte[24];

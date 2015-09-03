@@ -1,6 +1,7 @@
 package com.njackson.test.pebble;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
@@ -45,6 +46,7 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
     @Inject Bus _bus;
     @Inject IServiceStarter _mockServiceStarter;
     @Inject IGPSDataStore _mockDataStore;
+    @Inject SharedPreferences _mockPreferences;
 
     private static IMessageManager _mockMessageManager;
     private static IOruxMaps _mockOruxMaps;
@@ -74,6 +76,12 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
         @Provides
         @Singleton
         IGPSDataStore providesGPSDataStore() { return mock(IGPSDataStore.class); }
+
+        @Provides
+        @Singleton
+        SharedPreferences provideSharedPreferences() {
+            return mock(SharedPreferences.class);
+        }
     }
 
     @Subscribe
