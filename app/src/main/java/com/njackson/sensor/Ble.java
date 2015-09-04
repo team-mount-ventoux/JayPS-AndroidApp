@@ -239,8 +239,10 @@ public class Ble implements IBle {
                 //gatt = null;
             }
         }
-        connectionThread.interrupt();
-        connectionThread = null;
+        if (connectionThread != null) {
+            connectionThread.interrupt();
+            connectionThread = null;
+        }
     }
 
     private void reconnectLater(BluetoothGatt gatt) {
