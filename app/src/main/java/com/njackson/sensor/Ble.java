@@ -409,6 +409,7 @@ public class Ble implements IBle {
             res = String.format("Received heart rate: %d", heartRate);
             BleSensorData sensorData = new BleSensorData();
             sensorData.setHeartRate(heartRate);
+            //sensorData.setCyclingWheelRpm(3 * heartRate); // fake values to debug csc
             _bus.post(sensorData);
         } else if (UUID_CSC_MEASUREMENT.equals(characteristic.getUuid())) {
             int flag = characteristic.getProperties();
@@ -432,10 +433,11 @@ public class Ble implements IBle {
 
             _csc.onNewValues(cumulativeWheelRevolutions, lastWheelEventTime, cumulativeCrankRevolutions, lastCrankEventTime);
 
-            res = String.format("Received cadence: %d", (int) _csc.getCrankRpm());
+            res = String.format("Received cadence: %d, wheelRpm: %d", (int) _csc.getCrankRpm(), (int) _csc.getWheelRpm());
 
             BleSensorData sensorData = new BleSensorData();
             sensorData.setCyclingCadence((int) _csc.getCrankRpm());
+            sensorData.setCyclingWheelRpm(_csc.getWheelRpm());
             _bus.post(sensorData);
         } else if (UUID_BATTERY_LEVEL.equals(characteristic.getUuid())) {
             final int battery = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0);

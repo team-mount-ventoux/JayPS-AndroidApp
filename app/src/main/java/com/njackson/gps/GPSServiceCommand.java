@@ -118,7 +118,8 @@ public class GPSServiceCommand implements IServiceCommand {
                 break;
             case BleSensorData.SENSOR_CSC:
                 _cyclingCadence = event.getCyclingCadence();
-                Log.d(TAG, "onNewBleSensorData _cadence:" + _cyclingCadence);
+                _advancedLocation.setSensorSpeed(2133 / 1000 * event.getCyclingWheelRpm() / 60, _time.getCurrentTimeMilliseconds());
+                Log.d(TAG, "onNewBleSensorData _cadence:" + _cyclingCadence + " wheelRpm:" + event.getCyclingWheelRpm());
                 break;
             case BleSensorData.SENSOR_RSC:
                 _runningCadence = event.getRunningCadence();

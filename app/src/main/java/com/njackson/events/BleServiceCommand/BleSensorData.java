@@ -29,6 +29,14 @@ public class BleSensorData {
         this._type = SENSOR_CSC;
         this._cyclingCadence = cyclingCadence;
     }
+    private float _cyclingWheelRpm = 0;
+    public float getCyclingWheelRpm() {
+        return _cyclingWheelRpm;
+    }
+    public void setCyclingWheelRpm(float cyclingWheelRpm) {
+        this._type = SENSOR_CSC;
+        this._cyclingWheelRpm = cyclingWheelRpm;
+    }
 
     private int _runningCadence = 0;
     public int getRunningCadence() {
