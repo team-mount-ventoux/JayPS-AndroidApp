@@ -206,7 +206,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
             if (!hrm_address.equals("")) {
                 if (_serviceStarter.isLocationServicesRunning()) {
-                    Toast.makeText(getApplicationContext(), "Please restart GPS to display heart rate", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Please restart GPS to display BLE sensor data", Toast.LENGTH_LONG).show();
                 }
             }
         }

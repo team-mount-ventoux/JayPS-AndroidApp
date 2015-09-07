@@ -60,6 +60,7 @@ public class Ble implements IBle {
     private Queue<BluetoothGattDescriptor> descriptorWriteQueue = new LinkedList<BluetoothGattDescriptor>();
     private Queue<BluetoothGattCharacteristic> readCharacteristicQueue = new LinkedList<BluetoothGattCharacteristic>();
     private boolean allwrites = false;
+    private int _nbReconnect = 0;
 
     public Ble(Context context) {
         _context = context;
@@ -211,12 +212,12 @@ public class Ble implements IBle {
                 Log.d(TAG, "connectionLoop next device " + device.getAddress().toString());
                 device.connectGatt(_context, false, mGattCallback);
                 try {
-                    Thread.sleep(250);
+                    Thread.sleep(500);
                 } catch (InterruptedException e) {
                 }
             }
             try {
-                Thread.sleep(10000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
             }
         }
@@ -246,9 +247,18 @@ public class Ble implements IBle {
     }
 
     private void reconnectLater(BluetoothGatt gatt) {
-        Log.w(TAG, display(gatt) + " reconnectLater");
+        _nbReconnect++;
         try {
-            Thread.sleep(20000);
+            int sleep;
+            if (_nbReconnect < 5) {
+                sleep = 5;
+            } else if(_nbReconnect <= 20) {
+                sleep = 15;
+            } else {
+                sleep = 60;
+            }
+            Log.w(TAG, display(gatt) + " reconnectLater, _nbReconnect: " + _nbReconnect + " wait " + sleep + "s");
+            Thread.sleep(1000 * sleep);
         } catch (InterruptedException e) {
         }
         Log.w(TAG, display(gatt) + " connectionQueue.add");
@@ -299,6 +309,7 @@ public class Ble implements IBle {
             }
 
             if (newState == BluetoothProfile.STATE_CONNECTED) {
+                _nbReconnect = 0;
                 // TODO(jay) post something?
                 //broadcastUpdate(ACTION_GATT_CONNECTED);
                 if (debug) Log.i(TAG, display(gatt) + " Connected to GATT server.");
