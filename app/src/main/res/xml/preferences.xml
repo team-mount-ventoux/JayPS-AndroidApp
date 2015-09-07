@@ -110,6 +110,13 @@
                 android:title="@string/PREF_BLE_TITLE2"
                 android:summary=""
                 />
+            <EditTextPreference
+                android:key="PREF_BLE_CSC_WHEEL_SIZE"
+                android:title="@string/PREF_BLE_CSC_WHEEL_SIZE"
+                android:summary="@string/PREF_BLE_CSC_WHEEL_SIZE_SUMMARY"
+                android:hint="@string/PREF_BLE_CSC_WHEEL_SIZE_SUMMARY"
+                android:inputType="number"
+                />
         </PreferenceCategory>
 
         <PreferenceCategory

@@ -84,8 +84,10 @@
     <string name="PREF_CANVAS_URL">https://play.google.com/store/apps/details?id=com.pennas.pebblecanvas</string>
 
     <string name="PREF_BLE_CATEGORY_TITLE">BLE Heart Rate Monitor (HRM) or Cycling Speed and Cadence (CSC)</string>
-    <string name="PREF_BLE_TITLE1">Sensor1</string>
-    <string name="PREF_BLE_TITLE2">Sensor2</string>
+    <string name="PREF_BLE_TITLE1">Sensor 1</string>
+    <string name="PREF_BLE_TITLE2">Sensor 2</string>
+    <string name="PREF_BLE_CSC_WHEEL_SIZE">CSC: Wheel circumference (mm)</string>
+    <string name="PREF_BLE_CSC_WHEEL_SIZE_SUMMARY">Example: 700x23C => 2133mm</string>
 
     <string name="PREF_ABOUT_TITLE">@string/MAIN_TITLE</string>
     <string name="PREF_ABOUT_SUMMARY">http://www.pebblebike.com</string>
