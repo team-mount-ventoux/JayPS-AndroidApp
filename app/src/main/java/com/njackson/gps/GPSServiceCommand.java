@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.njackson.Constants;
 import com.njackson.adapters.AdvancedLocationToNewLocation;
 import com.njackson.adapters.NewLocationToSavedLocation;
 import com.njackson.application.IInjectionContainer;
@@ -358,8 +359,13 @@ public class GPSServiceCommand implements IServiceCommand {
         if (_runningCadence > 0) {
             event.setRunningCadence(_runningCadence);
         }
-        if (_temperature > 0) {
-            event.setTemperature(_temperature);
+        if (_temperature != 0) {
+            double temperature = _temperature;
+            if (units == Constants.IMPERIAL || units == Constants.NAUTICAL_IMPERIAL || units == Constants.RUNNING_IMPERIAL) {
+                // force conversion to Fahrenheit
+                temperature = _temperature * 9 / 5.0 + 32;
+            }
+            event.setTemperature(temperature);
         }
 
         _savedLocation = new NewLocationToSavedLocation(event);
