@@ -37,6 +37,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 
 /**
  * Created by njackson on 17/01/15.
@@ -52,6 +53,7 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
     private static IOruxMaps _mockOruxMaps;
     private Resources _mockResource;
     private Context _mockContext;
+    private SharedPreferences.Editor _mockEditor;
     private TestApplication _app;
     private PebbleDataReceiver _pebbleDataReceiver;
     private ResetGPSState _refreshEvent;
@@ -116,6 +118,8 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
         _mockContext = mock(Context.class);
         when(_mockContext.getResources()).thenReturn(_mockResource);
         when(_mockContext.getApplicationContext()).thenReturn(_app);
+        _mockEditor = mock(SharedPreferences.Editor.class, RETURNS_DEEP_STUBS);
+        when(_mockPreferences.edit()).thenReturn(_mockEditor);
     }
 
     @SmallTest
