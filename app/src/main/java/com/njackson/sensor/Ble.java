@@ -61,6 +61,8 @@ public class Ble implements IBle {
     private Queue<BluetoothGattCharacteristic> readCharacteristicQueue = new LinkedList<BluetoothGattCharacteristic>();
     private boolean allwrites = false;
     private int _nbReconnect = 0;
+    private String _ble_address1 = "";
+    private String _ble_address2 = "";
 
     public Ble(Context context) {
         _context = context;
@@ -76,18 +78,17 @@ public class Ble implements IBle {
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
                         Log.d(TAG, "Bluetooth off");
-                        mBluetoothManager = null;
-                        disconnectAllDevices();
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
                         Log.d(TAG, "Turning Bluetooth off...");
+                        mBluetoothManager = null;
+                        disconnectAllDevices();
                         break;
                     case BluetoothAdapter.STATE_ON:
                         Log.d(TAG, "Bluetooth on");
 
                         if (_bleStarted) {
                             initialize();
-                            //todo(jay) initConnection(final String address1, final String address2)
                         }
 
                         break;
@@ -103,21 +104,21 @@ public class Ble implements IBle {
         Log.d(TAG, "start");
 
         container.inject(this);
-
         _bus = bus;
-
         _bleStarted = true;
 
-        Log.d(TAG, "ble_address1="+ble_address1+" ble_address2="+ble_address2);
-
-        initialize();
+        // for later reconnections
+        _ble_address1 = ble_address1;
+        _ble_address2 = ble_address2;
 
 //        String BLE_JAY_HRM1 = "1C:BA:8C:1F:58:1D";
 //        String BLE_JAY_HRM2 = "E0:C7:9D:69:1E:57";
 //        String BLE_JAY_CSC  = "EB:18:F4:AA:92:4E";
-//        initConnection(BLE_JAY_HRM1, BLE_JAY_CSC);
+//        _ble_address1 = BLE_JAY_HRM1;_ble_address2 = BLE_JAY_HRM2;
 
-        initConnection(ble_address1, ble_address2);
+        Log.d(TAG, "_ble_address1=" + _ble_address1 + " _ble_address2 = " + _ble_address2);
+
+        initialize();
 
         // Register for broadcasts on BluetoothAdapter state change
         IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
@@ -134,72 +135,73 @@ public class Ble implements IBle {
     }
 
 
-    /**
-     * Initializes a reference to the local Bluetooth adapter.
-     *
-     * @return Return true if the initialization is successful.
-     */
-    public boolean initialize() {
+    public void initialize() {
         // For API level 18 and above, get a reference to BluetoothAdapter through
         // BluetoothManager.
         if (mBluetoothManager == null) {
             mBluetoothManager = (BluetoothManager) _context.getSystemService(Context.BLUETOOTH_SERVICE);
             if (mBluetoothManager == null) {
                 Log.e(TAG, "Unable to initialize BluetoothManager.");
-                return false;
+                return;
             }
         }
 
         mBluetoothAdapter = mBluetoothManager.getAdapter();
         if (mBluetoothAdapter == null) {
             Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
-            return false;
+            return;
         }
 
         Log.d(TAG, "initialize OK");
-        return true;
-    }
 
-    public void initConnection(String address1, String address2) {
-        Log.d(TAG, "initConnection " + address1 + " " + address2);
-        if (mBluetoothAdapter == null) {
-            Log.w(TAG, "BluetoothAdapter not initialized");
+        if (mBluetoothAdapter.getState() != BluetoothAdapter.STATE_ON) {
+            Log.e(TAG, "Bluetooth is not ON");
+            // new attempt to connect will be done when receiving BluetoothAdapter.ACTION_STATE_CHANGED
             return;
-        }
-        if (address1.equals(address2)) {
-            // do not connect twice to the same device
-            address2 = "";
-        }
-        BluetoothDevice device1 = null;
-        BluetoothDevice device2 = null;
-        if (!address1.equals("")) {
-            device1 = mBluetoothAdapter.getRemoteDevice(address1);
-            if (device1 == null) {
-                Log.w(TAG, "Device1 not found. Unable to connect.");
-                return;
-            }
-            connectionQueue.add(device1);
-        }
-        if (!address2.equals("")) {
-            device2 = mBluetoothAdapter.getRemoteDevice(address2);
-            if (device2 == null) {
-                Log.w(TAG, "Device2 not found. Unable to connect.");
-                return;
-            }
-            connectionQueue.add(device2);
-        }
-        if (device1 != null || device2 != null) {
-            if (connectionThread == null) {
-                connectionThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        connectionLoop();
-                        //                    connectionThread.interrupt();
-                        //                    connectionThread = null;
-                    }
-                });
+        } else {
+            Log.d(TAG, "initConnections " + _ble_address1 + " " + _ble_address2);
 
-                connectionThread.start();
+            if (mBluetoothAdapter == null) {
+                Log.w(TAG, "BluetoothAdapter not initialized");
+                return;
+            }
+            if (_ble_address1.equals(_ble_address2)) {
+                // do not connect twice to the same device
+                _ble_address2 = "";
+            }
+            BluetoothDevice device1 = null;
+            BluetoothDevice device2 = null;
+            if (!_ble_address1.equals("")) {
+                device1 = mBluetoothAdapter.getRemoteDevice(_ble_address1);
+                if (device1 == null) {
+                    Log.w(TAG, "Device1 not found. Unable to connect.");
+                    return;
+                }
+                Log.d(TAG, "d1 getMajorDeviceClass:" + device1.getBluetoothClass().getMajorDeviceClass());
+                Log.d(TAG, "d1 getDeviceClass:" + device1.getBluetoothClass().getDeviceClass());
+                connectionQueue.add(device1);
+            }
+            if (!_ble_address2.equals("")) {
+                device2 = mBluetoothAdapter.getRemoteDevice(_ble_address2);
+                if (device2 == null) {
+                    Log.w(TAG, "Device2 not found. Unable to connect.");
+                    return;
+                }
+                connectionQueue.add(device2);
+            }
+            if (device1 != null || device2 != null) {
+                if (connectionThread == null) {
+                    connectionThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            connectionLoop();
+                            //                    connectionThread.interrupt();
+                            //                    connectionThread = null;
+                        }
+                    });
+
+                    connectionThread.start();
+                }
             }
         }
     }
@@ -210,7 +212,109 @@ public class Ble implements IBle {
             while (!connectionQueue.isEmpty()) {
                 BluetoothDevice device = connectionQueue.poll();
                 Log.d(TAG, "connectionLoop next device " + device.getAddress().toString());
-                device.connectGatt(_context, false, mGattCallback);
+                device.connectGatt(_context, false, new BluetoothGattCallback() {
+                    @Override
+                    public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+                        Log.d(TAG, display(gatt) + " onConnectionStateChange status="+status+" newState="+newState);
+
+                        if (status==133) {
+                            // http://stackoverflow.com/questions/21021429/bluetoothlowenergy-range-issue-android
+                            Log.d(TAG, display(gatt) + " status=133, not in range?");
+                        }
+
+                        if (newState == BluetoothProfile.STATE_CONNECTED) {
+                            _nbReconnect = 0;
+                            // TODO(jay) post something?
+                            //broadcastUpdate(ACTION_GATT_CONNECTED);
+                            if (debug) Log.i(TAG, display(gatt) + " Connected to GATT server.");
+
+                            mGatts.put(gatt.getDevice().getAddress(), gatt);
+
+                            // Attempts to discover services after successful connection.
+                            //boolean discovery = mBluetoothGatt.discoverServices();
+                            serviceDiscoveryQueue.add(gatt);
+
+                            Log.d(TAG, "connectionQueue.size=" + connectionQueue.size());
+                            //if (connectionQueue.isEmpty()) {
+                            initServiceDiscovery();
+                            //}
+
+
+                        } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                            if (debug) Log.i(TAG, display(gatt) + " Disconnected from GATT server.");
+                            // TODO(jay) post something?
+                            //broadcastUpdate(ACTION_GATT_DISCONNECTED);
+
+                            gatt.close();
+                            mGatts.remove(gatt.getDevice().getAddress());
+                            if (_bleStarted) {
+                                reconnectLater(gatt);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+                        Log.d(TAG, "onServicesDiscovered");
+                        if (status == BluetoothGatt.GATT_SUCCESS) {
+                            if (debug) Log.i(TAG, display(gatt) + " discovered GATT services.");
+                            // TODO(jay) post something?
+                            //broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+                            displayGattServices(gatt);
+                        } else {
+                            if (debug) Log.w(TAG, display(gatt) + " onServicesDiscovered received: " + status);
+                        }
+                    }
+
+                    @Override
+                    public void onCharacteristicRead(BluetoothGatt gatt,
+                                                     BluetoothGattCharacteristic characteristic,
+                                                     int status) {
+                        readCharacteristicQueue.remove();
+
+                        if (status == BluetoothGatt.GATT_SUCCESS) {
+                            String msg = decodeCharacteristic(characteristic);
+                            if (debug) Log.d(TAG, display(gatt, characteristic) + " onCharacteristicRead status=" + status + msg);
+                        } else {
+                            Log.d(TAG, display(gatt, characteristic) + " onCharacteristicRead error: " + status);
+                        }
+                        if(readCharacteristicQueue.size() > 0) {
+                            gatt.readCharacteristic(readCharacteristicQueue.element());
+                        }
+                    }
+
+                    @Override
+                    public void onCharacteristicChanged(BluetoothGatt gatt,
+                                                        BluetoothGattCharacteristic characteristic) {
+                        String msg = decodeCharacteristic(characteristic);
+                        if (debug) Log.d(TAG, display(gatt) + " onCharacteristicChanged" + display(characteristic) + " " + msg);
+                    }
+                    @Override
+                    public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
+                        Log.d(TAG, display(gatt) + " onMtuChanged mtu=" + mtu + " status=" + status);
+                    }
+                    @Override
+                    public void onReadRemoteRssi (BluetoothGatt gatt, int rssi, int status) {
+                        Log.d(TAG, display(gatt) + " onReadRemoteRssi rssi=" + rssi + " status=" + status);
+                    }
+                    @Override
+                    public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
+                        if (status == BluetoothGatt.GATT_SUCCESS) {
+                            Log.d(TAG, display(gatt) + " Callback: Wrote GATT Descriptor successfully.");
+                        } else {
+                            Log.d(TAG, display(gatt) + " Callback: Error writing GATT Descriptor: " + status);
+                        }
+                        descriptorWriteQueue.remove();  //pop the item that we just finishing writing
+                        //if there is more to write, do it!
+                        if (descriptorWriteQueue.size() > 0) {
+                            Log.d(TAG, display(gatt) + " write next descriptor");
+                            gatt.writeDescriptor(descriptorWriteQueue.element());
+                        } else if (readCharacteristicQueue.size() > 0) {
+                            Log.d(TAG, display(gatt) + " no more descriptor, next characteristic");
+                            gatt.readCharacteristic(readCharacteristicQueue.element());
+                        }
+                    };
+                });
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -296,111 +400,6 @@ public class Ble implements IBle {
         Log.d(TAG, "serviceDiscovery end");
     }
 
-    // Implements callback methods for GATT events that the app cares about.  For example,
-    // connection change and services discovered.
-    private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
-        @Override
-        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            Log.d(TAG, display(gatt) + " onConnectionStateChange status="+status+" newState="+newState);
-
-            if (status==133) {
-                // http://stackoverflow.com/questions/21021429/bluetoothlowenergy-range-issue-android
-                Log.d(TAG, display(gatt) + " status=133, not in range?");
-            }
-
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                _nbReconnect = 0;
-                // TODO(jay) post something?
-                //broadcastUpdate(ACTION_GATT_CONNECTED);
-                if (debug) Log.i(TAG, display(gatt) + " Connected to GATT server.");
-
-                mGatts.put(gatt.getDevice().getAddress(), gatt);
-
-                // Attempts to discover services after successful connection.
-                //boolean discovery = mBluetoothGatt.discoverServices();
-                serviceDiscoveryQueue.add(gatt);
-
-                Log.d(TAG, "connectionQueue.size=" + connectionQueue.size());
-                //if (connectionQueue.isEmpty()) {
-                    initServiceDiscovery();
-                //}
-
-
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                if (debug) Log.i(TAG, display(gatt) + " Disconnected from GATT server.");
-                // TODO(jay) post something?
-                //broadcastUpdate(ACTION_GATT_DISCONNECTED);
-
-                if (_bleStarted) {
-                    gatt.close();
-                    mGatts.remove(gatt.getDevice().getAddress());
-                    reconnectLater(gatt);
-                }
-            }
-        }
-
-        @Override
-        public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-            Log.d(TAG, "onServicesDiscovered");
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                if (debug) Log.i(TAG, display(gatt) + " discovered GATT services.");
-                // TODO(jay) post something?
-                //broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
-                displayGattServices(gatt);
-            } else {
-                if (debug) Log.w(TAG, display(gatt) + " onServicesDiscovered received: " + status);
-            }
-        }
-
-        @Override
-        public void onCharacteristicRead(BluetoothGatt gatt,
-                                         BluetoothGattCharacteristic characteristic,
-                                         int status) {
-            readCharacteristicQueue.remove();
-
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                String msg = decodeCharacteristic(characteristic);
-                if (debug) Log.d(TAG, display(gatt, characteristic) + " onCharacteristicRead status=" + status + msg);
-            } else {
-                Log.d(TAG, display(gatt, characteristic) + " onCharacteristicRead error: " + status);
-            }
-            if(readCharacteristicQueue.size() > 0) {
-                gatt.readCharacteristic(readCharacteristicQueue.element());
-            }
-        }
-
-        @Override
-        public void onCharacteristicChanged(BluetoothGatt gatt,
-                                            BluetoothGattCharacteristic characteristic) {
-            String msg = decodeCharacteristic(characteristic);
-            if (debug) Log.d(TAG, display(gatt) + " onCharacteristicChanged" + display(characteristic) + " " + msg);
-        }
-        @Override
-        public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
-            Log.d(TAG, display(gatt) + " onMtuChanged mtu=" + mtu + " status=" + status);
-        }
-        @Override
-        public void onReadRemoteRssi (BluetoothGatt gatt, int rssi, int status) {
-            Log.d(TAG, display(gatt) + " onReadRemoteRssi rssi=" + rssi + " status=" + status);
-        }
-        @Override
-        public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                Log.d(TAG, display(gatt) + " Callback: Wrote GATT Descriptor successfully.");
-            } else {
-                Log.d(TAG, display(gatt) + " Callback: Error writing GATT Descriptor: " + status);
-            }
-            descriptorWriteQueue.remove();  //pop the item that we just finishing writing
-            //if there is more to write, do it!
-            if (descriptorWriteQueue.size() > 0) {
-                Log.d(TAG, display(gatt) + " write next descriptor");
-                gatt.writeDescriptor(descriptorWriteQueue.element());
-            } else if (readCharacteristicQueue.size() > 0) {
-                Log.d(TAG, display(gatt) + " no more descriptor, next characteristic");
-                gatt.readCharacteristic(readCharacteristicQueue.element());
-            }
-        };
-    };
     private String decodeCharacteristic(final BluetoothGattCharacteristic characteristic) {
         String res = "";
         //if (debug) Log.d(TAG, "decodeCharacteristic() "+display(gatt, characteristic));
