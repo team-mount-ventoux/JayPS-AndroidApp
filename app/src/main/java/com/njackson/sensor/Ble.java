@@ -19,6 +19,8 @@ import android.util.Log;
 
 import com.njackson.application.IInjectionContainer;
 import com.njackson.events.BleServiceCommand.BleSensorData;
+import com.njackson.utils.time.ITimer;
+import com.njackson.utils.time.ITimerHandler;
 import com.squareup.otto.Bus;
 
 import java.util.Iterator;
@@ -32,7 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.inject.Inject;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
-public class Ble implements IBle {
+public class Ble implements IBle, ITimerHandler {
 
     private final String TAG = "PB-Ble";
 
@@ -49,14 +51,18 @@ public class Ble implements IBle {
     public final static UUID UUID_BATTERY_LEVEL = UUID.fromString(BLESampleGattAttributes.BATTERY_LEVEL);
     public final static UUID UUID_TEMPERATURE_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.TEMPERATURE_MEASUREMENT);
 
+    private final static int TIMEOUT_CONNECTGATT = 5 * 60 * 1000; // in ms
+
     private boolean debug = true;
     private boolean _bleStarted = false;
+    @Inject ITimer _timer;
 
     private Queue<BluetoothDevice> connectionQueue = new LinkedList<BluetoothDevice>();
     private Thread connectionThread;
     private Queue<BluetoothGatt> serviceDiscoveryQueue = new LinkedList<BluetoothGatt>();
     private Thread serviceDiscoveryThread;
     private ConcurrentHashMap<String, BluetoothGatt> mGatts = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, BluetoothGatt> mGattsConnectionPending = new ConcurrentHashMap<>();
     private Queue<BluetoothGattDescriptor> descriptorWriteQueue = new LinkedList<BluetoothGattDescriptor>();
     private Queue<BluetoothGattCharacteristic> readCharacteristicQueue = new LinkedList<BluetoothGattCharacteristic>();
     private boolean allwrites = false;
@@ -177,8 +183,6 @@ public class Ble implements IBle {
                     Log.w(TAG, "Device1 not found. Unable to connect.");
                     return;
                 }
-                Log.d(TAG, "d1 getMajorDeviceClass:" + device1.getBluetoothClass().getMajorDeviceClass());
-                Log.d(TAG, "d1 getDeviceClass:" + device1.getBluetoothClass().getDeviceClass());
                 connectionQueue.add(device1);
             }
             if (!_ble_address2.equals("")) {
@@ -207,17 +211,24 @@ public class Ble implements IBle {
     }
 
     private void connectionLoop() {
-        Log.d(TAG, "connectionLoop start");
         while(connectionThread != null) {
             while (!connectionQueue.isEmpty()) {
                 BluetoothDevice device = connectionQueue.poll();
                 Log.d(TAG, "connectionLoop next device " + device.getAddress().toString());
-                device.connectGatt(_context, false, new BluetoothGattCallback() {
+                // Official doc: Cancel the current device discovery process.
+                // An application should always call cancel discovery even if it did not directly request a discovery, just to be sure.
+                mBluetoothAdapter.cancelDiscovery();
+
+                // force new timer (to cancel connectGatt() if its callback is not called in TIMEOUT_CONNECTGATT ms)
+                _timer.cancel();
+                _timer.setTimer(TIMEOUT_CONNECTGATT, this);
+
+                BluetoothGatt gatt = device.connectGatt(_context, false, new BluetoothGattCallback() {
                     @Override
                     public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-                        Log.d(TAG, display(gatt) + " onConnectionStateChange status="+status+" newState="+newState);
+                        Log.d(TAG, display(gatt) + " onConnectionStateChange status=" + status + " newState=" + newState);
 
-                        if (status==133) {
+                        if (status == 133) {
                             // http://stackoverflow.com/questions/21021429/bluetoothlowenergy-range-issue-android
                             Log.d(TAG, display(gatt) + " status=133, not in range?");
                         }
@@ -228,7 +239,8 @@ public class Ble implements IBle {
                             //broadcastUpdate(ACTION_GATT_CONNECTED);
                             if (debug) Log.i(TAG, display(gatt) + " Connected to GATT server.");
 
-                            mGatts.put(gatt.getDevice().getAddress(), gatt);
+                            mGattsConnectionPending.remove(gatt.getDevice().getAddress());
+                            Log.d(TAG, "after remove, mGattsConnectionPending.size:" + mGattsConnectionPending.size());
 
                             // Attempts to discover services after successful connection.
                             //boolean discovery = mBluetoothGatt.discoverServices();
@@ -247,6 +259,7 @@ public class Ble implements IBle {
 
                             gatt.close();
                             mGatts.remove(gatt.getDevice().getAddress());
+                            //Log.d(TAG, "after remove, mGatts.size:" + mGatts.size());
                             if (_bleStarted) {
                                 reconnectLater(gatt);
                             }
@@ -278,7 +291,7 @@ public class Ble implements IBle {
                         } else {
                             Log.d(TAG, display(gatt, characteristic) + " onCharacteristicRead error: " + status);
                         }
-                        if(readCharacteristicQueue.size() > 0) {
+                        if (readCharacteristicQueue.size() > 0) {
                             gatt.readCharacteristic(readCharacteristicQueue.element());
                         }
                     }
@@ -289,14 +302,17 @@ public class Ble implements IBle {
                         String msg = decodeCharacteristic(characteristic);
                         if (debug) Log.d(TAG, display(gatt) + " onCharacteristicChanged" + display(characteristic) + " " + msg);
                     }
+
                     @Override
                     public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
                         Log.d(TAG, display(gatt) + " onMtuChanged mtu=" + mtu + " status=" + status);
                     }
+
                     @Override
-                    public void onReadRemoteRssi (BluetoothGatt gatt, int rssi, int status) {
+                    public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
                         Log.d(TAG, display(gatt) + " onReadRemoteRssi rssi=" + rssi + " status=" + status);
                     }
+
                     @Override
                     public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
                         if (status == BluetoothGatt.GATT_SUCCESS) {
@@ -313,8 +329,14 @@ public class Ble implements IBle {
                             Log.d(TAG, display(gatt) + " no more descriptor, next characteristic");
                             gatt.readCharacteristic(readCharacteristicQueue.element());
                         }
-                    };
+                    }
                 });
+
+                mGatts.put(gatt.getDevice().getAddress(), gatt);
+                //Log.d(TAG, "put " + display(gatt) + " into mGatts, size:" + mGatts.size());
+                mGattsConnectionPending.put(gatt.getDevice().getAddress(), gatt);
+                ///Log.d(TAG, "put " + display(gatt) + " into mGattsConnectionPending, size:" + mGattsConnectionPending.size());
+
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -325,15 +347,14 @@ public class Ble implements IBle {
             } catch (InterruptedException e) {
             }
         }
-        Log.d(TAG, "connectionLoop end");
     }
 
     public void disconnectAllDevices() {
-        Log.d(TAG, "disconnectAllDevices");
         if (mBluetoothAdapter == null) {
-            Log.w(TAG, "BluetoothAdapter not initialized");
+            Log.w(TAG, "disconnectAllDevices BluetoothAdapter not initialized");
             return;
         }
+        Log.d(TAG, "disconnectAllDevices mGatts.size:" + mGatts.size());
         Iterator<Map.Entry<String, BluetoothGatt>> iterator = mGatts.entrySet().iterator();
         while (iterator.hasNext()) {
             BluetoothGatt gatt = iterator.next().getValue();
@@ -344,6 +365,7 @@ public class Ble implements IBle {
                 //gatt = null;
             }
         }
+        mGatts.clear();
         if (connectionThread != null) {
             connectionThread.interrupt();
             connectionThread = null;
@@ -351,6 +373,11 @@ public class Ble implements IBle {
     }
 
     private void reconnectLater(BluetoothGatt gatt) {
+        // Note: reconnectLater can be called just after STATE_TURNING_OFF
+        if (mBluetoothAdapter == null || mBluetoothAdapter.getState() != BluetoothAdapter.STATE_ON) {
+            return;
+        }
+
         _nbReconnect++;
         try {
             int sleep;
@@ -365,8 +392,15 @@ public class Ble implements IBle {
             Thread.sleep(1000 * sleep);
         } catch (InterruptedException e) {
         }
-        Log.w(TAG, display(gatt) + " connectionQueue.add");
-        connectionQueue.add(gatt.getDevice());
+        if (_bleStarted) {
+
+            if (mGattsConnectionPending.containsKey(gatt.getDevice().getAddress())) {
+                Log.w(TAG, display(gatt) + " reconnectLater already in mGattsConnectionPending, skip it");
+            } else {
+                Log.w(TAG, display(gatt) + " reconnectLater connectionQueue.add");
+                connectionQueue.add(gatt.getDevice());
+            }
+        }
     }
 
     private void initServiceDiscovery() {
@@ -619,4 +653,24 @@ public class Ble implements IBle {
         return display(gatt) + display(characteristic);
     }
 
+
+    @Override
+    public void handleTimeout() {
+        // timeout TIMEOUT_CONNECTGATT ms after last attempt to connectGatt
+        // force cancel of pending connections
+
+        if (mGattsConnectionPending.size() == 0) {
+            // no pending connections, nothing to do
+            return;
+        }
+        Log.d(TAG, "handleTimeout mGattsConnectionPending.size:" + mGattsConnectionPending.size());
+        Iterator<Map.Entry<String, BluetoothGatt>> iterator = mGattsConnectionPending.entrySet().iterator();
+        while (iterator.hasNext()) {
+            BluetoothGatt gatt = iterator.next().getValue();
+            Log.d(TAG, "handleTimeout close pending connection to " + display(gatt));
+            gatt.close();
+            mGattsConnectionPending.remove(gatt.getDevice().getAddress());
+            reconnectLater(gatt);
+        }
+    }
 }
