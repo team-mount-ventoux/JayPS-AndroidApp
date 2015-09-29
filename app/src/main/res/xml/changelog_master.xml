@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.2.0-beta4" versioncode="264" >
+        <change>Pebble: display phone battery levels in menu</change>
+        <change><![CDATA[<b>=> New watchface (click on "Install Watchface from the developers website" in settings)</b>]]></change>
+    </release>
     <release version="2.2.0-beta3" versioncode="263" >
         <change>BLE: improve connections/reconnections</change>
     </release>
