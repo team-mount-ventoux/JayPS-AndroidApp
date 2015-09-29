@@ -29,6 +29,7 @@ import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.AltitudeGraphReduce;
+import com.njackson.utils.BatteryStatus;
 import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -69,12 +70,16 @@ public class GPSServiceCommand implements IServiceCommand {
     private int _cyclingCadence = 0;
     private int _runningCadence = 0;
     private double _temperature = 0;
+    private int _batteryLevel = 0;
     private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
     private SavedLocation _savedLocation = null;
     private NewAltitude _savedNewAltitude = null;
     private int _nbLocationReceived = 0;
 
     private long _last_post_newlocation  = 0;
+    private long _last_post_battery_level  = 0;
+    private long _last_post_temperature  = 0;
+
     private int _refresh_interval = 0;
 
     @Subscribe
@@ -359,13 +364,21 @@ public class GPSServiceCommand implements IServiceCommand {
         if (_runningCadence > 0) {
             event.setRunningCadence(_runningCadence);
         }
-        if (_temperature != 0) {
+        if (_temperature != 0 && _time.getCurrentTimeMilliseconds() - _last_post_temperature > 60 * 1000) {
+            // only send temperature if available and once every X seconds
             double temperature = _temperature;
             if (units == Constants.IMPERIAL || units == Constants.NAUTICAL_IMPERIAL || units == Constants.RUNNING_IMPERIAL) {
                 // force conversion to Fahrenheit
                 temperature = _temperature * 9 / 5.0 + 32;
             }
             event.setTemperature(temperature);
+            _last_post_temperature = _time.getCurrentTimeMilliseconds();
+        }
+        if (_time.getCurrentTimeMilliseconds() - _last_post_battery_level > 60 * 1000) {
+            // only send battery level once every X seconds
+            _batteryLevel = BatteryStatus.getBatteryLevel(_applicationContext);
+            event.setBatteryLevel(_batteryLevel);
+            _last_post_battery_level = _time.getCurrentTimeMilliseconds();
         }
 
         _savedLocation = new NewLocationToSavedLocation(event);

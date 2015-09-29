@@ -153,4 +153,8 @@ public abstract class MyLocation {
     public double getTemperature() { return this._temperature; }
     public void setTemperature(double temperature) { this._temperature = temperature;}
 
+    private int _batteryLevel = 0;
+    public int getBatteryLevel() { return this._batteryLevel; }
+    public void setBatteryLevel(int batteryLevel) { this._batteryLevel = batteryLevel;}
+
 }

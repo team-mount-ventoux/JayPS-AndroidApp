@@ -56,7 +56,6 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
         }
         //Log.d(TAG, "watchfaceVersion=" + watchfaceVersion + " location_data_version=" + location_data_version);
 
-        PebbleDictionary dic = new PebbleDictionary();
         byte[] data = new byte[24];
 
         data[BYTE_SETTINGS] = (byte) ((event.getUnits() % 8) * (1<<POS_UNITS)); // set the units
@@ -136,7 +135,12 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
 
         if (location_data_version >= Constants.PEBBLE_LOCATION_DATA_V3 && event.getTemperature() != 0) {
             this.addInt16(Constants.PEBBLE_MSG_SENSOR_TEMPERATURE, (short) Math.floor(10 * event.getTemperature()));
+            //Log.d(TAG, "temperature:" + event.getTemperature());
         }
 
+        if (event.getBatteryLevel() != 0) {
+            this.addInt32(Constants.MSG_BATTERY_LEVEL, event.getBatteryLevel());
+            //Log.d(TAG, "batteryLevel:" + event.getBatteryLevel());
+        }
     }
 }
