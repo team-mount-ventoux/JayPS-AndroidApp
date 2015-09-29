@@ -1,25 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="2.2.0-beta4" versioncode="264" >
-        <change>Pebble: display phone battery levels in menu</change>
-        <change><![CDATA[<b>=> New watchface (click on "Install Watchface from the developers website" in settings)</b>]]></change>
-    </release>
-    <release version="2.2.0-beta3" versioncode="263" >
-        <change>BLE: improve connections/reconnections</change>
-    </release>
-    <release version="2.2.0-beta2" versioncode="262" >
+    <release version="2.2.0" versioncode="265" >
+        <change><![CDATA[<b>BLE: support for multiple devices at the same time (HRM+CSC)</b>]]></change>
         <change><![CDATA[<b>GPX: use Garmin format for better compatibility with Strava and export hear rate and cadence by default</b>]]></change>
         <change><![CDATA[<b>BLE CSC: use instant speed from sensor if available - Configure your wheel size in the settings</b>]]></change>
-        <change>BLE sensor: add temperature in configurable fields (tested with Wahoo Blue SC)</change>
-        <change>Fix units on top field in page_heartrate</change>
-        <change><![CDATA[<b>=> New watchface (click on "Install Watchface from the developers website" in settings)</b>]]></change>
-    </release>
-    <release version="2.2.0-beta1" versioncode="261" >
-        <change><![CDATA[<b>BLE: support for multiple devices at the same time (HRM+CSC)</b>]]></change>
-        <change><![CDATA[<b>BLE: support for multiple data from the same device (TickrX)</b>]]></change>
-        <change>BLE: support for temperature (Wahoo Blue SC) - Canvas only</change>
+        <change>BLE: support for temperature (Wahoo Blue SC)</change>
         <change>BLE Running Speed and Cadence (RSC) - TickrX, experimental, Canvas only</change>
-        <change><![CDATA[<b>=> New watchface (click on "Install Watchface from the developers website" in settings)</b>]]></change>
+        <change>Pebble: display phone battery levels in menu</change>
+        <change><![CDATA[<b>=> New watchface (click on "Install Watchface" in settings)</b>]]></change>
     </release>
     <release version="2.1.0" versioncode="253" >
         <change><![CDATA[<b>New name for the app. Pebble Bike is now Ventoo!</b>]]></change>

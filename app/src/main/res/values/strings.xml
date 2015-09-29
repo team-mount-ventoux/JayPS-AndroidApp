@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Ventoo</string>
-    <string name="MAIN_TITLE">Ventoo v2.2.0-beta4</string>
+    <string name="MAIN_TITLE">Ventoo v2.2.0</string>
     <string name="action_settings">Settings</string>
     <string name="speedfragment_time_label">TIME</string>
     <string name="speedfragment_time_value">00:00</string>
