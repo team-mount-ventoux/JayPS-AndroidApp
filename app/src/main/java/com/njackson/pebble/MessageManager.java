@@ -18,6 +18,7 @@ import com.njackson.adapters.NewLocationToPebbleDictionary;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSServiceCommand.NewLocation;
+import com.njackson.utils.BatteryStatus;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -286,6 +287,8 @@ public class MessageManager implements IMessageManager, Runnable {
         advancedLocation.setMaxSpeed(maxSpeed);
 
         NewLocation newLocation = new AdvancedLocationToNewLocation(advancedLocation, 0, 0, units);
+
+        newLocation.setBatteryLevel(BatteryStatus.getBatteryLevel(_applicationContext));
 
         // Get current version code
         int versionCode = 0;
