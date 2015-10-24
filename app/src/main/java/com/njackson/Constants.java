@@ -29,6 +29,7 @@ public class Constants {
     public static final int MSG_LIVE_NAME3 = 0x22;
     public static final int MSG_LIVE_NAME4 = 0x23;
     public static final int MSG_BATTERY_LEVEL = 0x24;
+    public static final int MSG_CONFIG = 0x28;
 
     public static final int PLAY_PRESS = 0x0;
     public static final int STOP_PRESS = 0x1;

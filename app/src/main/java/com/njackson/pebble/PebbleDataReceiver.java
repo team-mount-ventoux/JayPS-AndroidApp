@@ -37,7 +37,7 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
 
     @Override
     public void receiveData(final Context context, final int transactionId, final PebbleDictionary data) {
-        Log.i(TAG, "receiveData"+transactionId);
+        Log.i(TAG, "receiveData" + transactionId);
         ((PebbleBikeApplication)context.getApplicationContext()).inject(this);
 
         _messageManager.sendAckToPebble(transactionId);
@@ -48,6 +48,9 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
 
         if (data.contains(Constants.MSG_VERSION_PEBBLE)) {
             handleVersion(context,data);
+        }
+        if (data.contains(Constants.MSG_CONFIG)) {
+            handleConfig(context, data);
         }
         /*if (data.contains(Constants.MSG_LIVE_ASK_NAMES)) {
             live_max_name = data.getInteger(Constants.MSG_LIVE_ASK_NAMES).intValue();
@@ -74,7 +77,17 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
 
         sendSavedData();
     }
-
+    private void handleConfig(Context context, PebbleDictionary data) {
+        byte[] config = data.getBytes(Constants.MSG_CONFIG);
+        String configString = "";
+        for(int i=0; i<config.length; i++) {
+            configString += String.format("%02X", config[i]);
+        }
+        //Log.i(TAG, "config=" + configString);
+        SharedPreferences.Editor editor = _sharedPreferences.edit();
+        editor.putString("WATCHFACE_CONFIG", configString);
+        editor.commit();
+    }
     private void handleButtonData(Context context, PebbleDictionary data) {
         int button = data.getUnsignedIntegerAsLong(Constants.CMD_BUTTON_PRESS).intValue();
         Log.i(TAG, "handleButtonData:" + button);
