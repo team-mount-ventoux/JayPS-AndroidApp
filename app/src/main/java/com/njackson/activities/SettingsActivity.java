@@ -310,21 +310,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
     private void setRefreshSummary() {
-        int refresh_interval = 0;
-
-        try {
-            refresh_interval = Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "500"));
-        }catch (NumberFormatException nfe) {
-            refresh_interval = Constants.REFRESH_INTERVAL_DEFAULT;
-        }
-
-        Preference refreshPref = findPreference("REFRESH_INTERVAL");
-
-        if (refresh_interval < 1000) {
-            refreshPref.setSummary(refresh_interval + " ms");
-        } else {
-            refreshPref.setSummary(refresh_interval/1000 + " s");
-        }
+        ListPreference refreshPref = (ListPreference) findPreference("REFRESH_INTERVAL");
+        CharSequence listDesc = refreshPref.getEntry();
+        refreshPref.setSummary(listDesc);
     }
 
     private void setLoginJaypsSummary() {

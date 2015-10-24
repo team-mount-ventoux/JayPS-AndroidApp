@@ -63,7 +63,7 @@
 
     <string name="REFRESH_INTERVAL_TITLE">GPS Minimum time</string>
     <string name="REFRESH_INTERVAL_DIALOG_TITLE">GPS Minimum time</string>
-    <string name="REFRESH_INTERVAL_DEFAULT">1000</string>
+    <string name="REFRESH_INTERVAL_DEFAULT">103000</string>
 
     <string name="ORUXMAPS_AUTO_TITLE">Link OruxMaps start</string>
     <string name="ORUXMAPS_AUTO_DIALOG_TITLE">Link OruxMaps start</string>

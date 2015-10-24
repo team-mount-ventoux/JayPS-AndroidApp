@@ -277,7 +277,7 @@ public class GPSServiceCommand implements IServiceCommand {
         if (_currentStatus == BaseStatus.Status.STARTED) {
             _locationMgr.removeUpdates(_locationListener);
         }
-        _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, refresh_interval, 2.0f, _locationListener);
+        _locationMgr.requestLocationUpdates(LocationManager.GPS_PROVIDER, refresh_interval % 100000, 2.0f, _locationListener);
     }
 
     private void registerNmeaListener() {
@@ -289,7 +289,7 @@ public class GPSServiceCommand implements IServiceCommand {
         _sensorListener = new GPSSensorEventListener(_advancedLocation,_sensorManager,new Callable() {
             @Override
             public Object call() throws Exception {
-                //Log.d(TAG, "call:" + _advancedLocation.getAltitudeFromPressure());
+                //Log.d(TAG, "getAltitudeFromPressure:" + _advancedLocation.getAltitudeFromPressure());
                 broadcastLocation(null);
                 return null;
             }
@@ -345,6 +345,8 @@ public class GPSServiceCommand implements IServiceCommand {
 
     private double _xpos = 0;
     private double _ypos = 0;
+    private NewLocation previousLocation;
+    private int nbSent=0;
     private void broadcastLocation(Location location) {
         if (firstLocation != null && location != null) {
             _xpos = firstLocation.distanceTo(location) * Math.sin(firstLocation.bearingTo(location) / 180 * 3.1415);
@@ -383,10 +385,14 @@ public class GPSServiceCommand implements IServiceCommand {
 
         _savedLocation = new NewLocationToSavedLocation(event);
 
-        if (_time.getCurrentTimeMilliseconds() - _last_post_newlocation > _refresh_interval * 0.95) {
+        if (locationShouldBeSended(_advancedLocation)) {
             // 0.95 to avoid skipping wanted data
             //Log.d(TAG, "ts:" + _time.getCurrentTimeMilliseconds() + " _refresh_interval:" + _refresh_interval);
             _last_post_newlocation = _time.getCurrentTimeMilliseconds();
+            previousLocation = event;
+
+            nbSent++;
+            event.setAscentRate(nbSent);
             _bus.post(event);
         }
 
@@ -399,6 +405,100 @@ public class GPSServiceCommand implements IServiceCommand {
 
             _savedNewAltitude = newAltitude;
         }
+    }
+    private long m_sentElapsedTime = -1;
+    private double m_sentAltitude;
+    //private float m_sentAccuracy;
+    private float m_sentDistance;
+    private float m_sentSpeed;
+    private boolean locationShouldBeSended(AdvancedLocation p_advancedLocation) {
+
+        boolean send = false;
+
+        //Log.d(TAG, "locationShouldBeSended _refresh_interval%100000="+_refresh_interval % 100000+" _refresh_interval=" + _refresh_interval);
+
+        if (_time.getCurrentTimeMilliseconds() - _last_post_newlocation > (_refresh_interval % 100000) * 0.95) {
+            // _refresh_interval % 100000 = GPS minTime
+            // 0.95 to avoid skipping wanted data
+            //Log.d(TAG, "ts:" + _time.getCurrentTimeMilliseconds() + " _refresh_interval:" + _refresh_interval);
+
+            int adaptativeMode = _refresh_interval/100000;
+            Log.d(TAG, "adaptativeMode:" + adaptativeMode);
+
+            if (adaptativeMode == 0) {
+                // standard mode
+                send = true;
+            } else if (m_sentElapsedTime < 0) {
+                // adaptative mode, no previous location
+                send = true;
+            } else {
+                // adaptative mode
+
+                double deltaAltitude = Math.abs(Math.floor(p_advancedLocation.getAltitude()) - Math.floor(m_sentAltitude)); // in m
+//                double deltaAccuracy = Math.abs(Math.floor(p_advancedLocation.getAccuracy()) - Math.floor(m_sentAccuracy)); // in m
+                double deltaDistance = Math.abs(Math.floor( p_advancedLocation.getDistance() / 100) - Math.floor(m_sentDistance / 100)) / 10; // in km (delta of distances floored to 100m)
+//                Log.d(TAG, "p_advancedLocation.getDistance()=" + p_advancedLocation.getDistance() + " m_sentDistance=" + m_sentDistance);
+                double deltaSpeed = Math.abs(Math.floor(p_advancedLocation.getSpeed()*3.6) - Math.floor(m_sentSpeed*3.6)); // in km/h (rounded at 1 km/h)
+                double averageSpeed = p_advancedLocation.getElapsedTime() > 0 ? p_advancedLocation.getDistance() * 3.6 / (p_advancedLocation.getElapsedTime()/1000) : 0; // in km/h
+                double minDeltaAltitude;
+                double minDeltaDistance;
+                double minDeltaSpeed;
+                switch (adaptativeMode) {
+                    case 1:
+                        // high - normal
+                        minDeltaAltitude = 5; // 5m => 18s at 1000m/h
+                        minDeltaDistance = averageSpeed / 3600 * 10; // in km, distance traveled at average speed during 10 s
+                        minDeltaSpeed = 0.2 * averageSpeed; // 20% of average speed
+                        break;
+                    case 2:
+                        // medium
+                        minDeltaAltitude = 10;
+                        minDeltaDistance = averageSpeed / 3600 * 20; // in km, distance traveled at average speed during 20 s
+                        minDeltaSpeed = 0.3 * averageSpeed; // 30% of average speed
+                        break;
+                    case 3:
+                        // low
+                        minDeltaAltitude = 20;
+                        minDeltaDistance = 2 * averageSpeed / 3600 * 30; // in km, distance traveled at 2x average speed during 30 s
+                        minDeltaSpeed = 0.4 * averageSpeed; // 40% of average speed
+                        break;
+                    default:
+                        minDeltaAltitude = 5; // m
+                        minDeltaDistance = 0.5; // km
+                        minDeltaSpeed = 3; // km/h
+                }
+                minDeltaAltitude = Math.max(minDeltaAltitude, 5); // m
+                minDeltaDistance = Math.max(minDeltaDistance, 0.1); // km/h
+                minDeltaSpeed = Math.max(minDeltaSpeed, 3); // km/h
+                Log.d(TAG, " minDeltaAltitude:" + minDeltaAltitude + " minDeltaDistance:" + minDeltaDistance + " minDeltaSpeed:" + minDeltaSpeed);
+                Log.d(TAG, " deltaAltitude:" + deltaAltitude + " deltaDistance:" + deltaDistance + " deltaSpeed:" + deltaSpeed + " averageSpeed:" + averageSpeed);
+                if (deltaAltitude >= minDeltaAltitude && deltaAltitude > 3 * p_advancedLocation.getAccuracy()) {
+                    Log.d(TAG, "sent forced by altitude deltaAltitude:" + deltaAltitude + " > " + minDeltaAltitude);
+                    send = true;
+                }
+                if (deltaDistance >= minDeltaDistance) {
+                    Log.d(TAG, "sent forced by distance deltaDistance:" + deltaDistance + " > " + minDeltaDistance);
+                    send = true;
+                }
+                if (p_advancedLocation.getSpeed() >= 1 /* m/s */ && deltaSpeed >= minDeltaSpeed) {
+                    Log.d(TAG, "sent forced by speed deltaSpeed:" + deltaSpeed + " > " + minDeltaSpeed);
+                    send = true;
+                }
+
+                if (_time.getCurrentTimeMilliseconds() - _last_post_newlocation > 30000) {
+                    Log.d(TAG, "sent forced after 30s");
+                    send = true;
+                }
+            }
+        }
+        if (send) {
+            m_sentElapsedTime = _advancedLocation.getElapsedTime();
+            m_sentAltitude = _advancedLocation.getAltitude();
+            //m_sentAccuracy = _advancedLocation.getAccuracy();
+            m_sentDistance = _advancedLocation.getDistance();
+            m_sentSpeed = _advancedLocation.getSpeed();
+        }
+        return send;
     }
 
     private void broadcastStatus(BaseStatus.Status currentStatus) {
