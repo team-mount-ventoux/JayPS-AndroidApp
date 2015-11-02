@@ -235,7 +235,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         _sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         setUnitsSummary();
-        setRefreshSummary();
+        setRefreshSummary(_sharedPreferences.getString("REFRESH_INTERVAL", String.valueOf(Constants.REFRESH_INTERVAL_DEFAULT)));
         setLoginJaypsSummary();
         setLoginMmtSummary();
         setLiveSummary();
@@ -266,7 +266,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 refresh_interval = Constants.REFRESH_INTERVAL_DEFAULT;
             }
             _bus.post(new ChangeRefreshInterval(refresh_interval));
-            setRefreshSummary();
+            setRefreshSummary(_sharedPreferences.getString("REFRESH_INTERVAL", String.valueOf(Constants.REFRESH_INTERVAL_DEFAULT)));
         }
         if (s.equals("LIVE_TRACKING") || s.equals("LIVE_TRACKING_MMT")) {
             setLiveSummary();
@@ -294,7 +294,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         String units = _sharedPreferences.getString("UNITS_OF_MEASURE", "0");
         Preference unitsPref = findPreference("UNITS_OF_MEASURE");
 
-        if (units.equals(""+Constants.IMPERIAL)) {
+        if (units.equals("" + Constants.IMPERIAL)) {
             unitsPref.setSummary(getString(R.string.PREF_UNITS_UNIT_IMPERIAL));
         } else if (units.equals(""+Constants.METRIC)) {
             unitsPref.setSummary(getString(R.string.PREF_UNITS_UNIT_METRIC));
@@ -309,10 +309,27 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
     }
 
-    private void setRefreshSummary() {
+    private void setRefreshSummary(String p_refreshInterval) {
         ListPreference refreshPref = (ListPreference) findPreference("REFRESH_INTERVAL");
-        CharSequence listDesc = refreshPref.getEntry();
-        refreshPref.setSummary(listDesc);
+        if (refreshPref.findIndexOfValue(p_refreshInterval) >= 0) {
+            CharSequence listDesc = refreshPref.getEntries()[refreshPref.findIndexOfValue(p_refreshInterval)];
+            refreshPref.setSummary(listDesc);
+        } else {
+            // not in the list (old value?)
+            int refresh_interval = 0;
+            try {
+                refresh_interval = Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", "500"));
+            } catch (NumberFormatException nfe) {
+                refresh_interval = Constants.REFRESH_INTERVAL_DEFAULT;
+            }
+            refresh_interval = refresh_interval % 100000;
+            if (refresh_interval < 1000) {
+                refreshPref.setSummary(refresh_interval + " ms");
+            } else {
+                refreshPref.setSummary(refresh_interval/1000 + " s");
+            }
+        }
+
     }
 
     private void setLoginJaypsSummary() {

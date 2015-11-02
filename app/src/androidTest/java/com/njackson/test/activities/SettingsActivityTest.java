@@ -260,10 +260,10 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
 
     @SmallTest
     public void testOnPreferenceChangedAndIntervalGreaterThan1000SetsRefreshIntervalToMilliseconds(){
-        when(_preferences.getString("REFRESH_INTERVAL","500")).thenReturn("2000");
+        when(_preferences.getString("REFRESH_INTERVAL","500")).thenReturn("3400");
         _activity.onSharedPreferenceChanged(_preferences, "REFRESH_INTERVAL");
 
-        assertEquals("2 s", _refreshPref.getSummary());
+        assertEquals("3 s", _refreshPref.getSummary());
     }
 
     @SmallTest
