@@ -392,7 +392,7 @@ public class GPSServiceCommand implements IServiceCommand {
             previousLocation = event;
 
             nbSent++;
-            event.setAscentRate(nbSent);
+            //event.setAscentRate(nbSent);
             _bus.post(event);
         }
 

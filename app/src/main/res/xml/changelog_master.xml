@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.3.0-beta1" versioncode="270" >
+        <change><![CDATA[<b>New watchapp with more fields and colors</b>]]></change>
+        <change>Support for Pebble Time Round</change>
+        <change>New GPS adaptative modes to reduce battery usage</change>
+        <change><![CDATA[<b>=> New watchface (click on "Install Watchface from the developers website" in settings)</b>]]></change>
+    </release>
     <release version="2.2.0" versioncode="265" >
         <change><![CDATA[<b>BLE: support for multiple devices at the same time (HRM+CSC)</b>]]></change>
         <change><![CDATA[<b>GPX: use Garmin format for better compatibility with Strava and export hear rate and cadence by default</b>]]></change>
