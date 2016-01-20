@@ -69,6 +69,7 @@ public class Ble implements IBle, ITimerHandler {
     private int _nbReconnect = 0;
     private String _ble_address1 = "";
     private String _ble_address2 = "";
+    private String _ble_address3 = "";
 
     public Ble(Context context) {
         _context = context;
@@ -106,7 +107,7 @@ public class Ble implements IBle, ITimerHandler {
         }
     };
     @Override
-    public void start(String ble_address1, String ble_address2, Bus bus, IInjectionContainer container) {
+    public void start(String ble_address1, String ble_address2, String ble_address3, Bus bus, IInjectionContainer container) {
         Log.d(TAG, "start");
 
         container.inject(this);
@@ -116,13 +117,14 @@ public class Ble implements IBle, ITimerHandler {
         // for later reconnections
         _ble_address1 = ble_address1;
         _ble_address2 = ble_address2;
+        _ble_address3 = ble_address3;
 
 //        String BLE_JAY_HRM1 = "1C:BA:8C:1F:58:1D";
 //        String BLE_JAY_HRM2 = "E0:C7:9D:69:1E:57";
 //        String BLE_JAY_CSC  = "EB:18:F4:AA:92:4E";
 //        _ble_address1 = BLE_JAY_HRM1;_ble_address2 = BLE_JAY_HRM2;
 
-        Log.d(TAG, "_ble_address1=" + _ble_address1 + " _ble_address2 = " + _ble_address2);
+        Log.d(TAG, "_ble_address1=" + _ble_address1 + " _ble_address2 = " + _ble_address2 + " _ble_address3 = " + _ble_address3);
 
         initialize();
 
@@ -165,7 +167,7 @@ public class Ble implements IBle, ITimerHandler {
             // new attempt to connect will be done when receiving BluetoothAdapter.ACTION_STATE_CHANGED
             return;
         } else {
-            Log.d(TAG, "initConnections " + _ble_address1 + " " + _ble_address2);
+            Log.d(TAG, "initConnections " + _ble_address1 + " " + _ble_address2 + " " + _ble_address3);
 
             if (mBluetoothAdapter == null) {
                 Log.w(TAG, "BluetoothAdapter not initialized");
@@ -175,8 +177,13 @@ public class Ble implements IBle, ITimerHandler {
                 // do not connect twice to the same device
                 _ble_address2 = "";
             }
+            if (_ble_address3.equals(_ble_address2) || _ble_address3.equals(_ble_address1)) {
+                // do not connect twice to the same device
+                _ble_address3 = "";
+            }
             BluetoothDevice device1 = null;
             BluetoothDevice device2 = null;
+            BluetoothDevice device3 = null;
             if (!_ble_address1.equals("")) {
                 device1 = mBluetoothAdapter.getRemoteDevice(_ble_address1);
                 if (device1 == null) {
@@ -193,7 +200,15 @@ public class Ble implements IBle, ITimerHandler {
                 }
                 connectionQueue.add(device2);
             }
-            if (device1 != null || device2 != null) {
+            if (!_ble_address3.equals("")) {
+                device3 = mBluetoothAdapter.getRemoteDevice(_ble_address3);
+                if (device3 == null) {
+                    Log.w(TAG, "Device3 not found. Unable to connect.");
+                    return;
+                }
+                connectionQueue.add(device3);
+            }
+            if (device1 != null || device2 != null || device3 != null) {
                 if (connectionThread == null) {
                     connectionThread = new Thread(new Runnable() {
                         @Override
