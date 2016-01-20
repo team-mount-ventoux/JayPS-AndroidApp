@@ -457,32 +457,44 @@ public class Ble implements IBle, ITimerHandler {
             _bus.post(sensorData);
         } else if (UUID_CSC_MEASUREMENT.equals(characteristic.getUuid())) {
             int flag = characteristic.getProperties();
-            //Log.d(TAG, String.format("flag: %d", flag));
+            Log.d(TAG, String.format("flag: %d", flag));
+            boolean wheelRevolutionDataPresent = false;
+            boolean crankRevolutionDataPresent = false;
             int cumulativeWheelRevolutions = 0;
             int lastWheelEventTime = 0;
             int cumulativeCrankRevolutions = 0;
             int lastCrankEventTime = 0;
 
-           // if ((flag & 0x01) != 0) {
-                // Wheel Revolution Data Present
+            //if ((flag & 0x01) != 0) { // does not work with Wahoo BlueSC...
+            try {
                 cumulativeWheelRevolutions = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT32 , 1);
                 lastWheelEventTime = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16 , 5);
-
-            //}
-            //if ((flag & 0x02) != 0) {
-                //Crank Revolution Data Present
+                wheelRevolutionDataPresent = true;
+            } catch (Exception e) {
+                Log.d(TAG, "weel data not found");
+            }
+            //if ((flag & 0x02) != 0) { // does not work with Wahoo BlueSC...
+            try {
                 cumulativeCrankRevolutions = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 7);
                 lastCrankEventTime = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 9);
-            //}
-
+                crankRevolutionDataPresent = true;
+            } catch (Exception e) {
+                Log.d(TAG, "crank data not found");
+            }
             _csc.onNewValues(cumulativeWheelRevolutions, lastWheelEventTime, cumulativeCrankRevolutions, lastCrankEventTime);
 
             res = String.format("Received cadence: %d, wheelRpm: %d", (int) _csc.getCrankRpm(), (int) _csc.getWheelRpm());
 
             BleSensorData sensorData = new BleSensorData();
-            sensorData.setCyclingCadence((int) _csc.getCrankRpm());
-            sensorData.setCyclingWheelRpm(_csc.getWheelRpm());
-            _bus.post(sensorData);
+            if (crankRevolutionDataPresent) {
+                sensorData.setCyclingCadence((int) _csc.getCrankRpm());
+            }
+            if (wheelRevolutionDataPresent) {
+                sensorData.setCyclingWheelRpm(_csc.getWheelRpm());
+            }
+            if (crankRevolutionDataPresent || wheelRevolutionDataPresent) {
+                _bus.post(sensorData);
+            }
         } else if (UUID_BATTERY_LEVEL.equals(characteristic.getUuid())) {
             final int battery = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0);
             res = String.format("Received battery: %d", battery);
