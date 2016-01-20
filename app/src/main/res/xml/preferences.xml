@@ -110,6 +110,11 @@
                 android:title="@string/PREF_BLE_TITLE2"
                 android:summary=""
                 />
+            <Preference
+                android:key="PREF_BLE3"
+                android:title="@string/PREF_BLE_TITLE3"
+                android:summary=""
+                />
             <EditTextPreference
                 android:key="PREF_BLE_CSC_WHEEL_SIZE"
                 android:title="@string/PREF_BLE_CSC_WHEEL_SIZE"

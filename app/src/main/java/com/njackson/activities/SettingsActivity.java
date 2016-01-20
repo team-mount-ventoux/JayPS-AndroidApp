@@ -178,6 +178,18 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                     return false;
                 }
             });
+
+            Preference pref_ble3 = findPreference("PREF_BLE3");
+            pref_ble3.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    if (preference.getKey().equals("PREF_BLE3")) {
+                        final Intent intent = new Intent(getApplicationContext(), HRMScanActivity.class);
+                        startActivityForResult(intent, 3);
+                    }
+                    return false;
+                }
+            });
         }
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -196,6 +208,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             if (sensorNumber == 2) {
                 editor.putString("hrm_name2", hrm_name);
                 editor.putString("hrm_address2", hrm_address);
+            } else if (sensorNumber == 3) {
+                editor.putString("hrm_name3", hrm_name);
+                editor.putString("hrm_address3", hrm_address);
             } else {
                 editor.putString("hrm_name", hrm_name);
                 editor.putString("hrm_address", hrm_address);
@@ -384,9 +399,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     private void setHrmSummary() {
         String summary = _sharedPreferences.getString("hrm_name", "");
         String summary2 = _sharedPreferences.getString("hrm_name2", "");
+        String summary3 = _sharedPreferences.getString("hrm_name3", "");
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             summary = getResources().getString(R.string.ble_not_supported);
             summary2 = getResources().getString(R.string.ble_not_supported);
+            summary3 = getResources().getString(R.string.ble_not_supported);
         }
         if (summary.equals("")) {
             summary = "Click to choose a sensor";
@@ -399,5 +416,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
         Preference hrmPref2 = findPreference("PREF_BLE2");
         hrmPref2.setSummary(summary2);
+
+        if (summary3.equals("")) {
+            summary3 = "Click to choose a sensor";
+        }
+        Preference hrmPref3 = findPreference("PREF_BLE3");
+        hrmPref3.setSummary(summary3);
     }
 }

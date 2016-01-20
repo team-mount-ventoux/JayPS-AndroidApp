@@ -85,6 +85,7 @@ public class BleServiceCommandTest extends AndroidTestCase {
     private void setupMocks() {
         when(_mockPreferences.getString("hrm_address", "")).thenReturn("12");
         when(_mockPreferences.getString("hrm_address2", "")).thenReturn("34");
+        when(_mockPreferences.getString("hrm_address3", "")).thenReturn("56");
     }
 
 // we no longer start HrmServiceCommand if hrm_address is not setted
