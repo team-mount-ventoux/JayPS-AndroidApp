@@ -457,44 +457,80 @@ public class Ble implements IBle, ITimerHandler {
         // carried out as per profile specifications:
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
         if (UUID_HEART_RATE_MEASUREMENT.equals(characteristic.getUuid())) {
-            int flag = characteristic.getProperties();
+            int flags = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0);
+            Log.d(TAG, String.format("flags: %d|%s", flags, Integer.toBinaryString(flags)));
+            int sensorContactStatus = (flags & 0x06) >> 1;
+            Log.d(TAG, "sensorContactStatus=" + sensorContactStatus);
+            byte[] values = characteristic.getValue();
+            String tmp = "";
+            for(int i=0; i<values.length; i++) {
+                tmp += String.format("|%d(%02X)", values[i], values[i]);
+            }
+            Log.d(TAG, "characteristic HRM=" + tmp);
+            int energy = -1;
+            int offset = 1;
+            int rrCount = 0;
             int format = -1;
-            if ((flag & 0x01) != 0) {
+            if ((flags & 0x01) != 0) {
                 format = BluetoothGattCharacteristic.FORMAT_UINT16;
+                offset += 2;
             } else {
                 format = BluetoothGattCharacteristic.FORMAT_UINT8;
+                offset += 1;
             }
             final int heartRate = characteristic.getIntValue(format, 1);
             res = String.format("Received heart rate: %d", heartRate);
+
+            if ((flags & (1 << 3)) != 0) {
+                // calories present
+                energy = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, offset);
+                offset += 2;
+                Log.d(TAG, "Received energy: " + energy);
+            }
+            if ( (flags & (1 << 4)) != 0) {
+                // RR interval.
+                rrCount = ((characteristic.getValue()).length - offset) / 2;
+                int[] rrIntervals = new int[rrCount];
+                for (int i = 0; i < rrCount; i++){
+                    rrIntervals[i] = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, offset);
+                    offset += 2;
+                    Log.d(TAG, "Received rrInterval:" + rrIntervals[i]);
+                }
+            }
+
             BleSensorData sensorData = new BleSensorData();
             sensorData.setHeartRate(heartRate);
             //sensorData.setCyclingWheelRpm(3 * heartRate); // fake values to debug csc
             _bus.post(sensorData);
         } else if (UUID_CSC_MEASUREMENT.equals(characteristic.getUuid())) {
-            int flag = characteristic.getProperties();
-            Log.d(TAG, String.format("flag: %d", flag));
+            int flags = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0);
+            Log.d(TAG, String.format("flags: %d|%s", flags, Integer.toBinaryString(flags)));
+            byte[] values = characteristic.getValue();
+            String tmp = "";
+            for(int i=0; i<values.length; i++) {
+                tmp += String.format("|%d(%02X)", values[i], values[i]);
+            }
+            Log.d(TAG, "characteristic CSC=" + tmp);
             boolean wheelRevolutionDataPresent = false;
             boolean crankRevolutionDataPresent = false;
             int cumulativeWheelRevolutions = 0;
             int lastWheelEventTime = 0;
             int cumulativeCrankRevolutions = 0;
             int lastCrankEventTime = 0;
+            int offset = 0;
 
-            //if ((flag & 0x01) != 0) { // does not work with Wahoo BlueSC...
-            try {
+            if ((flags & 0x01) != 0) {
                 cumulativeWheelRevolutions = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT32 , 1);
                 lastWheelEventTime = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16 , 5);
                 wheelRevolutionDataPresent = true;
-            } catch (Exception e) {
-                Log.d(TAG, "weel data not found");
+                offset += 6;
+                Log.d(TAG, "Received wheelRevolutionData");
             }
-            //if ((flag & 0x02) != 0) { // does not work with Wahoo BlueSC...
-            try {
-                cumulativeCrankRevolutions = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 7);
-                lastCrankEventTime = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 9);
+            if ((flags & 0x02) != 0) {
+                cumulativeCrankRevolutions = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 1+offset);
+                lastCrankEventTime = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 3+offset);
                 crankRevolutionDataPresent = true;
-            } catch (Exception e) {
-                Log.d(TAG, "crank data not found");
+                Log.d(TAG, "Received crankRevolutionData");
             }
             _csc.onNewValues(cumulativeWheelRevolutions, lastWheelEventTime, cumulativeCrankRevolutions, lastCrankEventTime);
 
@@ -514,10 +550,17 @@ public class Ble implements IBle, ITimerHandler {
             final int battery = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0);
             res = String.format("Received battery: %d", battery);
         } else if (UUID_TEMPERATURE_MEASUREMENT.equals(characteristic.getUuid())) {
-            int flag = characteristic.getProperties();
+            int flags = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0);
+            Log.d(TAG, String.format("flags: %d|%s", flags, Integer.toBinaryString(flags)));
+            byte[] values = characteristic.getValue();
+            String tmp = "";
+            for(int i=0; i<values.length; i++) {
+                tmp += String.format("|%d(%02X)", values[i], values[i]);
+            }
+            Log.d(TAG, "characteristic Temperature=" + tmp);
             int offset = 0;
             String units = "";
-            if ((flag & 0x00) == 0) {
+            if ((flags & 0x00) == 0) {
                 units = "Celsius";
                 offset = 1;
             } else {
