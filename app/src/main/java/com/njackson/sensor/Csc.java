@@ -22,7 +22,7 @@ public class Csc {
     public void onNewValues(int cumulativeWheelRevolutions, int lastWheelEventTime, int cumulativeCrankRevolutions, int lastCrankEventTime) {
         Log.d(TAG, "onNewValues(" + cumulativeWheelRevolutions + ", " + lastWheelEventTime + ", " + cumulativeCrankRevolutions + ", " + lastCrankEventTime + ")");
 
-        if (prevWheelEventTime > -1) {
+        if (prevWheelEventTime > -1 && lastWheelEventTime > 0) {
             if (lastWheelEventTime != prevWheelEventTime) {
                 wheelRpm = 60 * 1024f / ((lastWheelEventTime - prevWheelEventTime + 65536) % 65536);
                 if (prevCumulativeWheelRevolutions > -1 && cumulativeWheelRevolutions > prevCumulativeWheelRevolutions + 1) {
@@ -33,7 +33,7 @@ public class Csc {
                 Log.v(TAG, "ratio: " + (crankRpm > 0 ? wheelRpm / crankRpm : 0));
             }
         }
-        if (prevCrankEventTime > -1) {
+        if (prevCrankEventTime > -1 && lastCrankEventTime > 0) {
             if (lastCrankEventTime != prevCrankEventTime) {
                 crankRpm = 60 * 1024f / ((lastCrankEventTime - prevCrankEventTime + 65536) % 65536);
                 if (prevCumulativeCrankRevolutions > -1 && cumulativeCrankRevolutions > prevCumulativeCrankRevolutions + 1) {
@@ -43,10 +43,13 @@ public class Csc {
                 Log.i(TAG, "crankRpm: " + crankRpm);
             }
         }
-
-        prevCumulativeWheelRevolutions = cumulativeWheelRevolutions;
-        prevWheelEventTime = lastWheelEventTime;
-        prevCumulativeCrankRevolutions = cumulativeCrankRevolutions;
-        prevCrankEventTime = lastCrankEventTime;
+        if (lastWheelEventTime > 0) {
+            prevCumulativeWheelRevolutions = cumulativeWheelRevolutions;
+            prevWheelEventTime = lastWheelEventTime;
+        }
+        if (lastCrankEventTime > 0) {
+            prevCumulativeCrankRevolutions = cumulativeCrankRevolutions;
+            prevCrankEventTime = lastCrankEventTime;
+        }
     }
 }

@@ -218,7 +218,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             case BleSensorData.SENSOR_HRM:
                 setHrmTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE1) + " - Heart rate: " + event.getHeartRate());
                 break;
-            case BleSensorData.SENSOR_CSC:
+            case BleSensorData.SENSOR_CSC_CADENCE:
                 setHrmTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE1) + " - Cadence: " + event.getCyclingCadence());
                 break;
             case BleSensorData.SENSOR_RSC:

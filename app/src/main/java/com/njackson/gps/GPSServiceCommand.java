@@ -122,8 +122,11 @@ public class GPSServiceCommand implements IServiceCommand {
                 _heartRate = event.getHeartRate();
                 Log.d(TAG, "onNewBleSensorData _heartRate:" + _heartRate);
                 break;
-            case BleSensorData.SENSOR_CSC:
+            case BleSensorData.SENSOR_CSC_CADENCE:
                 _cyclingCadence = event.getCyclingCadence();
+                Log.d(TAG, "onNewBleSensorData _cadence:" + _cyclingCadence);
+                break;
+            case BleSensorData.SENSOR_CSC_WHEEL_RPM:
                 int wheelSize;
                 try {
                     wheelSize = Integer.valueOf(_sharedPreferences.getString("PREF_BLE_CSC_WHEEL_SIZE", "0"));
@@ -133,7 +136,7 @@ public class GPSServiceCommand implements IServiceCommand {
                 if (wheelSize > 0) {
                     _advancedLocation.setSensorSpeed(wheelSize / 1000 * event.getCyclingWheelRpm() / 60, _time.getCurrentTimeMilliseconds());
                 }
-                Log.d(TAG, "onNewBleSensorData _cadence:" + _cyclingCadence + " wheelRpm:" + event.getCyclingWheelRpm() + " wheelSize:" + wheelSize);
+                Log.d(TAG, "onNewBleSensorData wheelRpm:" + event.getCyclingWheelRpm() + " wheelSize:" + wheelSize);
                 break;
             case BleSensorData.SENSOR_RSC:
                 _runningCadence = event.getRunningCadence();

@@ -3,9 +3,10 @@ package com.njackson.events.BleServiceCommand;
 public class BleSensorData {
     public static final int SENSOR_NONE = 0;
     public static final int SENSOR_HRM = 1;
-    public static final int SENSOR_CSC = 2;
-    public static final int SENSOR_RSC = 3;
-    public static final int SENSOR_TEMPERATURE = 4;
+    public static final int SENSOR_CSC_CADENCE = 2;
+    public static final int SENSOR_CSC_WHEEL_RPM = 3;
+    public static final int SENSOR_RSC = 4;
+    public static final int SENSOR_TEMPERATURE = 5;
 
     private int _type = SENSOR_NONE;
     public int getType() {
@@ -26,7 +27,7 @@ public class BleSensorData {
         return _cyclingCadence;
     }
     public void setCyclingCadence(int cyclingCadence) {
-        this._type = SENSOR_CSC;
+        this._type = SENSOR_CSC_CADENCE;
         this._cyclingCadence = cyclingCadence;
     }
     private float _cyclingWheelRpm = 0;
@@ -34,7 +35,7 @@ public class BleSensorData {
         return _cyclingWheelRpm;
     }
     public void setCyclingWheelRpm(float cyclingWheelRpm) {
-        this._type = SENSOR_CSC;
+        this._type = SENSOR_CSC_WHEEL_RPM;
         this._cyclingWheelRpm = cyclingWheelRpm;
     }
 
