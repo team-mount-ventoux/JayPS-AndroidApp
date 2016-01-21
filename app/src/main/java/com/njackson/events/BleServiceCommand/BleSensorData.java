@@ -8,6 +8,15 @@ public class BleSensorData {
     public static final int SENSOR_RSC = 4;
     public static final int SENSOR_TEMPERATURE = 5;
 
+    private String _bleAddress = "";
+    public BleSensorData(String bleAddress) {
+        this._bleAddress = bleAddress;
+    }
+
+    public String getBleAddress() {
+        return _bleAddress;
+    }
+
     private int _type = SENSOR_NONE;
     public int getType() {
         return _type;

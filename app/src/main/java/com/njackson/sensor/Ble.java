@@ -301,7 +301,7 @@ public class Ble implements IBle, ITimerHandler {
                         readCharacteristicQueue.remove();
 
                         if (status == BluetoothGatt.GATT_SUCCESS) {
-                            String msg = decodeCharacteristic(characteristic);
+                            String msg = decodeCharacteristic(gatt, characteristic);
                             if (debug) Log.d(TAG, display(gatt, characteristic) + " onCharacteristicRead status=" + status + msg);
                         } else {
                             Log.d(TAG, display(gatt, characteristic) + " onCharacteristicRead error: " + status);
@@ -314,7 +314,7 @@ public class Ble implements IBle, ITimerHandler {
                     @Override
                     public void onCharacteristicChanged(BluetoothGatt gatt,
                                                         BluetoothGattCharacteristic characteristic) {
-                        String msg = decodeCharacteristic(characteristic);
+                        String msg = decodeCharacteristic(gatt, characteristic);
                         if (debug) Log.d(TAG, display(gatt) + " onCharacteristicChanged" + display(characteristic) + " " + msg);
                     }
 
@@ -449,7 +449,7 @@ public class Ble implements IBle, ITimerHandler {
         Log.d(TAG, "serviceDiscovery end");
     }
 
-    private String decodeCharacteristic(final BluetoothGattCharacteristic characteristic) {
+    private String decodeCharacteristic(final BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
         String res = "";
         //if (debug) Log.d(TAG, "decodeCharacteristic() "+display(gatt, characteristic));
 
@@ -501,7 +501,7 @@ public class Ble implements IBle, ITimerHandler {
                 Log.d(TAG, "Received rrIntervals: " + tmp);
             }
 
-            BleSensorData sensorData = new BleSensorData();
+            BleSensorData sensorData = new BleSensorData(gatt.getDevice().getAddress());
             sensorData.setHeartRate(heartRate);
             //sensorData.setCyclingWheelRpm(3 * heartRate); // fake values to debug csc
             _bus.post(sensorData);
@@ -540,12 +540,12 @@ public class Ble implements IBle, ITimerHandler {
             res = String.format("Received cadence: %d, wheelRpm: %d", (int) _csc.getCrankRpm(), (int) _csc.getWheelRpm());
 
             if (crankRevolutionDataPresent) {
-                BleSensorData sensorData = new BleSensorData();
+                BleSensorData sensorData = new BleSensorData(gatt.getDevice().getAddress());
                 sensorData.setCyclingCadence((int) _csc.getCrankRpm());
                 _bus.post(sensorData);
             }
             if (wheelRevolutionDataPresent) {
-                BleSensorData sensorData = new BleSensorData();
+                BleSensorData sensorData = new BleSensorData(gatt.getDevice().getAddress());
                 sensorData.setCyclingWheelRpm(_csc.getWheelRpm());
                 _bus.post(sensorData);
             }
@@ -576,7 +576,7 @@ public class Ble implements IBle, ITimerHandler {
                 // force conversion to celsius
                 temperature = ((temperature - 32) * 5) / 9;
             }
-            BleSensorData sensorData = new BleSensorData();
+            BleSensorData sensorData = new BleSensorData(gatt.getDevice().getAddress());
             sensorData.setTemperature(temperature);
             _bus.post(sensorData);
         } else if (UUID_RSC_MEASUREMENT.equals(characteristic.getUuid())) {
@@ -584,7 +584,7 @@ public class Ble implements IBle, ITimerHandler {
             int cadence = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 3);
 
             res = String.format("Received running speeed: %d m/s, running cadence: %d", speed, cadence);
-            BleSensorData sensorData = new BleSensorData();
+            BleSensorData sensorData = new BleSensorData(gatt.getDevice().getAddress());
             sensorData.setRunningCadence((int) cadence);
             _bus.post(sensorData);
 

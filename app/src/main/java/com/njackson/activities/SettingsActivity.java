@@ -228,16 +228,24 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
     @Subscribe
     public void onNewBleSensorData(BleSensorData event) {
-        //todo(jay): which sensor?
+        String key = "PREF_BLE1";
+        int bleNumber = 1;
+        if (event.getBleAddress().equals(_sharedPreferences.getString("hrm_address2", ""))) {
+            key = "PREF_BLE2";
+            bleNumber = 2;
+        } else if (event.getBleAddress().equals(_sharedPreferences.getString("hrm_address3", ""))) {
+            key = "PREF_BLE3";
+            bleNumber = 3;
+        }
         switch (event.getType()) {
             case BleSensorData.SENSOR_HRM:
-                setHrmTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE1) + " - Heart rate: " + event.getHeartRate());
+                setBleTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE) + " " + bleNumber + " - Heart rate: " + event.getHeartRate(), key);
                 break;
             case BleSensorData.SENSOR_CSC_CADENCE:
-                setHrmTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE1) + " - Cadence: " + event.getCyclingCadence());
+                setBleTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE) + " " + bleNumber +  " - Cadence: " + event.getCyclingCadence(), key);
                 break;
             case BleSensorData.SENSOR_RSC:
-                setHrmTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE1) + " - Cadence: " + event.getRunningCadence());
+                setBleTitle(getApplicationContext().getString(R.string.PREF_BLE_TITLE) + " " + bleNumber + " - Cadence: " + event.getRunningCadence(), key);
                 break;
         }
     }
@@ -392,9 +400,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         Preference canvas_screen = findPreference("canvas_screen");
         canvas_screen.setSummary(listDesc);
     }
-    private void setHrmTitle(String title) {
-        Preference hrmPref = findPreference("PREF_BLE1");
-        hrmPref.setTitle(title);
+    private void setBleTitle(String title, String key) {
+        Preference blePref = findPreference(key);
+        blePref.setTitle(title);
     }
     private void setHrmSummary() {
         String summary = _sharedPreferences.getString("hrm_name", "");
