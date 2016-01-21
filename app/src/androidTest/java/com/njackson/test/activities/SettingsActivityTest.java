@@ -143,6 +143,7 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         when(_preferences.getString("CANVAS_MODE","")).thenReturn("canvas_and_pbw");
         when(_preferences.getString("hrm_name", "")).thenReturn("test");
         when(_preferences.getString("hrm_name2", "")).thenReturn("test2");
+        when(_preferences.getString("hrm_name3", "")).thenReturn("test3");
 
         _mockChangeLogBuilder = mock(IChangeLogBuilder.class);
         when(_mockChangeLogBuilder.setActivity(any(MainActivity.class))).thenReturn(_mockChangeLogBuilder);

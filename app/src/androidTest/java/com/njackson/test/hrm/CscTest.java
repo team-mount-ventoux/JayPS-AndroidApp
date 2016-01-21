@@ -11,10 +11,8 @@ public class CscTest extends AndroidTestCase {
     public void testCscRPM() throws Exception {
         Csc csc = new Csc();
 
-        // first values, skipped
-        csc.onNewValues(0, 0, 0, 0);
-
-        csc.onNewValues(2, 1024, 1, 1024);
+        csc.onNewValues(0, 1, 0, 1);
+        csc.onNewValues(2, 1025, 1, 1025);
         assertEquals(120f, csc.getWheelRpm());
         assertEquals(60f, csc.getCrankRpm());
 
