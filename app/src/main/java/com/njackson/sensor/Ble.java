@@ -527,24 +527,24 @@ public class Ble implements IBle, ITimerHandler {
                 lastWheelEventTime = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16 , 5);
                 wheelRevolutionDataPresent = true;
                 offset += 6;
-                //Log.d(TAG, "Received wheelRevolutionData");
+                Log.d(TAG, "Received wheelRevolutionData");
             }
             if ((flags & 0x02) != 0) {
                 cumulativeCrankRevolutions = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 1+offset);
                 lastCrankEventTime = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 3+offset);
                 crankRevolutionDataPresent = true;
-                //Log.d(TAG, "Received crankRevolutionData");
+                Log.d(TAG, "Received crankRevolutionData");
             }
-            _csc.onNewValues(cumulativeWheelRevolutions, lastWheelEventTime, cumulativeCrankRevolutions, lastCrankEventTime);
+            boolean needToPostData = _csc.onNewValues(cumulativeWheelRevolutions, lastWheelEventTime, cumulativeCrankRevolutions, lastCrankEventTime);
 
-            res = String.format("Received cadence: %d, wheelRpm: %d", (int) _csc.getCrankRpm(), (int) _csc.getWheelRpm());
+            res = String.format("Received cadence: %d, wheelRpm: %d %s", (int) _csc.getCrankRpm(), (int) _csc.getWheelRpm(), needToPostData ? "[NEW]" : "");
 
-            if (crankRevolutionDataPresent) {
+            if (needToPostData && crankRevolutionDataPresent) {
                 BleSensorData sensorData = new BleSensorData(gatt.getDevice().getAddress());
                 sensorData.setCyclingCadence((int) _csc.getCrankRpm());
                 _bus.post(sensorData);
             }
-            if (wheelRevolutionDataPresent) {
+            if (needToPostData && wheelRevolutionDataPresent) {
                 BleSensorData sensorData = new BleSensorData(gatt.getDevice().getAddress());
                 sensorData.setCyclingWheelRpm(_csc.getWheelRpm());
                 _bus.post(sensorData);
