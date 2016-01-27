@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.4.0-beta1" versioncode="280" >
+        <change><![CDATA[<b>Improve ascent calculation</b>]]></change>
+        <change><![CDATA[<b>Support for more HRM and CSC sensors</b>]]></change>
+        <change>Possibility to add a third BLE sensor</change>
+        <change>Settings: display data close to the right BLE sensor</change>
+    </release>
     <release version="2.3.0" versioncode="271" >
         <change><![CDATA[<b>New watchapp with more fields and colors</b>]]></change>
         <change>Support for Pebble Time Round</change>
