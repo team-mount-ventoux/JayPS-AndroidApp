@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="2.4.0-beta1" versioncode="280" >
+    <release version="2.4.0" versioncode="281" >
         <change><![CDATA[<b>Improve ascent calculation</b>]]></change>
         <change><![CDATA[<b>Support for more HRM and CSC sensors</b>]]></change>
         <change>Possibility to add a third BLE sensor</change>
