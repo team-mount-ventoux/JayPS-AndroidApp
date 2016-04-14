@@ -414,6 +414,7 @@ public class GPSServiceCommand implements IServiceCommand {
     //private float m_sentAccuracy;
     private float m_sentDistance;
     private float m_sentSpeed;
+    private int m_sentHeartRate;
     private boolean locationShouldBeSended(AdvancedLocation p_advancedLocation) {
 
         boolean send = false;
@@ -443,32 +444,38 @@ public class GPSServiceCommand implements IServiceCommand {
 //                Log.d(TAG, "p_advancedLocation.getDistance()=" + p_advancedLocation.getDistance() + " m_sentDistance=" + m_sentDistance);
                 double deltaSpeed = Math.abs(Math.floor(p_advancedLocation.getSpeed()*3.6) - Math.floor(m_sentSpeed*3.6)); // in km/h (rounded at 1 km/h)
                 double averageSpeed = p_advancedLocation.getElapsedTime() > 0 ? p_advancedLocation.getDistance() * 3.6 / (p_advancedLocation.getElapsedTime()/1000) : 0; // in km/h
+                int deltaHeartRate = Math.abs(_heartRate - m_sentHeartRate);
                 double minDeltaAltitude;
                 double minDeltaDistance;
                 double minDeltaSpeed;
+                double minDeltaHeartrate;
                 switch (adaptativeMode) {
                     case 1:
                         // high - normal
                         minDeltaAltitude = 5; // 5m => 18s at 1000m/h
                         minDeltaDistance = averageSpeed / 3600 * 10; // in km, distance traveled at average speed during 10 s
                         minDeltaSpeed = 0.2 * averageSpeed; // 20% of average speed
+                        minDeltaHeartrate = 5;
                         break;
                     case 2:
                         // medium
                         minDeltaAltitude = 10;
                         minDeltaDistance = averageSpeed / 3600 * 20; // in km, distance traveled at average speed during 20 s
                         minDeltaSpeed = 0.3 * averageSpeed; // 30% of average speed
+                        minDeltaHeartrate = 10;
                         break;
                     case 3:
                         // low
                         minDeltaAltitude = 20;
                         minDeltaDistance = 2 * averageSpeed / 3600 * 30; // in km, distance traveled at 2x average speed during 30 s
                         minDeltaSpeed = 0.4 * averageSpeed; // 40% of average speed
+                        minDeltaHeartrate = 20;
                         break;
                     default:
                         minDeltaAltitude = 5; // m
                         minDeltaDistance = 0.5; // km
                         minDeltaSpeed = 3; // km/h
+                        minDeltaHeartrate = 10;
                 }
                 minDeltaAltitude = Math.max(minDeltaAltitude, 5); // m
                 minDeltaDistance = Math.max(minDeltaDistance, 0.1); // km/h
@@ -487,6 +494,10 @@ public class GPSServiceCommand implements IServiceCommand {
                     Log.d(TAG, "sent forced by speed deltaSpeed:" + deltaSpeed + " > " + minDeltaSpeed);
                     send = true;
                 }
+                if (deltaHeartRate >= minDeltaHeartrate) {
+                    Log.d(TAG, "sent forced by heartrate deltaHeartRate:" + deltaHeartRate + " > " + minDeltaHeartrate);
+                    send = true;
+                }
 
                 if (_time.getCurrentTimeMilliseconds() - _last_post_newlocation > 30000) {
                     Log.d(TAG, "sent forced after 30s");
@@ -500,6 +511,7 @@ public class GPSServiceCommand implements IServiceCommand {
             //m_sentAccuracy = _advancedLocation.getAccuracy();
             m_sentDistance = _advancedLocation.getDistance();
             m_sentSpeed = _advancedLocation.getSpeed();
+            m_sentHeartRate = _heartRate;
         }
         return send;
     }
