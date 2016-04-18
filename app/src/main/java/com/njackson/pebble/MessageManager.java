@@ -308,6 +308,12 @@ public class MessageManager implements IMessageManager, Runnable {
                 _sharedPreferences.getInt("WATCHFACE_VERSION", 0)
         );
         dictionary.addInt32(Constants.MSG_VERSION_ANDROID, versionCode);
+
+        try {
+            dictionary.addUint8(Constants.MSG_HR_MAX, (byte) (Integer.valueOf(_sharedPreferences.getString("PREF_BLE_HRM_HRMAX", "0")) % 256));
+            dictionary.addUint8(Constants.MSG_HR_ZONE_NOTIFICATION_MODE, (byte) (Integer.valueOf(_sharedPreferences.getString("PREF_BLE_HRM_ZONE_NOTIFICATION_MODE", "0")) % 256));
+        } catch (NumberFormatException nfe) {}
+
         offer(dictionary);
     }
 }

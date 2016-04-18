@@ -116,6 +116,22 @@
                 android:summary=""
                 />
             <EditTextPreference
+                android:key="PREF_BLE_HRM_HRMAX"
+                android:title="@string/PREF_BLE_HRM_HRMAX"
+                android:summary="@string/PREF_BLE_HRM_HRMAX_SUMMARY"
+                android:hint="@string/PREF_BLE_HRM_HRMAX_SUMMARY"
+                android:inputType="number"
+                android:defaultValue="0" />
+                />
+            <ListPreference
+                android:key="PREF_BLE_HRM_ZONE_NOTIFICATION_MODE"
+                android:title="@string/PREF_BLE_HRM_ZONE_NOTIFICATION_MODE"
+                android:dialogTitle="@string/PREF_BLE_HRM_ZONE_NOTIFICATION_MODE"
+                android:entries="@array/PREF_BLE_HRM_ZONE_NOTIFICATION_MODE_ENTRIES"
+                android:entryValues="@array/PREF_BLE_HRM_ZONE_NOTIFICATION_MODE_ENTRY_VALUES"
+                android:defaultValue="@string/PREF_BLE_HRM_ZONE_NOTIFICATION_MODE_DEFAULT" />
+
+            <EditTextPreference
                 android:key="PREF_BLE_CSC_WHEEL_SIZE"
                 android:title="@string/PREF_BLE_CSC_WHEEL_SIZE"
                 android:summary="@string/PREF_BLE_CSC_WHEEL_SIZE_SUMMARY"

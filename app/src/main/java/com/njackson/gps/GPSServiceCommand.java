@@ -79,6 +79,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private long _last_post_newlocation  = 0;
     private long _last_post_battery_level  = 0;
     private long _last_post_temperature  = 0;
+    private long _last_post_hr_max  = 0;
 
     private int _refresh_interval = 0;
 
@@ -350,7 +351,9 @@ public class GPSServiceCommand implements IServiceCommand {
     private double _ypos = 0;
     private NewLocation previousLocation;
     private int nbSent=0;
+    private int previousHeartRateMax = 0;
     private void broadcastLocation(Location location) {
+        boolean force_send = false;
         if (firstLocation != null && location != null) {
             _xpos = firstLocation.distanceTo(location) * Math.sin(firstLocation.bearingTo(location) / 180 * 3.1415);
             _xpos = Math.floor(_xpos / 10);
@@ -363,6 +366,19 @@ public class GPSServiceCommand implements IServiceCommand {
         if (_heartRate > 0) {
             event.setHeartRate(_heartRate);
         }
+
+        try {
+            int heartRateMax = Integer.valueOf(_sharedPreferences.getString("PREF_BLE_HRM_HRMAX", "0"));
+            if (heartRateMax != previousHeartRateMax || _time.getCurrentTimeMilliseconds() - _last_post_hr_max > 60 * 1000) {
+                //Log.d(TAG, "previousHeartRateMax:" + previousHeartRateMax + " heartRateMax:" + heartRateMax);
+                // ||: force send every x sec
+                event.setHeartRateMax(heartRateMax);
+                event.setHeartRateMode(Integer.valueOf(_sharedPreferences.getString("PREF_BLE_HRM_ZONE_NOTIFICATION_MODE", "0")));
+                previousHeartRateMax = heartRateMax;
+                _last_post_hr_max = _time.getCurrentTimeMilliseconds();
+                force_send = true;
+            }
+        } catch (NumberFormatException nfe) {}
         if (_cyclingCadence > 0) {
             event.setCyclingCadence(_cyclingCadence);
         }
@@ -378,17 +394,19 @@ public class GPSServiceCommand implements IServiceCommand {
             }
             event.setTemperature(temperature);
             _last_post_temperature = _time.getCurrentTimeMilliseconds();
+            force_send = true;
         }
         if (_time.getCurrentTimeMilliseconds() - _last_post_battery_level > 60 * 1000) {
             // only send battery level once every X seconds
             _batteryLevel = BatteryStatus.getBatteryLevel(_applicationContext);
             event.setBatteryLevel(_batteryLevel);
             _last_post_battery_level = _time.getCurrentTimeMilliseconds();
+            force_send = true;
         }
 
         _savedLocation = new NewLocationToSavedLocation(event);
 
-        if (locationShouldBeSended(_advancedLocation)) {
+        if (locationShouldBeSended(_advancedLocation, force_send)) {
             // 0.95 to avoid skipping wanted data
             //Log.d(TAG, "ts:" + _time.getCurrentTimeMilliseconds() + " _refresh_interval:" + _refresh_interval);
             _last_post_newlocation = _time.getCurrentTimeMilliseconds();
@@ -415,9 +433,9 @@ public class GPSServiceCommand implements IServiceCommand {
     private float m_sentDistance;
     private float m_sentSpeed;
     private int m_sentHeartRate;
-    private boolean locationShouldBeSended(AdvancedLocation p_advancedLocation) {
+    private boolean locationShouldBeSended(AdvancedLocation p_advancedLocation, boolean p_forceSsend) {
 
-        boolean send = false;
+        boolean send = p_forceSsend;
 
         //Log.d(TAG, "locationShouldBeSended _refresh_interval%100000="+_refresh_interval % 100000+" _refresh_interval=" + _refresh_interval);
 

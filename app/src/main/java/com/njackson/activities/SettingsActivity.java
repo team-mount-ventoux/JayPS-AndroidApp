@@ -264,6 +264,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         setLiveSummary();
         setOruxMapsSummary();
         setCanvasSummary();
+        setHrmSummary();
     }
 
     @Override
@@ -310,6 +311,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
         if (s.equals("CANVAS_MODE")) {
             setCanvasSummary();
+        }
+        if (s.equals("PREF_BLE_HRM_HRMAX")) {
+            setHrmSummary();
         }
     }
 
@@ -430,5 +434,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
         Preference hrmPref3 = findPreference("PREF_BLE3");
         hrmPref3.setSummary(summary3);
+
+        Preference hrmMaxPref = findPreference("PREF_BLE_HRM_HRMAX");
+        hrmMaxPref.setSummary(_sharedPreferences.getString("PREF_BLE_HRM_HRMAX", getString(R.string.PREF_BLE_HRM_HRMAX_SUMMARY)));
     }
 }

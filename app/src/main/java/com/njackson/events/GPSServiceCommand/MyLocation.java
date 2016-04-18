@@ -141,6 +141,14 @@ public abstract class MyLocation {
     public int getHeartRate() { return this._HeartRate; }
     public void setHeartRate(int heartRate) { this._HeartRate = heartRate;}
 
+    private int _HeartRateMax = 0;
+    public int getHeartRateMax() { return this._HeartRateMax; }
+    public void setHeartRateMax(int heartRateMax) { this._HeartRateMax = heartRateMax;}
+
+    private int _HeartRateMode = 0;
+    public int getHeartRateMode() { return this._HeartRateMode; }
+    public void setHeartRateMode(int HeartRateMode) { this._HeartRateMode = HeartRateMode;}
+
     private int _cyclingCadence = 0;
     public int getCyclingCadence() { return this._cyclingCadence; }
     public void setCyclingCadence(int cyclingCadence) { this._cyclingCadence = cyclingCadence;}

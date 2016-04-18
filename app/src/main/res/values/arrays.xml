@@ -65,4 +65,16 @@
         <item>canvas_only</item>
         <item>canvas_and_pbw</item>
     </string-array>
+
+    <string-array name="PREF_BLE_HRM_ZONE_NOTIFICATION_MODE_ENTRIES">
+        <item>Disable</item>
+        <item>Vibrate at every zone change (at least 30s in the previous zone)</item>
+        <item>Vibrate entering maximum zone</item>
+    </string-array>
+    <string-array name="PREF_BLE_HRM_ZONE_NOTIFICATION_MODE_ENTRY_VALUES">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 </resources>
