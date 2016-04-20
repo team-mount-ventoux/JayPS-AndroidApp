@@ -114,8 +114,14 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
 
         AdvancedLocation advancedLocation = new AdvancedLocation(context);
         advancedLocation.resetGPX();
+
+        if (!_serviceStarter.isLocationServicesRunning()) {
+            // force send using _messageManager and not _bus to be able to send data even if GPS is not started
+            sendSavedData();
+        }
     }
     private void sendSavedData() {
+        //Log.d(TAG, "sendSavedData");
         // use _messageManager and not _bus to be able to send data even if GPS is not started
 
         boolean isLocationServicesRunning = _serviceStarter.isLocationServicesRunning();
