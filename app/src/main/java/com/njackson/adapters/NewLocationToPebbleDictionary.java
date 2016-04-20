@@ -143,8 +143,10 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
             //Log.d(TAG, "batteryLevel:" + event.getBatteryLevel());
         }
         if (event.getHeartRateMax() != 0) {
-            this.addUint8(Constants.MSG_HR_MAX, (byte) (event.getHeartRateMax() % 256));
-            this.addUint8(Constants.MSG_HR_ZONE_NOTIFICATION_MODE, (byte) (event.getHeartRateMode() % 256));
+            byte[] data_heartmax = new byte[2];
+            data_heartmax[0] = (byte) (event.getHeartRateMax() % 256);
+            data_heartmax[1] = (byte) (event.getHeartRateMode() % 256);
+            this.addBytes(Constants.MSG_HR_MAX, data_heartmax);
         }
     }
 }

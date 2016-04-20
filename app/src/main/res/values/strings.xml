@@ -88,9 +88,9 @@
     <string name="PREF_BLE_TITLE1">Sensor 1</string>
     <string name="PREF_BLE_TITLE2">Sensor 2</string>
     <string name="PREF_BLE_TITLE3">Sensor 3</string>
-    <string name="PREF_BLE_HRM_HRMAX">HRM: Max Heartrate</string>
+    <string name="PREF_BLE_HRM_HRMAX">HRM: Max heart rate</string>
     <string name="PREF_BLE_HRM_HRMAX_SUMMARY">Example: 220 minus your age</string>
-    <string name="PREF_BLE_HRM_ZONE_NOTIFICATION_MODE">HRM: Zone change notifications</string>
+    <string name="PREF_BLE_HRM_ZONE_NOTIFICATION_MODE">HRM: Zone alarms</string>
     <string name="PREF_BLE_HRM_ZONE_NOTIFICATION_MODE_DEFAULT">0</string>
     <string name="PREF_BLE_CSC_WHEEL_SIZE">CSC: Wheel circumference (mm)</string>
     <string name="PREF_BLE_CSC_WHEEL_SIZE_SUMMARY">Example: 700x23C => 2133mm</string>

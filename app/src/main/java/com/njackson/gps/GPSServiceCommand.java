@@ -369,7 +369,7 @@ public class GPSServiceCommand implements IServiceCommand {
 
         try {
             int heartRateMax = Integer.valueOf(_sharedPreferences.getString("PREF_BLE_HRM_HRMAX", "0"));
-            if (heartRateMax != previousHeartRateMax || _time.getCurrentTimeMilliseconds() - _last_post_hr_max > 60 * 1000) {
+            if (heartRateMax != previousHeartRateMax || _time.getCurrentTimeMilliseconds() - _last_post_hr_max > 5 * 60 * 1000) {
                 //Log.d(TAG, "previousHeartRateMax:" + previousHeartRateMax + " heartRateMax:" + heartRateMax);
                 // ||: force send every x sec
                 event.setHeartRateMax(heartRateMax);

@@ -310,8 +310,10 @@ public class MessageManager implements IMessageManager, Runnable {
         dictionary.addInt32(Constants.MSG_VERSION_ANDROID, versionCode);
 
         try {
-            dictionary.addUint8(Constants.MSG_HR_MAX, (byte) (Integer.valueOf(_sharedPreferences.getString("PREF_BLE_HRM_HRMAX", "0")) % 256));
-            dictionary.addUint8(Constants.MSG_HR_ZONE_NOTIFICATION_MODE, (byte) (Integer.valueOf(_sharedPreferences.getString("PREF_BLE_HRM_ZONE_NOTIFICATION_MODE", "0")) % 256));
+            byte[] data_heartmax = new byte[2];
+            data_heartmax[0] = (byte) (Integer.valueOf(_sharedPreferences.getString("PREF_BLE_HRM_HRMAX", "0")) % 256);
+            data_heartmax[1] = (byte) (Integer.valueOf(_sharedPreferences.getString("PREF_BLE_HRM_ZONE_NOTIFICATION_MODE", "0")) % 256);
+            dictionary.addBytes(Constants.MSG_HR_MAX, data_heartmax);
         } catch (NumberFormatException nfe) {}
 
         offer(dictionary);
