@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.6.0-alpha1" versioncode="300" >
+        <change><![CDATA[<b>Strava upload</b><br/>
+        - go in the settings to grant the access to Strava<br/>
+        - upload the current track from the menu<br/>
+        - if you want to re-upload a track, please delete it from Strava first]]></change>
+    </release>
     <release version="2.5.0" versioncode="291" >
         <change><![CDATA[<b>Pebble: add graphs in top field</b> (altitude, ascent, heart rate, speed)]]></change>
         <change><![CDATA[<b>Pebble: data screens share the same template</b>]]></change>

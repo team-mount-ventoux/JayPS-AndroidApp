@@ -7,3 +7,5 @@
 *.iml
 build
 app/src/main/gen/
+
+app/src/main/java/com/njackson/strava/StravaPrivateConstants.java

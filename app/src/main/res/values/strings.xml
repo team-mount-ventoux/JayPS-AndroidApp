@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Ventoo</string>
-    <string name="MAIN_TITLE">Ventoo v2.5.0</string>
+    <string name="MAIN_TITLE">Ventoo v2.6.0-alpha1</string>
     <string name="action_settings">Settings</string>
     <string name="speedfragment_time_label">TIME</string>
     <string name="speedfragment_time_value">00:00</string>
@@ -118,6 +118,10 @@
     <string name="PREF_DEBUG_TITLE">Debug</string>
     <string name="PREF_DEBUG_SUMMARY">More logs for developers</string>
 
+    <string name="PREF_STRAVA_CATEGORIE_TITLE">Strava Integration</string>
+    <string name="PREF_STRAVA_CATEGORIE_SUMMARY"></string>
+    <string name="PREF_STRAVA_TITLE">Strava</string>
+
     <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_TITLE">JayPS Live Tracking</string>
     <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_SUMMARY"></string>
     <string name="PREF_LIVE_TRACKING_JAYPS_TITLE">Live Tracking with JayPS</string>
@@ -176,4 +180,10 @@
 
     <!-- messages -->
     <string name="message_pebble_new_watchapp">A new watchapp is available. Please install it from the Ventoo android application settings</string>
+
+    <!-- strava -->
+    <string name="token_strava">strava</string>
+    <string name="get_token">Get Token</string>
+    <string name="delete_token">Delete Token</string>
+    <string name="delete_cookies">Delete cookies</string>
 </resources>

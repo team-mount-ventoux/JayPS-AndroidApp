@@ -1,5 +1,6 @@
 package com.njackson.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,6 +25,7 @@ import com.njackson.events.BleServiceCommand.BleSensorData;
 import com.njackson.events.GPSServiceCommand.ChangeRefreshInterval;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.state.IGPSDataStore;
+import com.njackson.strava.StravaUpload;
 import com.njackson.utils.gpx.GpxExport;
 import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.watchface.IInstallWatchFace;
@@ -191,6 +193,33 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 }
             });
         }
+        Preference pref_strava = findPreference("PREF_STRAVA");
+        pref_strava.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if (preference.getKey().equals("PREF_STRAVA")) {
+                    startActivity(new Intent(getApplicationContext(), StravaActivity.class));
+                }
+                return false;
+            }
+        });
+        Preference pref_upload_strava = findPreference("PREF_UPLOAD_STRAVA");
+        final Activity _activity = this;
+        pref_upload_strava.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if (_sharedPreferences.getBoolean("ENABLE_TRACKS", false)) {
+                    if (!_sharedPreferences.getString("strava_token", "").isEmpty()) {
+                        StravaUpload.upload(_activity, _sharedPreferences.getString("strava_token", ""));
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please configure Strava in the settings before using the upload", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the upload to Strava", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode > 0) {
@@ -262,6 +291,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         setLoginJaypsSummary();
         setLoginMmtSummary();
         setLiveSummary();
+        setStravaSummary();
         setOruxMapsSummary();
         setCanvasSummary();
         setHrmSummary();
@@ -387,6 +417,15 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             live = "Enable";
         }
         live_mmt_screen.setSummary(live);
+    }
+
+    private void setStravaSummary() {
+        Preference strava_screen = findPreference("strava_screen");
+        String strava = "Disable";
+        if (!_sharedPreferences.getString("strava_token", "").isEmpty()) {
+            strava = "Enable";
+        }
+        strava_screen.setSummary(strava);
     }
 
     private void setOruxMapsSummary() {

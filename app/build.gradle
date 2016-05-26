@@ -9,8 +9,8 @@ android {
         applicationId "com.njackson"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 291
-        versionName "v2.5.0"
+        versionCode 300
+        versionName "v2.6.0-alpha1"
         testInstrumentationRunner "com.njackson.test.MyInstrumentationTestRunner"
     }
 
@@ -41,6 +41,20 @@ dependencies {
     compile 'com.google.android.gms:play-services-fitness:6.5.87'
     compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
     compile 'io.reactivex:rxjava:1.0.3'
+    compile('com.google.api-client:google-api-client-android:1.20.0') {
+        exclude group: 'com.google.android.google-play-services', module: 'google-play-services'
+        exclude group: 'junit', module: 'junit'
+        exclude group: 'com.google.android', module: 'android'
+        exclude group: 'org.apache.httpcomponents'
+        exclude group: 'com.google.guava', module: 'guava-jdk5'
+    }
+    compile ('com.google.oauth-client:google-oauth-client-java6:1.20.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    compile ('com.google.http-client:google-http-client-jackson:1.20.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    compile ('com.wu-man:android-oauth-client:0.4.5@aar') {}
     compile fileTree(dir: 'libs', include: 'Parse-*.jar')
     compile fileTree(dir: 'libs', include: 'ParseCrashReporting-*.jar')
     androidTestCompile 'com.google.dexmaker:dexmaker:1.1+'

@@ -152,6 +152,7 @@ public class LiveTracking implements ILiveTracking {
         }
     }
 
+
     private class SendLiveTask extends AsyncTask<SendLiveTaskParams, Void, Boolean> {
         protected Boolean doInBackground(SendLiveTaskParams... params) {
             int count = params.length;

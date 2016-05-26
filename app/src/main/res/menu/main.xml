@@ -11,7 +11,11 @@
         android:title="Export GPX"
         android:orderInCategory="101" />
 
+    <item android:id="@+id/action_upload_strava"
+        android:title="Upload to Strava"
+        android:orderInCategory="102" />
+
     <item android:id="@+id/action_reset"
         android:title="Reset data &amp; GPX"
-        android:orderInCategory="102" />
+        android:orderInCategory="103" />
 </menu>

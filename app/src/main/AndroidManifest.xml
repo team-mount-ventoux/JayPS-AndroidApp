@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.njackson" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.njackson">
     <application
+        tools:replace="android:allowBackup"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
@@ -19,6 +21,7 @@
         <activity android:name=".activities.TestActivity"></activity>
         <activity android:name=".activities.SettingsActivity"/>
         <activity android:name=".activities.HRMScanActivity"/>
+        <activity android:name=".activities.StravaActivity"/>
         <service android:name=".service.MainService" android:label="MainService"/>
         <service android:name=".activityrecognition.ActivityRecognitionIntentService" android:label="ActivityRecognitionIntentService"/>
         <receiver android:name=".pebble.PebbleDataReceiver">

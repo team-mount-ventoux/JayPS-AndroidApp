@@ -29,6 +29,7 @@ import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.state.IGPSDataStore;
+import com.njackson.strava.StravaUpload;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.gpx.GpxExport;
 import com.njackson.utils.services.IServiceStarter;
@@ -221,6 +222,17 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
                 GpxExport.export(getApplicationContext(), _sharedPreferences.getBoolean("ADVANCED_GPX", false));
             } else {
                 Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the export", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (id == R.id.action_upload_strava) {
+            if (_sharedPreferences.getBoolean("ENABLE_TRACKS", false)) {
+                if (!_sharedPreferences.getString("strava_token", "").isEmpty()) {
+                    StravaUpload.upload(this, _sharedPreferences.getString("strava_token", ""));
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please configure Strava in the settings before using the upload", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the upload to Strava", Toast.LENGTH_SHORT).show();
             }
         }
         if (id == R.id.action_reset) {

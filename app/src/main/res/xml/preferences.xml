@@ -161,8 +161,30 @@
     <PreferenceScreen
         android:key="integration_screen"
         android:title="Integration"
-        android:summary="Live Tracking, OruxMaps, Canvas"
+        android:summary="Strava, Live Tracking, OruxMaps, Canvas"
         android:persistent="false">
+
+        <PreferenceScreen
+            android:key="strava_screen"
+            android:title="@string/PREF_STRAVA_CATEGORIE_TITLE"
+            android:persistent="false">
+            <PreferenceCategory
+                android:title="@string/PREF_STRAVA_CATEGORIE_TITLE"
+                android:summary="@string/PREF_STRAVA_CATEGORIE_SUMMARY"
+                >
+                <Preference
+                    android:key="PREF_STRAVA"
+                    android:title="Connect to Strava"
+                    android:summary="Grant Ventoo access to upload to Strava"
+                    />
+                <Preference
+                    android:key="PREF_UPLOAD_STRAVA"
+                    android:title="Upload"
+                    android:summary="Upload current track to Strava"
+                    />
+
+            </PreferenceCategory>
+        </PreferenceScreen>
 
         <PreferenceScreen
             android:key="live_jayps_screen"
