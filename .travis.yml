@@ -25,7 +25,7 @@ before_script:
 
 script:
   - adb logcat -c
-  - gradle connectedCheck
+  - ./gradlew connectedCheck
 
 after_success:
   - mkdir ./app/build/reports/

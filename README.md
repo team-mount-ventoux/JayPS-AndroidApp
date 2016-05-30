@@ -1,8 +1,8 @@
 PebbleBike-AndroidApp
 =====================
 
-[![Build Status](https://travis-ci.org/pebble-bike/PebbleBike-AndroidApp.svg?branch=master)](https://travis-ci.org/pebble-bike/PebbleBike-AndroidApp)
-[![Coverage Status](https://coveralls.io/repos/pebble-bike/PebbleBike-AndroidApp/badge.png?branch=master)](https://coveralls.io/r/pebble-bike/PebbleBike-AndroidApp?branch=v2)
+[![Build Status](https://api.travis-ci.org/team-mount-ventoux/PebbleVentoo-AndroidApp.svg?branch=master)](https://travis-ci.org/team-mount-ventoux/PebbleVentoo-AndroidApp)
+[![Coverage Status](https://coveralls.io/repos/team-mount-ventoux/PebbleVentoo-AndroidApp/badge.png?branch=master)](https://coveralls.io/r/team-mount-ventoux/PebbleVentoo-AndroidApp?branch=v2)
 
 [Pebble Bike](http://www.pebblebike.com) is a GPS cycle computer for your Pebble smart watch. It uses your phone's GPS to send speed, distance and altitude data to your Pebble. You can also see your track directly on your Pebble.
 
@@ -26,7 +26,7 @@ To allow testability we have had to de-couple many parts of the application so t
 
 ##Prerequisites  
 
-Gradle 1.10  
+Gradle 2.10  
 Download ``http://www.gradle.org/downloads``  
 Set GRADLE_HOME environment var ``export GRADLE_HOME=/Applications/gradle``  
 Set Gradle bin to your exe path ``export PATH=$GRADLE_HOME/bin:$PATH``
@@ -41,5 +41,5 @@ git submodule update
 ```
 Build the application and run the tests  
 ```
-gradle connectedCheck
+./gradlew connectedCheck
 ```
