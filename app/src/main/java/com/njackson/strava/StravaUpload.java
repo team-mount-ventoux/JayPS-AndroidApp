@@ -5,9 +5,11 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
@@ -34,7 +36,6 @@ public class StravaUpload {
                 AdvancedLocation advancedLocation = new AdvancedLocation(_activity.getApplicationContext());
                 String gpx = advancedLocation.getGPX(false);
 
-                //String postParameters = "data_type=gpx&activity_type=ride";
                 //String tmp_url = "http://labs.jayps.fr/pebble/strava.php";
                 String tmp_url = "https://www.strava.com/api/v3/uploads";
                 Log.d(TAG, "url="+tmp_url);
@@ -109,26 +110,40 @@ public class StravaUpload {
                     //start listening to the stream
                     String response = "";
                     // Strava doc: Upon a successful submission the request will return 201 Created. If there was an error the request will return 400 Bad Request.
+                    InputStream is = null;
                     if (serverResponseCode == 201) {
-                        Scanner inStream = new Scanner(urlConnection.getInputStream());
+                        is = urlConnection.getInputStream();
+                        message = "Your activity has been successfully created";
+                    } else if (serverResponseCode == 400) {
+                        is = urlConnection.getErrorStream();
+                        message = "An error has occurred. If you've alreaded uploaded the current activity, please delete it in Strava.";
+                    } else if (serverResponseCode == 401) {
+                        // {"message":"Authorization Error","errors":[{"resource":"Athlete","field":"access_token","code":"invalid"}]}
+                        is = urlConnection.getErrorStream();
+                        message = "Error - Unauthorized. Please check your credentials in the settings.";
+                    }
+                    if (is != null) {
+                        Scanner inStream = new Scanner(is);
                         //process the stream and store it in StringBuilder
                         while (inStream.hasNextLine()) {
                             response += (inStream.nextLine()) + "\n";
                         }
-                        JSONObject jObject = new JSONObject(response);
-                        int strava_id = jObject.getInt("id");
-                        String strava_status = jObject.getString("status");
-                        String strava_activity_id = jObject.getString("activity_id");
-                        Log.d(TAG, "strava_id:" + strava_id);
-                        Log.d(TAG, "strava_status:" + strava_status);
-                        Log.d(TAG, "strava_activity_id:" + strava_activity_id);
-                        ///@todo save strava_id to later check status
-
-                        message = "Your activity has been successfully created";
-                    } else if (serverResponseCode == 400) {
-                        message = "An error has occured. If you've alreaded uploaded the current activity, please delete it in Strava.";
                     }
                     Log.d(TAG, "response:" + response);
+                    if (response != "") {
+                        try {
+                            JSONObject jObject = new JSONObject(response);
+                            int strava_id = jObject.getInt("id");
+                            String strava_status = jObject.getString("status");
+                            String strava_activity_id = jObject.getString("activity_id");
+                            Log.d(TAG, "strava_id:" + strava_id);
+                            Log.d(TAG, "strava_status:" + strava_status);
+                            Log.d(TAG, "strava_activity_id:" + strava_activity_id);
+                            ///@todo save strava_id to later check status
+                        } catch (JSONException e) {
+                            Log.e(TAG, "Exception:" + e);
+                        }
+                    }
                     urlConnection.disconnect();
                 } catch (Exception e) {
                     Log.e(TAG, "Exception:" + e);
