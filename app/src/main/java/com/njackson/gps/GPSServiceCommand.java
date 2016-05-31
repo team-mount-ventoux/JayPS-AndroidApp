@@ -10,6 +10,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 
 import com.njackson.Constants;
@@ -31,6 +32,7 @@ import com.njackson.state.IGPSDataStore;
 import com.njackson.strava.StravaUpload;
 import com.njackson.utils.AltitudeGraphReduce;
 import com.njackson.utils.BatteryStatus;
+import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -62,6 +64,7 @@ public class GPSServiceCommand implements IServiceCommand {
     @Inject ITime _time;
     @Inject SharedPreferences _sharedPreferences;
     @Inject AltitudeGraphReduce _altitudeGraphReduce;
+    @Inject IServiceStarter _serviceStarter;
 
     private AdvancedLocation _advancedLocation;
     private Location firstLocation = null;
@@ -83,6 +86,9 @@ public class GPSServiceCommand implements IServiceCommand {
     private long _last_post_hr_max  = 0;
 
     private int _refresh_interval = 0;
+
+    private Handler mHandler;
+    private final static int TIMEOUT_STRAVA = 30 * 1000; // in ms
 
     @Subscribe
     public void onResetGPSStateEvent(ResetGPSState event) {
@@ -163,6 +169,7 @@ public class GPSServiceCommand implements IServiceCommand {
 
         _currentStatus = BaseStatus.Status.INITIALIZED;
         createNewAdvancedLocation();
+        mHandler = new Handler();
     }
 
     @Override
@@ -205,8 +212,18 @@ public class GPSServiceCommand implements IServiceCommand {
 
         _currentStatus = BaseStatus.Status.STOPPED;
 
-        StravaUpload strava_upload = new StravaUpload(_applicationContext);
-        strava_upload.upload(_sharedPreferences.getString("strava_token", ""));
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // only upload to strava if the GPS has not being restarted in the interval
+                // note: does not work with _currentStatus
+                if (!_serviceStarter.isLocationServicesRunning()) {
+                    StravaUpload strava_upload = new StravaUpload(_applicationContext);
+                    strava_upload.upload(_sharedPreferences.getString("strava_token", ""));
+                }
+            }
+        }, TIMEOUT_STRAVA);
+
     }
 
     private void setGPSStartTime() {
