@@ -28,6 +28,7 @@ import com.njackson.events.GPSServiceCommand.SavedLocation;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.njackson.state.IGPSDataStore;
+import com.njackson.strava.StravaUpload;
 import com.njackson.utils.AltitudeGraphReduce;
 import com.njackson.utils.BatteryStatus;
 import com.njackson.utils.time.ITime;
@@ -203,6 +204,9 @@ public class GPSServiceCommand implements IServiceCommand {
         stopLocationUpdates();
 
         _currentStatus = BaseStatus.Status.STOPPED;
+
+        StravaUpload strava_upload = new StravaUpload(_applicationContext);
+        strava_upload.upload(_sharedPreferences.getString("strava_token", ""));
     }
 
     private void setGPSStartTime() {

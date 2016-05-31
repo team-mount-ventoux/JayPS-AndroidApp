@@ -1,6 +1,7 @@
 package com.njackson.strava;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
@@ -26,15 +27,22 @@ public class StravaUpload {
     private static final String TAG = "PB-StravaUpload";
 
     @Inject IMessageManager _messageManager;
-    Activity _activity;
+    Activity _activity = null;
+    Context _context;
 
     public StravaUpload(Activity activity) {
         ((PebbleBikeApplication) activity.getApplicationContext()).inject(this);
         _activity = activity;
+        _context = activity.getApplicationContext();
+    }
+
+    public StravaUpload(Context context) {
+        ((PebbleBikeApplication) context).inject(this);
+        _context = context;
     }
 
     public void upload(String token) {
-        Toast.makeText(_activity.getApplicationContext(), "Strava: uploading... Please wait", Toast.LENGTH_LONG).show();
+        Toast.makeText(_context, "Strava: uploading... Please wait", Toast.LENGTH_LONG).show();
         final String strava_token = token;
 
         new Thread(new Runnable() {
@@ -44,7 +52,7 @@ public class StravaUpload {
                 Log.i(TAG, "token: " + strava_token);
 
                 Looper.prepare();
-                AdvancedLocation advancedLocation = new AdvancedLocation(_activity.getApplicationContext());
+                AdvancedLocation advancedLocation = new AdvancedLocation(_context);
                 String gpx = advancedLocation.getGPX(false);
 
                 //String tmp_url = "http://labs.jayps.fr/pebble/strava.php";
@@ -158,19 +166,21 @@ public class StravaUpload {
                     urlConnection.disconnect();
                 } catch (Exception e) {
                     Log.e(TAG, "Exception:" + e);
-                    //Toast.makeText(_activity.getApplicationContext(), "Exception:" + e, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(_context, "Exception:" + e, Toast.LENGTH_LONG).show();
                     //message = "" + e;
                 }
                 final String _message = message;
-                _activity.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(_activity.getApplicationContext(), "Strava: " + _message, Toast.LENGTH_LONG).show();
-                        Log.d(TAG, "_message:" + _message);
+                if (_activity != null) {
+                    _activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(_activity.getApplicationContext(), "Strava: " + _message, Toast.LENGTH_LONG).show();
+                            Log.d(TAG, "_message:" + _message);
+                        }
+                    });
+                }
+                // use _messageManager and not _bus to be able to send data even if GPS is not started
+                _messageManager.sendMessageToPebble("Strava: " + _message);
 
-                        // use _messageManager and not _bus to be able to send data even if GPS is not started
-                        _messageManager.sendMessageToPebble("Strava: " + _message);
-                    }
-                });
 
             }
         }).start();
