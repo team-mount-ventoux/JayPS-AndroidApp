@@ -227,7 +227,8 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
         if (id == R.id.action_upload_strava) {
             if (_sharedPreferences.getBoolean("ENABLE_TRACKS", false)) {
                 if (!_sharedPreferences.getString("strava_token", "").isEmpty()) {
-                    StravaUpload.upload(this, _sharedPreferences.getString("strava_token", ""));
+                    StravaUpload strava_upload = new StravaUpload(this);
+                    strava_upload.upload(_sharedPreferences.getString("strava_token", ""));
                 } else {
                     Toast.makeText(getApplicationContext(), "Please configure Strava in the settings before using the upload", Toast.LENGTH_SHORT).show();
                 }

@@ -5,6 +5,9 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.njackson.application.PebbleBikeApplication;
+import com.njackson.pebble.IMessageManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,15 +17,23 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
 
+import javax.inject.Inject;
+
 import fr.jayps.android.AdvancedLocation;
 
 public class StravaUpload {
 
     private static final String TAG = "PB-StravaUpload";
 
-    public static void upload(Activity activity, String token) {
-        final Activity _activity = activity;
+    @Inject IMessageManager _messageManager;
+    Activity _activity;
 
+    public StravaUpload(Activity activity) {
+        ((PebbleBikeApplication) activity.getApplicationContext()).inject(this);
+        _activity = activity;
+    }
+
+    public void upload(String token) {
         Toast.makeText(_activity.getApplicationContext(), "Strava: uploading... Please wait", Toast.LENGTH_LONG).show();
         final String strava_token = token;
 
@@ -155,6 +166,9 @@ public class StravaUpload {
                     public void run() {
                         Toast.makeText(_activity.getApplicationContext(), "Strava: " + _message, Toast.LENGTH_LONG).show();
                         Log.d(TAG, "_message:" + _message);
+
+                        // use _messageManager and not _bus to be able to send data even if GPS is not started
+                        _messageManager.sendMessageToPebble("Strava: " + _message);
                     }
                 });
 

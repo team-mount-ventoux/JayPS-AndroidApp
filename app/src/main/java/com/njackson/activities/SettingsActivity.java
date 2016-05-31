@@ -210,7 +210,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             public boolean onPreferenceClick(Preference preference) {
                 if (_sharedPreferences.getBoolean("ENABLE_TRACKS", false)) {
                     if (!_sharedPreferences.getString("strava_token", "").isEmpty()) {
-                        StravaUpload.upload(_activity, _sharedPreferences.getString("strava_token", ""));
+                        StravaUpload strava_upload = new StravaUpload(_activity);
+                        strava_upload.upload(_sharedPreferences.getString("strava_token", ""));
                     } else {
                         Toast.makeText(getApplicationContext(), "Please configure Strava in the settings before using the upload", Toast.LENGTH_SHORT).show();
                     }
