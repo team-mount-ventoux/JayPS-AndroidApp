@@ -32,7 +32,7 @@ after_success:
   - mkdir ./app/build/reports/jacoco
   - mkdir ./app/build/reports/jacoco/test
   - mv ./app/build/outputs/reports/coverage/debug/report.xml ./app/build/reports/jacoco/test/jacocoTestReport.xml
-  - gradle coveralls
+  - ./gradlew coveralls
 
 after_failure:
   - adb logcat -d E
