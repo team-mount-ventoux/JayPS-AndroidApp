@@ -31,6 +31,8 @@ after_success:
   - mkdir ./app/build/reports/
   - mkdir ./app/build/reports/jacoco
   - mkdir ./app/build/reports/jacoco/test
+  - find . -name *.xml
+  - find . -name report.xml
   - mv ./app/build/outputs/reports/coverage/debug/report.xml ./app/build/reports/jacoco/test/jacocoTestReport.xml
   - ./gradlew coveralls
 
