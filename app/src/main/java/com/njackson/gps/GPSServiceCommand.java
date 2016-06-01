@@ -212,17 +212,21 @@ public class GPSServiceCommand implements IServiceCommand {
 
         _currentStatus = BaseStatus.Status.STOPPED;
 
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // only upload to strava if the GPS has not being restarted in the interval
-                // note: does not work with _currentStatus
-                if (!_serviceStarter.isLocationServicesRunning()) {
-                    StravaUpload strava_upload = new StravaUpload(_applicationContext);
-                    strava_upload.upload(_sharedPreferences.getString("strava_token", ""));
+        String strava_auto = _sharedPreferences.getString("STRAVA_AUTO", "disable");
+        if (!strava_auto.equals("disable")) {
+            Log.d(TAG, "Strava automatic upload: start timer");
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // only upload to strava if the GPS has not being restarted in the interval
+                    // note: does not work with _currentStatus (new object after restart)
+                    if (!_serviceStarter.isLocationServicesRunning()) {
+                        StravaUpload strava_upload = new StravaUpload(_applicationContext);
+                        strava_upload.upload(_sharedPreferences.getString("strava_token", ""));
+                    }
                 }
-            }
-        }, TIMEOUT_STRAVA);
+            }, TIMEOUT_STRAVA);
+        }
 
     }
 

@@ -337,6 +337,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         if (s.equals("LIVE_TRACKING_PASSWORD") || s.equals("LIVE_TRACKING_MMT_PASSWORD")) {
             setLiveSummary();
         }
+        if (s.equals("STRAVA_AUTO")) {
+            setStravaSummary();
+        }
         if (s.equals("ORUXMAPS_AUTO")) {
             setOruxMapsSummary();
         }
@@ -421,6 +424,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
     private void setStravaSummary() {
+        ListPreference strava_auto = (ListPreference) findPreference("STRAVA_AUTO");
+        CharSequence listDesc = strava_auto.getEntry();
+        strava_auto.setSummary(listDesc);
+
         Preference strava_screen = findPreference("strava_screen");
         String strava = "Disable";
         if (!_sharedPreferences.getString("strava_token", "").isEmpty()) {

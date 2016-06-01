@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Ventoo</string>
-    <string name="MAIN_TITLE">Ventoo v2.6.0-alpha1</string>
+    <string name="MAIN_TITLE">Ventoo v2.6.0-alpha2</string>
     <string name="action_settings">Settings</string>
     <string name="speedfragment_time_label">TIME</string>
     <string name="speedfragment_time_value">00:00</string>
@@ -121,6 +121,11 @@
     <string name="PREF_STRAVA_CATEGORIE_TITLE">Strava Integration</string>
     <string name="PREF_STRAVA_CATEGORIE_SUMMARY"></string>
     <string name="PREF_STRAVA_TITLE">Strava</string>
+    <string name="PREF_STRAVA_NOTIFICATION_TITLE">Notification</string>
+    <string name="PREF_STRAVA_NOTIFICATION_SUMMARY">Display a notification on your Pebble after each upload</string>
+    <string name="STRAVA_AUTO_TITLE">Automatic upload</string>
+    <string name="STRAVA_AUTO_DIALOG_TITLE">Strava automatic upload</string>
+    <string name="STRAVA_AUTO_DEFAULT">disable</string>
 
     <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_TITLE">JayPS Live Tracking</string>
     <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_SUMMARY"></string>

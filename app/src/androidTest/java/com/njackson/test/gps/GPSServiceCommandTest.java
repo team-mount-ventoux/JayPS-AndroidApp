@@ -137,6 +137,7 @@ public class GPSServiceCommandTest extends AndroidTestCase {
         _mockServiceStarter = mock(IForegroundServiceStarter.class);
         when(_mockPreferences.getBoolean("PREF_DEBUG", false)).thenReturn(false);
         when(_mockPreferences.getBoolean("ENABLE_TRACKS", false)).thenReturn(false);
+        when(_mockPreferences.getString("STRAVA_AUTO", "disable")).thenReturn("disable");
     }
 
     @SmallTest

@@ -40,6 +40,15 @@
         <item>30000</item>
     </string-array>
 
+    <string-array name="STRAVA_AUTO_ENTRIES">
+        <item>Disable</item>
+        <item>At the end of the track</item>
+    </string-array>
+    <string-array name="STRAVA_AUTO_ENTRY_VALUES">
+        <item>disable</item>
+        <item>end_track</item>
+    </string-array>
+
     <string-array name="ORUXMAPS_AUTO_ENTRIES">
         <item>Disable</item>
         <item>Continue record</item>

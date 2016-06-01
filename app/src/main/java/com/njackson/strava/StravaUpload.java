@@ -2,6 +2,7 @@ package com.njackson.strava;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class StravaUpload {
     private static final String TAG = "PB-StravaUpload";
 
     @Inject IMessageManager _messageManager;
+    @Inject SharedPreferences _sharedPreferences;
     Activity _activity = null;
     Context _context;
 
@@ -178,10 +180,10 @@ public class StravaUpload {
                         }
                     });
                 }
-                // use _messageManager and not _bus to be able to send data even if GPS is not started
-                _messageManager.sendMessageToPebble("Strava: " + _message);
-
-
+                if (_sharedPreferences.getBoolean("STRAVA_NOTIFICATION", false)) {
+                    // use _messageManager and not _bus to be able to send data even if GPS is not started
+                    _messageManager.sendMessageToPebble("Strava: " + _message);
+                }
             }
         }).start();
     }
