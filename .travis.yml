@@ -32,6 +32,7 @@ after_success:
   - find . -name report.xml
   - mv ./app/build/reports/coverage/debug/report.xml ./app/build/reports/jacoco/test/jacocoTestReport.xml
   - ./gradlew coveralls
+  - bash <(curl -s https://codecov.io/bash)
 
 after_failure:
   - adb logcat -d E
