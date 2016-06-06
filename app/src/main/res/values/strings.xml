@@ -128,6 +128,9 @@
     <string name="STRAVA_AUTO_TITLE">Automatic upload</string>
     <string name="STRAVA_AUTO_DIALOG_TITLE">Strava automatic upload</string>
     <string name="STRAVA_AUTO_DEFAULT">disable</string>
+    <string name="PREF_STRAVA_VENTOO_CLUB_TITLE">Strava Ventoo Club</string>
+    <string name="PREF_STRAVA_VENTOO_CLUB_SUMMARY">Join other Ventoo users</string>
+    <string name="PREF_STRAVA_URL_VENTOO_CLUB">https://www.strava.com/clubs/ventoo</string>
 
     <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_TITLE">JayPS Live Tracking</string>
     <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_SUMMARY"></string>

@@ -199,6 +199,14 @@
                     android:title="@string/PREF_STRAVA_NOTIFICATION_TITLE"
                     android:summary="@string/PREF_STRAVA_NOTIFICATION_SUMMARY"
                     android:defaultValue="true" />
+                <Preference
+                    android:key="STRAVA_URL_VENTOO_CLUB"
+                    android:title="@string/PREF_STRAVA_VENTOO_CLUB_TITLE"
+                    android:summary="@string/PREF_STRAVA_VENTOO_CLUB_SUMMARY"
+                    >
+                    <intent android:action="android.intent.action.VIEW"
+                        android:data="@string/PREF_STRAVA_URL_VENTOO_CLUB" />
+                </Preference>
             </PreferenceCategory>
         </PreferenceScreen>
 
