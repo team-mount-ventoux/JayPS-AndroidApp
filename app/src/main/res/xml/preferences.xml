@@ -190,6 +190,11 @@
                     android:entryValues="@array/STRAVA_AUTO_ENTRY_VALUES"
                     android:defaultValue="@string/STRAVA_AUTO_DEFAULT" />
                 <CheckBoxPreference
+                    android:key="STRAVA_DELETE_IF_EXISTS_DURING_UPLOAD"
+                    android:title="@string/PREF_STRAVA_DELETE_IF_EXISTS_DURING_UPLOAD_TITLE"
+                    android:summary="@string/PREF_STRAVA_DELETE_IF_EXISTS_DURING_UPLOAD_SUMMARY"
+                    android:defaultValue="false" />
+                <CheckBoxPreference
                     android:key="STRAVA_NOTIFICATION"
                     android:title="@string/PREF_STRAVA_NOTIFICATION_TITLE"
                     android:summary="@string/PREF_STRAVA_NOTIFICATION_SUMMARY"
