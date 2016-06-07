@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.6.0-beta1" versioncode="302" >
+        <change>Strava: option to delete and replace an already uploaded track</change>
+        <change>Strava: compress gpx to save bandwidth</change>
+        <change>Strava: improve GPX export if barometer is used</change>
+    </release>
     <release version="2.6.0-alpha2" versioncode="301" >
         <change><![CDATA[<b>Strava automatic upload</b><br/>
         - configure it in the settings]]></change>
@@ -21,7 +26,6 @@
         <change>Pebble: add german (thanks Hanspeter Jochmann), spanish (thanks ZoretMan) and french</change>
         <change>[Pebble Time and Round only] add steps and steps cadence (data from Pebble Health)</change>
         <change><![CDATA[<a href="http://pebblebike.com/v2.5.0">More about v2.5.0</a>]]></change>
-        <change><![CDATA[Looking for an autonomous GPS for your Pebble? Please support our friends <a href="http://pebblebike.com/palk">Pal</a>!]]></change>
     </release>
     <release version="2.4.0" versioncode="281" >
         <change><![CDATA[<b>Improve ascent calculation</b>]]></change>
