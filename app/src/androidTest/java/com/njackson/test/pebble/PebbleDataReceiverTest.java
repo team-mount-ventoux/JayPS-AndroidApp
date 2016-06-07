@@ -210,7 +210,7 @@ public class PebbleDataReceiverTest extends AndroidTestCase {
 
         _pebbleDataReceiver.receiveData(_mockContext,12345,dic);
 
-        verify(_mockMessageManager, timeout(1000).times(0)).sendMessageToPebble(any(String.class));    }
+        verify(_mockMessageManager, timeout(1000).times(0)).sendMessageToPebble(any(String.class), any(String.class));    }
 
     /* TODO(nic) fix me
     @SmallTest

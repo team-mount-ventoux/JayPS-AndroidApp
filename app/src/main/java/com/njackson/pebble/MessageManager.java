@@ -271,8 +271,8 @@ public class MessageManager implements IMessageManager, Runnable {
     }
 
     @Override
-    public void sendMessageToPebble(String message) {
-        showSimpleNotificationOnWatch("Ventoo", message);
+    public void sendMessageToPebble(String title, String message) {
+        showSimpleNotificationOnWatch(title, message);
     }
 
     @Override

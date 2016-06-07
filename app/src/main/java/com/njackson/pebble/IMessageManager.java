@@ -18,7 +18,7 @@ public interface IMessageManager extends Runnable {
 
     public void showSimpleNotificationOnWatch(String title, String text);
 
-    public void sendMessageToPebble(String message);
+    public void sendMessageToPebble(String title, String message);
 
     public void sendSavedDataToPebble(boolean isLocationServicesRunning, int units, float distance, long elapsedTime, float ascent, float maxSpeed);
 }
