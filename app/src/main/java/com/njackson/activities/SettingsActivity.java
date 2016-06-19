@@ -431,7 +431,11 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         Preference strava_screen = findPreference("strava_screen");
         String strava = "Disable";
         if (!_sharedPreferences.getString("strava_token", "").isEmpty()) {
-            strava = "Enable";
+            if (_sharedPreferences.getString("STRAVA_AUTO", "disable").equals("disable")) {
+                strava = "Manual upload";
+            } else {
+                strava = "Automatic upload";
+            }
         }
         strava_screen.setSummary(strava);
     }
