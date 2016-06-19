@@ -9,7 +9,7 @@ public class Constants {
 
     public static final UUID WATCH_UUID = java.util.UUID.fromString("5dd35873-3bb6-44d6-8255-0e61bc3b97f5");
 
-    public static final int LAST_VERSION_PEBBLE = 291;
+    public static final int LAST_VERSION_PEBBLE = 303;
     public static final int MIN_VERSION_PEBBLE = 200;
 
     public static final int LIVE_TRACKING_FRIENDS = 0x10;

@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="2.6.0-beta1" versioncode="302" >
-        <change>Strava: option to delete and replace an already uploaded track</change>
-        <change>Strava: compress gpx to save bandwidth</change>
-        <change>Strava: improve GPX export if barometer is used</change>
-    </release>
-    <release version="2.6.0-alpha2" versioncode="301" >
-        <change><![CDATA[<b>Strava automatic upload</b><br/>
-        - configure it in the settings]]></change>
-        <change>Strava upload notification on your Pebble</change>
-    </release>
-    <release version="2.6.0-alpha1" versioncode="300" >
+    <release version="2.6.0" versioncode="303" >
         <change><![CDATA[<b>Strava upload</b><br/>
         - go in the settings to grant the access to Strava<br/>
-        - upload the current track from the menu<br/>
-        - if you want to re-upload a track, please delete it from Strava first]]></change>
+        - upload manually from the menu or automatically at the end of the track<br/>
+        ]]></change>
+        <change>[Time series] Rotation mode: long press middle button to automatically cycle every 5 seconds between your data screens</change>
+        <change><![CDATA[Do you like this free app? Please give us a heart on <a href="pebble://appstore/529289cee07df1fa76000009">Pebble Store</a> or rate us on <a href="https://play.google.com/store/apps/details?id=com.njackson">Google Play</a>. Thanks!]]></change>
     </release>
     <release version="2.5.0" versioncode="291" >
         <change><![CDATA[<b>Pebble: add graphs in top field</b> (altitude, ascent, heart rate, speed)]]></change>

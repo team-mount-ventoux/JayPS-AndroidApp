@@ -34,7 +34,7 @@ public class InstallPebbleWatchFace implements IInstallWatchFace{
     }
 
     public Uri getDownloadUrl(String versionCode, String pebbleFirmwareVersion) {
-        String uriString = "http://dl.pebblebike.com/p/ventoo-2.5.0";
+        String uriString = "http://dl.pebblebike.com/p/ventoo-2.6.0";
         uriString += ".pbw?and&v=" + versionCode;
         uriString += "&p=" + pebbleFirmwareVersion;
         Log.d(TAG, "uriString:" + uriString);
