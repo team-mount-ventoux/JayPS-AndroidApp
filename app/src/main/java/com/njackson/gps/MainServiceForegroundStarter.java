@@ -33,7 +33,7 @@ public class MainServiceForegroundStarter implements IForegroundServiceStarter {
         builder = new NotificationCompat.Builder(service);
 
         builder.setContentTitle(title).setContentText(contentText)
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP ? R.drawable.ic_notification : R.drawable.ic_launcher)
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(false)
                 .setOngoing(true)
