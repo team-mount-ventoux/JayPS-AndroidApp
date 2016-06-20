@@ -1,4 +1,4 @@
-package com.njackson.strava;
+package com.njackson.upload;
 
 /**
  * Constants for Strava's OAuth implementation.

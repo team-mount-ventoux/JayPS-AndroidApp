@@ -1,4 +1,4 @@
-package com.njackson.strava;
+package com.njackson.upload;
 
 import android.app.Activity;
 import android.content.Context;

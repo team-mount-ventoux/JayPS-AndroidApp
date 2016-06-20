@@ -29,7 +29,8 @@ import com.njackson.events.GPSServiceCommand.SavedLocation;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
 import com.njackson.state.IGPSDataStore;
-import com.njackson.strava.StravaUpload;
+import com.njackson.upload.RunkeeperUpload;
+import com.njackson.upload.StravaUpload;
 import com.njackson.utils.AltitudeGraphReduce;
 import com.njackson.utils.BatteryStatus;
 import com.njackson.utils.services.IServiceStarter;
@@ -89,6 +90,7 @@ public class GPSServiceCommand implements IServiceCommand {
 
     private Handler mHandler;
     private final static int TIMEOUT_STRAVA = 30 * 1000; // in ms
+    private final static int TIMEOUT_RUNKEEPER = 30 * 1000; // in ms
 
     @Subscribe
     public void onResetGPSStateEvent(ResetGPSState event) {
@@ -227,7 +229,21 @@ public class GPSServiceCommand implements IServiceCommand {
                 }
             }, TIMEOUT_STRAVA);
         }
-
+        String runkeeper_auto = _sharedPreferences.getString("RUNKEEPER_AUTO", "disable");
+        if (!runkeeper_auto.equals("disable")) {
+            Log.d(TAG, "Runkeeper automatic upload: start timer");
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    // only upload to runkeeper if the GPS has not being restarted in the interval
+                    // note: does not work with _currentStatus (new object after restart)
+                    if (!_serviceStarter.isLocationServicesRunning()) {
+                        RunkeeperUpload runkeeper_upload = new RunkeeperUpload(_applicationContext);
+                        runkeeper_upload.upload(_sharedPreferences.getString("runkeeper_token", ""));
+                    }
+                }
+            }, TIMEOUT_RUNKEEPER);
+        }
     }
 
     private void setGPSStartTime() {

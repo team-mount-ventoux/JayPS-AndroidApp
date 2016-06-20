@@ -1,6 +1,7 @@
 package com.njackson.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -29,27 +30,73 @@ import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.njackson.strava.StravaConstants;
-import com.njackson.strava.StravaPrivateConstants;
+import com.njackson.upload.RunkeeperConstants;
+import com.njackson.upload.RunkeeperPrivateConstants;
+import com.njackson.upload.StravaConstants;
+import com.njackson.upload.StravaPrivateConstants;
 import com.wuman.android.auth.AuthorizationDialogController;
 import com.wuman.android.auth.AuthorizationFlow;
 import com.wuman.android.auth.DialogFragmentController;
 import com.wuman.android.auth.OAuthManager;
 import com.wuman.android.auth.oauth2.store.SharedPreferencesCredentialStore;
-import com.njackson.strava.AsyncResourceLoader;
-import com.njackson.strava.OAuth;
+import com.njackson.upload.AsyncResourceLoader;
+import com.njackson.upload.OAuth;
 import com.njackson.R;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 
-public class StravaActivity extends FragmentActivity {
+public class UploadActivity extends FragmentActivity {
 
-    private static final String TAG = "PB-StravaActivity";
+    private static final String TAG = "PB-UploadActivity";
+    private enum UploadType {
+        STRAVA,
+        RUNKEEPER
+    }
+    private UploadType _type = UploadType.STRAVA;
+    private static String _userId;
+    private static String _prefTokenKey;
+    private static String _redirectUrl;
+    private static String _credentialsStorePrefFile;
+    private static String _urlToken;
+    private static String _clientId;
+    private static String _clientSecret;
+    private static String _urlAuthorize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        if (null != intent) { //Null Checking
+            if (intent.getStringExtra("type").equals("runkeeper")) {
+                _type = UploadType.RUNKEEPER;
+            }
+        }
+        switch (_type) {
+            case STRAVA:
+                Log.d(TAG, "STRAVA");
+                _userId = getApplicationContext().getString(R.string.token_strava);
+                _prefTokenKey = "strava_token";
+                _credentialsStorePrefFile = StravaConstants.CREDENTIALS_STORE_PREF_FILE;
+                _redirectUrl = StravaConstants.REDIRECT_URL;
+                _urlToken = StravaConstants.URL_TOKEN;
+                _clientId = StravaPrivateConstants.CLIENT_ID;
+                _clientSecret = StravaPrivateConstants.CLIENT_SECRET;
+                _urlAuthorize = StravaConstants.URL_AUTHORIZE;
+                break;
+            case RUNKEEPER:
+                Log.d(TAG, "RUNKEEPER");
+                _userId = getApplicationContext().getString(R.string.token_runkeeper);
+                _prefTokenKey = "runkeeper_token";
+                _credentialsStorePrefFile = RunkeeperConstants.CREDENTIALS_STORE_PREF_FILE;
+                _redirectUrl = RunkeeperConstants.REDIRECT_URL;
+                _urlToken = RunkeeperConstants.URL_TOKEN;
+                _clientId = RunkeeperPrivateConstants.CLIENT_ID;
+                _clientSecret = RunkeeperPrivateConstants.CLIENT_SECRET;
+                _urlAuthorize = RunkeeperConstants.URL_AUTHORIZE;
+                break;
+        }
+
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
@@ -143,20 +190,20 @@ public class StravaActivity extends FragmentActivity {
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
+
             // setup credential store
             SharedPreferencesCredentialStore credentialStore =
-                    new SharedPreferencesCredentialStore(getActivity(),
-                            StravaConstants.CREDENTIALS_STORE_PREF_FILE, OAuth.JSON_FACTORY);
+                    new SharedPreferencesCredentialStore(getActivity(), _credentialsStorePrefFile, OAuth.JSON_FACTORY);
+
             // setup authorization flow
             AuthorizationFlow flow = new AuthorizationFlow.Builder(
                     BearerToken.queryParameterAccessMethod(),
                     OAuth.HTTP_TRANSPORT,
                     OAuth.JSON_FACTORY,
-                    new GenericUrl(StravaConstants.URL_TOKEN),
-                    new ClientParametersAuthentication(StravaPrivateConstants.CLIENT_ID,
-                            StravaPrivateConstants.CLIENT_SECRET),
-                    StravaPrivateConstants.CLIENT_ID,
-                    StravaConstants.URL_AUTHORIZE)
+                    new GenericUrl(_urlToken),
+                    new ClientParametersAuthentication(_clientId, _clientSecret),
+                    _clientId,
+                    _urlAuthorize)
                     .setScopes(Arrays.asList("view_private,write"))
                     .setCredentialStore(credentialStore)
                     .setRequestInitializer(new HttpRequestInitializer() {
@@ -169,7 +216,7 @@ public class StravaActivity extends FragmentActivity {
                     new DialogFragmentController(getFragmentManager(), true) {
                         @Override
                         public String getRedirectUri() throws IOException {
-                            return StravaConstants.REDIRECT_URL;
+                            return _redirectUrl;
                         }
 
                         @Override
@@ -213,13 +260,13 @@ public class StravaActivity extends FragmentActivity {
                 if (result.data != null) {
                     ///@todo _sharedPreferences in a static context...
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences("com.njackson_preferences", Context.MODE_PRIVATE).edit();
-                    editor.putString("strava_token", result.data.getAccessToken());
+                    editor.putString(_prefTokenKey, result.data.getAccessToken());
                     editor.commit();
                 }
             } else {
                 message.setText("");
                 SharedPreferences.Editor editor = getActivity().getSharedPreferences("com.njackson_preferences", Context.MODE_PRIVATE).edit();
-                editor.putString("strava_token", "");
+                editor.putString(_prefTokenKey, "");
                 editor.commit();
             }
             if (result.success) {
@@ -267,8 +314,7 @@ public class StravaActivity extends FragmentActivity {
             @Override
             public Credential loadResourceInBackground() throws Exception {
                 Credential credential =
-                        oauth.authorizeExplicitly(getContext().getString(R.string.token_strava),
-                                null, null).getResult();
+                        oauth.authorizeExplicitly(_userId, null, null).getResult();
                 Log.i(TAG, "token: " + credential.getAccessToken());
                 return credential;
             }
@@ -294,8 +340,7 @@ public class StravaActivity extends FragmentActivity {
 
             @Override
             public Credential loadResourceInBackground() throws Exception {
-                success = oauth.deleteCredential(getContext().getString(R.string.token_strava), null,
-                        null).getResult();
+                success = oauth.deleteCredential(_userId, null, null).getResult();
                 Log.i(TAG, "token deleted: " + success);
                 return null;
             }

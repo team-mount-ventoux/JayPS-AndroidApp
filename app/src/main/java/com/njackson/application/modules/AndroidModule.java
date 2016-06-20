@@ -45,7 +45,8 @@ import com.njackson.service.IServiceCommand;
 import com.njackson.service.MainService;
 import com.njackson.state.GPSDataStore;
 import com.njackson.state.IGPSDataStore;
-import com.njackson.strava.StravaUpload;
+import com.njackson.upload.RunkeeperUpload;
+import com.njackson.upload.StravaUpload;
 import com.njackson.utils.AltitudeGraphReduce;
 import com.njackson.utils.BootUpReceiver;
 import com.njackson.utils.googleplay.GoogleFitSessionManager;
@@ -103,7 +104,8 @@ import static android.content.Context.SENSOR_SERVICE;
         SpeedFragment.class,
         MessageManager.class,
         BootUpReceiver.class,
-        StravaUpload.class
+        StravaUpload.class,
+        RunkeeperUpload.class
         })
 public class AndroidModule {
     private final String TAG = "PB-AndroidModule";

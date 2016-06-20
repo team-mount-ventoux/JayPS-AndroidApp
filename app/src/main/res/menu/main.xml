@@ -15,7 +15,11 @@
         android:title="Upload to Strava"
         android:orderInCategory="102" />
 
+    <item android:id="@+id/action_upload_runkeeper"
+        android:title="Upload to Runkeeper"
+        android:orderInCategory="103" />
+
     <item android:id="@+id/action_reset"
         android:title="Reset data &amp; GPX"
-        android:orderInCategory="103" />
+        android:orderInCategory="104" />
 </menu>

@@ -21,7 +21,7 @@
         <activity android:name=".activities.TestActivity"></activity>
         <activity android:name=".activities.SettingsActivity"/>
         <activity android:name=".activities.HRMScanActivity"/>
-        <activity android:name=".activities.StravaActivity"/>
+        <activity android:name=".activities.UploadActivity"/>
         <service android:name=".service.MainService" android:label="MainService"/>
         <service android:name=".activityrecognition.ActivityRecognitionIntentService" android:label="ActivityRecognitionIntentService"/>
         <receiver android:name=".pebble.PebbleDataReceiver">

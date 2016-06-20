@@ -146,6 +146,8 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         when(_preferences.getString("hrm_name3", "")).thenReturn("test3");
         when(_preferences.getString("strava_token", "")).thenReturn("test_strava");
         when(_preferences.getString("STRAVA_AUTO", "disable")).thenReturn("disable");
+        when(_preferences.getString("runkeeper_token", "")).thenReturn("test_runkeeper");
+        when(_preferences.getString("RUNKEEPER_AUTO", "disable")).thenReturn("disable");
 
         _mockChangeLogBuilder = mock(IChangeLogBuilder.class);
         when(_mockChangeLogBuilder.setActivity(any(MainActivity.class))).thenReturn(_mockChangeLogBuilder);

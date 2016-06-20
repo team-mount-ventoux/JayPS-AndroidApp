@@ -1,5 +1,5 @@
 
-package com.njackson.strava;
+package com.njackson.upload;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
@@ -9,10 +9,7 @@ import android.util.Log;
 import com.google.api.client.auth.oauth2.TokenErrorResponse;
 import com.google.api.client.auth.oauth2.TokenResponseException;
 import com.wuman.android.auth.oauth2.explicit.LenientTokenResponseException;
-import com.njackson.strava.AsyncResourceLoader.Result;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.njackson.upload.AsyncResourceLoader.Result;
 
 public abstract class AsyncResourceLoader<T> extends AsyncTaskLoader<Result<T>> {
 

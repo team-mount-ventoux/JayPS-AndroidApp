@@ -18,7 +18,6 @@ import com.njackson.Constants;
 import com.njackson.R;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
-import com.njackson.changelog.CLChangeLog;
 import com.njackson.changelog.IChangeLog;
 import com.njackson.changelog.IChangeLogBuilder;
 import com.njackson.events.ActivityRecognitionCommand.ActivityRecognitionStatus;
@@ -29,7 +28,8 @@ import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.state.IGPSDataStore;
-import com.njackson.strava.StravaUpload;
+import com.njackson.upload.RunkeeperUpload;
+import com.njackson.upload.StravaUpload;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.gpx.GpxExport;
 import com.njackson.utils.services.IServiceStarter;
@@ -38,7 +38,6 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-import de.cketti.library.changelog.ChangeLog;
 import fr.jayps.android.AdvancedLocation;
 
 public class MainActivity extends FragmentActivity  implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -234,6 +233,18 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
                 }
             } else {
                 Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the upload to Strava", Toast.LENGTH_SHORT).show();
+            }
+        }
+        if (id == R.id.action_upload_runkeeper) {
+            if (_sharedPreferences.getBoolean("ENABLE_TRACKS", false)) {
+                if (!_sharedPreferences.getString("runkeeper_token", "").isEmpty()) {
+                    RunkeeperUpload runkeeper_upload = new RunkeeperUpload(this);
+                    runkeeper_upload.upload(_sharedPreferences.getString("runkeeper_token", ""));
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please configure Runkeeper in the settings before using the upload", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the upload to Runkeeper", Toast.LENGTH_SHORT).show();
             }
         }
         if (id == R.id.action_reset) {

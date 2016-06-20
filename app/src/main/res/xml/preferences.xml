@@ -161,7 +161,7 @@
     <PreferenceScreen
         android:key="integration_screen"
         android:title="Integration"
-        android:summary="Strava, Live Tracking, OruxMaps, Canvas"
+        android:summary="Strava, Runkeeper, Live Tracking, OruxMaps, Canvas"
         android:persistent="false">
 
         <PreferenceScreen
@@ -207,6 +207,39 @@
                     <intent android:action="android.intent.action.VIEW"
                         android:data="@string/PREF_STRAVA_URL_VENTOO_CLUB" />
                 </Preference>
+            </PreferenceCategory>
+        </PreferenceScreen>
+
+        <PreferenceScreen
+            android:key="runkeeper_screen"
+            android:title="@string/PREF_RUNKEEPER_CATEGORIE_TITLE"
+            android:persistent="false">
+            <PreferenceCategory
+                android:title="@string/PREF_RUNKEEPER_CATEGORIE_TITLE"
+                android:summary="@string/PREF_RUNKEEPER_CATEGORIE_SUMMARY"
+                >
+                <Preference
+                    android:key="PREF_RUNKEEPER"
+                    android:title="Connect to Runkeeper"
+                    android:summary="Grant Ventoo access to upload to Runkeeper"
+                    />
+                <Preference
+                    android:key="PREF_UPLOAD_RUNKEEPER"
+                    android:title="Upload"
+                    android:summary="Upload current track to Runkeeper"
+                    />
+                <ListPreference
+                    android:key="RUNKEEPER_AUTO"
+                    android:title="@string/RUNKEEPER_AUTO_TITLE"
+                    android:dialogTitle="@string/RUNKEEPER_AUTO_DIALOG_TITLE"
+                    android:entries="@array/RUNKEEPER_AUTO_ENTRIES"
+                    android:entryValues="@array/RUNKEEPER_AUTO_ENTRY_VALUES"
+                    android:defaultValue="@string/RUNKEEPER_AUTO_DEFAULT" />
+                <CheckBoxPreference
+                    android:key="RUNKEEPER_NOTIFICATION"
+                    android:title="@string/PREF_RUNKEEPER_NOTIFICATION_TITLE"
+                    android:summary="@string/PREF_RUNKEEPER_NOTIFICATION_SUMMARY"
+                    android:defaultValue="true" />
             </PreferenceCategory>
         </PreferenceScreen>
 

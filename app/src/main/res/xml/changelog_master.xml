@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.7.0-beta1" versioncode="304" >
+        <change><![CDATA[<b>Runkeeper upload</b><br/>
+        - go in the settings to grant the access to Runkeeper<br/>
+        - upload manually from the menu or automatically at the end of the track<br/>
+        ]]></change>
+    </release>
     <release version="2.6.0" versioncode="303" >
         <change><![CDATA[<b>Strava upload</b><br/>
         - go in the settings to grant the access to Strava<br/>

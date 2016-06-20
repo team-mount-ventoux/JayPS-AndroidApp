@@ -1,5 +1,5 @@
 
-package com.njackson.strava;
+package com.njackson.upload;
 
 import android.content.Context;
 import android.os.Handler;

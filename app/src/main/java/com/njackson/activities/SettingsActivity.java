@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -19,13 +18,13 @@ import android.widget.Toast;
 
 import com.njackson.Constants;
 import com.njackson.R;
-import com.njackson.activities.HRMScanActivity;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.BleServiceCommand.BleSensorData;
 import com.njackson.events.GPSServiceCommand.ChangeRefreshInterval;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.state.IGPSDataStore;
-import com.njackson.strava.StravaUpload;
+import com.njackson.upload.RunkeeperUpload;
+import com.njackson.upload.StravaUpload;
 import com.njackson.utils.gpx.GpxExport;
 import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.watchface.IInstallWatchFace;
@@ -33,16 +32,10 @@ import com.njackson.utils.messages.ToastMessageMaker;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import javax.inject.Inject;
 
 import de.cketti.library.changelog.ChangeLog;
 import fr.jayps.android.AdvancedLocation;
-
-import static android.support.v4.content.FileProvider.getUriForFile;
 
 /**
  * Created by server on 28/06/2014.
@@ -198,7 +191,21 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 if (preference.getKey().equals("PREF_STRAVA")) {
-                    startActivity(new Intent(getApplicationContext(), StravaActivity.class));
+                    Intent mIntent = new Intent(getApplicationContext(), UploadActivity.class);
+                    mIntent.putExtra("type", "strava");
+                    startActivity(mIntent);
+                }
+                return false;
+            }
+        });
+        Preference pref_runkeeper = findPreference("PREF_RUNKEEPER");
+        pref_runkeeper.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if (preference.getKey().equals("PREF_RUNKEEPER")) {
+                    Intent mIntent = new Intent(getApplicationContext(), UploadActivity.class);
+                    mIntent.putExtra("type", "runkeeper");
+                    startActivity(mIntent);
                 }
                 return false;
             }
@@ -217,6 +224,23 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the upload to Strava", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
+        Preference pref_upload_runkeeper = findPreference("PREF_UPLOAD_RUNKEEPER");
+        pref_upload_runkeeper.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if (_sharedPreferences.getBoolean("ENABLE_TRACKS", false)) {
+                    if (!_sharedPreferences.getString("runkeeper_token", "").isEmpty()) {
+                        RunkeeperUpload runkeeper_upload = new RunkeeperUpload(_activity);
+                        runkeeper_upload.upload(_sharedPreferences.getString("runkeeper_token", ""));
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please configure Runkeeper in the settings before using the upload", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the upload to Runkeeper", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }
@@ -293,6 +317,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         setLoginMmtSummary();
         setLiveSummary();
         setStravaSummary();
+        setRunkeeperSummary();
         setOruxMapsSummary();
         setCanvasSummary();
         setHrmSummary();
@@ -339,6 +364,9 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         }
         if (s.equals("STRAVA_AUTO")) {
             setStravaSummary();
+        }
+        if (s.equals("RUNKEEPER_AUTO")) {
+            setRunkeeperSummary();
         }
         if (s.equals("ORUXMAPS_AUTO")) {
             setOruxMapsSummary();
@@ -438,6 +466,23 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         }
         strava_screen.setSummary(strava);
+    }
+
+    private void setRunkeeperSummary() {
+        ListPreference runkeeper_auto = (ListPreference) findPreference("RUNKEEPER_AUTO");
+        CharSequence listDesc = runkeeper_auto.getEntry();
+        runkeeper_auto.setSummary(listDesc);
+
+        Preference runkeeper_screen = findPreference("runkeeper_screen");
+        String runkeeper = "Disable";
+        if (!_sharedPreferences.getString("runkeeper_token", "").isEmpty()) {
+            if (_sharedPreferences.getString("RUNKEEPER_AUTO", "disable").equals("disable")) {
+                runkeeper = "Manual upload";
+            } else {
+                runkeeper = "Automatic upload";
+            }
+        }
+        runkeeper_screen.setSummary(runkeeper);
     }
 
     private void setOruxMapsSummary() {
