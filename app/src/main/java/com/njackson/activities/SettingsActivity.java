@@ -365,7 +365,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         if (s.equals("STRAVA_AUTO")) {
             setStravaSummary();
         }
-        if (s.equals("RUNKEEPER_AUTO")) {
+        if (s.equals("RUNKEEPER_AUTO") || s.equals("RUNKEEPER_ACTIVITY_TYPE")) {
             setRunkeeperSummary();
         }
         if (s.equals("ORUXMAPS_AUTO")) {
@@ -472,6 +472,10 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         ListPreference runkeeper_auto = (ListPreference) findPreference("RUNKEEPER_AUTO");
         CharSequence listDesc = runkeeper_auto.getEntry();
         runkeeper_auto.setSummary(listDesc);
+
+        ListPreference runkeeper_activity_type = (ListPreference) findPreference("RUNKEEPER_ACTIVITY_TYPE");
+        listDesc = runkeeper_activity_type.getEntry();
+        runkeeper_activity_type.setSummary(listDesc);
 
         Preference runkeeper_screen = findPreference("runkeeper_screen");
         String runkeeper = "Disable";

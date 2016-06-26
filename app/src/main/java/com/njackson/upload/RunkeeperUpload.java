@@ -7,8 +7,10 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.njackson.R;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.pebble.IMessageManager;
+import com.njackson.state.IGPSDataStore;
 
 import java.io.DataOutputStream;
 import java.io.InputStream;
@@ -26,6 +28,7 @@ public class RunkeeperUpload {
 
     @Inject IMessageManager _messageManager;
     @Inject SharedPreferences _sharedPreferences;
+    @Inject IGPSDataStore _dataStore;
     Activity _activity = null;
     Context _context;
 
@@ -57,7 +60,8 @@ public class RunkeeperUpload {
                 AdvancedLocation advancedLocation = new AdvancedLocation(_context);
                 advancedLocation.debugLevel = _sharedPreferences.getBoolean("PREF_DEBUG", false) ? 1 : 0;
                 advancedLocation.debugTagPrefix = "PB-";
-                String json = advancedLocation.getRunkeeperJson();
+                advancedLocation.setElapsedTime(_dataStore.getElapsedTime());
+                String json = advancedLocation.getRunkeeperJson(_sharedPreferences.getString("RUNKEEPER_ACTIVITY_TYPE", _context.getString(R.string.RUNKEEPER_ACTIVITY_TYPE_DEFAULT)));
 
                 String message;
 

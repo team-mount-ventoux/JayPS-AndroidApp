@@ -135,6 +135,9 @@
     <string name="PREF_RUNKEEPER_CATEGORIE_TITLE">Runkeeper Integration</string>
     <string name="PREF_RUNKEEPER_CATEGORIE_SUMMARY"></string>
     <string name="PREF_RUNKEEPER_TITLE">Runkeeper</string>
+    <string name="RUNKEEPER_ACTIVITY_TYPE_TITLE">Activity</string>
+    <string name="RUNKEEPER_ACTIVITY_TYPE_DIALOG_TITLE">Runkeeper activity</string>
+    <string name="RUNKEEPER_ACTIVITY_TYPE_DEFAULT">Running</string>
     <string name="PREF_RUNKEEPER_NOTIFICATION_TITLE">Notification</string>
     <string name="PREF_RUNKEEPER_NOTIFICATION_SUMMARY">Display a notification on your Pebble after each upload</string>
     <string name="RUNKEEPER_AUTO_TITLE">Automatic upload</string>

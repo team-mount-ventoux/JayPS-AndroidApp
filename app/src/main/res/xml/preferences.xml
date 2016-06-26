@@ -223,6 +223,13 @@
                     android:title="Connect to Runkeeper"
                     android:summary="Grant Ventoo access to upload to Runkeeper"
                     />
+                <ListPreference
+                    android:key="RUNKEEPER_ACTIVITY_TYPE"
+                    android:title="@string/RUNKEEPER_ACTIVITY_TYPE_TITLE"
+                    android:dialogTitle="@string/RUNKEEPER_ACTIVITY_TYPE_DIALOG_TITLE"
+                    android:entries="@array/RUNKEEPER_ACTIVITY_TYPE_ENTRIES"
+                    android:entryValues="@array/RUNKEEPER_ACTIVITY_TYPE_ENTRY_VALUES"
+                    android:defaultValue="@string/RUNKEEPER_ACTIVITY_TYPE_DEFAULT" />
                 <Preference
                     android:key="PREF_UPLOAD_RUNKEEPER"
                     android:title="Upload"

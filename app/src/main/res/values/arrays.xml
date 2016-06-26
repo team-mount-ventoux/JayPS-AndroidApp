@@ -58,6 +58,25 @@
         <item>end_track</item>
     </string-array>
 
+    <string-array name="RUNKEEPER_ACTIVITY_TYPE_ENTRIES">
+        <item>Running</item>
+        <item>Cycling</item>
+        <item>Hiking</item>
+        <item>Walking</item>
+        <item>Mountain Biking</item>
+        <item>Cross-Country Skiing</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="RUNKEEPER_ACTIVITY_TYPE_ENTRY_VALUES">
+        <item>Running</item>
+        <item>Cycling</item>
+        <item>Hiking</item>
+        <item>Walking</item>
+        <item>Mountain Biking</item>
+        <item>Cross-Country Skiing</item>
+        <item>Other</item>
+    </string-array>
+
     <string-array name="ORUXMAPS_AUTO_ENTRIES">
         <item>Disable</item>
         <item>Continue record</item>
