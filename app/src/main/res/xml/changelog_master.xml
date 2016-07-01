@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="2.7.0-beta2" versioncode="305" >
-        <change>Runkeeper: activity type</change>
-        <change>Runkeeper: heart rate</change>
-        <change>Android: notification icon for Lollipop</change>
-    </release>
-    <release version="2.7.0-beta1" versioncode="304" >
+    <release version="2.7.0" versioncode="306" >
         <change><![CDATA[<b>Runkeeper upload</b><br/>
         - go in the settings to grant the access to Runkeeper<br/>
         - upload manually from the menu or automatically at the end of the track<br/>
         ]]></change>
+        <change><![CDATA[Do you like this free app? Please give us a heart on <a href="pebble://appstore/529289cee07df1fa76000009">Pebble Store</a> or rate us on <a href="https://play.google.com/store/apps/details?id=com.njackson">Google Play</a>. Thanks!]]></change>
     </release>
     <release version="2.6.0" versioncode="303" >
         <change><![CDATA[<b>Strava upload</b><br/>
@@ -17,7 +13,6 @@
         - upload manually from the menu or automatically at the end of the track<br/>
         ]]></change>
         <change>[Time series] Rotation mode: long press middle button to automatically cycle every 5 seconds between your data screens</change>
-        <change><![CDATA[Do you like this free app? Please give us a heart on <a href="pebble://appstore/529289cee07df1fa76000009">Pebble Store</a> or rate us on <a href="https://play.google.com/store/apps/details?id=com.njackson">Google Play</a>. Thanks!]]></change>
     </release>
     <release version="2.5.0" versioncode="291" >
         <change><![CDATA[<b>Pebble: add graphs in top field</b> (altitude, ascent, heart rate, speed)]]></change>
