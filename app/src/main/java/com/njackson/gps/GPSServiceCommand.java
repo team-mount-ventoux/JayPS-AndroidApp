@@ -66,6 +66,7 @@ public class GPSServiceCommand implements IServiceCommand {
     @Inject SharedPreferences _sharedPreferences;
     @Inject AltitudeGraphReduce _altitudeGraphReduce;
     @Inject IServiceStarter _serviceStarter;
+    @Inject Navigator _navigator;
 
     private AdvancedLocation _advancedLocation;
     private Location firstLocation = null;
@@ -358,6 +359,7 @@ public class GPSServiceCommand implements IServiceCommand {
         @Override
         public void onLocationChanged(Location location) {
             _advancedLocation.onLocationChanged(location, _heartRate, _cyclingCadence);
+            _navigator.onLocationChanged(location);
             if (firstLocation == null) {
                 firstLocation = location;
                 saveGPSStats();
@@ -404,6 +406,12 @@ public class GPSServiceCommand implements IServiceCommand {
         int units = _dataStore.getMeasurementUnits();
 
         NewLocation event = new AdvancedLocationToNewLocation(_advancedLocation, _xpos, _ypos, units);
+        if (_navigator.getNbPoints() > 0) {
+            event.setAltitude(_navigator.getNextDistance());
+            event.setAscent(_navigator.getNextBearing());
+            event.setMaxSpeed(_navigator.getNextIndex());
+            event.setAscentRate(_navigator.getError());
+        }
         if (_heartRate > 0) {
             event.setHeartRate(_heartRate);
         }

@@ -28,6 +28,7 @@ import com.njackson.fragments.StartButtonFragment;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.gps.IForegroundServiceStarter;
 import com.njackson.gps.MainServiceForegroundStarter;
+import com.njackson.gps.Navigator;
 import com.njackson.sensor.Ble;
 import com.njackson.sensor.BLEServiceCommand;
 import com.njackson.sensor.IBle;
@@ -172,6 +173,8 @@ public class AndroidModule {
     public IMessageManager providesMessageManager(SharedPreferences preferences) { return new MessageManager(preferences, application); }
 
     @Provides IOruxMaps providesOruxMaps() { return new OruxMaps(application); }
+
+    @Provides @Singleton Navigator providesNavigator() { return new Navigator(); }
 
     @Provides
     IBle providesHrm() {

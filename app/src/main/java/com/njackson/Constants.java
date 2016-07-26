@@ -66,4 +66,6 @@ public class Constants {
     public static final String GOOGLE_FIT_SESSION_NAME = "Pebble Bike";
 
     public static final String PREFS_NAME_V1 = "PebbleBikePrefs";
+
+    public static final int CODE_LOAD_GPX = 1;
 }

@@ -19,7 +19,11 @@
         android:title="Upload to Runkeeper"
         android:orderInCategory="103" />
 
+    <item android:id="@+id/action_load_route"
+        android:title="Load route to follow"
+        android:orderInCategory="104" />
+
     <item android:id="@+id/action_reset"
         android:title="Reset data &amp; GPX"
-        android:orderInCategory="104" />
+        android:orderInCategory="105" />
 </menu>

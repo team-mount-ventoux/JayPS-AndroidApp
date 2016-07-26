@@ -7,6 +7,7 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -27,6 +28,7 @@ import com.njackson.events.UI.StartButtonTouchedEvent;
 import com.njackson.events.UI.StopButtonTouchedEvent;
 import com.njackson.events.GoogleFitCommand.GoogleFitStatus;
 import com.njackson.events.base.BaseStatus;
+import com.njackson.gps.Navigator;
 import com.njackson.state.IGPSDataStore;
 import com.njackson.upload.RunkeeperUpload;
 import com.njackson.upload.StravaUpload;
@@ -35,6 +37,9 @@ import com.njackson.utils.gpx.GpxExport;
 import com.njackson.utils.services.IServiceStarter;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import javax.inject.Inject;
 
@@ -50,6 +55,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
     @Inject SharedPreferences _sharedPreferences;
     @Inject IChangeLogBuilder _changeLogBuilder;
     @Inject IGPSDataStore _dataStore;
+    @Inject Navigator _navigator;
 
     private boolean _authInProgress;
 
@@ -247,6 +253,18 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
                 Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the upload to Runkeeper", Toast.LENGTH_SHORT).show();
             }
         }
+        if (id == R.id.action_load_route) {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            try {
+                startActivityForResult(Intent.createChooser(intent, "Select txt file"), Constants.CODE_LOAD_GPX);
+            } catch (android.content.ActivityNotFoundException ex) {
+                // Potentially direct the user to the Market with a Dialog
+                Toast.makeText(getApplicationContext(), "Impossible to open file", Toast.LENGTH_SHORT).show();
+            }
+        }
+
         if (id == R.id.action_reset) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.ALERT_RESET_DATA_TITLE)
@@ -277,6 +295,28 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
                 _serviceStarter.startActivityService();
             } else {
                 _serviceStarter.stopActivityService();
+            }
+        }
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Log.d(TAG, "requestCode=" + requestCode + " resultCode=" + resultCode);
+        if (requestCode == Constants.CODE_LOAD_GPX) {
+            if (data != null) {
+                try {
+                    Uri uri = data.getData();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(getContentResolver().openInputStream(uri)));
+                    StringBuilder gpx = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        gpx.append(line).append('\n');
+                    }
+                    _navigator.loadGpx(gpx.toString());
+                    Toast.makeText(getApplicationContext(), "Route loaded - " + _navigator.getNbPoints() + " points", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.e(TAG, "Exception:" + e);
+                }
             }
         }
     }
