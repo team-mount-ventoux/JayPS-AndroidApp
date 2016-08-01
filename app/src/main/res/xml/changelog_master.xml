@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.8.0-beta1" versioncode="310" >
+        <change><![CDATA[<b>Routing (experimental)</b><br/>
+        - load a GPX to follow in the menu<br/>
+        - show data on your Pebble, using the (temporary) reuse of fields:<br/>
+            + distance to next waypoint > altitude<br/>
+            + next bearing to next waypoint > ascent<br/>
+            + index of next waypoint > max speed<br/>
+            + error to route > ascent rate<br/>
+        - [Pebble Time Only] New watchface (click on "Install Watchface" in settings)<br/>
+        ]]></change>
+        <change>Pebble: add italian (thanks Riccardo Fantoni)</change>
+    </release>
     <release version="2.7.0" versioncode="306" >
         <change><![CDATA[<b>Runkeeper upload</b><br/>
         - go in the settings to grant the access to Runkeeper<br/>

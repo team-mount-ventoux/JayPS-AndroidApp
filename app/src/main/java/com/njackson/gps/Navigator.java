@@ -59,13 +59,13 @@ public class Navigator {
             float bearing = (location.bearingTo(points[i]) + 360) % 360;
             float error = i > 0 ? crossTrackError(points[i-1], points[i], location) : 0;
             Log.d(TAG, i + " dist:" + dist + " bearing:" + bearing + " error:" + error + " seen:" + (points[i].seen ? "y" : "n"));
-            if (dist < minDist /*&& _maxSeenIndex < i*/) {
+            if (dist < minDist && _maxSeenIndex < i) {
                 minDist = dist;
                 minPoint = i;
                 minBearing = bearing;
                 minError = error;
             }
-            if (dist < 100) {
+            if (dist < 50) {
                 points[i].seen = true;
                 _maxSeenIndex = i > _maxSeenIndex ? i : _maxSeenIndex;
             }
