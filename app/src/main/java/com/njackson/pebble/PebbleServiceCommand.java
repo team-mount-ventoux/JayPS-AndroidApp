@@ -15,6 +15,7 @@ import com.njackson.events.GPSServiceCommand.GPSStatus;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.LiveServiceCommand.LiveMessage;
 import com.njackson.events.base.BaseStatus;
+import com.njackson.gps.Navigator;
 import com.njackson.pebble.canvas.GPSData;
 import com.njackson.pebble.canvas.ICanvasWrapper;
 import com.njackson.service.IServiceCommand;
@@ -31,6 +32,7 @@ public class PebbleServiceCommand implements IServiceCommand {
     @Inject ICanvasWrapper _canvasWrapper;
     @Inject SharedPreferences _sharedPreferences;
     @Inject Bus _bus;
+    @Inject Navigator _navigator;
 
     private static final String TAG = "PB-PebbleServiceCommand";
     private BaseStatus.Status _currentStatus = BaseStatus.Status.NOT_INITIALIZED;
@@ -123,6 +125,7 @@ public class PebbleServiceCommand implements IServiceCommand {
     private void sendLocationToPebble(NewLocation newLocation) {
         PebbleDictionary dictionary = new NewLocationToPebbleDictionary(
                 newLocation,
+                _navigator,
                 true, // forced to true, we're receiving location (can a location arrive after stop event?)
                 _sharedPreferences.getBoolean("PREF_DEBUG", false),
                 _sharedPreferences.getBoolean("LIVE_TRACKING", false),

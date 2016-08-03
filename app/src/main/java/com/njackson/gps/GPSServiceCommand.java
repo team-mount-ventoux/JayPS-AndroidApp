@@ -407,10 +407,11 @@ public class GPSServiceCommand implements IServiceCommand {
 
         NewLocation event = new AdvancedLocationToNewLocation(_advancedLocation, _xpos, _ypos, units);
         if (_navigator.getNbPoints() > 0) {
-            event.setAltitude(_navigator.getNextDistance());
-            event.setAscent(_navigator.getNextBearing());
+            //event.setAltitude(_navigator.getNextDistance());
+            //event.setAscent(_navigator.getNextBearing());
             event.setMaxSpeed(_navigator.getNextIndex());
             event.setAscentRate(_navigator.getError());
+            //event.setNavigationDistanceToDestination(_navigator.getDistanceToDestination());
         }
         if (_heartRate > 0) {
             event.setHeartRate(_heartRate);

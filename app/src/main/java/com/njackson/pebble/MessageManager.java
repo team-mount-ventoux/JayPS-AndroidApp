@@ -18,6 +18,7 @@ import com.njackson.adapters.NewLocationToPebbleDictionary;
 import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.GPSServiceCommand.NewLocation;
+import com.njackson.gps.Navigator;
 import com.njackson.utils.BatteryStatus;
 
 import org.json.JSONArray;
@@ -57,6 +58,7 @@ public class MessageManager implements IMessageManager, Runnable {
 
     @Inject SharedPreferences _sharedPreferences;
     @Inject IAnalytics _parseAnalytics;
+    @Inject Navigator _navigator;
 
     public MessageManager(SharedPreferences preferences, Context context) {
         _sharedPreferences = preferences;
@@ -301,6 +303,7 @@ public class MessageManager implements IMessageManager, Runnable {
 
         PebbleDictionary dictionary = new NewLocationToPebbleDictionary(
                 newLocation,
+                _navigator,
                 isLocationServicesRunning,
                 _sharedPreferences.getBoolean("PREF_DEBUG", false),
                 _sharedPreferences.getBoolean("LIVE_TRACKING", false),

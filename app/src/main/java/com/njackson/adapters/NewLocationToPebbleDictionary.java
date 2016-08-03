@@ -5,6 +5,7 @@ import android.util.Log;
 import com.getpebble.android.kit.util.PebbleDictionary;
 import com.njackson.Constants;
 import com.njackson.events.GPSServiceCommand.NewLocation;
+import com.njackson.gps.Navigator;
 
 /**
  * Created by server on 25/03/2014.
@@ -48,7 +49,15 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
     public static final short BYTE_MAXSPEED2 = 22;
     public static final short BYTE_CADENCE = 23;
 
-    public NewLocationToPebbleDictionary(NewLocation event, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int watchfaceVersion) {
+    public static final short NAV_BYTE_DISTANCE1 = 0;
+    public static final short NAV_BYTE_DISTANCE2 = 1;
+    public static final short NAV_BYTE_DTD1 = 2;
+    public static final short NAV_BYTE_DTD2 = 3;
+    public static final short NAV_BYTE_BEARING = 4;
+    public static final short NAV_BYTE_ERROR = 5;
+    public static final short NAV_NB_BYTES = 6;
+
+    public NewLocationToPebbleDictionary(NewLocation event, Navigator navigator, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int watchfaceVersion) {
 
         int location_data_version = Constants.PEBBLE_LOCATION_DATA_V2;
         if (watchfaceVersion >= Constants.MIN_VERSION_PEBBLE_FOR_LOCATION_DATA_V3) {
@@ -147,6 +156,26 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
             data_heartmax[0] = (byte) (event.getHeartRateMax() % 256);
             data_heartmax[1] = (byte) (event.getHeartRateMode() % 256);
             this.addBytes(Constants.MSG_HR_MAX, data_heartmax);
+        }
+        if (navigator.getNbPoints() > 0) {
+            byte[] data_navigation = new byte[NAV_NB_BYTES];
+
+            // in m, 0-65.535km
+            data_navigation[NAV_BYTE_DISTANCE1] = (byte) ((navigator.getNextDistance()) % 256);
+            data_navigation[NAV_BYTE_DISTANCE2] = (byte) ((navigator.getNextDistance()) / 256);
+
+            // in 10m, 0-655km
+            data_navigation[NAV_BYTE_DTD1] = (byte) (((int) (Math.floor(navigator.getDistanceToDestination() / 10) / 1)) % 256);
+            data_navigation[NAV_BYTE_DTD2] = (byte) (((int) (Math.floor(navigator.getDistanceToDestination() / 10) / 1)) / 256);
+
+            data_navigation[NAV_BYTE_BEARING] = (byte) (((int)  (navigator.getNextBearing() / 360 * 256)) % 256);
+
+            // in 10m, 0-2.56km
+            data_navigation[NAV_BYTE_ERROR] = (byte) (((int) (Math.floor(navigator.getError() / 10) / 1)) % 256);
+
+            //navigator.getNextIndex()
+
+            this.addBytes(Constants.MSG_NAVIGATION, data_navigation);
         }
     }
 }

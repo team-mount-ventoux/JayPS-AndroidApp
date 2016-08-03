@@ -48,10 +48,12 @@ public class Navigator {
     private float _error = 0;
 
     public Navigator() {
-        Log.d(TAG, "Navigator() nbPointsIni:" + _nbPointsIni);
     }
 
     public void onLocationChanged(Location location) {
+        if (_nbPointsIni == 0) {
+            return;
+        }
         Log.d(TAG, "onLocationChanged: lat:"+location.getLatitude()+",lon:"+location.getLongitude() + " nbPointsSimpl:" + _nbPointsSimpl);
         float minDist = 1000000;
         int minPoint = -1;
@@ -199,6 +201,9 @@ public class Navigator {
         return dXt;
     }
 
+    public float getDistanceToDestination() {
+        return _nbPointsSimpl > 0 ? (_pointsSimpl[_nbPointsSimpl-1].distance - _pointsSimpl[_nextIndex].distance + _nextDistance) : 0;
+    }
     public float getNextDistance() {
         return _nextDistance;
     }
