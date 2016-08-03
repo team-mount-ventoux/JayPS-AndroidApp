@@ -29,15 +29,18 @@ public class Navigator {
 
     protected class Poi extends Location {
         public boolean seen = false;
+        public float distance = 0;
+        public int index = 0;
 
         public Poi(Location l) {
             super(l);
-            this.seen = false;
         }
     }
 
-    Poi[] points;
-    private int _nbPoints = 0;
+    Poi[] _pointsIni;
+    private int _nbPointsIni = 0;
+    Poi[] _pointsSimpl;
+    private int _nbPointsSimpl = 0;
     private float _nextDistance = 0;
     private float _nextBearing = 0;
     private int _nextIndex = 0;
@@ -45,20 +48,20 @@ public class Navigator {
     private float _error = 0;
 
     public Navigator() {
-        Log.d(TAG, "Navigator() nbPoints:" + _nbPoints);
+        Log.d(TAG, "Navigator() nbPointsIni:" + _nbPointsIni);
     }
 
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged: lat:"+location.getLatitude()+",lon:"+location.getLongitude() + " nbPoints:" + _nbPoints);
+        Log.d(TAG, "onLocationChanged: lat:"+location.getLatitude()+",lon:"+location.getLongitude() + " nbPointsSimpl:" + _nbPointsSimpl);
         float minDist = 1000000;
         int minPoint = -1;
         float minBearing = 0;
         float minError = 0;
-        for(int i = 0; i < _nbPoints; i++) {
-            float dist = location.distanceTo(points[i]);
-            float bearing = (location.bearingTo(points[i]) + 360) % 360;
-            float error = i > 0 ? crossTrackError(points[i-1], points[i], location) : 0;
-            Log.d(TAG, i + " dist:" + dist + " bearing:" + bearing + " error:" + error + " seen:" + (points[i].seen ? "y" : "n"));
+        for(int i = 0; i < _nbPointsSimpl; i++) {
+            float dist = location.distanceTo(_pointsSimpl[i]);
+            float bearing = (location.bearingTo(_pointsSimpl[i]) + 360) % 360;
+            float error = i > 0 ? crossTrackError(_pointsSimpl[i-1], _pointsSimpl[i], location) : 0;
+            Log.d(TAG, i + "[" + _pointsSimpl[i].index + "] dist:" + dist + " bearing:" + bearing + " error:" + error + " seen:" + (_pointsSimpl[i].seen ? "y" : "n"));
             if (dist < minDist && _maxSeenIndex < i) {
                 minDist = dist;
                 minPoint = i;
@@ -66,11 +69,11 @@ public class Navigator {
                 minError = error;
             }
             if (dist < 50) {
-                points[i].seen = true;
+                _pointsSimpl[i].seen = true;
                 _maxSeenIndex = i > _maxSeenIndex ? i : _maxSeenIndex;
             }
         }
-        Log.d(TAG, "min:"  + minDist + " bearing: " + minBearing + " error: " + minError + " point #" + minPoint);
+        Log.d(TAG, "min:"  + minDist + " bearing: " + minBearing + " error: " + minError + " DTD:" + Math.round(_pointsSimpl[_nbPointsSimpl-1].distance - _pointsSimpl[minPoint].distance) + " point #" + minPoint);
 
         _nextDistance = minDist;
         _nextBearing = minBearing;
@@ -78,7 +81,7 @@ public class Navigator {
         _error = minError;
     }
     public void loadGpx(String gpx) {
-        _nbPoints = 0;
+        _nbPointsIni = 0;
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -91,7 +94,8 @@ public class Navigator {
             expression = "//trkpt";
             nodes = (NodeList) xpath.evaluate(expression, doc, XPathConstants.NODESET);
             Log.d(TAG, "length:" + nodes.getLength());
-            points = new Poi[nodes.getLength()];
+            float distance = 0;
+            _pointsIni = new Poi[nodes.getLength()];
             Location loc = new Location("Ventoo");
             for (int i = 0; i < nodes.getLength(); i++) {
                 node = nodes.item(i);
@@ -102,7 +106,13 @@ public class Navigator {
                     try {
                         loc.setLatitude(Float.parseFloat(eElement.getAttribute("lat")));
                         loc.setLongitude(Float.parseFloat(eElement.getAttribute("lon")));
-                        points[_nbPoints++] = new Poi(loc);
+                        _pointsIni[_nbPointsIni] = new Poi(loc);
+                        _pointsIni[_nbPointsIni].index = i;
+                        if (_nbPointsIni > 0) {
+                            distance += _pointsIni[_nbPointsIni].distanceTo(_pointsIni[_nbPointsIni-1]);
+                            _pointsIni[_nbPointsIni].distance = distance;
+                        }
+                        _nbPointsIni++;
                     } catch (NumberFormatException e) {
                         Log.e(TAG, "Exception:" + e);
                     }
@@ -111,7 +121,63 @@ public class Navigator {
         } catch (Exception e) {
             Log.e(TAG, "Exception:" + e);
         }
-        Log.d(TAG, "nbPoints:" + _nbPoints);
+        Log.d(TAG, "nbPointsIni:" + _nbPointsIni);
+        simplifyRoute();
+
+        // debug
+        //if (_nbPointsSimpl > 15) {
+        //    onLocationChanged(_pointsSimpl[0]);
+        //    onLocationChanged(_pointsSimpl[10]);
+        //    onLocationChanged(_pointsSimpl[_nbPointsSimpl-1]);
+        //}
+    }
+    public void simplifyRoute() {
+        Log.d(TAG, "simplifyRoute nbPointsIni:" + _nbPointsIni);
+        if (_nbPointsIni == 0) {
+            return;
+        }
+        int lastIndex = 0;
+        int lastIndex2 = 0;
+        StringBuilder debug = new StringBuilder();
+        _pointsSimpl = new Poi[_nbPointsIni];
+
+        // force 1st point
+        _pointsSimpl[0] = _pointsIni[0];
+        _nbPointsSimpl = 1;
+        for(int i = 1; i < _nbPointsIni - 1; i++) {
+            float bearingLastToMe = (_pointsIni[lastIndex].bearingTo(_pointsIni[i]) + 360) % 360;
+            float bearingLastToNext = (_pointsIni[lastIndex].bearingTo(_pointsIni[i + 1]) + 360) % 360;
+            float bearingMeToNext = (_pointsIni[i].bearingTo(_pointsIni[i + 1]) + 360) % 360;
+            boolean keep = false;
+            float diff1 = 0;
+            float diff2 = 0;
+            String tmp = "";
+            diff1 = bearingLastToNext - bearingLastToMe;
+            diff2 = bearingMeToNext - bearingLastToMe;
+            if (lastIndex != i - 1) {
+                if (Math.abs(diff1) > 5) {
+                    tmp += "a"+Math.round(Math.abs(diff1));
+                    keep = true;
+                }
+            }
+            if (Math.abs(diff2) > 30) {
+                tmp += "b"+Math.round(Math.abs(diff2));
+                keep = true;
+            }
+            Log.d(TAG, i + ": " + lastIndex2 + "-" + lastIndex + " dist:" + Math.round(_pointsIni[i].distance) + " b1:" + Math.round(bearingLastToMe) + " b2:" + Math.round(bearingLastToNext) + " b3:" + Math.round(bearingMeToNext) + " d1:" + Math.round(diff1) + " d2:" + Math.round(diff2) + " " + (keep ? ("KEEP "  + _pointsIni[i].getLatitude() + "," + _pointsIni[i].getLongitude()) : "REMOVE"));
+            if (keep) {
+                debug.append(i + ": " + lastIndex2 + "-" + lastIndex + tmp +", "  + _pointsIni[i].getLatitude() + "," + _pointsIni[i].getLongitude()+"\n");
+                lastIndex2 = lastIndex;
+                lastIndex = i;
+                _pointsSimpl[_nbPointsSimpl] = _pointsIni[i];
+                _nbPointsSimpl++;
+            }
+        }
+        // force last point
+        _pointsSimpl[_nbPointsSimpl] = _pointsIni[_nbPointsIni - 1];
+        _nbPointsSimpl++;
+        Log.d(TAG, "simplifyRoute nbPointsIni:" + _nbPointsIni + " nbPointsSimpl:" + _nbPointsSimpl);
+        Log.d(TAG, debug.toString());
     }
 
     private static float R = 6371000; // radius of earth (meter)
@@ -146,6 +212,6 @@ public class Navigator {
         return _error;
     }
     public int getNbPoints() {
-        return _nbPoints;
+        return _nbPointsSimpl;
     }
 }
