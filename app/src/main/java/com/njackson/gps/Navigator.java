@@ -83,7 +83,7 @@ public class Navigator {
         _error = minError;
     }
     public void loadGpx(String gpx) {
-        _nbPointsIni = 0;
+        _nbPointsIni = _nbPointsSimpl = _nextIndex = 0;
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
