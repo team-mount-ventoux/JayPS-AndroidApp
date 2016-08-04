@@ -56,7 +56,7 @@ public class Navigator {
         }
         Log.d(TAG, "onLocationChanged: lat:"+location.getLatitude()+",lon:"+location.getLongitude() + " nbPointsSimpl:" + _nbPointsSimpl);
         float minDist = 1000000;
-        int minPoint = -1;
+        int minPoint = 0;
         float minBearing = 0;
         float minError = 0;
         for(int i = 0; i < _nbPointsSimpl; i++) {
