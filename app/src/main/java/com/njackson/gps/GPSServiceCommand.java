@@ -409,8 +409,9 @@ public class GPSServiceCommand implements IServiceCommand {
         if (_navigator.getNbPoints() > 0) {
             //event.setAltitude(_navigator.getNextDistance());
             //event.setAscent(_navigator.getNextBearing());
+            ///@todo(nav)
             event.setMaxSpeed(_navigator.getNextIndex());
-            event.setAscentRate(_navigator.getError());
+            //event.setAscentRate(_navigator.getError());
             //event.setNavigationDistanceToDestination(_navigator.getDistanceToDestination());
         }
         if (_heartRate > 0) {

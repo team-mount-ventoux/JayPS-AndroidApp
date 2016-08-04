@@ -171,7 +171,7 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
             data_navigation[NAV_BYTE_BEARING] = (byte) (((int)  (navigator.getNextBearing() / 360 * 256)) % 256);
 
             // in 10m, 0-2.56km
-            data_navigation[NAV_BYTE_ERROR] = (byte) (((int) (Math.floor(navigator.getError() / 10) / 1)) % 256);
+            data_navigation[NAV_BYTE_ERROR] = (byte) (((int) (Math.floor(Math.abs(navigator.getError()) / 10) / 1)) % 256);
 
             //navigator.getNextIndex()
 
