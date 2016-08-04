@@ -406,6 +406,7 @@ public class GPSServiceCommand implements IServiceCommand {
         int units = _dataStore.getMeasurementUnits();
 
         NewLocation event = new AdvancedLocationToNewLocation(_advancedLocation, _xpos, _ypos, units);
+        event.setFirstLocation(firstLocation);
         if (_navigator.getNbPoints() > 0) {
             //event.setAltitude(_navigator.getNextDistance());
             //event.setAscent(_navigator.getNextBearing());

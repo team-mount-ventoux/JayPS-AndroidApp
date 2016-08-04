@@ -1,5 +1,7 @@
 package com.njackson.events.GPSServiceCommand;
 
+import android.location.Location;
+
 public abstract class MyLocation {
     private float _speed;
     public float getSpeed() {
@@ -164,5 +166,9 @@ public abstract class MyLocation {
     private int _batteryLevel = 0;
     public int getBatteryLevel() { return this._batteryLevel; }
     public void setBatteryLevel(int batteryLevel) { this._batteryLevel = batteryLevel;}
+
+    private Location _firstLocation = null;
+    public Location getFirstLocation() { return this._firstLocation; }
+    public void setFirstLocation(Location firstLocation) { this._firstLocation = firstLocation;}
 
 }

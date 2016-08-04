@@ -219,4 +219,10 @@ public class Navigator {
     public int getNbPoints() {
         return _nbPointsSimpl;
     }
+    public Location getPoint(int i) {
+        if ((_nextIndex + i >= 0) && (_nextIndex + i < _nbPointsSimpl)) {
+            return _pointsSimpl[_nextIndex + i];
+        }
+        return null;
+    }
 }

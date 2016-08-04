@@ -1,5 +1,6 @@
 package com.njackson.adapters;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.getpebble.android.kit.util.PebbleDictionary;
@@ -55,7 +56,16 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
     public static final short NAV_BYTE_DTD2 = 3;
     public static final short NAV_BYTE_BEARING = 4;
     public static final short NAV_BYTE_ERROR = 5;
-    public static final short NAV_NB_BYTES = 6;
+    public static final short NAV_BYTE_POINTS_XPOS1 = 6;
+    public static final short NAV_BYTE_POINTS_XPOS2 = 7;
+    public static final short NAV_BYTE_POINTS_YPOS1 = 8;
+    public static final short NAV_BYTE_POINTS_YPOS2 = 9;
+
+
+    public static final short NAV_NB_POINTS = 20;
+    public static final short NAV_NB_BYTES = NAV_BYTE_ERROR + 1 + 4 * NAV_NB_POINTS;
+
+    private Location _firstLocation = null;
 
     public NewLocationToPebbleDictionary(NewLocation event, Navigator navigator, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int watchfaceVersion) {
 
@@ -174,6 +184,34 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
             data_navigation[NAV_BYTE_ERROR] = (byte) (((int) (Math.floor(Math.abs(navigator.getError()) / 10) / 1)) % 256);
 
             //navigator.getNextIndex()
+
+            if (_firstLocation == null) {
+                _firstLocation = event.getFirstLocation();
+            }
+            double xpos, ypos;
+            for (int i = 0; i < NAV_NB_POINTS; i++) {
+                xpos = ypos = 0;
+                Location point = navigator.getPoint(i - 4);
+
+                if (point != null && _firstLocation != null) {
+                    xpos = _firstLocation.distanceTo(point) * Math.sin(_firstLocation.bearingTo(point) / 180 * 3.1415);
+                    xpos = Math.floor(xpos / 10);
+                    ypos = _firstLocation.distanceTo(point) * Math.cos(_firstLocation.bearingTo(point) / 180 * 3.1415);
+                    ypos = Math.floor(ypos / 10);
+                }
+
+                data_navigation[NAV_BYTE_POINTS_XPOS1 + 4 * i] = (byte) (Math.abs(xpos) % 256);
+                data_navigation[NAV_BYTE_POINTS_XPOS2 + 4 * i] = (byte) (Math.abs(xpos / 256) % 128);
+                if (xpos < 0) {
+                    data_navigation[NAV_BYTE_POINTS_XPOS2 + 4 * i] += 128;
+                }
+                data_navigation[NAV_BYTE_POINTS_YPOS1 + 4 * i] = (byte) (Math.abs(ypos) % 256);
+                data_navigation[NAV_BYTE_POINTS_YPOS2 + 4 * i] = (byte) ((Math.abs(ypos) / 256) % 128);
+                if (ypos < 0) {
+                    data_navigation[NAV_BYTE_POINTS_YPOS2 + 4 * i] += 128;
+                }
+                //Log.d(TAG, i + " xpos:" + xpos + " ypos:" + ypos);
+            }
 
             this.addBytes(Constants.MSG_NAVIGATION, data_navigation);
         }
