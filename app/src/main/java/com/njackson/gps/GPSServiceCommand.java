@@ -458,7 +458,7 @@ public class GPSServiceCommand implements IServiceCommand {
 
         _savedLocation = new NewLocationToSavedLocation(event);
 
-        if (locationShouldBeSended(_advancedLocation, force_send)) {
+        if (locationShouldBeSended(_advancedLocation, _navigator, force_send)) {
             // 0.95 to avoid skipping wanted data
             //Log.d(TAG, "ts:" + _time.getCurrentTimeMilliseconds() + " _refresh_interval:" + _refresh_interval);
             _last_post_newlocation = _time.getCurrentTimeMilliseconds();
@@ -485,7 +485,9 @@ public class GPSServiceCommand implements IServiceCommand {
     private float m_sentDistance;
     private float m_sentSpeed;
     private int m_sentHeartRate;
-    private boolean locationShouldBeSended(AdvancedLocation p_advancedLocation, boolean p_forceSsend) {
+    private int m_sentNavNextIndex;
+    private float m_sentNavNextBearing;
+    private boolean locationShouldBeSended(AdvancedLocation p_advancedLocation, Navigator p_navigator, boolean p_forceSsend) {
 
         boolean send = p_forceSsend;
 
@@ -515,10 +517,17 @@ public class GPSServiceCommand implements IServiceCommand {
                 double deltaSpeed = Math.abs(Math.floor(p_advancedLocation.getSpeed()*3.6) - Math.floor(m_sentSpeed*3.6)); // in km/h (rounded at 1 km/h)
                 double averageSpeed = p_advancedLocation.getElapsedTime() > 0 ? p_advancedLocation.getDistance() * 3.6 / (p_advancedLocation.getElapsedTime()/1000) : 0; // in km/h
                 int deltaHeartRate = Math.abs(_heartRate - m_sentHeartRate);
+                int deltaNavNextIndex = Math.abs(p_navigator.getNextIndex() - m_sentNavNextIndex);
+                float deltaNavNextBearing = (Math.abs(p_navigator.getNextBearing() - m_sentNavNextBearing) + 360) % 360;
+                if (deltaNavNextBearing > 180) {
+                    deltaNavNextBearing = 360 - deltaNavNextBearing;
+                }
                 double minDeltaAltitude;
                 double minDeltaDistance;
                 double minDeltaSpeed;
                 double minDeltaHeartrate;
+                float minDeltaNavNextIndex = 1;
+                float minDeltaNavNextBearing = 30;
                 switch (adaptativeMode) {
                     case 1:
                         // high - normal
@@ -568,6 +577,14 @@ public class GPSServiceCommand implements IServiceCommand {
                     Log.d(TAG, "sent forced by heartrate deltaHeartRate:" + deltaHeartRate + " > " + minDeltaHeartrate);
                     send = true;
                 }
+                if (deltaNavNextIndex >= minDeltaNavNextIndex) {
+                    Log.d(TAG, "sent forced by deltaNavNextIndex:" + deltaNavNextIndex + " >= " + minDeltaNavNextIndex);
+                    send = true;
+                }
+                if (deltaNavNextBearing >= minDeltaNavNextBearing) {
+                    Log.d(TAG, "sent forced by deltaNavNextBearing:" + deltaNavNextBearing + " >= " + minDeltaNavNextBearing);
+                    send = true;
+                }
 
                 if (_time.getCurrentTimeMilliseconds() - _last_post_newlocation > 30000) {
                     Log.d(TAG, "sent forced after 30s");
@@ -582,6 +599,8 @@ public class GPSServiceCommand implements IServiceCommand {
             m_sentDistance = _advancedLocation.getDistance();
             m_sentSpeed = _advancedLocation.getSpeed();
             m_sentHeartRate = _heartRate;
+            m_sentNavNextIndex = p_navigator.getNextIndex();
+            m_sentNavNextBearing = p_navigator.getNextBearing();
         }
         return send;
     }
