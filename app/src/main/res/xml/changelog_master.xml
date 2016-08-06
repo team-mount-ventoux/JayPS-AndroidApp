@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="2.8.0-beta1" versioncode="310" >
-        <change><![CDATA[<b>Routing (experimental)</b><br/>
+    <release version="2.8.0-alpha2" versioncode="311" >
+        <change>Navigation: auto-simplify gpx</change>
+        <change><![CDATA[<b>[Pebble Time Only] New watchface (click on "Install Watchface" in settings)</b><br/>
+        - add "Distance to Destination" (DTD) and "Time to Destination" (TTD) fields<br/>
+        - displays route on map screen (last 5 and next 15 points)<br/>
+        ]]></change>
+    </release>
+    <release version="2.8.0-alpha1" versioncode="310" >
+        <change><![CDATA[<b>Navigation/routing (experimental)</b><br/>
         - load a GPX to follow in the menu<br/>
         - show data on your Pebble, using the (temporary) reuse of fields:<br/>
             + distance to next waypoint > altitude<br/>
