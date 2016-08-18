@@ -157,6 +157,24 @@
         </PreferenceCategory>
     </PreferenceScreen>
 
+    <PreferenceScreen
+        android:key="navigation_screen"
+        android:title="Navigation"
+        android:summary="Follow a route"
+        android:persistent="false">
+        <Preference
+            android:key="PREF_LOAD_ROUTE"
+            android:title="Load route to follow"
+            android:summary="Import a GPX file"
+            />
+
+        <Preference
+            android:key="PREF_EXPORT_ROUTE_ORUX"
+            android:title="Export to OruxMaps"
+            android:summary="Export current route to OruxMaps"
+            />
+
+    </PreferenceScreen>
 
     <PreferenceScreen
         android:key="integration_screen"

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -22,6 +23,7 @@ import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.BleServiceCommand.BleSensorData;
 import com.njackson.events.GPSServiceCommand.ChangeRefreshInterval;
 import com.njackson.events.GPSServiceCommand.ResetGPSState;
+import com.njackson.gps.Navigator;
 import com.njackson.state.IGPSDataStore;
 import com.njackson.upload.RunkeeperUpload;
 import com.njackson.upload.StravaUpload;
@@ -31,6 +33,9 @@ import com.njackson.utils.watchface.IInstallWatchFace;
 import com.njackson.utils.messages.ToastMessageMaker;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import javax.inject.Inject;
 
@@ -49,6 +54,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Inject IGPSDataStore _dataStore;
     @Inject IServiceStarter _serviceStarter;
     @Inject Bus _bus;
+    @Inject Navigator _navigator;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -186,6 +192,38 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 }
             });
         }
+        final Activity _activity = this;
+        Preference pref_nav_load_route = findPreference("PREF_LOAD_ROUTE");
+        pref_nav_load_route.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if (preference.getKey().equals("PREF_LOAD_ROUTE")) {
+                    Toast.makeText(getApplicationContext(), "Open a GPX file", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("*/*");
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    try {
+                        startActivityForResult(Intent.createChooser(intent, "Select txt file"), Constants.CODE_LOAD_GPX);
+                    } catch (android.content.ActivityNotFoundException ex) {
+                        // Potentially direct the user to the Market with a Dialog
+                        Toast.makeText(getApplicationContext(), "Impossible to open file", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                return false;
+            }
+        });
+        Preference pref_nav_export_route_orux = findPreference("PREF_EXPORT_ROUTE_ORUX");
+        pref_nav_export_route_orux.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if (preference.getKey().equals("PREF_EXPORT_ROUTE_ORUX")) {
+                    _navigator.loadRouteToOrux(_activity);
+                }
+                return false;
+            }
+        });
+
         Preference pref_strava = findPreference("PREF_STRAVA");
         pref_strava.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -211,7 +249,6 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             }
         });
         Preference pref_upload_strava = findPreference("PREF_UPLOAD_STRAVA");
-        final Activity _activity = this;
         pref_upload_strava.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -247,7 +284,23 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         });
     }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode > 0) {
+        if (requestCode == Constants.CODE_LOAD_GPX) {
+            if (data != null) {
+                try {
+                    Uri uri = data.getData();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(getContentResolver().openInputStream(uri)));
+                    StringBuilder gpx = new StringBuilder();
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        gpx.append(line).append('\n');
+                    }
+                    _navigator.loadGpx(gpx.toString());
+                    Toast.makeText(getApplicationContext(), "Route loaded - " + _navigator.getNbPoints() + " points", Toast.LENGTH_SHORT).show();
+                } catch (Exception e) {
+                    Log.e(TAG, "Exception:" + e);
+                }
+            }
+        } else if (requestCode > 0) {
             int sensorNumber = requestCode;
             Log.d(TAG, "onActivityResult sensorNumber="+sensorNumber);
 

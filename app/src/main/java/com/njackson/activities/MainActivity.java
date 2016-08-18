@@ -254,7 +254,10 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
             }
         }
         if (id == R.id.action_load_route) {
+            Toast.makeText(getApplicationContext(), "Open a GPX file", Toast.LENGTH_SHORT).show();
+
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            //intent.setType("application/gpx+xml"); // does not work for all gpx file.... (ko: recent, dropbox...)
             intent.setType("*/*");
             intent.addCategory(Intent.CATEGORY_OPENABLE);
             try {
@@ -264,7 +267,6 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
                 Toast.makeText(getApplicationContext(), "Impossible to open file", Toast.LENGTH_SHORT).show();
             }
         }
-
         if (id == R.id.action_reset) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.ALERT_RESET_DATA_TITLE)

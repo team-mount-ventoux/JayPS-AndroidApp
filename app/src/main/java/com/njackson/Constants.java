@@ -68,5 +68,5 @@ public class Constants {
 
     public static final String PREFS_NAME_V1 = "PebbleBikePrefs";
 
-    public static final int CODE_LOAD_GPX = 1;
+    public static final int CODE_LOAD_GPX = 10;
 }

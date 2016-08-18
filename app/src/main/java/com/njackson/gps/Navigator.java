@@ -1,6 +1,8 @@
 package com.njackson.gps;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.util.Log;
@@ -132,6 +134,7 @@ public class Navigator {
         //    onLocationChanged(_pointsSimpl[10]);
         //    onLocationChanged(_pointsSimpl[_nbPointsSimpl-1]);
         //}
+
     }
     public void simplifyRoute() {
         Log.d(TAG, "simplifyRoute nbPointsIni:" + _nbPointsIni);
@@ -181,6 +184,60 @@ public class Navigator {
         Log.d(TAG, "simplifyRoute nbPointsIni:" + _nbPointsIni + " nbPointsSimpl:" + _nbPointsSimpl);
         Log.d(TAG, debug.toString());
     }
+    public void loadRouteToOrux(Activity activity) {
+
+        //Map offline
+        Intent i = new Intent("com.oruxmaps.VIEW_MAP_OFFLINE");
+        //Map online
+        //Intent i = new Intent("com.oruxmaps.VIEW_MAP_ONLINE");
+        // Route Waypoints
+
+        /*double[] targetLat = {45.166934967041016, 45.17635726928711};
+        double[] targetLon = {5.667555809020996, 5.648068904876709};
+        String[] targetNames = {"point alpha", "point beta"};*/
+        double[] targetLat = new double[_nbPointsSimpl];
+        double[] targetLon = new double[_nbPointsSimpl];
+        String[] targetNames = new String[_nbPointsSimpl];
+        int[] targetTypes = new int[_nbPointsSimpl];
+
+        for(int j = 0; j < _nbPointsSimpl; j++) {
+            boolean add = false;
+            if (j == _nextIndex) {
+                // next point
+                targetTypes[j] = 1;
+                add = true;
+            } else if (j == _nbPointsSimpl - 1) {
+                // destination
+                targetTypes[j] = 15;
+                add = true;
+            } else {
+                //targetTypes[j] = 4;
+            }
+            if (add) {
+                targetLat[j] = _pointsSimpl[j].getLatitude();
+                targetLon[j] = _pointsSimpl[j].getLongitude();
+                targetNames[j] = "pt" + j;
+            }
+        }
+        i.putExtra("targetLat", targetLat);
+        i.putExtra("targetLon", targetLon);
+        i.putExtra("targetName", targetNames);
+        i.putExtra("targetType", targetTypes);
+        //i.putExtra("navigatetoindex", _nbPointsSimpl-1);
+        //index of the wpt. you want to start wpt. navigation.
+        //Track points,
+        double[] targetLatPoints = new double[_nbPointsIni];
+        double[] targetLonPoints = new double[_nbPointsIni];
+        for(int j = 0; j < _nbPointsIni; j++) {
+            targetLatPoints[j] = _pointsIni[j].getLatitude();
+            targetLonPoints[j] = _pointsIni[j].getLongitude();
+        }
+        i.putExtra("targetLatPoints", targetLatPoints);
+        i.putExtra("targetLonPoints", targetLonPoints);
+        Log.e(TAG, "Avant startActivity:");
+        activity.startActivity(i);
+    }
+
 
     private static float R = 6371000; // radius of earth (meter)
     private static float DTR = 1.0f / 180 * 3.14159f;    // conversion degrees -> radians
