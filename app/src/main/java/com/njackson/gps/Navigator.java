@@ -46,8 +46,10 @@ public class Navigator {
     private float _nextDistance = 0;
     private float _nextBearing = 0;
     private int _nextIndex = 0;
-    private int _maxSeenIndex = -1;
     private float _error = 0;
+    private final float MIN_DIST = 1000000;
+    private Location _lastSeenLoc = null;
+    private float _lastSeenDist = 0;
 
     public Navigator() {
     }
@@ -57,7 +59,7 @@ public class Navigator {
             return;
         }
         Log.d(TAG, "onLocationChanged: lat:"+location.getLatitude()+",lon:"+location.getLongitude() + " nbPointsSimpl:" + _nbPointsSimpl);
-        float minDist = 1000000;
+        float minDist = MIN_DIST;
         int minPoint = 0;
         float minBearing = 0;
         float minError = 0;
@@ -66,16 +68,27 @@ public class Navigator {
             float bearing = (location.bearingTo(_pointsSimpl[i]) + 360) % 360;
             float error = i > 0 ? crossTrackError(_pointsSimpl[i-1], _pointsSimpl[i], location) : 0;
             Log.d(TAG, i + "[" + _pointsSimpl[i].index + "] dist:" + dist + " bearing:" + bearing + " error:" + error + " seen:" + (_pointsSimpl[i].seen ? "y" : "n"));
-            if (dist < minDist && _maxSeenIndex < i) {
-                minDist = dist;
-                minPoint = i;
-                minBearing = bearing;
-                minError = error;
+            if (dist < minDist) {
+                if (i == _nextIndex || _lastSeenLoc == null || _lastSeenLoc.distanceTo(_pointsSimpl[i]) > _lastSeenDist) {
+                    minDist = dist;
+                    minPoint = i;
+                    minBearing = bearing;
+                    minError = error;
+                }
             }
             if (dist < 50) {
+                if (i == _nextIndex) {
+		    // reach  point _nextIndex, reset algo with next point
+                    _nextIndex++;
+		    minDist = MIN_DIST;
+		}
                 _pointsSimpl[i].seen = true;
-                _maxSeenIndex = i > _maxSeenIndex ? i : _maxSeenIndex;
+                _lastSeenLoc = location;
+                _lastSeenDist = i < _nbPointsSimpl ? location.distanceTo(_pointsSimpl[i+1]) : 0;
             }
+        }
+        if (minDist == MIN_DIST) {
+            minDist = 0;
         }
         Log.d(TAG, "min:"  + minDist + " bearing: " + minBearing + " error: " + minError + " DTD:" + Math.round(_pointsSimpl[_nbPointsSimpl-1].distance - _pointsSimpl[minPoint].distance) + " point #" + minPoint);
 
@@ -86,6 +99,9 @@ public class Navigator {
     }
     public void loadGpx(String gpx) {
         _nbPointsIni = _nbPointsSimpl = _nextIndex = 0;
+        _nextDistance = 0;
+        _lastSeenLoc = null;
+        _lastSeenDist = 0;
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
