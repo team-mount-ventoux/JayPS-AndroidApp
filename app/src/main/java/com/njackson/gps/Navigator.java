@@ -29,8 +29,9 @@ public class Navigator {
 
     private static final String TAG = "PB-Navigator";
 
+    public int debugLevel = 1;
+
     protected class Poi extends Location {
-        public boolean seen = false;
         public float distance = 0;
         public int index = 0;
 
@@ -39,13 +40,13 @@ public class Navigator {
         }
     }
 
-    Poi[] _pointsIni;
+    private Poi[] _pointsIni;
     private int _nbPointsIni = 0;
-    Poi[] _pointsSimpl;
+    private Poi[] _pointsSimpl;
     private int _nbPointsSimpl = 0;
     private float _nextDistance = 0;
     private float _nextBearing = 0;
-    private int _nextIndex = 0;
+    private int _nextIndex = -1;
     private float _error = 0;
     private final float MIN_DIST = 1000000;
     private Location _lastSeenLoc = null;
@@ -59,46 +60,83 @@ public class Navigator {
             return;
         }
         Log.d(TAG, "onLocationChanged: lat:"+location.getLatitude()+",lon:"+location.getLongitude() + " nbPointsSimpl:" + _nbPointsSimpl);
+        int closestPoint = -1;
+
+        if (_nextIndex < 0 ||  _nextIndex >= _nbPointsSimpl) {
+            Log.d(TAG, "Next point not yet defined");
+            closestPoint = searchClosestPoint(location, null, 0, 0, -1);
+            selectNewNextPoint(location, closestPoint);
+        }
+
+        if (_nextIndex >= 0) {
+            float distToNextIndex = location.distanceTo(_pointsSimpl[_nextIndex]);
+            if (distToNextIndex < 50) {
+                Log.d(TAG, "Reach next point #" + _nextIndex + " d:" + distToNextIndex);
+                if (_nextIndex == _nbPointsSimpl - 1) {
+                    Log.d(TAG, "Destination reached!");
+                    _nextDistance = 0;
+                    _nextIndex = closestPoint = _nbPointsSimpl; // special meaning
+                } else {
+                    closestPoint = searchClosestPoint(location, null, 0, _nextIndex + 1, -1);
+                }
+            } else {
+                // continue to look for current next point
+                closestPoint = searchClosestPoint(location, _lastSeenLoc, _lastSeenDist, 0, _nextIndex);
+            }
+        }
+
+        if (_nextIndex != closestPoint) {
+            selectNewNextPoint(location, closestPoint);
+        }
+        // compute distance to next point
+        if (_nextIndex >= 0 && _nextIndex < _nbPointsSimpl) {
+            _nextDistance = location.distanceTo(_pointsSimpl[_nextIndex]);
+            _nextBearing = (location.bearingTo(_pointsSimpl[_nextIndex]) + 360) % 360;
+            _error = _nextIndex > 0 ? crossTrackError(_pointsSimpl[_nextIndex-1], _pointsSimpl[_nextIndex], location) : 0;
+            Log.d(TAG, _nextIndex + "[" + _pointsSimpl[_nextIndex].index + "] dist:" + _nextDistance + " bearing:" + _nextBearing + " error:" + _error);
+        } else {
+            _nextDistance = 0;
+            Log.d(TAG, "No _nextIndex (" + _nextIndex + ")");
+        }
+    }
+
+    /**
+     * Search for closest point, excluding points around excludeCenter (radius exludeRadius)
+     * @param location
+     * @param excludeCenter
+     * @param exludeRadius
+     * @return index or -1
+     */
+    private int searchClosestPoint(Location location, Location excludeCenter, float exludeRadius, int firstIndex, int expectedIndex) {
+        Log.d(TAG, "searchClosestPoint exludeRadius:" + exludeRadius + " firstIndex:" + firstIndex + " expectedIndex:" + expectedIndex);
+        int minIndex = -1;
         float minDist = MIN_DIST;
-        int minPoint = 0;
-        float minBearing = 0;
-        float minError = 0;
-        for(int i = 0; i < _nbPointsSimpl; i++) {
+        for(int i = firstIndex; i < _nbPointsSimpl; i++) {
             float dist = location.distanceTo(_pointsSimpl[i]);
-            float bearing = (location.bearingTo(_pointsSimpl[i]) + 360) % 360;
-            float error = i > 0 ? crossTrackError(_pointsSimpl[i-1], _pointsSimpl[i], location) : 0;
-            Log.d(TAG, i + "[" + _pointsSimpl[i].index + "] dist:" + dist + " bearing:" + bearing + " error:" + error + " seen:" + (_pointsSimpl[i].seen ? "y" : "n"));
+            if (debugLevel > 1) Log.d(TAG, i + "[" + _pointsSimpl[i].index + "] dist:" + dist + (excludeCenter != null ? " ex:" + excludeCenter.distanceTo(_pointsSimpl[i]) : ""));
             if (dist < minDist) {
-                if (i == _nextIndex || _lastSeenLoc == null || _lastSeenLoc.distanceTo(_pointsSimpl[i]) > _lastSeenDist) {
+                if (excludeCenter != null && excludeCenter.distanceTo(_pointsSimpl[i]) <= exludeRadius && i != expectedIndex) {
+                    Log.d(TAG, "exclude #" + i + " d:" + excludeCenter.distanceTo(_pointsSimpl[i]) + "<=" + exludeRadius);
+                } else {
                     minDist = dist;
-                    minPoint = i;
-                    minBearing = bearing;
-                    minError = error;
+                    minIndex = i;
                 }
             }
-            if (dist < 50) {
-                if (i == _nextIndex) {
-		    // reach  point _nextIndex, reset algo with next point
-                    _nextIndex++;
-		    minDist = MIN_DIST;
-		}
-                _pointsSimpl[i].seen = true;
-                _lastSeenLoc = location;
-                _lastSeenDist = i < _nbPointsSimpl ? location.distanceTo(_pointsSimpl[i+1]) : 0;
-            }
         }
-        if (minDist == MIN_DIST) {
-            minDist = 0;
+        Log.d(TAG, "searchClosestPoint(>=#" + firstIndex + "): #:" + minIndex + " d:" + minDist);
+        return minIndex;
+    }
+    private void selectNewNextPoint(Location location, int newNextIndex) {
+        if (newNextIndex >= 0 && newNextIndex < _nbPointsSimpl) {
+            Log.d(TAG, "New _nextIndex: " + _nextIndex + "=>" + newNextIndex);
+            _nextIndex = newNextIndex;
+            _lastSeenLoc = location;
+            _lastSeenDist = location.distanceTo(_pointsSimpl[newNextIndex]);
         }
-        Log.d(TAG, "min:"  + minDist + " bearing: " + minBearing + " error: " + minError + " DTD:" + Math.round(_pointsSimpl[_nbPointsSimpl-1].distance - _pointsSimpl[minPoint].distance) + " point #" + minPoint);
-
-        _nextDistance = minDist;
-        _nextBearing = minBearing;
-        _nextIndex = minPoint;
-        _error = minError;
     }
     public void loadGpx(String gpx) {
-        _nbPointsIni = _nbPointsSimpl = _nextIndex = 0;
+        _nbPointsIni = _nbPointsSimpl = 0;
+        _nextIndex = -1;
         _nextDistance = 0;
         _lastSeenLoc = null;
         _lastSeenDist = 0;
@@ -151,6 +189,18 @@ public class Navigator {
         //    onLocationChanged(_pointsSimpl[_nbPointsSimpl-1]);
         //}
 
+    }
+    public void addPoints(Location[] locs) {
+        _pointsIni = new Poi[locs.length];
+        _nbPointsIni = 0;
+        for(int i = 0; i < locs.length; i++) {
+            _pointsIni[_nbPointsIni] = new Poi(locs[i]);
+            _pointsIni[_nbPointsIni].index = _nbPointsIni;
+            if (_nbPointsIni > 0) {
+                _pointsIni[_nbPointsIni].distance = _pointsIni[_nbPointsIni - 1].distance + _pointsIni[_nbPointsIni].distanceTo(_pointsIni[_nbPointsIni - 1]);
+            }
+            _nbPointsIni++;
+        }
     }
     public void simplifyRoute() {
         Log.d(TAG, "simplifyRoute nbPointsIni:" + _nbPointsIni);
@@ -208,9 +258,6 @@ public class Navigator {
         //Intent i = new Intent("com.oruxmaps.VIEW_MAP_ONLINE");
         // Route Waypoints
 
-        /*double[] targetLat = {45.166934967041016, 45.17635726928711};
-        double[] targetLon = {5.667555809020996, 5.648068904876709};
-        String[] targetNames = {"point alpha", "point beta"};*/
         double[] targetLat = new double[_nbPointsSimpl];
         double[] targetLon = new double[_nbPointsSimpl];
         String[] targetNames = new String[_nbPointsSimpl];
@@ -275,7 +322,7 @@ public class Navigator {
     }
 
     public float getDistanceToDestination() {
-        return _nbPointsSimpl > 0 ? (_pointsSimpl[_nbPointsSimpl-1].distance - _pointsSimpl[_nextIndex].distance + _nextDistance) : 0;
+        return _nbPointsSimpl > 0 && _nextIndex >= 0 && _nextIndex < _nbPointsSimpl ? (_pointsSimpl[_nbPointsSimpl-1].distance - _pointsSimpl[_nextIndex].distance + _nextDistance) : 0;
     }
     public float getNextDistance() {
         return _nextDistance;

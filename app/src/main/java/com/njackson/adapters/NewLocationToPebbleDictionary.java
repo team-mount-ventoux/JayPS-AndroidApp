@@ -56,14 +56,17 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
     public static final short NAV_BYTE_DTD2 = 3;
     public static final short NAV_BYTE_BEARING = 4;
     public static final short NAV_BYTE_ERROR = 5;
-    public static final short NAV_BYTE_POINTS_XPOS1 = 6;
-    public static final short NAV_BYTE_POINTS_XPOS2 = 7;
-    public static final short NAV_BYTE_POINTS_YPOS1 = 8;
-    public static final short NAV_BYTE_POINTS_YPOS2 = 9;
+    public static final short NAV_BYTE_NB_PAGES = 6;
+    public static final short NAV_BYTE_NEXT_INDEX1 = 7;
+    public static final short NAV_BYTE_NEXT_INDEX2 = 8;
+    public static final short NAV_BYTE_SETTINGS = NAV_BYTE_NEXT_INDEX2;
+    public static final short NAV_BYTES_POINTS = 9;
 
+    public static final short NAV_POS_NOTIFICATION  = 7; // 1 bit
 
     public static final short NAV_NB_POINTS = 20;
-    public static final short NAV_NB_BYTES = NAV_BYTE_ERROR + 1 + 4 * NAV_NB_POINTS;
+    public static final short NAV_NB_BYTES = NAV_BYTES_POINTS + 4 * NAV_NB_POINTS;
+    public static final short NB_POINTS_PER_PAGE = 5;
 
     private Location _firstLocation = null;
 
@@ -170,27 +173,36 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
         if (navigator.getNbPoints() > 0) {
             byte[] data_navigation = new byte[NAV_NB_BYTES];
 
+            boolean notification = true;
+
             // in m, 0-65.535km
-            data_navigation[NAV_BYTE_DISTANCE1] = (byte) ((navigator.getNextDistance()) % 256);
-            data_navigation[NAV_BYTE_DISTANCE2] = (byte) ((navigator.getNextDistance()) / 256);
+            data_navigation[NAV_BYTE_DISTANCE1] = putDataUInt16_1((int) navigator.getNextDistance());
+            data_navigation[NAV_BYTE_DISTANCE2] = putDataUInt16_2((int) navigator.getNextDistance());
 
             // in 10m, 0-655km
-            data_navigation[NAV_BYTE_DTD1] = (byte) (((int) (Math.floor(navigator.getDistanceToDestination() / 10) / 1)) % 256);
-            data_navigation[NAV_BYTE_DTD2] = (byte) (((int) (Math.floor(navigator.getDistanceToDestination() / 10) / 1)) / 256);
+            data_navigation[NAV_BYTE_DTD1] = putDataUInt16_1((int) (Math.floor(navigator.getDistanceToDestination() / 10) / 1));
+            data_navigation[NAV_BYTE_DTD2] = putDataUInt16_2((int) (Math.floor(navigator.getDistanceToDestination() / 10) / 1));
 
-            data_navigation[NAV_BYTE_BEARING] = (byte) (((int)  (navigator.getNextBearing() / 360 * 256)) % 256);
+            data_navigation[NAV_BYTE_BEARING] = putData((int) (navigator.getNextBearing() / 360 * 256));
 
             // in 10m, 0-2.56km
-            data_navigation[NAV_BYTE_ERROR] = (byte) (((int) (Math.floor(Math.abs(navigator.getError()) / 10) / 1)) % 256);
+            data_navigation[NAV_BYTE_ERROR] = putData((int) (Math.floor(Math.abs(navigator.getError()) / 10) / 1));
 
-            //navigator.getNextIndex()
+            // 0-256 pages (=> 5*256=1280 points)
+            data_navigation[NAV_BYTE_NB_PAGES] = putData((int) Math.ceil(navigator.getNbPoints() / NB_POINTS_PER_PAGE));
+
+            data_navigation[NAV_BYTE_NEXT_INDEX1] = putDataUInt16_1(navigator.getNextIndex());
+            data_navigation[NAV_BYTE_NEXT_INDEX2] = putDataUInt16_2(navigator.getNextIndex());
+
+
+            data_navigation[NAV_BYTE_SETTINGS] += (byte) ((notification ? 1: 0) * (1<<NAV_POS_NOTIFICATION));
 
             if (_firstLocation == null) {
                 _firstLocation = event.getFirstLocation();
             }
             double xpos, ypos;
             for (int i = 0; i < NAV_NB_POINTS; i++) {
-                xpos = ypos = 0;
+                xpos = ypos = 0xFFFF;
                 Location point = navigator.getPoint(i - 4);
 
                 if (point != null && _firstLocation != null) {
@@ -200,20 +212,30 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
                     ypos = Math.floor(ypos / 10);
                 }
 
-                data_navigation[NAV_BYTE_POINTS_XPOS1 + 4 * i] = (byte) (Math.abs(xpos) % 256);
-                data_navigation[NAV_BYTE_POINTS_XPOS2 + 4 * i] = (byte) (Math.abs(xpos / 256) % 128);
+                //use putDataInt16_1
+                data_navigation[NAV_BYTES_POINTS + 4 * i] = (byte) (Math.abs(xpos) % 256);
+                data_navigation[NAV_BYTES_POINTS + 1 + 4 * i] = (byte) (Math.abs(xpos / 256) % 128);
                 if (xpos < 0) {
-                    data_navigation[NAV_BYTE_POINTS_XPOS2 + 4 * i] += 128;
+                    data_navigation[NAV_BYTES_POINTS + 1 + 4 * i] += 128;
                 }
-                data_navigation[NAV_BYTE_POINTS_YPOS1 + 4 * i] = (byte) (Math.abs(ypos) % 256);
-                data_navigation[NAV_BYTE_POINTS_YPOS2 + 4 * i] = (byte) ((Math.abs(ypos) / 256) % 128);
+                data_navigation[NAV_BYTES_POINTS + 2 + 4 * i] = (byte) (Math.abs(ypos) % 256);
+                data_navigation[NAV_BYTES_POINTS + 3 + 4 * i] = (byte) ((Math.abs(ypos) / 256) % 128);
                 if (ypos < 0) {
-                    data_navigation[NAV_BYTE_POINTS_YPOS2 + 4 * i] += 128;
+                    data_navigation[NAV_BYTES_POINTS + 3 + 4 * i] += 128;
                 }
                 //Log.d(TAG, i + " xpos:" + xpos + " ypos:" + ypos);
             }
 
             this.addBytes(Constants.MSG_NAVIGATION, data_navigation);
         }
+    }
+    static byte putDataUInt16_1(int data) {
+        return (byte) (data % 256);
+    }
+    static byte putDataUInt16_2(int data) {
+        return (byte) (data / 256);
+    }
+    static byte putData(int data) {
+        return (byte) (data % 256);
     }
 }
