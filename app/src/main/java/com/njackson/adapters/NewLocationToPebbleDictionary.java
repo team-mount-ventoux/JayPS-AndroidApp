@@ -57,10 +57,11 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
     public static final short NAV_BYTE_BEARING = 4;
     public static final short NAV_BYTE_ERROR = 5;
     public static final short NAV_BYTE_NB_PAGES = 6;
-    public static final short NAV_BYTE_NEXT_INDEX1 = 7;
-    public static final short NAV_BYTE_NEXT_INDEX2 = 8;
+    public static final short NAV_BYTE_PAGE_NUMBER = 7;
+    public static final short NAV_BYTE_NEXT_INDEX1 = 8;
+    public static final short NAV_BYTE_NEXT_INDEX2 = 9;
     public static final short NAV_BYTE_SETTINGS = NAV_BYTE_NEXT_INDEX2;
-    public static final short NAV_BYTES_POINTS = 9;
+    public static final short NAV_BYTES_POINTS = 10;
 
     public static final short NAV_POS_NOTIFICATION  = 7; // 1 bit
 
@@ -188,8 +189,14 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
             // in 10m, 0-2.56km
             data_navigation[NAV_BYTE_ERROR] = putData((int) (Math.floor(Math.abs(navigator.getError()) / 10) / 1));
 
+            int curPageNumber = (int) Math.floor(navigator.getNextIndex() / NB_POINTS_PER_PAGE);
+            int firstPageNumberSent = Math.max(0, (curPageNumber - 1));
+            int firstIndex = firstPageNumberSent * NB_POINTS_PER_PAGE;
+            //Log.d(TAG, "nextIndex:" + navigator.getNextIndex() + " curPageNumber:" + curPageNumber + " firstPageNumberSent:" + firstPageNumberSent + " firstIndex:" + firstIndex);
+
             // 0-256 pages (=> 5*256=1280 points)
             data_navigation[NAV_BYTE_NB_PAGES] = putData((int) Math.ceil(navigator.getNbPoints() / NB_POINTS_PER_PAGE));
+            data_navigation[NAV_BYTE_PAGE_NUMBER] = putData(firstPageNumberSent);
 
             data_navigation[NAV_BYTE_NEXT_INDEX1] = putDataUInt16_1(navigator.getNextIndex());
             data_navigation[NAV_BYTE_NEXT_INDEX2] = putDataUInt16_2(navigator.getNextIndex());
@@ -203,7 +210,7 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
             double xpos, ypos;
             for (int i = 0; i < NAV_NB_POINTS; i++) {
                 xpos = ypos = 0xFFFF;
-                Location point = navigator.getPoint(i - 4);
+                Location point = navigator.getPoint(firstIndex + i);
 
                 if (point != null && _firstLocation != null) {
                     xpos = _firstLocation.distanceTo(point) * Math.sin(_firstLocation.bearingTo(point) / 180 * 3.1415);

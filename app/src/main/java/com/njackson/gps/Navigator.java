@@ -340,8 +340,8 @@ public class Navigator {
         return _nbPointsSimpl;
     }
     public Location getPoint(int i) {
-        if ((_nextIndex + i >= 0) && (_nextIndex + i < _nbPointsSimpl)) {
-            return _pointsSimpl[_nextIndex + i];
+        if (i >= 0 && i < _nbPointsSimpl) {
+            return _pointsSimpl[i];
         }
         return null;
     }
