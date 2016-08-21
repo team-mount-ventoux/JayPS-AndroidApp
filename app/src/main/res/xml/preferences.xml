@@ -174,6 +174,24 @@
             android:summary="Export current route to OruxMaps"
             />
 
+        <Preference
+            android:key="PREF_NAV_PLANNER"
+            android:title="Ventoo navigation - Online planner"
+            android:summary="Create your own route (GPX)"
+            >
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://pebblebike.com/planner/?utm_source=VentooApp" />
+        </Preference>
+
+        <Preference
+            android:key="PREF_NAV_HELP"
+            android:title="Online help"
+            android:summary="Learn how to use navigation - Ventoo blog"
+            >
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://pebblebike.com/navigation-help/?utm_source=VentooApp" />
+        </Preference>
+
     </PreferenceScreen>
 
     <PreferenceScreen
