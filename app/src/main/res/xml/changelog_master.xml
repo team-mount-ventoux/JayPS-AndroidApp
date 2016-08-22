@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.8.0-alpha4" versioncode="313" >
+        <change><![CDATA[<b>Navigation: new routing algorithm</b>]]></change>
+        <change>Improve map</change>
+        <change>Online planner (Settings > Navigation)</change>
+        <change>Export route to OruxMaps (Settings > Navigation)</change>
+        <change>ETA is now based on last 2 minutes average speed</change>
+        <change>[Pebble Time Only] color map + keep old points on map</change>
+        <change>Fix bug with initial message never received</change>
+        <change><![CDATA[<b>New watchface (click on "Install Watchface" in settings) - The previous one is not compatible</b>]]></change>
+    </release>
     <release version="2.8.0-alpha2" versioncode="311" >
         <change>Navigation: auto-simplify gpx</change>
         <change><![CDATA[<b>[Pebble Time Only] New watchface (click on "Install Watchface" in settings)</b><br/>
