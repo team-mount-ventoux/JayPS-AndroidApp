@@ -64,7 +64,7 @@ public class Navigator {
 
         if (_nextIndex < 0 ||  _nextIndex >= _nbPointsSimpl) {
             Log.d(TAG, "Next point not yet defined");
-            closestPoint = searchClosestPoint(location, null, 0, 0, -1);
+            closestPoint = searchClosestPoint(location, null, 0, 0, -1, -1);
             selectNewNextPoint(location, closestPoint);
         }
 
@@ -77,11 +77,27 @@ public class Navigator {
                     _nextDistance = 0;
                     _nextIndex = closestPoint = _nbPointsSimpl; // special meaning
                 } else {
-                    closestPoint = searchClosestPoint(location, null, 0, _nextIndex + 1, -1);
+                    closestPoint = searchClosestPoint(location, null, 0, _nextIndex + 1, -1, -1);
+                    if (closestPoint >= 0) {
+                        float distanceOnRoute = _pointsSimpl[closestPoint].distance - _pointsSimpl[_nextIndex].distance;
+                        float distanceDirect = _pointsSimpl[closestPoint].distanceTo(_pointsSimpl[_nextIndex]);
+                        Log.d(TAG, "1. #" + _nextIndex + "=>#" + closestPoint + " distanceOnRoute:" + distanceOnRoute + " distanceDirect:" + distanceDirect);
+                        if (distanceOnRoute > 2 * distanceDirect && distanceOnRoute > 300) {
+                            Log.d(TAG, "closestPoint too far ahead");
+                            int closestPoint2 = searchClosestPoint(location, null, 0, _nextIndex + 1, -1, closestPoint - 1);
+                            if (closestPoint2 >= 0) {
+                                distanceOnRoute = _pointsSimpl[closestPoint2].distance - _pointsSimpl[_nextIndex].distance;
+                                distanceDirect = _pointsSimpl[closestPoint2].distanceTo(_pointsSimpl[_nextIndex]);
+                                Log.d(TAG, "2. #" + _nextIndex + "=>#" + closestPoint2 + " distanceOnRoute:" + distanceOnRoute + " distanceDirect:" + distanceDirect);
+                                Log.d(TAG,"Replace #" + closestPoint + " by #" + closestPoint2);
+                                closestPoint = closestPoint2;
+                            }
+                        }
+                    }
                 }
             } else {
                 // continue to look for current next point
-                closestPoint = searchClosestPoint(location, _lastSeenLoc, _lastSeenDist, 0, _nextIndex);
+                closestPoint = searchClosestPoint(location, _lastSeenLoc, _lastSeenDist, 0, _nextIndex, -1);
             }
         }
 
@@ -107,11 +123,15 @@ public class Navigator {
      * @param exludeRadius
      * @return index or -1
      */
-    private int searchClosestPoint(Location location, Location excludeCenter, float exludeRadius, int firstIndex, int expectedIndex) {
-        Log.d(TAG, "searchClosestPoint exludeRadius:" + exludeRadius + " firstIndex:" + firstIndex + " expectedIndex:" + expectedIndex);
+    private int searchClosestPoint(Location location, Location excludeCenter, float exludeRadius, int firstIndex, int expectedIndex, int maxIndex) {
+        if (maxIndex < 0 || maxIndex >= _nbPointsSimpl) {
+            maxIndex = _nbPointsSimpl-1;
+        }
+        Log.d(TAG, "searchClosestPoint exludeRadius:" + exludeRadius + " firstIndex:" + firstIndex + " expectedIndex:" + expectedIndex + " maxIndex:" + maxIndex);
         int minIndex = -1;
         float minDist = MIN_DIST;
-        for(int i = firstIndex; i < _nbPointsSimpl; i++) {
+
+        for(int i = firstIndex; i <= maxIndex; i++) {
             float dist = location.distanceTo(_pointsSimpl[i]);
             if (debugLevel > 1) Log.d(TAG, i + "[" + _pointsSimpl[i].index + "] dist:" + dist + (excludeCenter != null ? " ex:" + excludeCenter.distanceTo(_pointsSimpl[i]) : ""));
             if (dist < minDist) {

@@ -68,6 +68,49 @@ public class NavigatorTest extends AndroidTestCase {
         assertEquals(2, nav.getNextIndex());
     }
 
+    @SmallTest
+    public void test_return_path() throws Exception {
+        Navigator nav = new Navigator();
+        nav.debugLevel = 2;
+        Location[] locs = new Location[6];
+
+        int i = 0;
+        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.00); i++;
+        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.01); locs[i].setLongitude(0.07); i++;
+        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.09); i++;
+        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.02); locs[i].setLongitude(0.12); i++;
+        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.0001); locs[i].setLongitude(0.0901); i++;
+        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.00); i++;
+
+        nav.addPoints(locs);
+        nav.simplifyRoute();
+        assertEquals(i, nav.getNbPoints());
+
+        nav.onLocationChanged(locs[0]);
+        assertEquals(1, nav.getNextIndex());
+
+        nav.onLocationChanged(locs[1]);
+        assertEquals(2, nav.getNextIndex());
+
+        nav.onLocationChanged(addDeltaMin(locs[2]));
+        assertEquals(3, nav.getNextIndex()); // and not 4, closest
+
+        nav.onLocationChanged(locs[3]);
+        assertEquals(4, nav.getNextIndex());
+
+        nav.onLocationChanged(locs[2]); // 2 close to 4
+        assertEquals(5, nav.getNextIndex());
+
+        nav.onLocationChanged(addDeltaMin(locs[5]));
+        assertEquals(6, nav.getNextIndex());
+        assertEquals(0.0f, nav.getDistanceToDestination());
+
+        // restart nav
+        nav.onLocationChanged(addDelta(locs[1]));
+        assertEquals(1, nav.getNextIndex());
+
+    }
+
     Location addDelta(Location loc) {
         Location result = new Location("Ventoo");
         result.setLatitude(loc.getLatitude()+0.001);
