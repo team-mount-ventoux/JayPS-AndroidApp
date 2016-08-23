@@ -255,7 +255,22 @@ public class Navigator {
                 tmp += "b"+Math.round(Math.abs(diff2));
                 keep = true;
             }
-            Log.d(TAG, i + ": " + lastIndex2 + "-" + lastIndex + " dist:" + Math.round(_pointsIni[i].distance) + " b1:" + Math.round(bearingLastToMe) + " b2:" + Math.round(bearingLastToNext) + " b3:" + Math.round(bearingMeToNext) + " d1:" + Math.round(diff1) + " d2:" + Math.round(diff2) + " " + (keep ? ("KEEP "  + _pointsIni[i].getLatitude() + "," + _pointsIni[i].getLongitude()) : "REMOVE"));
+            float max_error = 0;
+            for(int j = lastIndex; j < i; j++) {
+                float error = crossTrackError(_pointsIni[lastIndex], _pointsIni[i], _pointsIni[j]);
+                if (error > max_error) {
+                    max_error = error;
+                }
+            }
+            //Log.d(TAG, i + ": " + max_error);
+            if (Math.abs(max_error) > 50) {
+                tmp += "c" + Math.round(Math.abs(max_error));
+                if (!keep) {
+                    Log.d(TAG, i + ": keep due to error " + tmp);
+                    keep = true;
+                }
+            }
+            Log.d(TAG, i + ": " + lastIndex2 + "-" + lastIndex + " dist:" + Math.round(_pointsIni[i].distance) + " b1:" + Math.round(bearingLastToMe) + " b2:" + Math.round(bearingLastToNext) + " b3:" + Math.round(bearingMeToNext) + " d1:" + Math.round(diff1) + " d2:" + Math.round(diff2) + " err:" + Math.round(max_error) + " " + (keep ? ("KEEP "  + _pointsIni[i].getLatitude() + "," + _pointsIni[i].getLongitude()) : "REMOVE"));
             if (keep) {
                 debug.append(i + ": " + lastIndex2 + "-" + lastIndex + tmp +", "  + _pointsIni[i].getLatitude() + "," + _pointsIni[i].getLongitude()+"\n");
                 lastIndex2 = lastIndex;
@@ -294,7 +309,10 @@ public class Navigator {
                 targetTypes[j] = 15;
                 add = true;
             } else {
-                //targetTypes[j] = 4;
+                if (debugLevel > 0) {
+                    targetTypes[j] = 4;
+                    add = true;
+                }
             }
             if (add) {
                 targetLat[j] = _pointsSimpl[j].getLatitude();

@@ -218,6 +218,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 if (preference.getKey().equals("PREF_EXPORT_ROUTE_ORUX")) {
+                    _navigator.debugLevel = _sharedPreferences.getBoolean("PREF_DEBUG", false) ? 1 : 0;
                     _navigator.loadRouteToOrux(_activity);
                 }
                 return false;
