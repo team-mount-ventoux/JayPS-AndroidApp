@@ -39,7 +39,7 @@ public class NewLocationToPebbleDataTest extends AndroidTestCase{
         event.setCyclingCadence(134);
 
         Navigator navigator = new Navigator();
-        PebbleDictionary dic = new NewLocationToPebbleDictionary(event, navigator, true, true, true, 5000, Constants.MIN_VERSION_PEBBLE_FOR_LOCATION_DATA_V3);
+        PebbleDictionary dic = new NewLocationToPebbleDictionary(event, navigator, true, true, true, 5000, Constants.MIN_VERSION_PEBBLE_FOR_LOCATION_DATA_V3, true);
         data = dic.getBytes(Constants.PEBBLE_LOCATION_DATA_V3);
 
         assertNotNull("Data should not be null",data);

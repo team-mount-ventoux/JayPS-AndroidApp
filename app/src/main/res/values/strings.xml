@@ -118,6 +118,8 @@
     <string name="PREF_DEBUG_TITLE">Debug</string>
     <string name="PREF_DEBUG_SUMMARY">More logs for developers</string>
 
+    <string name="PREF_NAV_PLANNER_URL">http://www.pebblebike.com/static/planner/planner3.htm?utm_source=VentooApp</string>
+
     <string name="PREF_STRAVA_CATEGORIE_TITLE">Strava Integration</string>
     <string name="PREF_STRAVA_CATEGORIE_SUMMARY"></string>
     <string name="PREF_STRAVA_TITLE">Strava</string>

@@ -308,7 +308,8 @@ public class MessageManager implements IMessageManager, Runnable {
                 _sharedPreferences.getBoolean("PREF_DEBUG", false),
                 _sharedPreferences.getBoolean("LIVE_TRACKING", false),
                 Integer.valueOf(_sharedPreferences.getString("REFRESH_INTERVAL", String.valueOf(Constants.REFRESH_INTERVAL_DEFAULT))),
-                _sharedPreferences.getInt("WATCHFACE_VERSION", 0)
+                _sharedPreferences.getInt("WATCHFACE_VERSION", 0),
+                _sharedPreferences.getBoolean("NAV_NOTIFICATION", false)
         );
         dictionary.addInt32(Constants.MSG_VERSION_ANDROID, versionCode);
 

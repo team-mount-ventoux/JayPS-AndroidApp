@@ -224,6 +224,31 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 return false;
             }
         });
+        Preference pref_nav_open_planner = findPreference("PREF_NAV_PLANNER");
+        pref_nav_open_planner.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                String uriString = getApplicationContext().getString(R.string.PREF_NAV_PLANNER_URL);
+                if (!_sharedPreferences.getString("PREF_NAV_PLANNER_START", "").isEmpty()) {
+                    uriString += "&start=" + _sharedPreferences.getString("PREF_NAV_PLANNER_START", "");
+                }
+                if (!_sharedPreferences.getString("PREF_NAV_PLANNER_END", "").isEmpty()) {
+                    uriString += "&end=" + _sharedPreferences.getString("PREF_NAV_PLANNER_END", "");
+                }
+                Log.d(TAG, "uriString:" + uriString);
+
+                Uri uri = Uri.parse(uriString);
+
+                Intent startupIntent = new Intent();
+                startupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startupIntent.setAction(Intent.ACTION_VIEW);
+                startupIntent.setData(uri);
+
+                startActivity(startupIntent);
+
+                return true;
+            }
+        });
 
         Preference pref_strava = findPreference("PREF_STRAVA");
         pref_strava.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

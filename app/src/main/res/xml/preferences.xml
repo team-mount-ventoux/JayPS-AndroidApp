@@ -168,21 +168,43 @@
             android:summary="Import a GPX file"
             />
 
+        <CheckBoxPreference
+            android:key="NAV_NOTIFICATION"
+            android:title="Indicate next change"
+            android:summary="Vibrate if the direction has changed (experimental)"
+            android:defaultValue="false" />
+
         <Preference
             android:key="PREF_EXPORT_ROUTE_ORUX"
             android:title="Export to OruxMaps"
             android:summary="Export current route to OruxMaps"
             />
-
-        <Preference
-            android:key="PREF_NAV_PLANNER"
+        <PreferenceScreen
+            android:key="navigation_planner_screen"
             android:title="Ventoo navigation - Online planner"
             android:summary="Create your own route (GPX)"
-            >
-            <intent android:action="android.intent.action.VIEW"
-                android:data="http://pebblebike.com/planner/?utm_source=VentooApp" />
-        </Preference>
+            android:persistent="false">
+            <Preference
+                android:key="PREF_NAV_PLANNER"
+                android:title="Ventoo navigation - Online planner"
+                android:summary="Create your own route (GPX)"
+                />
 
+            <EditTextPreference
+                android:key="PREF_NAV_PLANNER_START"
+                android:title="Prefered start position"
+                android:summary=""
+                android:hint="Chose 'POSITION' to use your last GPS position"
+                android:defaultValue="POSITION"
+                />
+
+            <EditTextPreference
+                android:key="PREF_NAV_PLANNER_END"
+                android:title="Prefered end position"
+                android:summary=""
+                android:hint="Chose 'POSITION' to use your last GPS position"
+                />
+        </PreferenceScreen>
         <Preference
             android:key="PREF_NAV_HELP"
             android:title="Online help"

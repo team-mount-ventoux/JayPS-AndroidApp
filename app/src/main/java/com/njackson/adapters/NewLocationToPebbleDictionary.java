@@ -71,7 +71,7 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
 
     private Location _firstLocation = null;
 
-    public NewLocationToPebbleDictionary(NewLocation event, Navigator navigator, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int watchfaceVersion) {
+    public NewLocationToPebbleDictionary(NewLocation event, Navigator navigator, boolean serviceRunning, boolean debug, boolean liveTrackingEnabled, int refreshInterval, int watchfaceVersion, boolean nav_notification) {
 
         int location_data_version = Constants.PEBBLE_LOCATION_DATA_V2;
         if (watchfaceVersion >= Constants.MIN_VERSION_PEBBLE_FOR_LOCATION_DATA_V3) {
@@ -174,8 +174,6 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
         if (navigator.getNbPoints() > 0) {
             byte[] data_navigation = new byte[NAV_NB_BYTES];
 
-            boolean notification = true;
-
             // in m, 0-65.535km
             data_navigation[NAV_BYTE_DISTANCE1] = putDataUInt16_1((int) navigator.getNextDistance());
             data_navigation[NAV_BYTE_DISTANCE2] = putDataUInt16_2((int) navigator.getNextDistance());
@@ -202,7 +200,7 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
             data_navigation[NAV_BYTE_NEXT_INDEX2] = putDataUInt16_2(navigator.getNextIndex());
 
 
-            data_navigation[NAV_BYTE_SETTINGS] += (byte) ((notification ? 1: 0) * (1<<NAV_POS_NOTIFICATION));
+            data_navigation[NAV_BYTE_SETTINGS] += (byte) ((nav_notification ? 1: 0) * (1<<NAV_POS_NOTIFICATION));
 
             if (_firstLocation == null) {
                 _firstLocation = event.getFirstLocation();
