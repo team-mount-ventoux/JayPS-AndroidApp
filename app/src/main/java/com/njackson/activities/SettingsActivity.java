@@ -229,11 +229,24 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 String uriString = getApplicationContext().getString(R.string.PREF_NAV_PLANNER_URL);
+                String position = "";
+                if (_dataStore.getLastLocationLatitude() != 0.0f && _dataStore.getLastLocationLongitude() != 0.0f) {
+                    position = _dataStore.getLastLocationLatitude() + "," + _dataStore.getLastLocationLongitude();
+                }
+                //Log.d(TAG, "position:" + position);
                 if (!_sharedPreferences.getString("PREF_NAV_PLANNER_START", "").isEmpty()) {
-                    uriString += "&start=" + _sharedPreferences.getString("PREF_NAV_PLANNER_START", "");
+                    if (_sharedPreferences.getString("PREF_NAV_PLANNER_START", "").equals("POSITION")) {
+                        uriString += "&start=" + position;
+                    } else {
+                        uriString += "&start=" + _sharedPreferences.getString("PREF_NAV_PLANNER_START", "");
+                    }
                 }
                 if (!_sharedPreferences.getString("PREF_NAV_PLANNER_END", "").isEmpty()) {
-                    uriString += "&end=" + _sharedPreferences.getString("PREF_NAV_PLANNER_END", "");
+                    if (_sharedPreferences.getString("PREF_NAV_PLANNER_END", "").equals("POSITION")) {
+                        uriString += "&end=" + position;
+                    } else {
+                        uriString += "&end=" + _sharedPreferences.getString("PREF_NAV_PLANNER_END", "");
+                    }
                 }
                 Log.d(TAG, "uriString:" + uriString);
 

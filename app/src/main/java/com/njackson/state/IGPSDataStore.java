@@ -42,6 +42,12 @@ public interface IGPSDataStore {
     float getFirstLocationLongitude();
     void setFirstLocationLongitude(float value);
 
+    float getLastLocationLatitude();
+    void setLastLocationLatitude(float value);
+
+    float getLastLocationLongitude();
+    void setLastLocationLongitude(float value);
+
     /* Resets all values to 0 */
     void resetAllValues();
 

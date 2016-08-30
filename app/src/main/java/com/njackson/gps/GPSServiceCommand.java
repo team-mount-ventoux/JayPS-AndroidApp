@@ -80,12 +80,12 @@ public class GPSServiceCommand implements IServiceCommand {
     private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
     private SavedLocation _savedLocation = null;
     private NewAltitude _savedNewAltitude = null;
-    private int _nbLocationReceived = 0;
 
     private long _last_post_newlocation  = 0;
     private long _last_post_battery_level  = 0;
     private long _last_post_temperature  = 0;
     private long _last_post_hr_max  = 0;
+    private long _last_save_gps_stats = 0;
 
     private int _refresh_interval = 0;
 
@@ -284,6 +284,7 @@ public class GPSServiceCommand implements IServiceCommand {
 
     // save the state
     private void saveGPSStats() {
+        Log.d(TAG, "saveGPSStats");
         _dataStore.setDistance(_advancedLocation.getDistance());
         _dataStore.setElapsedTime(_advancedLocation.getElapsedTime());
         _dataStore.setAscent((float) _advancedLocation.getAscent());
@@ -295,6 +296,8 @@ public class GPSServiceCommand implements IServiceCommand {
             _dataStore.setFirstLocationLattitude((float) firstLocation.getLatitude());
             _dataStore.setFirstLocationLongitude((float) firstLocation.getLongitude());
         }
+        _dataStore.setLastLocationLatitude((float) _advancedLocation.getLatitude());
+        _dataStore.setLastLocationLongitude((float) _advancedLocation.getLongitude());
         _dataStore.commit();
     }
 
@@ -364,10 +367,9 @@ public class GPSServiceCommand implements IServiceCommand {
                 firstLocation = location;
                 saveGPSStats();
             }
-            _nbLocationReceived++;
-            if (_nbLocationReceived % 100 == 0) {
-                // save stats every 100 new locations
+            if (_time.getCurrentTimeMilliseconds() - _last_save_gps_stats > 1 * 60 * 1000) {
                 saveGPSStats();
+                _last_save_gps_stats = _time.getCurrentTimeMilliseconds();
             }
 
             broadcastLocation(location);

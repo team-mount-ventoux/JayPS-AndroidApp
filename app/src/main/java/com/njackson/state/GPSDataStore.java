@@ -27,8 +27,10 @@ public class GPSDataStore implements IGPSDataStore {
     private float _altitudeCalibrationDelta;
     private long _altitudeCalibrationDeltaTime;
     private float _geoid;
-    private float _lattitude;
+    private float _latitude;
     private float _longitude;
+    private float _lastLatitude;
+    private float _lastLongitude;
     private int _units;
 
 
@@ -59,8 +61,10 @@ public class GPSDataStore implements IGPSDataStore {
         _altitudeCalibrationDelta = _sharedPreferences.getFloat("ALTITUDE_CALIBRATION_DELTA", 0);
         _altitudeCalibrationDeltaTime = _sharedPreferences.getLong("ALTITUDE_CALIBRATION_DELTA_TIME",0);
         _geoid = _sharedPreferences.getFloat("GEOID_HEIGHT",0);
-        _lattitude = _sharedPreferences.getFloat("GPS_FIRST_LOCATION_LAT",0);
+        _latitude = _sharedPreferences.getFloat("GPS_FIRST_LOCATION_LAT",0);
         _longitude = _sharedPreferences.getFloat("GPS_FIRST_LOCATION_LON",0);
+        _lastLatitude = _sharedPreferences.getFloat("GPS_LAST_LOCATION_LAT",0);
+        _lastLongitude = _sharedPreferences.getFloat("GPS_LAST_LOCATION_LON",0);
     }
 
     @Override
@@ -167,12 +171,12 @@ public class GPSDataStore implements IGPSDataStore {
 
     @Override
     public float getFirstLocationLattitude() {
-        return _lattitude;
+        return _latitude;
     }
 
     @Override
     public void setFirstLocationLattitude(float value) {
-        _lattitude = value;
+        _latitude = value;
     }
 
     @Override
@@ -186,6 +190,27 @@ public class GPSDataStore implements IGPSDataStore {
     }
 
     @Override
+    public float getLastLocationLatitude() {
+        return _lastLatitude;
+    }
+
+    @Override
+    public void setLastLocationLatitude(float value) {
+        _lastLatitude = value;
+    }
+
+    @Override
+    public float getLastLocationLongitude() {
+        return _lastLongitude;
+    }
+
+    @Override
+    public void setLastLocationLongitude(float value) {
+        _lastLongitude = value;
+    }
+
+
+    @Override
     public void resetAllValues() {
         //_startTime = 0; // no reset needed, it's for orxumaps auto-start
         _distance = 0;
@@ -195,9 +220,8 @@ public class GPSDataStore implements IGPSDataStore {
         _maxSpeed = 0;
         //_altitudeCalibrationDelta = 0; // no reset needed, it's for altitude correction
         //_geoid = 0; // no reset needed, it's for altitude correction
-        //_lattitude = 0; // no reset needed, it's for map origin (latitude => xpos conversion)
-        //_longitude = 0; // no reset needed, it's for map origin (longitude => ypos conversion)
-
+        _latitude = 0;
+        _longitude = 0;
 
         // TODO(nic) move me to some other place?
         SharedPreferences.Editor editor = _sharedPreferences.edit();
@@ -224,8 +248,10 @@ public class GPSDataStore implements IGPSDataStore {
         editor.putFloat("ALTITUDE_CALIBRATION_DELTA", _altitudeCalibrationDelta);
         editor.putLong("ALTITUDE_CALIBRATION_DELTA_TIME", _altitudeCalibrationDeltaTime);
         editor.putFloat("GEOID_HEIGHT", _geoid);
-        editor.putFloat("GPS_FIRST_LOCATION_LAT", _lattitude);
+        editor.putFloat("GPS_FIRST_LOCATION_LAT", _latitude);
         editor.putFloat("GPS_FIRST_LOCATION_LON", _longitude);
+        editor.putFloat("GPS_LAST_LOCATION_LAT", _lastLatitude);
+        editor.putFloat("GPS_LAST_LOCATION_LON", _lastLongitude);
 
         editor.commit();
     }
