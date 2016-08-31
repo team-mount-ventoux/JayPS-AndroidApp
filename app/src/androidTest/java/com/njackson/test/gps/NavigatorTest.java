@@ -4,6 +4,7 @@ import android.location.Location;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
+import com.njackson.Constants;
 import com.njackson.gps.Navigator;
 
 public class NavigatorTest extends AndroidTestCase {
@@ -54,11 +55,11 @@ public class NavigatorTest extends AndroidTestCase {
 
         nav.onLocationChanged(addDeltaMin(locs[3]));
         assertEquals(4, nav.getNextIndex());
-        assertEquals(0.0f, nav.getDistanceToDestination());
+        assertEquals(0.0f, nav.getDistanceToDestination(Constants.METRIC));
 
         nav.onLocationChanged(addDeltaMin(locs[3]));
         assertEquals(4, nav.getNextIndex());
-        assertEquals(0.0f, nav.getDistanceToDestination());
+        assertEquals(0.0f, nav.getDistanceToDestination(Constants.METRIC));
 
         // restart nav
         nav.onLocationChanged(addDelta(locs[1]));
@@ -103,7 +104,7 @@ public class NavigatorTest extends AndroidTestCase {
 
         nav.onLocationChanged(addDeltaMin(locs[5]));
         assertEquals(6, nav.getNextIndex());
-        assertEquals(0.0f, nav.getDistanceToDestination());
+        assertEquals(0.0f, nav.getDistanceToDestination(Constants.METRIC));
 
         // restart nav
         nav.onLocationChanged(addDelta(locs[1]));
