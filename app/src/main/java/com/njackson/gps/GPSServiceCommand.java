@@ -584,7 +584,7 @@ public class GPSServiceCommand implements IServiceCommand {
                     Log.d(TAG, "sent forced after 30s");
                     send = true;
                 }
-                if (_navigator.getNbPoints() > 0 && p_navigator.getNextDistance() < 200) {
+                if (_navigator.getNbPoints() > 0 && p_navigator.getNextDistance(Constants.METRIC) < 200) {
                     if (_time.getCurrentTimeMilliseconds() - _last_post_newlocation > 3000) {
                         Log.d(TAG, "sent forced by getNextDistance() < 200 && deltaTime > 3");
                         send = true;
@@ -593,7 +593,7 @@ public class GPSServiceCommand implements IServiceCommand {
             }
         }
         if (_navigator.getNbPoints() > 0) {
-            if (p_navigator.getNextDistance() < 50) {
+            if (p_navigator.getNextDistance(Constants.METRIC) < 50) {
                 Log.d(TAG, "sent forced by getNextDistance() < 50");
                 send = true;
             }

@@ -7,6 +7,8 @@ import android.location.Location;
 import android.net.Uri;
 import android.util.Log;
 
+import com.njackson.Constants;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -359,11 +361,28 @@ public class Navigator {
         return dXt;
     }
 
-    public float getDistanceToDestination() {
-        return _nbPointsSimpl > 0 && _nextIndex >= 0 && _nextIndex < _nbPointsSimpl ? (_pointsSimpl[_nbPointsSimpl-1].distance - _pointsSimpl[_nextIndex].distance + _nextDistance) : 0;
+    public float getDistanceToDestination(int units) {
+        // in m
+        float distance = _nbPointsSimpl > 0 && _nextIndex >= 0 && _nextIndex < _nbPointsSimpl ? (_pointsSimpl[_nbPointsSimpl-1].distance - _pointsSimpl[_nextIndex].distance + _nextDistance) : 0;
+
+        if (units == Constants.IMPERIAL || units == Constants.RUNNING_IMPERIAL) {
+            distance *= Constants.M_TO_MILES;
+        } else if (units == Constants.METRIC || units == Constants.RUNNING_METRIC) {
+            distance *= Constants.M_TO_KM;
+        } else if (units == Constants.NAUTICAL_IMPERIAL || units == Constants.NAUTICAL_METRIC) {
+            distance *= Constants.M_TO_NM;
+        }
+        return distance; // in km
     }
-    public float getNextDistance() {
-        return _nextDistance;
+    public float getNextDistance(int units) {
+        // in m
+        float distance = _nextDistance;
+        if (units == Constants.IMPERIAL || units == Constants.RUNNING_IMPERIAL || units == Constants.NAUTICAL_IMPERIAL) {
+            distance *= Constants.M_TO_FEET;
+        } else if (units == Constants.METRIC || units == Constants.RUNNING_METRIC || units == Constants.NAUTICAL_METRIC) {
+            distance *= Constants.M_TO_M;
+        }
+        return distance;
     }
     public float getNextBearing() {
         return _nextBearing;

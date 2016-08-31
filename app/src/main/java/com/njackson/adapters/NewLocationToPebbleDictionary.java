@@ -175,12 +175,12 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
             byte[] data_navigation = new byte[NAV_NB_BYTES];
 
             // in m, 0-65.535km
-            data_navigation[NAV_BYTE_DISTANCE1] = putDataUInt16_1((int) navigator.getNextDistance());
-            data_navigation[NAV_BYTE_DISTANCE2] = putDataUInt16_2((int) navigator.getNextDistance());
+            data_navigation[NAV_BYTE_DISTANCE1] = putDataUInt16_1((int) navigator.getNextDistance(event.getUnits()));
+            data_navigation[NAV_BYTE_DISTANCE2] = putDataUInt16_2((int) navigator.getNextDistance(event.getUnits()));
 
-            // in 10m, 0-655km
-            data_navigation[NAV_BYTE_DTD1] = putDataUInt16_1((int) (Math.floor(navigator.getDistanceToDestination() / 10) / 1));
-            data_navigation[NAV_BYTE_DTD2] = putDataUInt16_2((int) (Math.floor(navigator.getDistanceToDestination() / 10) / 1));
+            // in 0.01km, 0-655km
+            data_navigation[NAV_BYTE_DTD1] = putDataUInt16_1((int) (Math.floor(navigator.getDistanceToDestination(event.getUnits()) * 100) / 1));
+            data_navigation[NAV_BYTE_DTD2] = putDataUInt16_2((int) (Math.floor(navigator.getDistanceToDestination(event.getUnits()) * 100) / 1));
 
             data_navigation[NAV_BYTE_BEARING] = putData((int) (navigator.getNextBearing() / 360 * 256));
 
