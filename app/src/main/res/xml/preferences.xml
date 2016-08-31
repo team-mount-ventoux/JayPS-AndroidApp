@@ -168,6 +168,33 @@
             android:summary="Import a GPX file"
             />
 
+        <PreferenceScreen
+            android:key="navigation_planner_screen"
+            android:title="Online planner"
+            android:summary="Create your own route (GPX) with Google Directions"
+            android:persistent="false">
+            <Preference
+                android:key="PREF_NAV_PLANNER"
+                android:title="Launch Online planner"
+                android:summary="Create your own route (GPX) online"
+                />
+
+            <EditTextPreference
+                android:key="PREF_NAV_PLANNER_START"
+                android:title="Preferred start position"
+                android:summary=""
+                android:hint="Choose 'POSITION' to use your last GPS position"
+                android:defaultValue="POSITION"
+                />
+
+            <EditTextPreference
+                android:key="PREF_NAV_PLANNER_END"
+                android:title="Preferred end position"
+                android:summary=""
+                android:hint="Choose 'POSITION' to use your last GPS position"
+                />
+        </PreferenceScreen>
+
         <CheckBoxPreference
             android:key="NAV_NOTIFICATION"
             android:title="Indicate next change"
@@ -179,32 +206,6 @@
             android:title="Export to OruxMaps"
             android:summary="Export current route to OruxMaps"
             />
-        <PreferenceScreen
-            android:key="navigation_planner_screen"
-            android:title="Ventoo navigation - Online planner"
-            android:summary="Create your own route (GPX)"
-            android:persistent="false">
-            <Preference
-                android:key="PREF_NAV_PLANNER"
-                android:title="Ventoo navigation - Online planner"
-                android:summary="Create your own route (GPX)"
-                />
-
-            <EditTextPreference
-                android:key="PREF_NAV_PLANNER_START"
-                android:title="Prefered start position"
-                android:summary=""
-                android:hint="Chose 'POSITION' to use your last GPS position"
-                android:defaultValue="POSITION"
-                />
-
-            <EditTextPreference
-                android:key="PREF_NAV_PLANNER_END"
-                android:title="Prefered end position"
-                android:summary=""
-                android:hint="Chose 'POSITION' to use your last GPS position"
-                />
-        </PreferenceScreen>
         <Preference
             android:key="PREF_NAV_HELP"
             android:title="Online help"
