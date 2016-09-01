@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.8.0-beta2" versioncode="315" >
+        <change><![CDATA[<b>Navidation updates:</b>]]></change>
+        <change>Improve online planner: add step, use GPS position</change>
+        <change>Imperial units</change>
+        <change>Navigation trads</change>
+        <change>Support for Pebble Time Round</change>
+        <change>Improve error detection</change>
+        <change><![CDATA[<b>New watchface (click on "Install Watchface from dev website" in settings)</b>]]></change>
+    </release>
     <release version="2.8.0-beta1" versioncode="314" >
         <change><![CDATA[<b>Pebble: native navigation fields (distance next point, time of arrival, time to destination, distance to destination)</b> - no more reused of fields]]></change>
         <change>Nav: improve routing algorithm for round trip</change>
