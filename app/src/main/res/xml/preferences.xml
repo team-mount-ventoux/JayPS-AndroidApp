@@ -164,8 +164,14 @@
         android:persistent="false">
         <Preference
             android:key="PREF_LOAD_ROUTE"
-            android:title="Load route to follow"
-            android:summary="Import a GPX file"
+            android:title="Start navigation - Load route"
+            android:summary="Import a GPX file containing a route to follow"
+            />
+
+        <Preference
+            android:key="PREF_NAV_STOP"
+            android:title="Stop navigation"
+            android:summary="Stop current navigation"
             />
 
         <PreferenceScreen

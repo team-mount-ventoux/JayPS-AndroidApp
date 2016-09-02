@@ -213,6 +213,24 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                 return false;
             }
         });
+        Preference pref_nav_stop = findPreference("PREF_NAV_STOP");
+        pref_nav_stop.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if (preference.getKey().equals("PREF_NAV_STOP")) {
+                    if (_navigator.getNbPoints() > 0) {
+                        _navigator.clearRoute();
+                        Toast.makeText(getApplicationContext(), "Navigation was stopped", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "The navigation was not started", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                return false;
+            }
+        });
+
+
+
         Preference pref_nav_export_route_orux = findPreference("PREF_EXPORT_ROUTE_ORUX");
         pref_nav_export_route_orux.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override

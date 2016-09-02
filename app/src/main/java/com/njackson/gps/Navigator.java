@@ -156,12 +156,15 @@ public class Navigator {
             _lastSeenDist = location.distanceTo(_pointsSimpl[newNextIndex]);
         }
     }
-    public void loadGpx(String gpx) {
+    public void clearRoute() {
         _nbPointsIni = _nbPointsSimpl = 0;
         _nextIndex = -1;
         _nextDistance = 0;
         _lastSeenLoc = null;
         _lastSeenDist = 0;
+    }
+    public void loadGpx(String gpx) {
+        clearRoute();
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
