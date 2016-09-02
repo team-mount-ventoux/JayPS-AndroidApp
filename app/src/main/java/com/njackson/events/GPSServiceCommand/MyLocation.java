@@ -171,4 +171,8 @@ public abstract class MyLocation {
     public Location getFirstLocation() { return this._firstLocation; }
     public void setFirstLocation(Location firstLocation) { this._firstLocation = firstLocation;}
 
+
+    private boolean _sendNavigation = false;
+    public boolean getSendNavigation() { return this._sendNavigation; }
+    public void setSendNavigation(boolean sendNavigation) { this._sendNavigation = sendNavigation;}
 }

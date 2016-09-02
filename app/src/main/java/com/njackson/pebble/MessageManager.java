@@ -291,6 +291,7 @@ public class MessageManager implements IMessageManager, Runnable {
         NewLocation newLocation = new AdvancedLocationToNewLocation(advancedLocation, 0, 0, units);
 
         newLocation.setBatteryLevel(BatteryStatus.getBatteryLevel(_applicationContext));
+        newLocation.setSendNavigation(_navigator.getNbPoints() > 0);
 
         // Get current version code
         int versionCode = 0;

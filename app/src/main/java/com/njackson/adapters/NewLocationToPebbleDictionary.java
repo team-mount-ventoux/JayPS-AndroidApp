@@ -171,7 +171,7 @@ public class NewLocationToPebbleDictionary extends PebbleDictionary{
             data_heartmax[1] = (byte) (event.getHeartRateMode() % 256);
             this.addBytes(Constants.MSG_HR_MAX, data_heartmax);
         }
-        if (navigator.getNbPoints() > 0) {
+        if (event.getSendNavigation()) {
             byte[] data_navigation = new byte[NAV_NB_BYTES];
 
             // in m, 0-65.535km

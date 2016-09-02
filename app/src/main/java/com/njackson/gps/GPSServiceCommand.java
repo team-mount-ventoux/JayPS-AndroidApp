@@ -81,10 +81,13 @@ public class GPSServiceCommand implements IServiceCommand {
     private SavedLocation _savedLocation = null;
     private NewAltitude _savedNewAltitude = null;
 
+    private boolean m_sendNavigator;
+
     private long _last_post_newlocation  = 0;
     private long _last_post_battery_level  = 0;
     private long _last_post_temperature  = 0;
     private long _last_post_hr_max  = 0;
+    private long _last_post_navigator  = 0;
     private long _last_save_gps_stats = 0;
 
     private int _refresh_interval = 0;
@@ -459,6 +462,12 @@ public class GPSServiceCommand implements IServiceCommand {
             previousLocation = event;
 
             nbSent++;
+
+            if (m_sendNavigator) {
+                event.setSendNavigation(true);
+                _last_post_navigator = _time.getCurrentTimeMilliseconds();
+            }
+
             //event.setAscentRate(nbSent);
             _bus.post(event);
         }
@@ -484,6 +493,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private boolean locationShouldBeSended(AdvancedLocation p_advancedLocation, Navigator p_navigator, boolean p_forceSsend) {
 
         boolean send = p_forceSsend;
+        m_sendNavigator = false;
 
         //Log.d(TAG, "locationShouldBeSended _refresh_interval%100000="+_refresh_interval % 100000+" _refresh_interval=" + _refresh_interval);
 
@@ -493,7 +503,7 @@ public class GPSServiceCommand implements IServiceCommand {
             //Log.d(TAG, "ts:" + _time.getCurrentTimeMilliseconds() + " _refresh_interval:" + _refresh_interval);
 
             int adaptativeMode = _refresh_interval/100000;
-            Log.d(TAG, "adaptativeMode:" + adaptativeMode);
+            //Log.d(TAG, "adaptativeMode:" + adaptativeMode);
 
             if (adaptativeMode == 0) {
                 // standard mode
@@ -553,7 +563,7 @@ public class GPSServiceCommand implements IServiceCommand {
                 minDeltaAltitude = Math.max(minDeltaAltitude, 5); // m
                 minDeltaDistance = Math.max(minDeltaDistance, 0.1); // km/h
                 minDeltaSpeed = Math.max(minDeltaSpeed, 3); // km/h
-                Log.d(TAG, " minDeltaAltitude:" + minDeltaAltitude + " minDeltaDistance:" + minDeltaDistance + " minDeltaSpeed:" + minDeltaSpeed);
+                //Log.d(TAG, " minDeltaAltitude:" + minDeltaAltitude + " minDeltaDistance:" + minDeltaDistance + " minDeltaSpeed:" + minDeltaSpeed);
                 Log.d(TAG, " deltaAltitude:" + deltaAltitude + " deltaDistance:" + deltaDistance + " deltaSpeed:" + deltaSpeed + " averageSpeed:" + averageSpeed);
                 if (deltaAltitude >= minDeltaAltitude && deltaAltitude > 3 * p_advancedLocation.getAccuracy()) {
                     Log.d(TAG, "sent forced by altitude deltaAltitude:" + deltaAltitude + " > " + minDeltaAltitude);
@@ -573,30 +583,37 @@ public class GPSServiceCommand implements IServiceCommand {
                 }
                 if (deltaNavNextIndex >= minDeltaNavNextIndex) {
                     Log.d(TAG, "sent forced by deltaNavNextIndex:" + deltaNavNextIndex + " >= " + minDeltaNavNextIndex);
-                    send = true;
+                    m_sendNavigator = true;
                 }
                 if (deltaNavNextBearing >= minDeltaNavNextBearing) {
                     Log.d(TAG, "sent forced by deltaNavNextBearing:" + deltaNavNextBearing + " >= " + minDeltaNavNextBearing);
-                    send = true;
+                    m_sendNavigator = true;
                 }
 
                 if (_time.getCurrentTimeMilliseconds() - _last_post_newlocation > 30000) {
                     Log.d(TAG, "sent forced after 30s");
                     send = true;
                 }
-                if (_navigator.getNbPoints() > 0 && p_navigator.getNextDistance(Constants.METRIC) < 200) {
-                    if (_time.getCurrentTimeMilliseconds() - _last_post_newlocation > 3000) {
+                if (_navigator.getNbPoints() > 0 && p_navigator.getNextDistance(Constants.METRIC) < 200 && p_navigator.getNextDistance(Constants.METRIC) > 0) {
+                    if (_time.getCurrentTimeMilliseconds() - _last_post_navigator > 3000) {
                         Log.d(TAG, "sent forced by getNextDistance() < 200 && deltaTime > 3");
-                        send = true;
+                        m_sendNavigator = true;
                     }
                 }
             }
         }
-        if (_navigator.getNbPoints() > 0) {
-            if (p_navigator.getNextDistance(Constants.METRIC) < 50) {
-                Log.d(TAG, "sent forced by getNextDistance() < 50");
-                send = true;
+        if (_navigator.getNbPoints() > 0 && p_navigator.getNextDistance(Constants.METRIC) < 50 && p_navigator.getNextDistance(Constants.METRIC) > 0) {
+            if (_time.getCurrentTimeMilliseconds() - _last_post_navigator > 1000) {
+                Log.d(TAG, "sent forced by getNextDistance() < 50 && deltaTime > 1");
+                m_sendNavigator = true;
             }
+        }
+        if (m_sendNavigator) {
+            send = true;
+        }
+        if (_navigator.getNbPoints() > 0 && !m_sendNavigator && send && (_time.getCurrentTimeMilliseconds() - _last_post_navigator > 5000)) {
+            Log.d(TAG, "sendNavigator forced after 5s");
+            m_sendNavigator = true;
         }
         if (send) {
             m_sentElapsedTime = _advancedLocation.getElapsedTime();
