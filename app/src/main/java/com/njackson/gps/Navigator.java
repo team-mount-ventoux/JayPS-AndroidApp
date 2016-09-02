@@ -31,7 +31,7 @@ public class Navigator {
 
     private static final String TAG = "PB-Navigator";
 
-    public int debugLevel = 1;
+    public int debugLevel = 0;
 
     protected class Poi extends Location {
         public float distance = 0;
@@ -275,7 +275,7 @@ public class Navigator {
                     keep = true;
                 }
             }
-            Log.d(TAG, i + ": " + lastIndex2 + "-" + lastIndex + " dist:" + Math.round(_pointsIni[i].distance) + " b1:" + Math.round(bearingLastToMe) + " b2:" + Math.round(bearingLastToNext) + " b3:" + Math.round(bearingMeToNext) + " d1:" + Math.round(diff1) + " d2:" + Math.round(diff2) + " err:" + Math.round(max_error) + " " + (keep ? ("KEEP "  + _pointsIni[i].getLatitude() + "," + _pointsIni[i].getLongitude()) : "REMOVE"));
+            if (debugLevel > 1) Log.d(TAG, i + ": " + lastIndex2 + "-" + lastIndex + " dist:" + Math.round(_pointsIni[i].distance) + " b1:" + Math.round(bearingLastToMe) + " b2:" + Math.round(bearingLastToNext) + " b3:" + Math.round(bearingMeToNext) + " d1:" + Math.round(diff1) + " d2:" + Math.round(diff2) + " err:" + Math.round(max_error) + " " + (keep ? ("KEEP "  + _pointsIni[i].getLatitude() + "," + _pointsIni[i].getLongitude()) : "REMOVE"));
             if (keep) {
                 debug.append(i + ": " + lastIndex2 + "-" + lastIndex + tmp +", "  + _pointsIni[i].getLatitude() + "," + _pointsIni[i].getLongitude()+"\n");
                 lastIndex2 = lastIndex;
@@ -288,7 +288,7 @@ public class Navigator {
         _pointsSimpl[_nbPointsSimpl] = _pointsIni[_nbPointsIni - 1];
         _nbPointsSimpl++;
         Log.d(TAG, "simplifyRoute nbPointsIni:" + _nbPointsIni + " nbPointsSimpl:" + _nbPointsSimpl);
-        Log.d(TAG, debug.toString());
+        if (debugLevel >= 1) Log.d(TAG, debug.toString());
     }
     public void loadRouteToOrux(Activity activity) {
 
