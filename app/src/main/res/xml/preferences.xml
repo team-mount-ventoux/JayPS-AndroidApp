@@ -4,10 +4,10 @@
     <PreferenceScreen
         android:key="install_screen"
         android:title="Install"
-        android:summary="Install the watchface on your Pebble"
+        android:summary="Install the watchapp on your Pebble"
         android:persistent="false">
         <PreferenceCategory
-            android:title="@string/PREF_INSTALL_CATEGORY_TITLE"
+            android:title="@string/PREF_INSTALL_DEFAULT_CATEGORY_TITLE"
             >
             <Preference
                 android:key="INSTALL_WATCHFACE_DEEPLINK"
@@ -17,11 +17,21 @@
                 <intent android:action="android.intent.action.VIEW"
                     android:data="@string/PREF_INSTALL_WATCHFACE_DEEPLINK_URL" />
             </Preference>
+        </PreferenceCategory>
+        <PreferenceCategory
+            android:title="@string/PREF_INSTALL_OTHERS_CATEGORY_TITLE"
+            >
             <Preference
                 android:key="INSTALL_WATCHFACE"
                 android:title="@string/PREF_INSTALL_WATCHFACE_WEBSITE"
                 android:summary="@string/PREF_INSTALL_WATCHFACE_WEBSITE_SUMMARY"
                 />
+            <Preference
+                android:key="INSTALL_WATCHFACE_NL"
+                android:title="@string/PREF_INSTALL_WATCHFACE_NL"
+                android:summary="@string/PREF_INSTALL_WATCHFACE_NL_SUMMARY"
+                >
+            </Preference>
         </PreferenceCategory>
     </PreferenceScreen>
     <Preference

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Ventoo</string>
     <string name="MAIN_TITLE">Ventoo v2.8.0-beta2</string>
+    <string name="PREF_INSTALL_WATCHFACE_URL">http://dl.pebblebike.com/p/ventoo-2.8.0-beta2.pbw</string>
+    <string name="PREF_INSTALL_WATCHFACE_NL_URL">http://dl.pebblebike.com/p/ventoo-2.8.0-nl.pbw</string>
+
+    <string name="app_name">Ventoo</string>
     <string name="action_settings">Settings</string>
     <string name="speedfragment_time_label">TIME</string>
     <string name="speedfragment_time_value">00:00</string>
@@ -21,12 +24,15 @@
     <string name="altitude_status_good">GOOD</string>
     <string name="altitude_status_medium">MEDIUM</string>
     <string name="altitude_status_poor">POOR</string>
-    <string name="PREF_INSTALL_CATEGORY_TITLE">Install the watchface on your Pebble</string>
+    <string name="PREF_INSTALL_DEFAULT_CATEGORY_TITLE">Default method</string>
+    <string name="PREF_INSTALL_OTHERS_CATEGORY_TITLE">Other versions</string>
     <string name="PREF_INSTALL_WATCHFACE_DEEPLINK">Installation from the Pebble Store [default]</string>
     <string name="PREF_INSTALL_WATCHFACE_DEEPLINK_SUMMARY">Please vote for the app</string>
     <string name="PREF_INSTALL_WATCHFACE_DEEPLINK_URL">pebble://appstore/529289cee07df1fa76000009</string>
     <string name="PREF_INSTALL_WATCHFACE_WEBSITE">Installation from the developers website</string>
     <string name="PREF_INSTALL_WATCHFACE_WEBSITE_SUMMARY"></string>
+    <string name="PREF_INSTALL_WATCHFACE_NL">Dutch version</string>
+    <string name="PREF_INSTALL_WATCHFACE_NL_SUMMARY">Specific version with Dutch locale</string>
     <string name="PREF_RESET_DATA">Reset data &amp; GPX</string>
     <string name="PREF_RESET_DATA_SUMMARY">Distance, time, speed and ascent</string>
     <string name="ALERT_RESET_DATA_TITLE">Reset data and GPX</string>

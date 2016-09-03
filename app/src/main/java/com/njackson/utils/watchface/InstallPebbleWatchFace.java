@@ -25,25 +25,24 @@ public class InstallPebbleWatchFace implements IInstallWatchFace{
         _watchFaceVersion = watchFaceVersion;
     }
 
-    public void execute(Context context, IMessageMaker messageMaker) {
+    public void execute(Context context, IMessageMaker messageMaker, String uriString) {
         try {
-            context.startActivity(createIntent(context));
+            context.startActivity(createIntent(context, uriString));
         } catch (ActivityNotFoundException ae) {
             messageMaker.showMessage(context, "Unable to install watchface, do you have the latest pebble app installed?");
         }
     }
 
-    public Uri getDownloadUrl(String versionCode, String pebbleFirmwareVersion) {
-        String uriString = "http://dl.pebblebike.com/p/ventoo-2.8.0-beta2";
-        uriString += ".pbw?and&v=" + versionCode;
+    public Uri getDownloadUrl(String versionCode, String pebbleFirmwareVersion, String uriString) {
+        uriString += "?and&v=" + versionCode;
         uriString += "&p=" + pebbleFirmwareVersion;
         Log.d(TAG, "uriString:" + uriString);
 
         return Uri.parse(uriString);
     }
 
-    public Intent createIntent(Context context) {
-        Uri uri = getDownloadUrl(_androidVersion.getVersionCode(context), _watchFaceVersion.getFirmwareVersion(context));
+    public Intent createIntent(Context context, String uriString) {
+        Uri uri = getDownloadUrl(_androidVersion.getVersionCode(context), _watchFaceVersion.getFirmwareVersion(context), uriString);
 
         Intent startupIntent = new Intent();
         startupIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

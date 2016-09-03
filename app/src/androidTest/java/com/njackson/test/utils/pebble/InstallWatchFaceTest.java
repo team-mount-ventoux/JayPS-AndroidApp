@@ -37,9 +37,9 @@ public class InstallWatchFaceTest extends AndroidTestCase {
 
     @SmallTest
     public void testGetDownloadUrlReturnsValidUri() {
-        Uri uri = _install.getDownloadUrl("21", "2.1.1");
+        Uri uri = _install.getDownloadUrl("21", "2.1.1", "http://myurl.com/watchapp.pbw");
 
-        assertEquals(uri.getHost(),"dl.pebblebike.com");
+        assertEquals(uri.getHost(),"myurl.com");
     }
 /* no longer using startupIntent.setComponent()
     @SmallTest
@@ -54,7 +54,7 @@ public class InstallWatchFaceTest extends AndroidTestCase {
     public void testExecuteWhenApplicationInstalledStartsActivity() {
         Context mockContext = mock(Context.class);
 
-        _install.execute(mockContext, null);
+        _install.execute(mockContext, null, "http://myurl.com/watchapp.pbw");
 
         verify(mockContext,times(1)).startActivity(any(Intent.class));
     }
@@ -66,7 +66,7 @@ public class InstallWatchFaceTest extends AndroidTestCase {
 
         doThrow(new ActivityNotFoundException()).when(mockContext).startActivity(any(Intent.class));
 
-        _install.execute(mockContext, mockToast);
+        _install.execute(mockContext, mockToast, "http://myurl.com/watchapp.pbw");
 
         verify(mockToast, times(1)).showMessage(eq(mockContext), anyString());
     }

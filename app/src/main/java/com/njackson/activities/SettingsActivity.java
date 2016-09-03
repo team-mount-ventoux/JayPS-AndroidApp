@@ -68,7 +68,15 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         installPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                _installWatchFace.execute(getApplicationContext(), new ToastMessageMaker());
+                _installWatchFace.execute(getApplicationContext(), new ToastMessageMaker(), getApplicationContext().getString(R.string.PREF_INSTALL_WATCHFACE_URL));
+                return true;
+            }
+        });
+        Preference installPreferenceNl = findPreference("INSTALL_WATCHFACE_NL");
+        installPreferenceNl.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                _installWatchFace.execute(getApplicationContext(), new ToastMessageMaker(), getApplicationContext().getString(R.string.PREF_INSTALL_WATCHFACE_NL_URL));
                 return true;
             }
         });

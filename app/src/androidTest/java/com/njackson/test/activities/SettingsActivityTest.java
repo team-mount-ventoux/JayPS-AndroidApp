@@ -227,7 +227,7 @@ public class SettingsActivityTest extends ActivityUnitTestCase<SettingsActivity>
         Preference.OnPreferenceClickListener onPreferenceClickListener = _installPreference.getOnPreferenceClickListener();
         boolean b = onPreferenceClickListener.onPreferenceClick(new Preference(_targetContext));
 
-        verify(_watchFaceMock, times(1)).execute(any(Context.class), any(IMessageMaker.class));
+        verify(_watchFaceMock, times(1)).execute(any(Context.class), any(IMessageMaker.class), any(String.class));
     }
 
     @SmallTest
