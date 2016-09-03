@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="MAIN_TITLE">Ventoo v2.8.0-beta2</string>
-    <string name="PREF_INSTALL_WATCHFACE_URL">http://dl.pebblebike.com/p/ventoo-2.8.0-beta2.pbw</string>
+    <string name="MAIN_TITLE">Ventoo v2.8.0</string>
+    <string name="PREF_INSTALL_WATCHFACE_URL">http://dl.pebblebike.com/p/ventoo-2.8.0.pbw</string>
     <string name="PREF_INSTALL_WATCHFACE_NL_URL">http://dl.pebblebike.com/p/ventoo-2.8.0-nl.pbw</string>
 
     <string name="app_name">Ventoo</string>
