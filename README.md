@@ -16,6 +16,15 @@ Licensed under [MIT License](http://opensource.org/licenses/MIT)
 * JayPS (https://github.com/jay3)  
 * Nic Jackson (https://github.com/nicholasjackson)
 
+## Translations
+* English
+* French
+* German (Hanspeter Jochmann)
+* Spanish (ZoretMan)
+* Italian (Riccardo Fantoni)
+* Japanese (Moyashi)
+* Dutch (Erwin Dirkx)
+
 ## Watchface
 See also the [Pebble Bike Watch Face](https://github.com/pebble-bike/PebbleBike-PebbleWatchFace).
 
