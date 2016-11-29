@@ -207,7 +207,7 @@ public class StravaUpload {
             } else if (result.serverResponseCode == 400) {
                  // {"id":11111111,"external_id":"file1465247568.gpx","error":"file1465247568.gpx duplicate of activity 222222","status":"There was an error processing your activity.","activity_id":null}
                 is = urlConnection.getErrorStream();
-                result.message = "An error has occurred. If you've alreaded uploaded the current activity, please delete it in Strava.";
+                result.message = "An error has occurred. If you've already uploaded the current activity, please delete it in Strava.";
             } else if (result.serverResponseCode == 401) {
                 // {"message":"Authorization Error","errors":[{"resource":"Athlete","field":"access_token","code":"invalid"}]}
                 is = urlConnection.getErrorStream();
