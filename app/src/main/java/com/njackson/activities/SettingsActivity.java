@@ -206,6 +206,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 if (preference.getKey().equals("PREF_LOAD_ROUTE")) {
+                    _navigator.debugLevel = _sharedPreferences.getBoolean("PREF_DEBUG", false) ? 1 : 0;
                     Toast.makeText(getApplicationContext(), "Open a GPX file", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(Intent.ACTION_GET_CONTENT);

@@ -18,6 +18,8 @@ import org.xml.sax.InputSource;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Singleton;
 import javax.xml.parsers.DocumentBuilder;
@@ -41,11 +43,17 @@ public class Navigator {
             super(l);
         }
     }
+    protected class Climb {
+        public Poi start;
+        public Poi end;
+        int ascent;
+    }
 
     private Poi[] _pointsIni;
     private int _nbPointsIni = 0;
     private Poi[] _pointsSimpl;
     private int _nbPointsSimpl = 0;
+    private List<Climb> _climbs;
     private float _nextDistance = 0;
     private float _nextBearing = 0;
     private int _nextIndex = -1;
@@ -54,7 +62,11 @@ public class Navigator {
     private Location _lastSeenLoc = null;
     private float _lastSeenDist = 0;
 
+    public static final int MIN_ASCENT_VARIATION = 25;
+    public static final int MIN_ASCENT_CLIMB = 40;
+
     public Navigator() {
+        _climbs = new ArrayList<Climb>();
     }
 
     public void onLocationChanged(Location location) {
@@ -158,6 +170,7 @@ public class Navigator {
     }
     public void clearRoute() {
         _nbPointsIni = _nbPointsSimpl = 0;
+        _climbs.clear();
         _nextIndex = -1;
         _nextDistance = 0;
         _lastSeenLoc = null;
@@ -189,6 +202,7 @@ public class Navigator {
                     try {
                         loc.setLatitude(Float.parseFloat(eElement.getAttribute("lat")));
                         loc.setLongitude(Float.parseFloat(eElement.getAttribute("lon")));
+                        loc.setAltitude(Float.parseFloat(eElement.getElementsByTagName("ele").item(0).getTextContent()));
                         _pointsIni[_nbPointsIni] = new Poi(loc);
                         _pointsIni[_nbPointsIni].index = i;
                         if (_nbPointsIni > 0) {
@@ -206,6 +220,7 @@ public class Navigator {
         }
         Log.d(TAG, "nbPointsIni:" + _nbPointsIni);
         simplifyRoute();
+        delectClimbs();
 
         // debug
         //if (_nbPointsSimpl > 15) {
@@ -290,6 +305,85 @@ public class Navigator {
         Log.d(TAG, "simplifyRoute nbPointsIni:" + _nbPointsIni + " nbPointsSimpl:" + _nbPointsSimpl);
         if (debugLevel >= 1) Log.d(TAG, debug.toString());
     }
+    public void delectClimbs() {
+        Log.d(TAG, "delectClimbs nbPointsIni:" + _nbPointsIni);
+        if (_nbPointsIni == 0) {
+            return;
+        }
+        StringBuilder debug = new StringBuilder();
+        _climbs.clear();
+        double alt, alt_temp = 0, alt_min_local = 0, alt_max_local = 0, ascent = 0, ascent2 = 0;
+        int way = 1;
+        int climb_start = 0, climb_start2 = 0, climb_end = 0;
+        for (int i = 0; i < _nbPointsIni; i++) {
+            StringBuilder debugPoint = new StringBuilder();
+            alt = _pointsIni[i].getAltitude();
+            //debugPoint.append(i + ": " + Math.floor(alt) + " - ");
+            if (i == 0) {
+                alt_min_local = alt_max_local = alt;
+                climb_start = climb_start2 = i;
+            } else {
+                double alt_delta =  alt - alt_temp;
+                if (alt_delta > 0) {
+                    ascent += alt_delta;
+                }
+                if ((way < 0) && (alt < alt_min_local)) {
+                    debugPoint.append(i + ": " + Math.floor(alt) + " " + way + " - case 1: descent, continuing\n");
+                    //Log.d(TAG, i + ": " + Math.floor(alt) + " - case 1: descent, continuing");
+                    alt_min_local = alt;
+                    climb_start2 = i;
+                } else if ((way > 0) && (alt > alt_max_local)) {
+                    debugPoint.append(i + ": " + Math.floor(alt) + " " + way + " - case 2: climb, continuing (min:" + Math.floor(alt_min_local) + ")\n");
+                    alt_max_local = alt;
+                    climb_end = i;
+                } else if ((way > 0) && (alt <= alt_max_local - MIN_ASCENT_VARIATION)) {
+                    double ascent_climb = alt_max_local - alt_min_local;
+                    debugPoint.append(i + ": " + Math.floor(alt) + " " + way + " - case 3: climb, and re-descent too much: end climb (" + Math.floor(ascent_climb) + "m)\n");
+                    if (ascent_climb > MIN_ASCENT_CLIMB) {
+                        ascent2 += ascent_climb;
+                        addClimb(climb_start, climb_end);
+                    }
+                    alt_min_local = alt_max_local = alt;
+                    way = -1;
+                } else if ((way < 0) && (alt >= alt_min_local + MIN_ASCENT_VARIATION)) {
+                    debugPoint.append(i + ": " + Math.floor(alt) + " " + way + " - case 4: descent, and re-climb too much: begin climb (" + Math.floor(alt - alt_min_local) + "m)\n");
+                    //Log.d(TAG, i + ": " + Math.floor(alt) + " - case 4: descent, and re-climb too much: begin climb (" + Math.floor(alt - alt_min_local) + "m)");
+                    alt_min_local = alt_max_local = alt;
+                    way = 1;
+                    climb_start = i;
+                } else {
+                    //debugPoint.append(i + ": " + Math.floor(alt) + " - case 0: flat\n");
+                }
+            }
+            alt_temp = alt;
+            //Log.d(TAG, debugPoint.toString());
+            debug.append(debugPoint);
+        }
+        if (way > 0) {
+            StringBuilder debugPoint = new StringBuilder();
+            double ascent_climb = alt_max_local - alt_min_local;
+            if (ascent_climb > MIN_ASCENT_CLIMB) {
+                ascent2 += ascent_climb;
+                addClimb(climb_start, climb_end);
+            }
+        }
+
+        //if (debugLevel >= 1) Log.d(TAG, debug.toString());
+        Log.d(TAG, "delectClimbs nbPointsIni:" + _nbPointsIni + " ascent:" + Math.floor(ascent) + " ascent2:" + Math.floor(ascent2));
+    }
+    public void addClimb(int climb_start, int climb_end) {
+        int alt_min_local = (int) Math.floor(_pointsIni[climb_start].getAltitude());
+        int alt_max_local = (int) Math.floor(_pointsIni[climb_end].getAltitude());
+        int ascent_climb = alt_max_local - alt_min_local;
+        Log.d(TAG, "New climb (" + climb_start + "-" + climb_end + "): " + alt_min_local + "m -> " + alt_max_local + "m = " + ascent_climb);
+
+        Climb climb = new Climb();
+        climb.start = _pointsIni[climb_start];
+        climb.end = _pointsIni[climb_end];
+        climb.ascent = ascent_climb;
+        _climbs.add(climb);
+    }
+
     public void loadRouteToOrux(Activity activity) {
 
         //Map offline
@@ -298,37 +392,58 @@ public class Navigator {
         //Intent i = new Intent("com.oruxmaps.VIEW_MAP_ONLINE");
         // Route Waypoints
 
-        double[] targetLat = new double[_nbPointsSimpl];
-        double[] targetLon = new double[_nbPointsSimpl];
-        String[] targetNames = new String[_nbPointsSimpl];
-        int[] targetTypes = new int[_nbPointsSimpl];
+        List<Double> targetLat = new ArrayList<>();
+        List<Double> targetLon = new ArrayList<>();
+        List<String> targetNames = new ArrayList<>();
+        List<Integer> targetTypes = new ArrayList<>();
 
         for(int j = 0; j < _nbPointsSimpl; j++) {
-            boolean add = false;
+            int type = -1; // -1 : do not add
             if (j == _nextIndex) {
                 // next point
-                targetTypes[j] = 1;
-                add = true;
+                type = 1;
             } else if (j == _nbPointsSimpl - 1) {
                 // destination
-                targetTypes[j] = 15;
-                add = true;
+                type = 15;
             } else {
                 if (debugLevel > 0) {
-                    targetTypes[j] = 4;
-                    add = true;
+                    type = 4;
                 }
             }
-            if (add) {
-                targetLat[j] = _pointsSimpl[j].getLatitude();
-                targetLon[j] = _pointsSimpl[j].getLongitude();
-                targetNames[j] = "pt" + j;
+            if (type >= 0) {
+                targetLat.add(_pointsSimpl[j].getLatitude());
+                targetLon.add(_pointsSimpl[j].getLongitude());
+                targetNames.add("pt" + j);
+                targetTypes.add(type);
             }
         }
-        i.putExtra("targetLat", targetLat);
-        i.putExtra("targetLon", targetLon);
-        i.putExtra("targetName", targetNames);
-        i.putExtra("targetType", targetTypes);
+        int nb = 1;
+        for (Climb climb : _climbs) {
+            targetLat.add(climb.start.getLatitude());
+            targetLon.add(climb.start.getLongitude());
+            targetNames.add("Start climb #" + nb + " " + climb.ascent + "m (" + ((int) climb.start.getAltitude()) + "-" +  ((int) climb.end.getAltitude()) + ")");
+            targetTypes.add(29); // 29:Parking Area
+
+            targetLat.add(climb.end.getLatitude());
+            targetLon.add(climb.end.getLongitude());
+            targetNames.add("End climb #" + nb + " " + climb.ascent + "m (" + ((int) climb.start.getAltitude()) + "-" +  ((int) climb.end.getAltitude()) + ")");
+            targetTypes.add(40); // 40:Summit
+            nb++;
+        }
+        // doc http://www.oruxmaps.com/foro/viewtopic.php?p=4404#p4404
+        double[] targetLat2 = new double[targetLat.size()];
+        double[] targetLon2 = new double[targetLon.size()];
+        int[] targetTypes2 = new int[targetTypes.size()];
+
+        for (int j = 0; j < targetLat.size(); j++) {
+            targetLat2[j] = targetLat.get(j);
+            targetLon2[j] = targetLon.get(j);
+            targetTypes2[j] = targetTypes.get(j);
+        }
+        i.putExtra("targetLat", targetLat2);
+        i.putExtra("targetLon", targetLon2);
+        i.putExtra("targetName", targetNames.toArray(new String[targetNames.size()]));
+        i.putExtra("targetType", targetTypes2);
         //i.putExtra("navigatetoindex", _nbPointsSimpl-1);
         //index of the wpt. you want to start wpt. navigation.
         //Track points,
@@ -340,7 +455,6 @@ public class Navigator {
         }
         i.putExtra("targetLatPoints", targetLatPoints);
         i.putExtra("targetLonPoints", targetLonPoints);
-        Log.e(TAG, "Avant startActivity:");
         activity.startActivity(i);
     }
 
