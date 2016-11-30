@@ -38,6 +38,8 @@ public class Navigator {
     protected class Poi extends Location {
         public float distance = 0;
         public int index = 0;
+        public String name;
+        public String desc;
 
         public Poi(Location l) {
             super(l);
@@ -54,6 +56,7 @@ public class Navigator {
     private Poi[] _pointsSimpl;
     private int _nbPointsSimpl = 0;
     private List<Climb> _climbs;
+    private List<Poi> _wpts;
     private float _nextDistance = 0;
     private float _nextBearing = 0;
     private int _nextIndex = -1;
@@ -66,7 +69,8 @@ public class Navigator {
     public static final int MIN_ASCENT_CLIMB = 40;
 
     public Navigator() {
-        _climbs = new ArrayList<Climb>();
+        _climbs = new ArrayList<>();
+        _wpts = new ArrayList<>();
     }
 
     public void onLocationChanged(Location location) {
@@ -210,6 +214,30 @@ public class Navigator {
                             _pointsIni[_nbPointsIni].distance = distance;
                         }
                         _nbPointsIni++;
+                    } catch (NumberFormatException e) {
+                        Log.e(TAG, "Exception:" + e);
+                    }
+                }
+            }
+
+
+            expression = "//wpt";
+            nodes = (NodeList) xpath.evaluate(expression, doc, XPathConstants.NODESET);
+            Log.d(TAG, "length wpt:" + nodes.getLength());
+            for (int i = 0; i < nodes.getLength(); i++) {
+                node = nodes.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    Element eElement = (Element) node;
+                    //Log.d(TAG, "lat  " + eElement.getAttribute("lat"));
+                    //Log.d(TAG, "ele: " + eElement.getElementsByTagName("ele").item(0).getTextContent());
+                    try {
+                        loc.setLatitude(Float.parseFloat(eElement.getAttribute("lat")));
+                        loc.setLongitude(Float.parseFloat(eElement.getAttribute("lon")));
+                        //loc.setAltitude(Float.parseFloat(eElement.getElementsByTagName("ele").item(0).getTextContent()));
+                        Poi wpt = new Poi(loc);
+                        wpt.name = eElement.getElementsByTagName("name").item(0).getTextContent();
+                        wpt.desc = android.text.Html.fromHtml(eElement.getElementsByTagName("desc").item(0).getTextContent()).toString();
+                        _wpts.add(wpt);
                     } catch (NumberFormatException e) {
                         Log.e(TAG, "Exception:" + e);
                     }
@@ -429,6 +457,12 @@ public class Navigator {
             targetNames.add("End climb #" + nb + " " + climb.ascent + "m (" + ((int) climb.start.getAltitude()) + "-" +  ((int) climb.end.getAltitude()) + ")");
             targetTypes.add(40); // 40:Summit
             nb++;
+        }
+        for (Poi wpt : _wpts) {
+            targetLat.add(wpt.getLatitude());
+            targetLon.add(wpt.getLongitude());
+            targetNames.add(wpt.name + " - " + wpt.desc);
+            targetTypes.add(11); // 11:crossing
         }
         // doc http://www.oruxmaps.com/foro/viewtopic.php?p=4404#p4404
         double[] targetLat2 = new double[targetLat.size()];
