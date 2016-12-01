@@ -23,6 +23,7 @@ import com.njackson.events.base.BaseStatus;
 import com.njackson.gps.GPSSensorEventListener;
 import com.njackson.gps.GPSServiceCommand;
 import com.njackson.gps.IForegroundServiceStarter;
+import com.njackson.pebble.IMessageManager;
 import com.njackson.state.GPSDataStore;
 import com.njackson.state.IGPSDataStore;
 import com.njackson.test.application.TestApplication;
@@ -115,6 +116,11 @@ public class GPSServiceCommandTest extends AndroidTestCase {
 
         @Provides @Singleton
         Bus providesBus() { return mock(Bus.class); }
+
+        @Provides @Singleton
+        public IMessageManager providesMessageManager() {
+            return mock(IMessageManager.class);
+        }
     }
 
     @Override

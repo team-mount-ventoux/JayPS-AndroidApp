@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.njackson.Constants;
 import com.njackson.adapters.AdvancedLocationToNewLocation;
@@ -27,6 +28,7 @@ import com.njackson.events.GPSServiceCommand.ResetGPSState;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.GPSServiceCommand.SavedLocation;
 import com.njackson.events.base.BaseStatus;
+import com.njackson.pebble.IMessageManager;
 import com.njackson.service.IServiceCommand;
 import com.njackson.state.IGPSDataStore;
 import com.njackson.upload.RunkeeperUpload;
@@ -67,6 +69,7 @@ public class GPSServiceCommand implements IServiceCommand {
     @Inject AltitudeGraphReduce _altitudeGraphReduce;
     @Inject IServiceStarter _serviceStarter;
     @Inject Navigator _navigator;
+    @Inject IMessageManager _messageManager;
 
     private AdvancedLocation _advancedLocation;
     private Location firstLocation = null;
@@ -366,6 +369,18 @@ public class GPSServiceCommand implements IServiceCommand {
         public void onLocationChanged(Location location) {
             _advancedLocation.onLocationChanged(location, _heartRate, _cyclingCadence);
             _navigator.onLocationChanged(location);
+            String[] resultClimb = _navigator.messageClimb(location);
+            if (resultClimb[0] != "") {
+                Toast.makeText(_applicationContext, resultClimb[0] + " " + resultClimb[1], Toast.LENGTH_LONG).show();
+                _messageManager.sendMessageToPebble(resultClimb[0], resultClimb[1]);
+            }
+            String[] resultWpt = _navigator.messageWpt(location);
+            if (resultWpt[0] != "") {
+                Toast.makeText(_applicationContext, resultWpt[0] + " " + resultWpt[1], Toast.LENGTH_LONG).show();
+                _messageManager.sendMessageToPebble(resultWpt[0], resultWpt[1]);
+            }
+
+
             if (firstLocation == null) {
                 firstLocation = location;
                 saveGPSStats();

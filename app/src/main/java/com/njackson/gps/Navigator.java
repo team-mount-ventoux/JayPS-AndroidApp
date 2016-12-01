@@ -49,6 +49,7 @@ public class Navigator {
         public Poi start;
         public Poi end;
         int ascent;
+        float dist;
     }
 
     private Poi[] _pointsIni;
@@ -64,9 +65,14 @@ public class Navigator {
     private final float MIN_DIST = 1000000;
     private Location _lastSeenLoc = null;
     private float _lastSeenDist = 0;
+    private int lastClimbMessage = 0;
+    private int lastWptMessage = 0;
 
     public static final int MIN_ASCENT_VARIATION = 25;
     public static final int MIN_ASCENT_CLIMB = 40;
+
+    public static final int MIN_DIST_ALERT_CLIMB = 50;
+    public static final int MIN_DIST_ALERT_WPT = 50;
 
     public Navigator() {
         _climbs = new ArrayList<>();
@@ -172,6 +178,76 @@ public class Navigator {
             _lastSeenDist = location.distanceTo(_pointsSimpl[newNextIndex]);
         }
     }
+    public String[] messageClimb(Location location) {
+        String[] result = new String[2];
+        String title = "";
+        String message = "";
+        int newClimbMessage = 0;
+
+        int nb = 0;
+        for (Climb climb : _climbs) {
+            float distStart = location.distanceTo(climb.start); // in meters
+            float distEnd = location.distanceTo(climb.end); // in meters
+            if (debugLevel > 1) Log.d(TAG, "climb #" + nb + " start:" + distStart + "m end:" + distEnd);
+            if (distStart < MIN_DIST_ALERT_CLIMB) {
+                title = "Start climb " + (nb+1) + "/" + _climbs.size();
+                message = displayClimb(nb);
+                newClimbMessage = 10 * nb + 1;
+            }
+            if (distEnd < MIN_DIST_ALERT_CLIMB) {
+                title = "End climb #" + (nb+1) + "/" + _climbs.size();
+                message = displayClimb(nb);
+                newClimbMessage = 10 * nb + 2;
+            }
+            nb++;
+        }
+        if (newClimbMessage == lastClimbMessage) {
+            if (debugLevel > 0) Log.d(TAG, "Skip message: " + message + " same newClimbMessage:" + newClimbMessage);
+            title = message = "";
+        }
+        lastClimbMessage = newClimbMessage;
+        if (message != "") {
+            Log.d(TAG, "messageClimb(): " + title + " - " + message);
+        }
+        result[0] = title;
+        result[1] = message;
+        return result;
+    }
+
+    public String[] messageWpt(Location location) {
+        String[] result = new String[2];
+        String title = "";
+        String message = "";
+        int newWptMessage = 0;
+
+        float minDist = MIN_DIST;
+        int nb = 0;
+        for (Poi wpt : _wpts) {
+            float dist = location.distanceTo(wpt); // in meters
+            if (debugLevel > 0) Log.d(TAG, "wpt #" + nb + " dist:" + dist + "m");
+            if (dist < minDist) {
+                if (dist < MIN_DIST_ALERT_WPT) {
+                    title = "Point " + (nb+1) + "/" + _wpts.size();
+                    message = wpt.name + " " + wpt.desc;
+                    newWptMessage = 10 * nb + 1;
+                }
+                minDist = dist;
+            }
+            nb++;
+        }
+        if (newWptMessage == lastWptMessage) {
+            if (debugLevel > 0) Log.d(TAG, "Skip message: " + message + " same newWptMessage:" + newWptMessage);
+            title = message = "";
+        }
+        lastWptMessage = newWptMessage;
+        if (message != "") {
+            Log.d(TAG, "messageWpt(): " + title + " - " + message);
+        }
+        result[0] = title;
+        result[1] = message;
+        return result;
+    }
+
     public void clearRoute() {
         _nbPointsIni = _nbPointsSimpl = 0;
         _climbs.clear();
@@ -408,8 +484,22 @@ public class Navigator {
         Climb climb = new Climb();
         climb.start = _pointsIni[climb_start];
         climb.end = _pointsIni[climb_end];
+        climb.dist = (int) (_pointsIni[climb_end].distance - _pointsIni[climb_start].distance);
         climb.ascent = ascent_climb;
         _climbs.add(climb);
+    }
+    public String displayClimb(int index) {
+        String msg = "";
+        if (index < _climbs.size()) {
+            Climb climb = _climbs.get(index);
+            msg = //"#" + (index+1) + "/" + _climbs.size()
+                "Summit " + ((int) climb.end.getAltitude()) + "m"
+                + " - climb " + climb.ascent + "m in " + String.format("%.1f", climb.dist/1000) + "km";
+            if (climb.dist > 0) {
+                msg += " " + String.format("%.1f", 100 * climb.ascent / climb.dist) + "%";
+            }
+        }
+        return msg;
     }
 
     public void loadRouteToOrux(Activity activity) {
@@ -445,16 +535,16 @@ public class Navigator {
                 targetTypes.add(type);
             }
         }
-        int nb = 1;
+        int nb = 0;
         for (Climb climb : _climbs) {
             targetLat.add(climb.start.getLatitude());
             targetLon.add(climb.start.getLongitude());
-            targetNames.add("Start climb #" + nb + " " + climb.ascent + "m (" + ((int) climb.start.getAltitude()) + "-" +  ((int) climb.end.getAltitude()) + ")");
+            targetNames.add("Start climb #" + (nb+1) + "/" + _climbs.size() + " " + displayClimb(nb));
             targetTypes.add(29); // 29:Parking Area
 
             targetLat.add(climb.end.getLatitude());
             targetLon.add(climb.end.getLongitude());
-            targetNames.add("End climb #" + nb + " " + climb.ascent + "m (" + ((int) climb.start.getAltitude()) + "-" +  ((int) climb.end.getAltitude()) + ")");
+            targetNames.add("End climb #" + (nb+1) + "/" + _climbs.size() + " " + displayClimb(nb));
             targetTypes.add(40); // 40:Summit
             nb++;
         }
