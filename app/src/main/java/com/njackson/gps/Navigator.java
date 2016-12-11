@@ -77,6 +77,7 @@ public class Navigator {
     public Navigator() {
         _climbs = new ArrayList<>();
         _wpts = new ArrayList<>();
+        clearRoute();
     }
 
     public void onLocationChanged(Location location) {
@@ -251,10 +252,13 @@ public class Navigator {
     public void clearRoute() {
         _nbPointsIni = _nbPointsSimpl = 0;
         _climbs.clear();
+        _wpts.clear();
         _nextIndex = -1;
         _nextDistance = 0;
         _lastSeenLoc = null;
         _lastSeenDist = 0;
+        lastClimbMessage = 0;
+        lastWptMessage = 0;
     }
     public void loadGpx(String gpx) {
         clearRoute();
