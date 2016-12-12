@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="2.9.5" versioncode="340" >
+    <release version="2.9.5-beta1" versioncode="340" >
         <change><![CDATA[<b>[Navigation] Waypoint notifications:</b><br/>
-            + If the imported GPX contains waypoints, show a notification on Pebble when reached<br/>
+            + If the imported GPX contains waypoints, show a notification on Pebble when they are reached<br/>
             + [Online planner] Add Google Directions "turns" as notifications<br/>
-            + Detect climbs + notifications (begin/end)]]></change>
+            + Detect climbs + notifications (start/end) - Export to OruxMaps]]></change>
     </release>
     <release version="2.9.1" versioncode="330" >
         <change>[Pebble 2] Add support for Pebble 2 and built-in heart rate monitor</change>
