@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="2.9.5" versioncode="340" >
+        <change><![CDATA[<b>[Navigation] Waypoint notifications:</b><br/>
+            + If the imported GPX contains waypoints, show a notification on Pebble when reached<br/>
+            + [Online planner] Add Google Directions "turns" as notifications<br/>
+            + Detect climbs + notifications (begin/end)]]></change>
+    </release>
+    <release version="2.9.1" versioncode="330" >
+        <change>[Pebble 2] Add support for Pebble 2 and built-in heart rate monitor</change>
+        <change>[Pebble classic] Add more functions thanks to advanced memory optimizations (Overlays, thanks gregoiresage)</change>
+        <change>[Firmware 4] Add App Glance : displays distance and ascent in the Pebble app menu</change>
+    </release>
     <release version="2.8.0" versioncode="320" >
         <change><![CDATA[<b>Navigation: follow a route on your Pebble</b><br/>
             - load a GPX containing a route to follow in the menu<br/>
