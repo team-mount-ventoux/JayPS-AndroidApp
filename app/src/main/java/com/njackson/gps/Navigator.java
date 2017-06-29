@@ -294,8 +294,8 @@ public class Navigator {
                             _pointsIni[_nbPointsIni].distance = distance;
                         }
                         _nbPointsIni++;
-                    } catch (NumberFormatException e) {
-                        Log.e(TAG, "Exception:" + e);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Skip " + i + ", exception:" + e);
                     }
                 }
             }
@@ -316,10 +316,12 @@ public class Navigator {
                         //loc.setAltitude(Float.parseFloat(eElement.getElementsByTagName("ele").item(0).getTextContent()));
                         Poi wpt = new Poi(loc);
                         wpt.name = eElement.getElementsByTagName("name").item(0).getTextContent();
-                        wpt.desc = android.text.Html.fromHtml(eElement.getElementsByTagName("desc").item(0).getTextContent()).toString();
+                        if (eElement.getElementsByTagName("desc").item(0) != null) {
+                            wpt.desc = android.text.Html.fromHtml(eElement.getElementsByTagName("desc").item(0).getTextContent()).toString();
+                        }
                         _wpts.add(wpt);
-                    } catch (NumberFormatException e) {
-                        Log.e(TAG, "Exception:" + e);
+                    } catch (Exception e) {
+                        Log.e(TAG, "Skip " + i + ", exception:" + e);
                     }
                 }
             }
