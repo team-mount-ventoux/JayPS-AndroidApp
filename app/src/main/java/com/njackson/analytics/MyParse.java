@@ -3,20 +3,23 @@ package com.njackson.analytics;
 import android.app.Application;
 import android.content.Intent;
 
+import com.parse.Parse;
 import com.parse.ParseAnalytics;
-import com.parse.ParseCrashReporting;
+
+import java.util.Map;
+//import com.parse.ParseCrashReporting;
 
 /**
  * Created by njackson on 23/12/14.
  */
-public class Parse implements IAnalytics {
+public class MyParse implements IAnalytics {
 
     private boolean _enabled = false;
 
     @Override
     public void enable(Application application) {
-        ParseCrashReporting.enable(application);
-        com.parse.Parse.initialize(application, "NIwEkYlaiestozg1sel0U9cDQk0AR5qLi8sSouxn", "5FzfXeSMyWnaXmy41zVzatF1dwdjLfP11gtLi5jf");
+        //ParseCrashReporting.enable(application);
+        com.parse.Parse.initialize(application);
         _enabled = true;
     }
 
@@ -47,4 +50,18 @@ public class Parse implements IAnalytics {
             ParseAnalytics.trackEventInBackground("SkippedMessage");
         }
     }
+
+    @Override
+    public void trackEvent(String name) {
+        if (_enabled) {
+            ParseAnalytics.trackEventInBackground(name);
+        }
+    }
+    @Override
+    public void trackEvent(String name, Map<String, String> dimensions) {
+        if (_enabled) {
+            ParseAnalytics.trackEventInBackground(name, dimensions);
+        }
+    }
+
 }

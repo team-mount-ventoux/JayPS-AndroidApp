@@ -15,7 +15,7 @@ import com.njackson.activities.MainActivity;
 import com.njackson.activityrecognition.ActivityRecognitionIntentService;
 import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
 import com.njackson.analytics.IAnalytics;
-import com.njackson.analytics.Parse;
+import com.njackson.analytics.MyParse;
 import com.njackson.application.MainThreadBus;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.activities.SettingsActivity;
@@ -206,7 +206,7 @@ public class AndroidModule {
 
     @Provides @Singleton
     IAnalytics providesAnalytics() {
-        return new Parse();
+        return new MyParse();
     }
 
     @Provides

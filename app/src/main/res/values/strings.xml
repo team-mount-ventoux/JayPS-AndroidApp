@@ -217,4 +217,8 @@
     <string name="get_token">Get Token</string>
     <string name="delete_token">Delete Token</string>
     <string name="delete_cookies">Delete cookies</string>
+
+    <string name="parse_server_url">http://s.jayps.fr/index.php</string>
+    <string name="parse_app_id">413475423</string>
+
 </resources>

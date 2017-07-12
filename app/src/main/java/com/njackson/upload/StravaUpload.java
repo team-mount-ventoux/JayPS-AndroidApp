@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.pebble.IMessageManager;
 
@@ -34,6 +35,7 @@ public class StravaUpload {
 
     @Inject IMessageManager _messageManager;
     @Inject SharedPreferences _sharedPreferences;
+    @Inject IAnalytics _parseAnalytics;
     Activity _activity = null;
     Context _context;
 
@@ -204,14 +206,17 @@ public class StravaUpload {
             if (result.serverResponseCode == 201) {
                 is = urlConnection.getInputStream();
                 result.message = "Your activity has been created";
+                _parseAnalytics.trackEvent("strava_ok");
             } else if (result.serverResponseCode == 400) {
                  // {"id":11111111,"external_id":"file1465247568.gpx","error":"file1465247568.gpx duplicate of activity 222222","status":"There was an error processing your activity.","activity_id":null}
                 is = urlConnection.getErrorStream();
                 result.message = "An error has occurred. If you've already uploaded the current activity, please delete it in Strava.";
+                _parseAnalytics.trackEvent("strava_error");
             } else if (result.serverResponseCode == 401) {
                 // {"message":"Authorization Error","errors":[{"resource":"Athlete","field":"access_token","code":"invalid"}]}
                 is = urlConnection.getErrorStream();
                 result.message = "Error - Unauthorized. Please check your credentials in the settings.";
+                _parseAnalytics.trackEvent("strava_unauthorized");
             }
             if (is != null) {
                 Scanner inStream = new Scanner(is);

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.njackson.Constants;
 import com.njackson.adapters.AdvancedLocationToNewLocation;
 import com.njackson.adapters.NewLocationToSavedLocation;
+import com.njackson.analytics.IAnalytics;
 import com.njackson.application.IInjectionContainer;
 import com.njackson.application.modules.ForApplication;
 import com.njackson.events.BleServiceCommand.BleSensorData;
@@ -40,6 +41,8 @@ import com.njackson.utils.time.ITime;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 import javax.inject.Inject;
@@ -70,6 +73,7 @@ public class GPSServiceCommand implements IServiceCommand {
     @Inject IServiceStarter _serviceStarter;
     @Inject Navigator _navigator;
     @Inject IMessageManager _messageManager;
+    @Inject IAnalytics _parseAnalytics;
 
     private AdvancedLocation _advancedLocation;
     private Location firstLocation = null;
@@ -212,6 +216,7 @@ public class GPSServiceCommand implements IServiceCommand {
         } else {
             _currentStatus = BaseStatus.Status.DISABLED;
         }
+        _parseAnalytics.trackEvent("start");
     }
 
     public void stop (){
@@ -251,6 +256,9 @@ public class GPSServiceCommand implements IServiceCommand {
                 }
             }, TIMEOUT_RUNKEEPER);
         }
+        Map<String, String> dimensions = new HashMap<String, String>();
+        dimensions.put("d", Float.toString(_advancedLocation.getDistance()));
+        _parseAnalytics.trackEvent("stop", dimensions);
     }
 
     private void setGPSStartTime() {
