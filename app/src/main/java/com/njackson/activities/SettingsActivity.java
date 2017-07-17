@@ -231,7 +231,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             public boolean onPreferenceClick(Preference preference) {
                 if (preference.getKey().equals("PREF_NAV_STOP")) {
                     if (_navigator.getNbPoints() > 0) {
-                        _navigator.clearRoute();
+                        _navigator.clearRoute(true);
                         Toast.makeText(getApplicationContext(), "Navigation was stopped", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getApplicationContext(), "The navigation was not started", Toast.LENGTH_SHORT).show();

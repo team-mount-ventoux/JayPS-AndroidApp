@@ -77,7 +77,7 @@ public class Navigator {
     public Navigator() {
         _climbs = new ArrayList<>();
         _wpts = new ArrayList<>();
-        clearRoute();
+        clearRoute(true);
     }
 
     public void onLocationChanged(Location location) {
@@ -249,63 +249,73 @@ public class Navigator {
         return result;
     }
 
-    public void clearRoute() {
-        _nbPointsIni = _nbPointsSimpl = 0;
-        _climbs.clear();
+    public void clearRoute(boolean cleartracks) {
+        if (cleartracks) {
+            _nbPointsIni = _nbPointsSimpl = 0;
+            _climbs.clear();
+            _nextIndex = -1;
+            _nextDistance = 0;
+            _lastSeenLoc = null;
+            _lastSeenDist = 0;
+            lastClimbMessage = 0;
+        }
         _wpts.clear();
-        _nextIndex = -1;
-        _nextDistance = 0;
-        _lastSeenLoc = null;
-        _lastSeenDist = 0;
-        lastClimbMessage = 0;
         lastWptMessage = 0;
     }
     public void loadGpx(String gpx) {
-        clearRoute();
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new InputSource(new ByteArrayInputStream(gpx.getBytes("utf-8"))));
-
-            XPath xpath = XPathFactory.newInstance().newXPath();
-            String expression = "";
-            NodeList nodes;
-            Node node;
-            expression = "//trkpt";
-            nodes = (NodeList) xpath.evaluate(expression, doc, XPathConstants.NODESET);
-            Log.d(TAG, "length:" + nodes.getLength());
-            float distance = 0;
-            _pointsIni = new Poi[nodes.getLength()];
             Location loc = new Location("JayPS");
-            for (int i = 0; i < nodes.getLength(); i++) {
-                node = nodes.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE) {
-                    Element eElement = (Element) node;
-                    //Log.d(TAG, "lat  " + eElement.getAttribute("lat"));
-                    //Log.d(TAG, "ele: " + eElement.getElementsByTagName("ele").item(0).getTextContent());
-                    try {
-                        loc.setLatitude(Float.parseFloat(eElement.getAttribute("lat")));
-                        loc.setLongitude(Float.parseFloat(eElement.getAttribute("lon")));
-                        loc.setAltitude(Float.parseFloat(eElement.getElementsByTagName("ele").item(0).getTextContent()));
-                        _pointsIni[_nbPointsIni] = new Poi(loc);
-                        _pointsIni[_nbPointsIni].index = i;
-                        if (_nbPointsIni > 0) {
-                            distance += _pointsIni[_nbPointsIni].distanceTo(_pointsIni[_nbPointsIni-1]);
-                            _pointsIni[_nbPointsIni].distance = distance;
-                        }
-                        _nbPointsIni++;
-                    } catch (Exception e) {
-                        Log.e(TAG, "Skip " + i + ", exception:" + e);
-                    }
-                }
+            XPath xpath = XPathFactory.newInstance().newXPath();
+            NodeList nodesTrkpt = (NodeList) xpath.evaluate("//trkpt", doc, XPathConstants.NODESET);
+            Log.d(TAG, "length trkpt:" + nodesTrkpt.getLength());
+            NodeList nodesWpt = (NodeList) xpath.evaluate("//wpt", doc, XPathConstants.NODESET);
+            Log.d(TAG, "length wpt:" + nodesWpt.getLength());
+
+            boolean importTracks = true;
+            if (nodesTrkpt.getLength() == 0 && nodesWpt.getLength() > 0) {
+                importTracks = false;
+                // clear only wpts
+                clearRoute(false);
+            } else {
+                // clear tracks and wpts
+                clearRoute(true);
             }
 
+            if (importTracks) {
+                float distance = 0;
+                _pointsIni = new Poi[nodesTrkpt.getLength()];
+                for (int i = 0; i < nodesTrkpt.getLength(); i++) {
+                    Node node = nodesTrkpt.item(i);
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+                        Element eElement = (Element) node;
+                        //Log.d(TAG, "lat  " + eElement.getAttribute("lat"));
+                        //Log.d(TAG, "ele: " + eElement.getElementsByTagName("ele").item(0).getTextContent());
+                        try {
+                            loc.setLatitude(Float.parseFloat(eElement.getAttribute("lat")));
+                            loc.setLongitude(Float.parseFloat(eElement.getAttribute("lon")));
+                            loc.setAltitude(Float.parseFloat(eElement.getElementsByTagName("ele").item(0).getTextContent()));
+                            _pointsIni[_nbPointsIni] = new Poi(loc);
+                            _pointsIni[_nbPointsIni].index = i;
+                            if (_nbPointsIni > 0) {
+                                distance += _pointsIni[_nbPointsIni].distanceTo(_pointsIni[_nbPointsIni - 1]);
+                                _pointsIni[_nbPointsIni].distance = distance;
+                            }
+                            _nbPointsIni++;
+                        } catch (Exception e) {
+                            Log.e(TAG, "Skip " + i + ", exception:" + e);
+                        }
+                    }
+                }
+                Log.d(TAG, "nbPointsIni:" + _nbPointsIni);
+                simplifyRoute();
+                delectClimbs();
+            }
 
-            expression = "//wpt";
-            nodes = (NodeList) xpath.evaluate(expression, doc, XPathConstants.NODESET);
-            Log.d(TAG, "length wpt:" + nodes.getLength());
-            for (int i = 0; i < nodes.getLength(); i++) {
-                node = nodes.item(i);
+            for (int i = 0; i < nodesWpt.getLength(); i++) {
+                Node node = nodesWpt.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) node;
                     //Log.d(TAG, "lat  " + eElement.getAttribute("lat"));
@@ -328,9 +338,7 @@ public class Navigator {
         } catch (Exception e) {
             Log.e(TAG, "Exception:" + e);
         }
-        Log.d(TAG, "nbPointsIni:" + _nbPointsIni);
-        simplifyRoute();
-        delectClimbs();
+
 
         // debug
         //if (_nbPointsSimpl > 15) {
