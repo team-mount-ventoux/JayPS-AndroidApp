@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
-    <release version="2.9.5-beta1" versioncode="340" >
+    <release version="2.9.5" versioncode="350" >
+        <change><![CDATA[<b>New name for the app. Ventoo is now JayPS!</b>]]></change>
         <change><![CDATA[<b>[Navigation] Waypoint notifications:</b><br/>
             + If the imported GPX contains waypoints, show a notification on Pebble when they are reached<br/>
             + [Online planner] Add Google Directions "turns" as notifications<br/>
