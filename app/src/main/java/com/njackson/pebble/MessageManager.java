@@ -266,7 +266,7 @@ public class MessageManager implements IMessageManager, Runnable {
         final String notificationData = new JSONArray().put(jsonData).toString();
 
         i.putExtra("messageType", "PEBBLE_ALERT");
-        i.putExtra("sender", "Ventoo");
+        i.putExtra("sender", "JayPS");
         i.putExtra("notificationData", notificationData);
 
         _applicationContext.sendBroadcast(i);

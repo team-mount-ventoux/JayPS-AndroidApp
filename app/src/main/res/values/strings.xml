@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="MAIN_TITLE">Ventoo v2.9.5-beta1</string>
+    <string name="MAIN_TITLE">JayPS v2.9.5-beta2</string>
     <string name="PREF_INSTALL_WATCHFACE_URL">http://dl.pebblebike.com/p/ventoo-2.9.1.pbw</string>
     <string name="PREF_INSTALL_WATCHFACE_NL_URL">http://dl.pebblebike.com/p/ventoo-2.8.0-nl.pbw</string>
 
-    <string name="app_name">Ventoo</string>
+    <string name="app_name">JayPS</string>
     <string name="action_settings">Settings</string>
     <string name="speedfragment_time_label">TIME</string>
     <string name="speedfragment_time_value">00:00</string>
@@ -53,7 +53,7 @@
     <string name="PREF_ABOUT_CATEGORY_TITLE">About</string>
 
     <string name="PREF_AUTOSTART_TITLE">Auto Start</string>
-    <string name="PREF_AUTOSTART_SUMMARY">Select this item if you would like Ventoo to autostart everytime you
+    <string name="PREF_AUTOSTART_SUMMARY">Select this item if you would like JayPS to autostart everytime you
         start cycling
     </string>
     <string name="PREF_UNITS_TITLE">Units</string>
@@ -103,11 +103,11 @@
 
     <string name="PREF_ABOUT_TITLE">@string/MAIN_TITLE</string>
     <string name="PREF_ABOUT_SUMMARY">http://www.pebblebike.com</string>
-    <string name="PREF_ABOUT_URL">http://www.pebblebike.com/?utm_source=VentooApp</string>
+    <string name="PREF_ABOUT_URL">http://www.pebblebike.com/?utm_source=JayPSApp</string>
 
     <string name="PREF_USERVOICE">New features</string>
     <string name="PREF_USERVOICE_SUMMARY">Create and vote for new features</string>
-    <string name="PREF_USERVOICE_URL">http://pebblebike.uservoice.com/?utm_source=VentooApp</string>
+    <string name="PREF_USERVOICE_URL">http://pebblebike.uservoice.com/?utm_source=JayPSApp</string>
 
     <string name="PREF_GOOGLEPLUS">Google+ Community</string>
     <string name="PREF_GOOGLEPLUS_SUMMARY">Exchange ideas and test new versions</string>
@@ -124,7 +124,7 @@
     <string name="PREF_DEBUG_TITLE">Debug</string>
     <string name="PREF_DEBUG_SUMMARY">More logs for developers</string>
 
-    <string name="PREF_NAV_PLANNER_URL">http://pebblebike.com/planner/?utm_source=VentooApp</string>
+    <string name="PREF_NAV_PLANNER_URL">http://pebblebike.com/planner/?utm_source=JayPSApp</string>
 
     <string name="PREF_STRAVA_CATEGORIE_TITLE">Strava Integration</string>
     <string name="PREF_STRAVA_CATEGORIE_SUMMARY"></string>
@@ -136,8 +136,8 @@
     <string name="STRAVA_AUTO_TITLE">Automatic upload</string>
     <string name="STRAVA_AUTO_DIALOG_TITLE">Strava automatic upload</string>
     <string name="STRAVA_AUTO_DEFAULT">disable</string>
-    <string name="PREF_STRAVA_VENTOO_CLUB_TITLE">Strava Ventoo Club</string>
-    <string name="PREF_STRAVA_VENTOO_CLUB_SUMMARY">Join other Ventoo users</string>
+    <string name="PREF_STRAVA_VENTOO_CLUB_TITLE">Strava JayPS Club</string>
+    <string name="PREF_STRAVA_VENTOO_CLUB_SUMMARY">Join other JayPS users</string>
     <string name="PREF_STRAVA_URL_VENTOO_CLUB">https://www.strava.com/clubs/ventoo</string>
 
     <string name="PREF_RUNKEEPER_CATEGORIE_TITLE">Runkeeper Integration</string>
@@ -184,7 +184,7 @@
     <string name="ble_unknown_characteristic">Unknown characteristic</string>
     <string name="ble_unknown_service">Unknown service</string>
     <string name="PREF_GOOGLE_FIT_TITLE">Google Fit</string>
-    <string name="PREF_GOOGLE_FIT_SUMMARY">Enable Google Fit recording for all your Ventoo activity</string>
+    <string name="PREF_GOOGLE_FIT_SUMMARY">Enable Google Fit recording for all your JayPS activity</string>
 
     <!-- Canvas Plugin -->
     <string-array name="canvas_format_mask_descs">
@@ -209,7 +209,7 @@
     </string-array>
 
     <!-- messages -->
-    <string name="message_pebble_new_watchapp">A new watchapp is available. Please install it from the Ventoo android application settings</string>
+    <string name="message_pebble_new_watchapp">A new watchapp is available. Please install it from the JayPS android application settings</string>
 
     <!-- strava/runkeeper -->
     <string name="token_strava">strava</string>

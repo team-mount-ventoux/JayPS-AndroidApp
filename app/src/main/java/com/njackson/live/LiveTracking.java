@@ -73,7 +73,7 @@ public class LiveTracking implements ILiveTracking {
         this._context = null;
         this._type = type;
         _bus = bus;
-        this._lastLocation = new Location("Ventoo");
+        this._lastLocation = new Location("JayPS");
     }
 
     public LiveTracking(Context context, int type, Bus bus) {
@@ -184,7 +184,7 @@ public class LiveTracking implements ILiveTracking {
 
             postParameters = "request=" + request;
             if (_activity_id == "") {
-                postParameters += "&title=Test&source=Ventoo&version=" + _versionCode;
+                postParameters += "&title=Test&source=JayPS&version=" + _versionCode;
             } else {
                 postParameters += "&activity_id=" + _activity_id;
             }

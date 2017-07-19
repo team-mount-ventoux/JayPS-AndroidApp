@@ -80,7 +80,7 @@ public class RunkeeperUpload {
                 }
                 if (_sharedPreferences.getBoolean("RUNKEEPER_NOTIFICATION", false)) {
                     // use _messageManager and not _bus to be able to send data even if GPS is not started
-                    _messageManager.sendMessageToPebble("Ventoo - Runkeeper", message);
+                    _messageManager.sendMessageToPebble("JayPS - Runkeeper", message);
                 }
             }
         }).start();

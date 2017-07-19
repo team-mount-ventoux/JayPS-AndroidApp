@@ -64,7 +64,7 @@ public class PebbleServiceCommand implements IServiceCommand {
 
     @Subscribe
     public void onNewMessageEvent(NewMessage message) {
-        _messageManager.showSimpleNotificationOnWatch("Ventoo", message.getMessage());
+        _messageManager.showSimpleNotificationOnWatch("JayPS", message.getMessage());
     }
 
     @Subscribe
@@ -104,7 +104,7 @@ public class PebbleServiceCommand implements IServiceCommand {
     }
 
     private void notifyPebbleGPSDisable() {
-        _messageManager.showSimpleNotificationOnWatch("Ventoo", "GPS is disabled on your phone. Please enable it.");
+        _messageManager.showSimpleNotificationOnWatch("JayPS", "GPS is disabled on your phone. Please enable it.");
 
     }
 

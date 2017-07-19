@@ -138,6 +138,6 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
     private void sendMessageToPebble(String message) {
         // use _messageManager and not _bus to be able to send data even if GPS is not started
         // TODO(nic): refactor me!
-        _messageManager.sendMessageToPebble("Ventoo", message);
+        _messageManager.sendMessageToPebble("JayPS", message);
     }
 }

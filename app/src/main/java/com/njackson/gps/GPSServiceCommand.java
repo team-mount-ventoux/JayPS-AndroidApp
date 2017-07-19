@@ -288,7 +288,7 @@ public class GPSServiceCommand implements IServiceCommand {
         _advancedLocation.setAltitudeCalibrationDelta(_dataStore.getAltitudeCalibrationDelta(_time.getCurrentTimeMilliseconds()));
 
         if (_dataStore.getFirstLocationLattitude() != 0.0f && _dataStore.getFirstLocationLongitude() != 0.0f) {
-            firstLocation = new Location("Ventoo");
+            firstLocation = new Location("JayPS");
             firstLocation.setLatitude(_dataStore.getFirstLocationLattitude());
             firstLocation.setLongitude(_dataStore.getFirstLocationLongitude());
         } else {

@@ -17,10 +17,10 @@ public class NavigatorTest extends AndroidTestCase {
 
         int i = 0;
 
-        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.00); i++;
-        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.01); locs[i].setLongitude(0.07); i++;
-        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.09); i++;
-        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.02); locs[i].setLongitude(0.12); i++;
+        locs[i] = new Location("JayPS"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.00); i++;
+        locs[i] = new Location("JayPS"); locs[i].setLatitude(43.01); locs[i].setLongitude(0.07); i++;
+        locs[i] = new Location("JayPS"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.09); i++;
+        locs[i] = new Location("JayPS"); locs[i].setLatitude(43.02); locs[i].setLongitude(0.12); i++;
 
         nav.addPoints(locs);
         nav.simplifyRoute();
@@ -76,12 +76,12 @@ public class NavigatorTest extends AndroidTestCase {
         Location[] locs = new Location[6];
 
         int i = 0;
-        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.00); i++;
-        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.01); locs[i].setLongitude(0.07); i++;
-        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.09); i++;
-        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.02); locs[i].setLongitude(0.12); i++;
-        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.0001); locs[i].setLongitude(0.0901); i++;
-        locs[i] = new Location("Ventoo"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.00); i++;
+        locs[i] = new Location("JayPS"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.00); i++;
+        locs[i] = new Location("JayPS"); locs[i].setLatitude(43.01); locs[i].setLongitude(0.07); i++;
+        locs[i] = new Location("JayPS"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.09); i++;
+        locs[i] = new Location("JayPS"); locs[i].setLatitude(43.02); locs[i].setLongitude(0.12); i++;
+        locs[i] = new Location("JayPS"); locs[i].setLatitude(43.0001); locs[i].setLongitude(0.0901); i++;
+        locs[i] = new Location("JayPS"); locs[i].setLatitude(43.00); locs[i].setLongitude(0.00); i++;
 
         nav.addPoints(locs);
         nav.simplifyRoute();
@@ -113,19 +113,19 @@ public class NavigatorTest extends AndroidTestCase {
     }
 
     Location addDelta(Location loc) {
-        Location result = new Location("Ventoo");
+        Location result = new Location("JayPS");
         result.setLatitude(loc.getLatitude()+0.001);
         result.setLongitude(loc.getLongitude()+0.001);
         return result;
     }
     Location addDeltaMin(Location loc) {
-        Location result = new Location("Ventoo");
+        Location result = new Location("JayPS");
         result.setLatitude(loc.getLatitude()+0.0001);
         result.setLongitude(loc.getLongitude()+0.0001);
         return result;
     }
     Location middle(Location loc1, Location loc2) {
-        Location result = new Location("Ventoo");
+        Location result = new Location("JayPS");
         result.setLatitude((loc1.getLatitude()+loc2.getLatitude())/2);
         result.setLongitude((loc1.getLongitude()+loc2.getLongitude())/2);
         return result;

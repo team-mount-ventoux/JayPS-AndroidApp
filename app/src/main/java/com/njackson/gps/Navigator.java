@@ -276,7 +276,7 @@ public class Navigator {
             Log.d(TAG, "length:" + nodes.getLength());
             float distance = 0;
             _pointsIni = new Poi[nodes.getLength()];
-            Location loc = new Location("Ventoo");
+            Location loc = new Location("JayPS");
             for (int i = 0; i < nodes.getLength(); i++) {
                 node = nodes.item(i);
                 if (node.getNodeType() == Node.ELEMENT_NODE) {

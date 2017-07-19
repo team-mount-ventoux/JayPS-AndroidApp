@@ -95,7 +95,7 @@
     <string-array name="CANVAS_MODE_ENTRIES">
         <item>Disable</item>
         <item>Canvas only</item>
-        <item>Canvas + Ventoo Watchapp</item>
+        <item>Canvas + JayPS Watchapp</item>
     </string-array>
     <string-array name="CANVAS_MODE_ENTRY_VALUES">
         <item>disable</item>

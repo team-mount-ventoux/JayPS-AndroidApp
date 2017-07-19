@@ -45,12 +45,12 @@ public class LiveServiceCommand implements IServiceCommand {
 
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
-        Location location = new NewLocationToAndroidLocation("Ventoo", newLocation);
+        Location location = new NewLocationToAndroidLocation("JayPS", newLocation);
 
         if (location.getTime() > 0) {
             if (firstLocation == null) {
                 if (_dataStore.getFirstLocationLattitude() != 0.0f && _dataStore.getFirstLocationLongitude() != 0.0f) {
-                    firstLocation = new Location("Ventoo");
+                    firstLocation = new Location("JayPS");
                     firstLocation.setLatitude(_dataStore.getFirstLocationLattitude());
                     firstLocation.setLongitude(_dataStore.getFirstLocationLongitude());
                 } else {
