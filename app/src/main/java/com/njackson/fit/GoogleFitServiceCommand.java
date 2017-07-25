@@ -36,12 +36,12 @@ public class GoogleFitServiceCommand implements IServiceCommand, GoogleApiClient
     @Subscribe
     public void onNewActivityEvent(NewActivityEvent event) {
         if(_currentStatus == BaseStatus.Status.STARTED) {
-            switch (event.getActivityType()) {
+            switch (event.getActivity().getMostProbableActivity().getType()) {
                 case DetectedActivity.ON_BICYCLE:
                 case DetectedActivity.RUNNING:
                 case DetectedActivity.WALKING:
                 case DetectedActivity.ON_FOOT:
-                    _sessionManager.addDataPoint(new Date().getTime(), event.getActivityType());
+                    _sessionManager.addDataPoint(new Date().getTime(), event.getActivity().getMostProbableActivity().getType());
                     break;
             }
         }

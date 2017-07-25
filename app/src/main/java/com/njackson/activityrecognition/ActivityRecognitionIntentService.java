@@ -21,7 +21,7 @@ import javax.inject.Inject;
  */
 public class ActivityRecognitionIntentService extends IntentService {
 
-    private static final String TAG = "PB-ActivityRecognitionIntentService";
+    private static final String TAG = "PB-ActivityRecoIntServ";
     @Inject Bus _bus;
 
     public ActivityRecognitionIntentService() {
@@ -38,51 +38,44 @@ public class ActivityRecognitionIntentService extends IntentService {
 
         if (ActivityRecognitionResult.hasResult(intent)) {
             ActivityRecognitionResult result = ActivityRecognitionResult.extractResult(intent);
-
-            switch(result.getMostProbableActivity().getType()) {
-
-                case DetectedActivity.ON_BICYCLE:
-                    Log.d(TAG, "ON_BICYCLE");
-                    sendReply(result.getMostProbableActivity().getType());
-                    break;
-                case DetectedActivity.WALKING:
-                    Log.d(TAG, "WALKING");
-                    sendReply(result.getMostProbableActivity().getType());
-                    break;
-                case DetectedActivity.RUNNING:
-                    Log.d(TAG, "RUNNING");
-                    sendReply(result.getMostProbableActivity().getType());
-                    break;
-                case DetectedActivity.ON_FOOT:
-                    Log.d(TAG, "ON_FOOT");
-                    sendReply(result.getMostProbableActivity().getType());
-                    break;
-                case DetectedActivity.TILTING:
-                    Log.d(TAG, "TILTING");
-                    break;
-                case DetectedActivity.STILL:
-                    Log.d(TAG, "STILL");
-                    sendReply(result.getMostProbableActivity().getType());
-                    break;
-                default:
-                    logActivity(result);
-            }
+            logActivity(result);
+            _bus.post(new NewActivityEvent(result));
         }
     }
 
     private void logActivity(ActivityRecognitionResult result) {
-        Log.d(TAG, "Unknown Activity");
-        Log.d(TAG, "Probable Activities");
-        for(DetectedActivity activity : result.getProbableActivities()) {
-            Log.d(TAG, "Most Probable list: " + result.getMostProbableActivity().getType());
-            Log.d(TAG, "Most Probable list: " + result.getMostProbableActivity().toString());
+        switch (result.getMostProbableActivity().getType()) {
+            case DetectedActivity.IN_VEHICLE:
+                Log.d(TAG, result.getMostProbableActivity().getType() + "_IN_VEHICLE");
+                break;
+            case DetectedActivity.ON_BICYCLE:
+                Log.d(TAG, result.getMostProbableActivity().getType() + "_ON_BICYCLE");
+                break;
+            case DetectedActivity.ON_FOOT:
+                Log.d(TAG, result.getMostProbableActivity().getType() + "_ON_FOOT");
+                break;
+            case DetectedActivity.STILL:
+                Log.d(TAG, result.getMostProbableActivity().getType() + "_STILL");
+                break;
+            case DetectedActivity.UNKNOWN:
+                Log.d(TAG, result.getMostProbableActivity().getType() + "_UNKNOWN");
+                break;
+            case DetectedActivity.TILTING:
+                Log.d(TAG, result.getMostProbableActivity().getType() + "_TILTING");
+                break;
+            case DetectedActivity.WALKING:
+                Log.d(TAG, result.getMostProbableActivity().getType() + "_WALKING");
+                break;
+            case DetectedActivity.RUNNING:
+                Log.d(TAG, result.getMostProbableActivity().getType() + "_RUNNING");
+                break;
+            default:
+                Log.d(TAG, result.getMostProbableActivity().getType() + "_UNKNOWN2");
         }
-        Log.d(TAG, "Most Probable: " + result.getMostProbableActivity().getType());
+        Log.d(TAG, "Probable Activities");
+        for (DetectedActivity activity : result.getProbableActivities()) {
+            Log.d(TAG, "Most Probable list: " + activity.toString());
+        }
         Log.d(TAG, "Most Probable: " + result.getMostProbableActivity().toString());
     }
-
-    private void sendReply(int type) {
-        _bus.post(new NewActivityEvent(type));
-    }
-
 }

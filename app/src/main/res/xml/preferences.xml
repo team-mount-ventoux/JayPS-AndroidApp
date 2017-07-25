@@ -93,6 +93,12 @@
                 android:key="ACTIVITY_RECOGNITION"
                 android:summary="@string/PREF_AUTOSTART_SUMMARY"
                 android:defaultValue="false" />
+
+            <CheckBoxPreference
+                android:key="ACTIVITY_RECOGNITION_WALKING"
+                android:summary="@string/PREF_AUTOSTART_WALKING_SUMMARY"
+                android:defaultValue="false" />
+
         </PreferenceCategory>
     </PreferenceScreen>
 

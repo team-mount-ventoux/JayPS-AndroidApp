@@ -53,9 +53,8 @@
     <string name="PREF_ABOUT_CATEGORY_TITLE">About</string>
 
     <string name="PREF_AUTOSTART_TITLE">Auto Start</string>
-    <string name="PREF_AUTOSTART_SUMMARY">Select this item if you would like JayPS to autostart everytime you
-        start cycling
-    </string>
+    <string name="PREF_AUTOSTART_SUMMARY">Select this item if you would like JayPS to autostart everytime you start cycling</string>
+    <string name="PREF_AUTOSTART_WALKING_SUMMARY">Also include walking/running</string>
     <string name="PREF_UNITS_TITLE">Units</string>
     <string name="PREF_UNITS_DIALOG_TITLE">Units</string>
     <string name="PREF_UNITS_DEFAULT">1</string>

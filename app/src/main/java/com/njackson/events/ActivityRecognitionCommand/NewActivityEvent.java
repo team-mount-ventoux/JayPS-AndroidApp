@@ -1,15 +1,17 @@
 package com.njackson.events.ActivityRecognitionCommand;
 
+import com.google.android.gms.location.ActivityRecognitionResult;
+
 /**
  * Created by server on 21/03/2014.
  */
 public class NewActivityEvent {
 
-    private int _activityType;
-    public int getActivityType() { return _activityType; }
+    private ActivityRecognitionResult _activity;
+    public ActivityRecognitionResult getActivity() { return _activity; }
 
-    public NewActivityEvent(int activityType) {
-        _activityType = activityType;
+    public NewActivityEvent(ActivityRecognitionResult activity) {
+        _activity = activity;
     }
 
 }

@@ -61,7 +61,8 @@ public class Constants {
     public static final float M_TO_NM = 0.000539957f;
     public static final float M_TO_M = 1f;
     public static final float M_TO_FEET = 3.2808399f;
-    public static final long ACTIVITY_RECOGNITION_STILL_TIME = 30000;
+    public static final long ACTIVITY_RECOGNITION_STILL_TIME = 30;
+    public static final long ACTIVITY_RECOGNITION_MOVE_TIME = 5;
 
     public static final String GOOGLE_FIT_SESSION_IDENTIFIER_PREFIX = "PebbleBike-";
     public static final String GOOGLE_FIT_SESSION_NAME = "Pebble Bike";
