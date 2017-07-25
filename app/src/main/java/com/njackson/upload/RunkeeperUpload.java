@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.njackson.R;
+import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.pebble.IMessageManager;
 import com.njackson.state.IGPSDataStore;
@@ -29,6 +30,7 @@ public class RunkeeperUpload {
     @Inject IMessageManager _messageManager;
     @Inject SharedPreferences _sharedPreferences;
     @Inject IGPSDataStore _dataStore;
+    @Inject IAnalytics _parseAnalytics;
     Activity _activity = null;
     Context _context;
 
@@ -135,9 +137,11 @@ public class RunkeeperUpload {
             if (result.serverResponseCode == 201) {
                 is = urlConnection.getInputStream();
                 result.message = "Your activity has been created";
+                _parseAnalytics.trackEvent("runkeeper_ok");
             } else if (result.serverResponseCode == 400) {
                 is = urlConnection.getErrorStream();
                 result.message = "An error has occurred.";
+                _parseAnalytics.trackEvent("runkeeper_ko");
             } else {
                 is = urlConnection.getInputStream();
             }

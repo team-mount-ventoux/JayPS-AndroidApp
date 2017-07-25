@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.njackson.Constants;
 import com.njackson.R;
+import com.njackson.analytics.IAnalytics;
 import com.njackson.application.PebbleBikeApplication;
 import com.njackson.events.BleServiceCommand.BleSensorData;
 import com.njackson.events.GPSServiceCommand.ChangeRefreshInterval;
@@ -55,6 +56,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     @Inject IServiceStarter _serviceStarter;
     @Inject Bus _bus;
     @Inject Navigator _navigator;
+    @Inject IAnalytics _parseAnalytics;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +110,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 GpxExport.export(getApplicationContext(), _sharedPreferences.getBoolean("ADVANCED_GPX", false));
+                _parseAnalytics.trackEvent("gpx_export");
                 return true;
             }
         });
@@ -286,6 +289,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
 
                 startActivity(startupIntent);
 
+                _parseAnalytics.trackEvent("navigation_planner");
+
                 return true;
             }
         });
@@ -361,6 +366,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
                         gpx.append(line).append('\n');
                     }
                     _navigator.loadGpx(gpx.toString());
+                    _parseAnalytics.trackEvent("navigation_load");
                     Toast.makeText(getApplicationContext(), "Route loaded - " + _navigator.getNbPoints() + " points", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     Log.e(TAG, "Exception:" + e);

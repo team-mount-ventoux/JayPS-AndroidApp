@@ -56,6 +56,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
     @Inject IChangeLogBuilder _changeLogBuilder;
     @Inject IGPSDataStore _dataStore;
     @Inject Navigator _navigator;
+    @Inject IAnalytics _parseAnalytics;
 
     private boolean _authInProgress;
 
@@ -225,6 +226,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
         if (id == R.id.action_export_gpx) {
             if (_sharedPreferences.getBoolean("ENABLE_TRACKS", false)) {
                 GpxExport.export(getApplicationContext(), _sharedPreferences.getBoolean("ADVANCED_GPX", false));
+                _parseAnalytics.trackEvent("gpx_export");
             } else {
                 Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the export", Toast.LENGTH_SHORT).show();
             }
@@ -315,6 +317,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
                         gpx.append(line).append('\n');
                     }
                     _navigator.loadGpx(gpx.toString());
+                    _parseAnalytics.trackEvent("navigation_load");
                     Toast.makeText(getApplicationContext(), "Route loaded - " + _navigator.getNbPoints() + " points", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     Log.e(TAG, "Exception:" + e);

@@ -17,6 +17,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.util.Log;
 
+import com.njackson.analytics.IAnalytics;
 import com.njackson.application.IInjectionContainer;
 import com.njackson.events.BleServiceCommand.BleSensorData;
 import com.njackson.utils.time.ITimer;
@@ -56,6 +57,7 @@ public class Ble implements IBle, ITimerHandler {
     private boolean debug = true;
     private boolean _bleStarted = false;
     @Inject ITimer _timer;
+    @Inject IAnalytics _parseAnalytics;
 
     private Queue<BluetoothDevice> connectionQueue = new LinkedList<BluetoothDevice>();
     private Thread connectionThread;
@@ -131,6 +133,8 @@ public class Ble implements IBle, ITimerHandler {
         // Register for broadcasts on BluetoothAdapter state change
         IntentFilter filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         _context.registerReceiver(mReceiver, filter);
+
+        _parseAnalytics.trackEvent("ble_start");
     }
     @Override
     public void stop() {
@@ -269,6 +273,7 @@ public class Ble implements IBle, ITimerHandler {
 
                         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                             if (debug) Log.i(TAG, display(gatt) + " Disconnected from GATT server.");
+                            _parseAnalytics.trackEvent("ble_disconnected");
                             // TODO(jay) post something?
                             //broadcastUpdate(ACTION_GATT_DISCONNECTED);
 
