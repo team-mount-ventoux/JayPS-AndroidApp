@@ -225,7 +225,7 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
         }
         if (id == R.id.action_export_gpx) {
             if (_sharedPreferences.getBoolean("ENABLE_TRACKS", false)) {
-                GpxExport.export(getApplicationContext(), _sharedPreferences.getBoolean("ADVANCED_GPX", false));
+                GpxExport.export(getApplicationContext(), _sharedPreferences.getBoolean("ADVANCED_GPX", false), _sharedPreferences.getString("EXPORT_EMAIL", ""));
                 _parseAnalytics.trackEvent("gpx_export");
             } else {
                 Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the export", Toast.LENGTH_SHORT).show();

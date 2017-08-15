@@ -109,7 +109,7 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         exportGPXPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                GpxExport.export(getApplicationContext(), _sharedPreferences.getBoolean("ADVANCED_GPX", false));
+                GpxExport.export(getApplicationContext(), _sharedPreferences.getBoolean("ADVANCED_GPX", false), _sharedPreferences.getString("EXPORT_EMAIL", ""));
                 _parseAnalytics.trackEvent("gpx_export");
                 return true;
             }

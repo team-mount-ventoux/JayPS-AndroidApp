@@ -89,6 +89,9 @@
     <string name="PREF_CANVAS_SUMMARY">Install app from Google Play</string>
     <string name="PREF_CANVAS_URL">https://play.google.com/store/apps/details?id=com.pennas.pebblecanvas</string>
 
+    <string name="PREF_EXPORT_EMAIL_TITLE">Export email</string>
+    <string name="PREF_EXPORT_EMAIL_SUMMARY">Email address to export your gpx file</string>
+
     <string name="PREF_BLE_CATEGORY_TITLE">BLE Heart Rate Monitor (HRM) or Cycling Speed and Cadence (CSC)</string>
     <string name="PREF_BLE_TITLE">Sensor</string>
     <string name="PREF_BLE_TITLE1">Sensor 1</string>
