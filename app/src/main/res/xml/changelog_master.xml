@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="3.1.0-beta1" versioncode="411" >
+        <change>Autostart: choose cycling only or walking/running/cycling</change>
+        <change>Export: configure email</change>
+        <change>Fix bug with Turkish locale</change>
+    </release>
     <release version="3.0.0" versioncode="401" >
         <change><![CDATA[<b>New name for the app. Ventoo is now JayPS!</b>]]></change>
     </release>
