@@ -257,7 +257,7 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
         _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
         _command.onNewActivityEvent(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.ON_FOOT, 60), 1000000000l, 5000l)));
 
-        verify(_serviceStarter,timeout(2000).times(1)).startLocationServices();
+        verify(_serviceStarter,timeout(6000).times(1)).startLocationServices();
     }
 
     @SmallTest
@@ -317,16 +317,16 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
 
         _command.execute(_app);
         _command.onNewActivityEvent(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.ON_FOOT, 60), 1000000000l, 5000l)));
-
+        _command.onNewActivityEvent(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.WALKING, 60), 1000000000l, 5000l)));
         verify(_mockTimer,timeout(2000).times(1)).cancel();
     }
 
-    @SmallTest
-    public void testTimeoutHandlerStopsLocation() throws Exception {
-        _command.execute(_app);
-        _command.handleTimeout();
-
-        verify(_serviceStarter,timeout(2000).times(1)).stopLocationServices();
-    }
+//    @SmallTest
+//    public void testTimeoutHandlerStopsLocation() throws Exception {
+//        _command.execute(_app);
+//        _command.handleTimeout();
+//
+//        verify(_serviceStarter,timeout(2000).times(1)).stopLocationServices();
+//    }
 
 }
