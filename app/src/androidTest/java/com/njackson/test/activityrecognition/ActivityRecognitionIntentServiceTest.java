@@ -70,35 +70,35 @@ public class ActivityRecognitionIntentServiceTest extends ServiceTestCase<Activi
         startWithType(DetectedActivity.ON_BICYCLE);
 
         _latch.await(2000, TimeUnit.MILLISECONDS);
-        assertEquals(_event.getActivityType(), DetectedActivity.ON_BICYCLE);
+        assertEquals(_event.getActivity().getMostProbableActivity().getType(), DetectedActivity.ON_BICYCLE);
     }
 
     public void testRecieveRunning() throws InterruptedException {
         startWithType(DetectedActivity.RUNNING);
 
         _latch.await(2000, TimeUnit.MILLISECONDS);
-        assertEquals(_event.getActivityType(), DetectedActivity.RUNNING);
+        assertEquals(_event.getActivity().getMostProbableActivity().getType(), DetectedActivity.RUNNING);
     }
 
     public void testRecieveWalking() throws InterruptedException {
         startWithType(DetectedActivity.WALKING);
 
         _latch.await(2000, TimeUnit.MILLISECONDS);
-        assertEquals(_event.getActivityType(), DetectedActivity.WALKING);
+        assertEquals(_event.getActivity().getMostProbableActivity().getType(), DetectedActivity.WALKING);
     }
 
     public void testRecieveOnFoot() throws InterruptedException {
         startWithType(DetectedActivity.ON_FOOT);
 
         _latch.await(2000, TimeUnit.MILLISECONDS);
-        assertEquals(_event.getActivityType(), DetectedActivity.ON_FOOT);
+        assertEquals(_event.getActivity().getMostProbableActivity().getType(), DetectedActivity.ON_FOOT);
     }
 
     public void testRecieveStill() throws InterruptedException {
         startWithType(DetectedActivity.STILL);
 
         _latch.await(2000, TimeUnit.MILLISECONDS);
-        assertEquals(_event.getActivityType(), DetectedActivity.STILL);
+        assertEquals(_event.getActivity().getMostProbableActivity().getType(), DetectedActivity.STILL);
     }
 
     private void startWithType(int activityType) throws InterruptedException {

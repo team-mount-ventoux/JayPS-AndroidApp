@@ -9,6 +9,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.njackson.activityrecognition.ActivityRecognitionServiceCommand;
 import com.njackson.application.MainThreadBus;
@@ -250,10 +251,11 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
     @SmallTest
     public void testRespondsToNewActivityEventStartsLocationWhenActivityRecognitonPreferenceSet() throws Exception {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
+        when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION_WALKING",false)).thenReturn(true);
 
         _command.execute(_app);
         _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
-        _command.onNewActivityEvent(new NewActivityEvent(DetectedActivity.ON_FOOT));
+        _command.onNewActivityEvent(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.ON_FOOT, 60), 1000000000l, 5000l)));
 
         verify(_serviceStarter,timeout(2000).times(1)).startLocationServices();
     }
@@ -261,10 +263,11 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
     @SmallTest
     public void testRespondsToNewActivityEventDoesNotStartsLocationWhenActivityRecognitonPreferenceNotSet() throws Exception {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(false);
+        when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION_WALKING",false)).thenReturn(false);
 
         _command.execute(_app);
         _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
-        _command.onNewActivityEvent(new NewActivityEvent(DetectedActivity.ON_FOOT));
+        _command.onNewActivityEvent(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.ON_FOOT, 60), 1000000000l, 5000l)));
 
         verify(_serviceStarter,timeout(2000).times(0)).startLocationServices();
     }
@@ -272,10 +275,11 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
     @SmallTest
     public void testRespondsToNewSTILLEventAndActivityRecognitionSetStartsTimer() throws Exception {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
+        when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION_WALKING",false)).thenReturn(true);
 
         _command.execute(_app);
         _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
-        _command.onNewActivityEvent(new NewActivityEvent(DetectedActivity.STILL));
+        _command.onNewActivityEvent(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.STILL, 60), 1000000000l, 5000l)));
 
         verify(_mockTimer,timeout(2000).times(1)).setTimer(anyLong(),any(ActivityRecognitionServiceCommand.class));
     }
@@ -283,10 +287,11 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
     @SmallTest
     public void testRespondsToNewSTILLAndActivityRecognitionSetDoesNotStartsTimer() throws Exception {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(false);
+        when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION_WALKING",false)).thenReturn(false);
 
         _command.execute(_app);
         _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
-        _command.onNewActivityEvent(new NewActivityEvent(DetectedActivity.STILL));
+        _command.onNewActivityEvent(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.STILL, 60), 1000000000l, 5000l)));
 
         verify(_mockTimer,timeout(2000).times(0)).setTimer(anyLong(),any(ActivityRecognitionServiceCommand.class));
     }
@@ -294,12 +299,13 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
     @SmallTest
     public void testRespondsToNewSTILLActivityEventDoesNotStartTimerIfTimerActive() throws Exception {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
+        when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION_WALKING",false)).thenReturn(true);
 
         _command.execute(_app);
         _command.onChangeState(new ActivityRecognitionChangeState(BaseChangeState.State.START));
 
         when(_mockTimer.getActive()).thenReturn(true);
-        _command.onNewActivityEvent(new NewActivityEvent(DetectedActivity.STILL));
+        _command.onNewActivityEvent(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.STILL, 60), 1000000000l, 5000l)));
 
         verify(_mockTimer,timeout(2000).times(0)).setTimer(anyLong(),any(ActivityRecognitionServiceCommand.class));
     }
@@ -307,9 +313,10 @@ public class ActivityRecognitionServiceCommandTest extends AndroidTestCase {
     @SmallTest
     public void testCancelsTimerWhenActivityDetected() throws Exception {
         when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION",false)).thenReturn(true);
+        when(_sharedPreferences.getBoolean("ACTIVITY_RECOGNITION_WALKING",false)).thenReturn(true);
 
         _command.execute(_app);
-        _command.onNewActivityEvent(new NewActivityEvent(DetectedActivity.ON_FOOT));
+        _command.onNewActivityEvent(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.ON_FOOT, 60), 1000000000l, 5000l)));
 
         verify(_mockTimer,timeout(2000).times(1)).cancel();
     }

@@ -8,6 +8,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.ActivityRecognitionResult;
 import com.google.android.gms.location.DetectedActivity;
 import com.njackson.application.modules.AndroidModule;
 import com.njackson.events.ActivityRecognitionCommand.NewActivityEvent;
@@ -209,7 +210,7 @@ public class GoogleFitServiceCommandTest extends AndroidTestCase {
         _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
 
         _command.onConnected(new Bundle());
-        _bus.post(new NewActivityEvent(DetectedActivity.RUNNING));
+        _bus.post(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.RUNNING, 60), 1000000000l, 5000l)));
 
         verify(_mockSessionManager, timeout(2000).times(1)).addDataPoint(anyLong(),anyInt());
     }
@@ -220,7 +221,7 @@ public class GoogleFitServiceCommandTest extends AndroidTestCase {
         _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
 
         _command.onConnected(new Bundle());
-        _bus.post(new NewActivityEvent(DetectedActivity.ON_BICYCLE));
+        _bus.post(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.ON_BICYCLE, 60), 1000000000l, 5000l)));
 
         verify(_mockSessionManager, timeout(2000).times(1)).addDataPoint(anyLong(),anyInt());
     }
@@ -231,7 +232,7 @@ public class GoogleFitServiceCommandTest extends AndroidTestCase {
         _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
 
         _command.onConnected(new Bundle());
-        _bus.post(new NewActivityEvent(DetectedActivity.WALKING));
+        _bus.post(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.WALKING, 60), 1000000000l, 5000l)));
 
         verify(_mockSessionManager, timeout(2000).times(1)).addDataPoint(anyLong(),anyInt());
     }
@@ -242,7 +243,7 @@ public class GoogleFitServiceCommandTest extends AndroidTestCase {
         _bus.post(new GoogleFitChangeState(BaseChangeState.State.START));
 
         _command.onConnected(new Bundle());
-        _bus.post(new NewActivityEvent(DetectedActivity.STILL));
+        _bus.post(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.STILL, 60), 1000000000l, 5000l)));
 
         verify(_mockSessionManager, timeout(2000).times(0)).addDataPoint(anyLong(),anyInt());
     }
@@ -253,7 +254,7 @@ public class GoogleFitServiceCommandTest extends AndroidTestCase {
         _bus.post(new GoogleFitChangeState(BaseChangeState.State.STOP));
 
         _command.onConnected(new Bundle());
-        _bus.post(new NewActivityEvent(DetectedActivity.STILL));
+        _bus.post(new NewActivityEvent(new ActivityRecognitionResult(new DetectedActivity(DetectedActivity.STILL, 60), 1000000000l, 5000l)));
 
         verify(_mockSessionManager, timeout(2000).times(0)).addDataPoint(anyLong(),anyInt());
     }
