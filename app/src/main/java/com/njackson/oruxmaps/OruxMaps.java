@@ -1,10 +1,13 @@
 package com.njackson.oruxmaps;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 public class OruxMaps implements IOruxMaps {
+
+    private static final String TAG = "PB-OruxMaps";
 
     private final Context _context;
 
@@ -12,43 +15,52 @@ public class OruxMaps implements IOruxMaps {
         _context = context;
     }
 
-    @Override
-    public void startRecordNewSegment() {
-        String oruxIntent = "com.oruxmaps.INTENT_START_RECORD_NEWSEGMENT";
+    private void sendOruxIntent(String intentName, boolean donateVersion) {
+        String oruxIntent = "";
+        ComponentName cn;
+        if (donateVersion) {
+            cn = new ComponentName("com.orux.oruxmapsDonate", "com.orux.oruxmaps.actividades.TaskIntentReceiver");
+            oruxIntent = "com.oruxmapsDonate." + intentName;
+        } else {
+            // free version
+            cn = new ComponentName("com.orux.oruxmaps", "com.orux.oruxmaps.actividades.TaskIntentReceiver");
+            oruxIntent = "com.oruxmaps." + intentName;
+        }
+
+        Log.d(TAG, oruxIntent);
         Intent intent = new Intent();
+        intent.setComponent(cn);
         intent.setAction(oruxIntent);
         _context.sendBroadcast(intent);
+    }
+
+    @Override
+    public void startRecordNewSegment() {
+        sendOruxIntent("INTENT_START_RECORD_NEWSEGMENT", true);
+        sendOruxIntent("INTENT_START_RECORD_NEWSEGMENT", false);
     }
 
     @Override
     public void startRecordNewTrack() {
-        String oruxIntent = "com.oruxmaps.INTENT_START_RECORD_NEWTRACK";
-        Intent intent = new Intent();
-        intent.setAction(oruxIntent);
-        _context.sendBroadcast(intent);
+        sendOruxIntent("INTENT_START_RECORD_NEWTRACK", true);
+        sendOruxIntent("INTENT_START_RECORD_NEWTRACK", false);
     }
 
     @Override
     public void startRecordContinue() {
-        String oruxIntent = "com.oruxmaps.INTENT_START_RECORD_CONTINUE";
-        Intent intent = new Intent();
-        intent.setAction(oruxIntent);
-        _context.sendBroadcast(intent);
+        sendOruxIntent("INTENT_START_RECORD_CONTINUE", true);
+        sendOruxIntent("INTENT_START_RECORD_CONTINUE", false);
     }
 
     @Override
     public void stopRecord() {
-        String oruxIntent = "com.oruxmaps.INTENT_STOP_RECORD";
-        Intent intent = new Intent();
-        intent.setAction(oruxIntent);
-        _context.sendBroadcast(intent);
+        sendOruxIntent("INTENT_STOP_RECORD", true);
+        sendOruxIntent("INTENT_STOP_RECORD", false);
     }
 
     @Override
     public void newWaypoint() {
-        String oruxIntent = "com.oruxmaps.INTENT_NEW_WAYPOINT";
-        Intent intent = new Intent();
-        intent.setAction(oruxIntent);
-        _context.sendBroadcast(intent);
+        sendOruxIntent("INTENT_NEW_WAYPOINT", true);
+        sendOruxIntent("INTENT_NEW_WAYPOINT", false);
     }
 }
