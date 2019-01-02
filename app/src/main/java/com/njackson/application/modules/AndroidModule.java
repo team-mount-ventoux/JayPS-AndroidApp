@@ -7,9 +7,9 @@ import android.location.LocationManager;
 import android.util.Log;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.RecordingApi;
-import com.google.android.gms.fitness.SessionsApi;
+//import com.google.android.gms.fitness.Fitness;
+//import com.google.android.gms.fitness.RecordingApi;
+//import com.google.android.gms.fitness.SessionsApi;
 import com.google.android.gms.location.ActivityRecognition;
 import com.njackson.activities.MainActivity;
 import com.njackson.activityrecognition.ActivityRecognitionIntentService;
@@ -21,7 +21,7 @@ import com.njackson.application.PebbleBikeApplication;
 import com.njackson.activities.SettingsActivity;
 import com.njackson.changelog.ChangeLogBuilder;
 import com.njackson.changelog.IChangeLogBuilder;
-import com.njackson.fit.GoogleFitServiceCommand;
+//import com.njackson.fit.GoogleFitServiceCommand;
 import com.njackson.fragments.AltitudeFragment;
 import com.njackson.fragments.SpeedFragment;
 import com.njackson.fragments.StartButtonFragment;
@@ -50,9 +50,9 @@ import com.njackson.upload.RunkeeperUpload;
 import com.njackson.upload.StravaUpload;
 import com.njackson.utils.AltitudeGraphReduce;
 import com.njackson.utils.BootUpReceiver;
-import com.njackson.utils.googleplay.GoogleFitSessionManager;
+//import com.njackson.utils.googleplay.GoogleFitSessionManager;
 import com.njackson.utils.googleplay.GooglePlayServices;
-import com.njackson.utils.googleplay.IGoogleFitSessionManager;
+//import com.njackson.utils.googleplay.IGoogleFitSessionManager;
 import com.njackson.utils.googleplay.IGooglePlayServices;
 import com.njackson.utils.services.IServiceStarter;
 import com.njackson.utils.services.ServiceStarter;
@@ -97,7 +97,7 @@ import static android.content.Context.SENSOR_SERVICE;
         PebbleServiceCommand.class,
         LiveServiceCommand.class,
         OruxMapsServiceCommand.class,
-        GoogleFitServiceCommand.class,
+        //GoogleFitServiceCommand.class,
         ActivityRecognitionServiceCommand.class,
         PebbleDataReceiver.class,
         BLEServiceCommand.class,
@@ -149,18 +149,18 @@ public class AndroidModule {
     GoogleApiClient provideActivityRecognitionClient() {
         return new GoogleApiClient.Builder(application).addApi(ActivityRecognition.API).build();
     }
+//
+//    @Provides @Singleton @Named("GoogleFit")
+//    GoogleApiClient provideFitnessAPIClient() {
+//        return new GoogleApiClient.Builder(application)
+//                .addApi(Fitness.API)
+//                .addScope(Fitness.SCOPE_ACTIVITY_READ)
+//                .addScope(Fitness.SCOPE_BODY_READ_WRITE)
+//                .build();
+//    }
 
-    @Provides @Singleton @Named("GoogleFit")
-    GoogleApiClient provideFitnessAPIClient() {
-        return new GoogleApiClient.Builder(application)
-                .addApi(Fitness.API)
-                .addScope(Fitness.SCOPE_ACTIVITY_READ)
-                .addScope(Fitness.SCOPE_BODY_READ_WRITE)
-                .build();
-    }
-
-    @Provides
-    IGoogleFitSessionManager providesGoogleFitSessionManager() { return new GoogleFitSessionManager(application, new GooglePlayServices(), Fitness.SessionsApi); }
+//    @Provides
+//    IGoogleFitSessionManager providesGoogleFitSessionManager() { return new GoogleFitSessionManager(application, new GooglePlayServices(), Fitness.SessionsApi); }
 
     @Provides @Singleton
     IServiceStarter provideServiceStarter(Bus bus, SharedPreferences preferences) {
@@ -215,11 +215,11 @@ public class AndroidModule {
     @Provides
     IGooglePlayServices providesGooglePlayServices() { return new GooglePlayServices(); }
 
-    @Provides
-    RecordingApi providesGoogleFitRecordingApi() { return Fitness.RecordingApi; }
-
-    @Provides
-    SessionsApi providesGoogleFitSessionsApi() { return Fitness.SessionsApi; }
+//    @Provides
+//    RecordingApi providesGoogleFitRecordingApi() { return Fitness.RecordingApi; }
+//
+//    @Provides
+//    SessionsApi providesGoogleFitSessionsApi() { return Fitness.SessionsApi; }
 
     @Provides
     ITimer providesTimer() { return new Timer(); }
@@ -244,7 +244,7 @@ public class AndroidModule {
                 new ActivityRecognitionServiceCommand(),
                 new OruxMapsServiceCommand(),
                 new LiveServiceCommand(),
-                new GoogleFitServiceCommand(),
+                //new GoogleFitServiceCommand(),
                 new BLEServiceCommand()
         );
     }
