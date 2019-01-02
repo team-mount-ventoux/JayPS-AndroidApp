@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <changelog>
+    <release version="3.1.0-beta2" versioncode="412" >
+        <change>OruxMaps: support for both donate (Google Play) and free (apk from official website) apps</change>
+        <change>Navigation: import wpt without clearing track</change>
+    </release>
     <release version="3.1.0-beta1" versioncode="411" >
         <change>Autostart: choose cycling only or walking/running/cycling</change>
         <change>Export: configure email</change>

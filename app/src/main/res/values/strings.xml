@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="MAIN_TITLE">JayPS v3.1.0-beta1</string>
+    <string name="MAIN_TITLE">JayPS v3.1.0-beta2</string>
     <string name="PREF_INSTALL_WATCHFACE_URL">http://dl.pebblebike.com/p/jayps-3.0.0.pbw</string>
     <string name="PREF_INSTALL_WATCHFACE_NL_URL">http://dl.pebblebike.com/p/ventoo-2.8.0-nl.pbw</string>
 
