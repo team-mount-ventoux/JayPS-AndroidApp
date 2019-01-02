@@ -9,7 +9,7 @@ android:
   components:
   - tools
   - platform-tools
-  - build-tools-25.2.3
+  - build-tools-28.0.3
   - android-21
   - sys-img-armeabi-v7a-android-21
   - extra-google-google_play_services

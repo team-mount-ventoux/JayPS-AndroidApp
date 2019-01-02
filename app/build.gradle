@@ -3,7 +3,7 @@ apply plugin: 'com.github.kt3k.coveralls'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "com.njackson"
@@ -31,34 +31,36 @@ android {
 }
 
 dependencies {
-    compile project(':advancedlocation-library')
-    compile 'com.getpebble:pebblekit:4.0.1@aar'
-    compile 'com.squareup:otto:1.3.5'
-    compile 'com.squareup.dagger:dagger:1.2.2'
-    compile 'com.squareup.dagger:dagger-compiler:1.2.2'
-    //compile 'com.parse.bolts:bolts-android:1.+'
-    compile 'com.parse:parse-android:1.15.7'
-    compile 'com.google.android.gms:play-services-location:6.5.87'
-    compile 'com.google.android.gms:play-services-fitness:6.5.87'
-    compile 'de.cketti.library.changelog:ckchangelog:1.2.2'
-    compile 'io.reactivex:rxjava:1.0.3'
-    compile('com.google.api-client:google-api-client-android:1.20.0') {
+    implementation project(':advancedlocation-library')
+    implementation 'com.getpebble:pebblekit:4.0.1@aar'
+    implementation 'com.squareup:otto:1.3.5'
+    implementation 'com.squareup.dagger:dagger:1.2.2'
+    annotationProcessor 'com.squareup.dagger:dagger:1.2.2'
+    implementation 'com.squareup.dagger:dagger-compiler:1.2.2'
+    annotationProcessor 'com.squareup.dagger:dagger-compiler:1.2.2'
+    //implementation 'com.parse.bolts:bolts-android:1.+'
+    implementation 'com.parse:parse-android:1.15.7'
+    implementation 'com.google.android.gms:play-services-location:6.5.87'
+    implementation 'com.google.android.gms:play-services-fitness:6.5.87'
+    implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
+    implementation 'io.reactivex:rxjava:1.0.3'
+    implementation('com.google.api-client:google-api-client-android:1.20.0') {
         exclude group: 'com.google.android.google-play-services', module: 'google-play-services'
         exclude group: 'junit', module: 'junit'
         exclude group: 'com.google.android', module: 'android'
         exclude group: 'org.apache.httpcomponents'
         exclude group: 'com.google.guava', module: 'guava-jdk5'
     }
-    compile ('com.google.oauth-client:google-oauth-client-java6:1.20.0') {
+    implementation ('com.google.oauth-client:google-oauth-client-java6:1.20.0') {
         exclude group: 'org.apache.httpcomponents'
     }
-    compile ('com.google.http-client:google-http-client-jackson:1.20.0') {
+    implementation ('com.google.http-client:google-http-client-jackson:1.20.0') {
         exclude group: 'org.apache.httpcomponents'
     }
-    compile ('com.wu-man:android-oauth-client:0.4.5@aar') {}
-    //compile fileTree(dir: 'libs', include: 'Parse-*.jar')
-    //compile fileTree(dir: 'libs', include: 'ParseCrashReporting-*.jar')
-    androidTestCompile 'com.google.dexmaker:dexmaker:1.1+'
-    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.1+'
-    androidTestCompile 'org.mockito:mockito-core:1.10.19'
+    implementation ('com.wu-man:android-oauth-client:0.4.5@aar') {}
+    //implementation fileTree(dir: 'libs', include: 'Parse-*.jar')
+    //implementation fileTree(dir: 'libs', include: 'ParseCrashReporting-*.jar')
+    androidTestImplementation 'com.google.dexmaker:dexmaker:1.1+'
+    androidTestImplementation 'com.google.dexmaker:dexmaker-mockito:1.1+'
+    androidTestImplementation 'org.mockito:mockito-core:1.10.19'
 }
