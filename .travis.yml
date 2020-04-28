@@ -18,7 +18,7 @@ android:
   - extra-google-m2repository
 
 licenses:
-  - android-sdk-license-5be876d5
+  - android-sdk-license-.+
 
 before_script:
   - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
