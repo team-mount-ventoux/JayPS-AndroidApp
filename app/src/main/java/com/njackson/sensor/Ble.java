@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import org.json.JSONObject;
+import org.json.JSONException;
 
 import javax.inject.Inject;
 
@@ -50,6 +52,8 @@ public class Ble implements IBle, ITimerHandler {
     public final static UUID UUID_RSC_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.RSC_MEASUREMENT);
     public final static UUID UUID_BATTERY_LEVEL = UUID.fromString(BLESampleGattAttributes.BATTERY_LEVEL);
     public final static UUID UUID_TEMPERATURE_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.TEMPERATURE_MEASUREMENT);
+    public final static UUID UUID_LIGHT_MODE = UUID.fromString(BLESampleGattAttributes.LIGHT_MODE);
+    public final static UUID UUID_LIGHT_MODE_SERVICE = UUID.fromString(BLESampleGattAttributes.LIGHT_MODE_SERVICE);
 
     private final static int TIMEOUT_CONNECTGATT = 5 * 60 * 1000; // in ms
 
@@ -71,6 +75,7 @@ public class Ble implements IBle, ITimerHandler {
     private String _ble_address1 = "";
     private String _ble_address2 = "";
     private String _ble_address3 = "";
+    private ConcurrentHashMap<BluetoothGatt, Integer> light_mode  = new ConcurrentHashMap<>();
 
     public Ble(Context context) {
         _context = context;
@@ -389,6 +394,51 @@ public class Ble implements IBle, ITimerHandler {
         }
     }
 
+    public void setLightMode(BluetoothGatt gatt, Boolean light_status) {
+        int newMode = 0;
+        String newModeString = "Off";
+        String device = gatt.getDevice().getName().toString();
+
+        if (light_status) {
+            switch (device) {
+                case "Flare RT":
+                case "ION 200 RT":
+                case "ION PRO RT":
+                    newModeString = "Day Flash";
+                    break;
+                default:
+                    return;
+            }
+        }
+
+        try {
+            JSONObject LIGHT_MODES_JSON = new JSONObject(BLESampleGattAttributes.LIGHT_MODES_JSON);
+            JSONObject LIGHT_MODE_JSON = (JSONObject)LIGHT_MODES_JSON.get(device);
+            try {
+                newMode = Integer.parseInt(LIGHT_MODE_JSON.optString(newModeString).toString());
+            } catch (Exception e) {
+                Log.i(TAG, "Unable to load light mode for "+device+" : "+e);
+                return;
+            }
+        } catch (JSONException e) {
+            Log.w(TAG, "Unable to load light JSON: "+e);
+        }
+
+        final BluetoothGattCharacteristic gattChar = getCharacter(gatt, UUID_LIGHT_MODE_SERVICE, UUID_LIGHT_MODE, "LIGHT MODE");
+        if (gattChar != null) {
+            Integer current_mode = light_mode.get(gatt);
+            if (current_mode==null) {
+                light_mode.put(gatt, 0);
+                current_mode = 0;
+            }
+            if ((newMode==0)||current_mode.equals(0)) {
+                Log.i(TAG, String.format("Setting light mode %d",newMode));
+                gattChar.setValue(newMode, BluetoothGattCharacteristic.FORMAT_UINT8, 0);
+                gatt.writeCharacteristic(gattChar);
+            }
+        }
+    }
+
     public void disconnectAllDevices() {
         if (mBluetoothAdapter == null) {
             Log.w(TAG, "disconnectAllDevices BluetoothAdapter not initialized");
@@ -486,9 +536,9 @@ public class Ble implements IBle, ITimerHandler {
             int flags = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0);
             Log.d(TAG, String.format("flags: %d|%s", flags, Integer.toBinaryString(flags)));
             int sensorContactStatus = (flags & 0x06) >> 1;
-            // 0,1	Sensor Contact feature is not supported in the current connection
-            // 2 	Sensor Contact feature is supported, but contact is not detected
-            // 3 	Sensor Contact feature is supported and contact is detected
+            // 0,1    Sensor Contact feature is not supported in the current connection
+            // 2     Sensor Contact feature is supported, but contact is not detected
+            // 3     Sensor Contact feature is supported and contact is detected
             Log.d(TAG, "sensorContactStatus=" + sensorContactStatus);
             /*byte[] values = characteristic.getValue();
             String tmp = "";
@@ -614,6 +664,13 @@ public class Ble implements IBle, ITimerHandler {
             sensorData.setRunningCadence((int) cadence);
             _bus.post(sensorData);
 
+        } else if (UUID_LIGHT_MODE.equals(characteristic.getUuid())) {
+            //store light address and mode
+            int lm = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8, 0);
+            Log.d(TAG, String.format("recieved mode %d",lm));
+            light_mode.put(gatt, lm);
+            BleSensorData sensorData = new BleSensorData(gatt.getDevice().getAddress());
+            _bus.post(sensorData);
         } else {
             // For all other profiles, writes the data formatted in HEX.
             final byte[] data = characteristic.getValue();
@@ -658,6 +715,7 @@ public class Ble implements IBle, ITimerHandler {
                         || UUID_RSC_MEASUREMENT.equals(gattCharacteristic.getUuid())
                         || UUID_BATTERY_LEVEL.equals(gattCharacteristic.getUuid())
                         || UUID_TEMPERATURE_MEASUREMENT.equals(gattCharacteristic.getUuid())
+                        || UUID_LIGHT_MODE.equals(gattCharacteristic.getUuid())
 
                 ) {
                     if ((charaProp & BluetoothGattCharacteristic.PROPERTY_NOTIFY) > 0) {
@@ -771,6 +829,7 @@ public class Ble implements IBle, ITimerHandler {
     }
 
     public void start_stop_handler(BluetoothGatt gatt, Boolean status) {
+        setLightMode(gatt, status);
         Log.d(TAG, "descriptorWriteQueue.size=" + descriptorWriteQueue.size());
         Log.d(TAG, "characteristicWriteQueue.size=" + characteristicWriteQueue.size());
         if (characteristicWriteQueue.size() > 0) {
