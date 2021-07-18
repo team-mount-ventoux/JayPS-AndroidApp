@@ -50,6 +50,8 @@ public class Ble implements IBle, ITimerHandler {
     public final static UUID UUID_RSC_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.RSC_MEASUREMENT);
     public final static UUID UUID_BATTERY_LEVEL = UUID.fromString(BLESampleGattAttributes.BATTERY_LEVEL);
     public final static UUID UUID_TEMPERATURE_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.TEMPERATURE_MEASUREMENT);
+    public final static UUID UUID_GOPRO_SERVICE = UUID.fromString(BLESampleGattAttributes.GOPRO_SERVICE);
+    public final static UUID UUID_GOPRO_COMMAND = UUID.fromString(BLESampleGattAttributes.GOPRO_COMMAND);
 
     private final static int TIMEOUT_CONNECTGATT = 5 * 60 * 1000; // in ms
 
@@ -64,6 +66,7 @@ public class Ble implements IBle, ITimerHandler {
     private ConcurrentHashMap<String, BluetoothGatt> mGatts = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, BluetoothGatt> mGattsConnectionPending = new ConcurrentHashMap<>();
     private Queue<BluetoothGattDescriptor> descriptorWriteQueue = new LinkedList<BluetoothGattDescriptor>();
+    private Queue<BluetoothGattCharacteristic> characteristicWriteQueue = new LinkedList<BluetoothGattCharacteristic>();
     private Queue<BluetoothGattCharacteristic> readCharacteristicQueue = new LinkedList<BluetoothGattCharacteristic>();
     private boolean allwrites = false;
     private int _nbReconnect = 0;
@@ -340,11 +343,35 @@ public class Ble implements IBle, ITimerHandler {
                         if (descriptorWriteQueue.size() > 0) {
                             Log.d(TAG, display(gatt) + " write next descriptor");
                             gatt.writeDescriptor(descriptorWriteQueue.element());
+                        } else if (characteristicWriteQueue.size() > 0) {
+                            Log.d(TAG, display(gatt) + " write next descriptor");
+                            gatt.writeCharacteristic(characteristicWriteQueue.element());
                         } else if (readCharacteristicQueue.size() > 0) {
                             Log.d(TAG, display(gatt) + " no more descriptor, next characteristic");
                             gatt.readCharacteristic(readCharacteristicQueue.element());
                         }
                     }
+
+                    @Override
+                    public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
+                        if (status == BluetoothGatt.GATT_SUCCESS) {
+                            Log.d(TAG, display(gatt) + " Callback: Wrote GATT Characteristic successfully.");
+                        } else {
+                            Log.d(TAG, display(gatt) + " Callback: Error writing GATT Characteristic: " + status);
+                        }
+                        characteristicWriteQueue.remove();  //pop the item that we just finishing writing
+                        if (descriptorWriteQueue.size() > 0) {
+                            Log.d(TAG, display(gatt) + " write next descriptor");
+                            gatt.writeDescriptor(descriptorWriteQueue.element());
+                        } else if (characteristicWriteQueue.size() > 0) {
+                            Log.d(TAG, display(gatt) + " write next descriptor");
+                            gatt.writeCharacteristic(characteristicWriteQueue.element());
+                        } else if (readCharacteristicQueue.size() > 0) {
+                            Log.d(TAG, display(gatt) + " no more descriptor, next characteristic");
+                            gatt.readCharacteristic(readCharacteristicQueue.element());
+                        }
+                    }
+
                 });
 
                 mGatts.put(gatt.getDevice().getAddress(), gatt);
@@ -375,6 +402,7 @@ public class Ble implements IBle, ITimerHandler {
             BluetoothGatt gatt = iterator.next().getValue();
             Log.d(TAG, "disconnect" + display(gatt));
             if (gatt != null) {
+                start_stop_handler(gatt, false);
                 gatt.disconnect();
                 gatt.close();
                 //gatt = null;
@@ -640,8 +668,12 @@ public class Ble implements IBle, ITimerHandler {
                 }
             }
         }
+        start_stop_handler(gatt, true);
         Log.d(TAG, "descriptorWriteQueue.size=" + descriptorWriteQueue.size());
-        if (descriptorWriteQueue.size() > 0) {
+        Log.d(TAG, "characteristicWriteQueue.size=" + characteristicWriteQueue.size());
+        if (characteristicWriteQueue.size() > 0) {
+            gatt.writeCharacteristic(characteristicWriteQueue.element());
+        } else if (descriptorWriteQueue.size() > 0) {
             gatt.writeDescriptor(descriptorWriteQueue.element());
         }
         allwrites = true;
@@ -744,6 +776,42 @@ public class Ble implements IBle, ITimerHandler {
             gatt.close();
             mGattsConnectionPending.remove(gatt.getDevice().getAddress());
             reconnectLater(gatt);
+        }
+    }
+
+    public void start_stop_handler(BluetoothGatt gatt, Boolean status) {
+        setGoProRecording(gatt, status);
+        if (!status) {
+            Log.d(TAG, "descriptorWriteQueue.size=" + descriptorWriteQueue.size());
+            Log.d(TAG, "characteristicWriteQueue.size=" + characteristicWriteQueue.size());
+            if (characteristicWriteQueue.size() > 0) {
+                gatt.writeCharacteristic(characteristicWriteQueue.element());
+            } else if (descriptorWriteQueue.size() > 0) {
+                gatt.writeDescriptor(descriptorWriteQueue.element());
+            }
+        }
+    }
+
+    public void setGoProRecording(BluetoothGatt gatt, Boolean gopro_on) {
+        String device = gatt.getDevice().getName().toString();
+        byte[] newMode = new byte[] { 0x03, 0x01, 0x01, 0x00 };
+        if (gopro_on) {
+            newMode = new byte[] { 0x03, 0x01, 0x01, 0x01 };
+        }
+        if (device.matches("GoPro .*")) {
+	    final BluetoothGattService gattService = gatt.getService(UUID_GOPRO_SERVICE);
+	    if (gattService == null) {
+	       Log.i(TAG, "GOPRO not found for "+device);
+	       return;
+	    }
+	    final BluetoothGattCharacteristic gattChar = gattService.getCharacteristic(UUID_GOPRO_COMMAND);
+	    if (gattChar == null) {
+	       Log.i(TAG, "GOPRO characteristic not found for "+device);
+	       return;
+	    }
+            Log.i(TAG, "Setting GoPro "+gopro_on);
+            gattChar.setValue(newMode);
+            gatt.writeCharacteristic(gattChar); 
         }
     }
 }
