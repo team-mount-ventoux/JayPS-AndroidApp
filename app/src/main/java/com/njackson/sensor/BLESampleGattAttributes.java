@@ -23,6 +23,12 @@ public class BLESampleGattAttributes {
     //https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.temperature_measurement.xml
     public static String BATTERY_LEVEL = "00002A19-0000-1000-8000-00805f9b34fb";
 
+    //https://github.com/dobos/LightRemote/blob/master/src/LightRemote/Constants.cs
+    public static String LIGHT_MODE_SERVICE = "71261000-3692-ae93-e711-472ba41689c9";
+    public static String LIGHT_MODE = "71261001-3692-ae93-e711-472ba41689c9";
+    //https://github.com/dobos/LightRemote/blob/master/src/LightRemote/Assets/Config.xml
+    public static String LIGHT_MODES_JSON = "{\"Flare RT\": {\"Off\": 0, \"Day Steady\": 1, \"Night Steady\": 5, \"Day Flash\": 7, \"All Day Flash\": 8, \"Night Flash\": 63}, \"ION PRO RT\": {\"Off\": 0, \"High\": 1, \"Medium\": 2, \"Low\": 5, \"Night Flash\": 62, \"Day Flash\": 63}, \"ION 200 RT\": {\"Off\": 0, \"High\": 1, \"Medium\": 2, \"Low\": 5, \"Night Flash\": 62, \"Day Flash\": 63}}";
+
     static {
         // Sample Services.
         // https://developer.bluetooth.org/gatt/services/Pages/ServicesHome.aspx
@@ -62,6 +68,8 @@ public class BLESampleGattAttributes {
         attributes.put("00002a5b-0000-1000-8000-00805f9b34fb", "CSC Measurement");
         attributes.put("00002a5c-0000-1000-8000-00805f9b34fb", "CSC Feature");
         attributes.put("00002a5d-0000-1000-8000-00805f9b34fb", "Sensor Location");
+
+        attributes.put("71261001-3692-ae93-e711-472ba41689c9", "Light Mode");
     }
 
     public static String lookup(String uuid, String defaultName) {
