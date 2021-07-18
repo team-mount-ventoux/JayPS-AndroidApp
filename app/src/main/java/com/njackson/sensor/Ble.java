@@ -50,6 +50,8 @@ public class Ble implements IBle, ITimerHandler {
     public final static UUID UUID_RSC_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.RSC_MEASUREMENT);
     public final static UUID UUID_BATTERY_LEVEL = UUID.fromString(BLESampleGattAttributes.BATTERY_LEVEL);
     public final static UUID UUID_TEMPERATURE_MEASUREMENT = UUID.fromString(BLESampleGattAttributes.TEMPERATURE_MEASUREMENT);
+    public final static UUID UUID_GOPRO_SERVICE = UUID.fromString(BLESampleGattAttributes.GOPRO_SERVICE);
+    public final static UUID UUID_GOPRO_COMMAND = UUID.fromString(BLESampleGattAttributes.GOPRO_COMMAND);
 
     private final static int TIMEOUT_CONNECTGATT = 5 * 60 * 1000; // in ms
 
@@ -771,6 +773,7 @@ public class Ble implements IBle, ITimerHandler {
     }
 
     public void start_stop_handler(BluetoothGatt gatt, Boolean status) {
+        setGoProRecording(gatt, status);
         Log.d(TAG, "descriptorWriteQueue.size=" + descriptorWriteQueue.size());
         Log.d(TAG, "characteristicWriteQueue.size=" + characteristicWriteQueue.size());
         if (characteristicWriteQueue.size() > 0) {
@@ -794,5 +797,21 @@ public class Ble implements IBle, ITimerHandler {
             }
         }
         return null;
+    }
+
+    public void setGoProRecording(BluetoothGatt gatt, Boolean gopro_on) {
+        String device = gatt.getDevice().getName().toString();
+        byte[] newMode = new byte[] { 0x03, 0x01, 0x01, 0x00 };
+        if (gopro_on) {
+            newMode = new byte[] { 0x03, 0x01, 0x01, 0x01 };
+        }
+        if (device.matches("GoPro .*")) {
+            final BluetoothGattCharacteristic gattChar = getCharacter(gatt, UUID_GOPRO_SERVICE, UUID_GOPRO_COMMAND, "GOPRO");
+	    if (gattChar != null) {
+                Log.i(TAG, "Setting GoPro "+gopro_on);
+                gattChar.setValue(newMode);
+                gatt.writeCharacteristic(gattChar); 
+            }
+        }
     }
 }
