@@ -2,7 +2,7 @@
 package com.njackson.upload;
 
 import android.content.Context;
-import android.support.v4.content.AsyncTaskLoader;
+import androidx.loader.content.AsyncTaskLoader;
 import android.text.TextUtils;
 import android.util.Log;
 

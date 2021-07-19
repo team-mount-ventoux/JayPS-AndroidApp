@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import fr.jayps.android.AdvancedLocation;
 
-import static android.support.v4.content.FileProvider.getUriForFile;
+import static androidx.core.content.FileProvider.getUriForFile;
 
 public class GpxExport {
 

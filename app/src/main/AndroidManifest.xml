@@ -22,8 +22,9 @@
         <activity android:name=".activities.SettingsActivity"/>
         <activity android:name=".activities.HRMScanActivity"/>
         <activity android:name=".activities.UploadActivity"/>
-        <service android:name=".service.MainService" android:label="MainService"/>
-        <service android:name=".activityrecognition.ActivityRecognitionIntentService" android:label="ActivityRecognitionIntentService"/>
+        <service android:name=".service.MainService" android:label="MainService" android:foregroundServiceType="location|dataSync|connectedDevice" />
+/>
+        <service android:name=".activityrecognition.ActivityRecognitionIntentService" android:label="ActivityRecognitionIntentService" android:foregroundServiceType="location|dataSync|connectedDevice"/>
         <receiver android:name=".pebble.PebbleDataReceiver">
             <intent-filter>
                 <action android:name="com.getpebble.action.app.RECEIVE"/>
@@ -45,7 +46,7 @@
         </receiver>
 
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="com.njackson.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
@@ -66,8 +67,13 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+
 </manifest>
