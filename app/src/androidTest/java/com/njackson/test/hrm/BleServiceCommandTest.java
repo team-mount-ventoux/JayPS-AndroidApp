@@ -83,7 +83,7 @@ public class BleServiceCommandTest extends AndroidTestCase {
         super.tearDown();
     }
     private void setupMocks() {
-        when(_mockPreferences.getString("hrm_address", "")).thenReturn("12");
+        when(_mockPreferences.getString("hrm_address1", "")).thenReturn("12");
         when(_mockPreferences.getString("hrm_address2", "")).thenReturn("34");
         when(_mockPreferences.getString("hrm_address3", "")).thenReturn("56");
     }
