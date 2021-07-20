@@ -48,7 +48,7 @@ import fr.jayps.android.AdvancedLocation;
 public class SettingsActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = "PB-SettingsActivity";
-    public  static final int max_ble_devices = 3;
+    public  static final int max_ble_devices = 6;
 
     @Inject IInstallWatchFace _installWatchFace;
     @Inject SharedPreferences _sharedPreferences;
@@ -166,8 +166,8 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
         ) {
             
             for (int i = 1; i<=max_ble_devices; i++) {
-                int intent_start = i;
-                String pref_ble_string = "PREF_BLE"+i;
+                final int intent_start = i;
+                final String pref_ble_string = "PREF_BLE"+i;
                 Preference pref_ble = findPreference(pref_ble_string);
                 pref_ble.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override

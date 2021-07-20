@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -57,9 +58,9 @@ public class Ble implements IBle, ITimerHandler {
     private boolean _bleStarted = false;
     @Inject ITimer _timer;
 
-    private Queue<BluetoothDevice> connectionQueue = new LinkedList<BluetoothDevice>();
+    private Queue<BluetoothDevice> connectionQueue = new LinkedList<>();
     private Thread connectionThread;
-    private Queue<BluetoothGatt> serviceDiscoveryQueue = new LinkedList<BluetoothGatt>();
+    private Queue<BluetoothGatt> serviceDiscoveryQueue = new LinkedList<>();
     private Thread serviceDiscoveryThread;
     private ConcurrentHashMap<String, BluetoothGatt> mGatts = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, BluetoothGatt> mGattsConnectionPending = new ConcurrentHashMap<>();
@@ -67,9 +68,8 @@ public class Ble implements IBle, ITimerHandler {
     private Queue<BluetoothGattCharacteristic> readCharacteristicQueue = new LinkedList<BluetoothGattCharacteristic>();
     private boolean allwrites = false;
     private int _nbReconnect = 0;
-    private String _ble_address1 = "";
-    private String _ble_address2 = "";
-    private String _ble_address3 = "";
+    private ConcurrentHashMap<BluetoothGatt, Integer> light_mode  = new ConcurrentHashMap<>();
+    private Set<String> _ble_addresses;
 
     public Ble(Context context) {
         _context = context;
@@ -107,25 +107,13 @@ public class Ble implements IBle, ITimerHandler {
         }
     };
     @Override
-    public void start(String ble_address1, String ble_address2, String ble_address3, Bus bus, IInjectionContainer container) {
+    public void start(Set<String> ble_addresses, Bus bus, IInjectionContainer container) {
         Log.d(TAG, "start");
 
         container.inject(this);
         _bus = bus;
         _bleStarted = true;
-
-        // for later reconnections
-        _ble_address1 = ble_address1;
-        _ble_address2 = ble_address2;
-        _ble_address3 = ble_address3;
-
-//        String BLE_JAY_HRM1 = "1C:BA:8C:1F:58:1D";
-//        String BLE_JAY_HRM2 = "E0:C7:9D:69:1E:57";
-//        String BLE_JAY_CSC  = "EB:18:F4:AA:92:4E";
-//        _ble_address1 = BLE_JAY_HRM1;_ble_address2 = BLE_JAY_HRM2;
-
-        Log.d(TAG, "_ble_address1=" + _ble_address1 + " _ble_address2 = " + _ble_address2 + " _ble_address3 = " + _ble_address3);
-
+        _ble_addresses = ble_addresses;
         initialize();
 
         // Register for broadcasts on BluetoothAdapter state change
@@ -167,48 +155,25 @@ public class Ble implements IBle, ITimerHandler {
             // new attempt to connect will be done when receiving BluetoothAdapter.ACTION_STATE_CHANGED
             return;
         } else {
-            Log.d(TAG, "initConnections " + _ble_address1 + " " + _ble_address2 + " " + _ble_address3);
-
             if (mBluetoothAdapter == null) {
                 Log.w(TAG, "BluetoothAdapter not initialized");
                 return;
             }
-            if (_ble_address1.equals(_ble_address2)) {
-                // do not connect twice to the same device
-                _ble_address2 = "";
-            }
-            if (_ble_address3.equals(_ble_address2) || _ble_address3.equals(_ble_address1)) {
-                // do not connect twice to the same device
-                _ble_address3 = "";
-            }
-            BluetoothDevice device1 = null;
-            BluetoothDevice device2 = null;
-            BluetoothDevice device3 = null;
-            if (!_ble_address1.equals("")) {
-                device1 = mBluetoothAdapter.getRemoteDevice(_ble_address1);
-                if (device1 == null) {
-                    Log.w(TAG, "Device1 not found. Unable to connect.");
-                    return;
+
+            for (String _ble_address: _ble_addresses) {
+                Log.d(TAG, "initConnection " + _ble_address);
+                BluetoothDevice device = null;
+                if (!_ble_address.equals("")) {
+                    device = mBluetoothAdapter.getRemoteDevice(_ble_address);
+                    if (device == null) {
+                        Log.w(TAG, "Device not found. Unable to connect.");
+                        return;
+                    }
+                    connectionQueue.add(device);
                 }
-                connectionQueue.add(device1);
             }
-            if (!_ble_address2.equals("")) {
-                device2 = mBluetoothAdapter.getRemoteDevice(_ble_address2);
-                if (device2 == null) {
-                    Log.w(TAG, "Device2 not found. Unable to connect.");
-                    return;
-                }
-                connectionQueue.add(device2);
-            }
-            if (!_ble_address3.equals("")) {
-                device3 = mBluetoothAdapter.getRemoteDevice(_ble_address3);
-                if (device3 == null) {
-                    Log.w(TAG, "Device3 not found. Unable to connect.");
-                    return;
-                }
-                connectionQueue.add(device3);
-            }
-            if (device1 != null || device2 != null || device3 != null) {
+
+            if (connectionQueue.size() > 0) {
                 if (connectionThread == null) {
                     connectionThread = new Thread(new Runnable() {
                         @Override
@@ -561,8 +526,8 @@ public class Ble implements IBle, ITimerHandler {
                 tmp += String.format("|%d(%02X)", values[i], values[i]);
             }
             Log.d(TAG, "characteristic Temperature=" + tmp);*/
-            int offset = 0;
-            String units = "";
+            int offset;
+            String units;
             if ((flags & 0x00) == 0) {
                 units = "Celsius";
                 offset = 1;

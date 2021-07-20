@@ -15,6 +15,8 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
+import java.util.Set;
+import java.util.HashSet;
 
 
 public class BLEServiceCommand implements IServiceCommand {
@@ -29,6 +31,7 @@ public class BLEServiceCommand implements IServiceCommand {
     IInjectionContainer _container;
     private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
     private boolean _registrered_bus = false;
+    private final int max_ble_devices = 6;
 
     @Override
     public void execute(IInjectionContainer container) {
@@ -51,10 +54,17 @@ public class BLEServiceCommand implements IServiceCommand {
     }
 
     private boolean isHrmActivated() {
+        Boolean ble_set = false;
+        for (int i = 1; i<=max_ble_devices; i++) {
+            String ble_address = _sharedPreferences.getString("hrm_address"+i, "");
+            if (!ble_address.equals("")) {
+                ble_set = true;
+            }
+        }
         return _applicationContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
                 // note: double check FEATURE_BLUETOOTH_LE + android version because the 1st test (hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) seems to return true on some 4.1 & 4.2
                 && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2 // BLE requires 4.3 (Api level 18)
-                && (!_sharedPreferences.getString("hrm_address1", "").equals("") || !_sharedPreferences.getString("hrm_address2", "").equals("") || !_sharedPreferences.getString("hrm_address3", "").equals(""));
+                && ble_set;
     }
 
     @Override
@@ -80,8 +90,16 @@ public class BLEServiceCommand implements IServiceCommand {
     private void start() {
         Log.d(TAG, "start");
 
-        if (!_sharedPreferences.getString("hrm_address1", "").equals("") || !_sharedPreferences.getString("hrm_address2", "").equals("") || !_sharedPreferences.getString("hrm_address3", "").equals("")) {
-            _hrm.start(_sharedPreferences.getString("hrm_address1", ""), _sharedPreferences.getString("hrm_address2", ""), _sharedPreferences.getString("hrm_address3", ""), _bus, _container);
+        Set<String> addresses = new HashSet<>();
+        for (int i = 1; i<=max_ble_devices; i++) {
+            String ble_address = _sharedPreferences.getString("hrm_address"+i, "");
+            if (!ble_address.equals("")) {
+                addresses.add(ble_address);
+            }
+        }
+        Log.d(TAG, addresses.size()+" ble sensors");
+        if (addresses.size()>0) {
+            _hrm.start(addresses, _bus, _container);
             _currentStatus = BaseStatus.Status.STARTED;
         } else {
             _currentStatus = BaseStatus.Status.UNABLE_TO_START;

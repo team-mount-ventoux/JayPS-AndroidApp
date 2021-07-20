@@ -89,11 +89,14 @@
     <string name="PREF_CANVAS_SUMMARY">Install app from Google Play</string>
     <string name="PREF_CANVAS_URL">https://play.google.com/store/apps/details?id=com.pennas.pebblecanvas</string>
 
-    <string name="PREF_BLE_CATEGORY_TITLE">BLE Heart Rate Monitor (HRM) or Cycling Speed and Cadence (CSC)</string>
+    <string name="PREF_BLE_CATEGORY_TITLE">BLE Heart Rate Monitor (HRM), Cycling Speed and Cadence (CSC), Lights and GoPro</string>
     <string name="PREF_BLE_TITLE">Sensor</string>
     <string name="PREF_BLE_TITLE1">Sensor 1</string>
     <string name="PREF_BLE_TITLE2">Sensor 2</string>
     <string name="PREF_BLE_TITLE3">Sensor 3</string>
+    <string name="PREF_BLE_TITLE4">Sensor 4</string>
+    <string name="PREF_BLE_TITLE5">Sensor 5</string>
+    <string name="PREF_BLE_TITLE6">Sensor 6</string>
     <string name="PREF_BLE_HRM_HRMAX">HRM: Max heart rate</string>
     <string name="PREF_BLE_HRM_HRMAX_SUMMARY">Example: 220 minus your age</string>
     <string name="PREF_BLE_HRM_ZONE_NOTIFICATION_MODE">HRM: Zone alarms</string>
@@ -108,10 +111,6 @@
     <string name="PREF_USERVOICE">New features</string>
     <string name="PREF_USERVOICE_SUMMARY">Create and vote for new features</string>
     <string name="PREF_USERVOICE_URL">http://pebblebike.uservoice.com/?utm_source=JayPSApp</string>
-
-    <string name="PREF_GOOGLEPLUS">Google+ Community</string>
-    <string name="PREF_GOOGLEPLUS_SUMMARY">Exchange ideas and test new versions</string>
-    <string name="PREF_GOOGLEPLUS_URL">https://plus.google.com/communities/101059137889634445614</string>
 
     <string name="PREF_TWITTER">Twitter</string>
     <string name="PREF_TWITTER_SUMMARY">Share on twitter</string>
