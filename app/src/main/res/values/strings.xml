@@ -30,7 +30,7 @@
     <string name="PREF_INSTALL_WATCHFACE_DEEPLINK_SUMMARY">Please vote for the app</string>
     <string name="PREF_INSTALL_WATCHFACE_DEEPLINK_URL">pebble://appstore/529289cee07df1fa76000009</string>
     <string name="PREF_INSTALL_WATCHFACE_WEBSITE">Installation from the developers website</string>
-    <string name="PREF_INSTALL_WATCHFACE_WEBSITE_SUMMARY"></string>
+    <string name="PREF_INSTALL_WATCHFACE_WEBSITE_SUMMARY" />
     <string name="PREF_INSTALL_WATCHFACE_NL">Dutch version</string>
     <string name="PREF_INSTALL_WATCHFACE_NL_SUMMARY">Specific version with Dutch locale</string>
     <string name="PREF_RESET_DATA">Reset data &amp; GPX</string>
@@ -42,7 +42,7 @@
     <string name="PREF_ENABLE_TRACKS_TITLE">Enable tracks</string>
     <string name="PREF_ENABLE_TRACKS_SUMMARY">Auto save locations when gps is started</string>
     <string name="PREF_EXPORT_GPX_TITLE">Export as GPX</string>
-    <string name="PREF_EXPORT_GPX_SUMMARY"></string>
+    <string name="PREF_EXPORT_GPX_SUMMARY" />
     <string name="PREF_RESET_TRACKS_TITLE">Reset tracks</string>
     <string name="PREF_RESET_TRACKS_SUMMARY">Delete all saved tracks</string>
 
@@ -53,7 +53,7 @@
     <string name="PREF_ABOUT_CATEGORY_TITLE">About</string>
 
     <string name="PREF_AUTOSTART_TITLE">Auto Start</string>
-    <string name="PREF_AUTOSTART_SUMMARY">Select this item if you would like JayPS to autostart everytime you
+    <string name="PREF_AUTOSTART_SUMMARY">Select this item if you would like JayPS to autostart every time you
         start cycling
     </string>
     <string name="PREF_UNITS_TITLE">Units</string>
@@ -127,7 +127,7 @@
     <string name="PREF_NAV_PLANNER_URL">http://pebblebike.com/planner/?utm_source=JayPSApp</string>
 
     <string name="PREF_STRAVA_CATEGORIE_TITLE">Strava Integration</string>
-    <string name="PREF_STRAVA_CATEGORIE_SUMMARY"></string>
+    <string name="PREF_STRAVA_CATEGORIE_SUMMARY" />
     <string name="PREF_STRAVA_TITLE">Strava</string>
     <string name="PREF_STRAVA_DELETE_IF_EXISTS_DURING_UPLOAD_TITLE">Delete if already exists</string>
     <string name="PREF_STRAVA_DELETE_IF_EXISTS_DURING_UPLOAD_SUMMARY">During upload, delete a previously uploaded track (this will avoid error if you try to upload a track, continue the record and upload it again)</string>
@@ -141,7 +141,7 @@
     <string name="PREF_STRAVA_URL_VENTOO_CLUB">https://www.strava.com/clubs/ventoo</string>
 
     <string name="PREF_RUNKEEPER_CATEGORIE_TITLE">Runkeeper Integration</string>
-    <string name="PREF_RUNKEEPER_CATEGORIE_SUMMARY"></string>
+    <string name="PREF_RUNKEEPER_CATEGORIE_SUMMARY" />
     <string name="PREF_RUNKEEPER_TITLE">Runkeeper</string>
     <string name="RUNKEEPER_ACTIVITY_TYPE_TITLE">Activity</string>
     <string name="RUNKEEPER_ACTIVITY_TYPE_DIALOG_TITLE">Runkeeper activity</string>
@@ -152,23 +152,27 @@
     <string name="RUNKEEPER_AUTO_DIALOG_TITLE">Runkeeper automatic upload</string>
     <string name="RUNKEEPER_AUTO_DEFAULT">disable</string>
 
-    <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_TITLE">JayPS Live Tracking</string>
-    <string name="PREF_LIVE_TRACKING_JAYPS_CATEGORIE_SUMMARY"></string>
-    <string name="PREF_LIVE_TRACKING_JAYPS_TITLE">Live Tracking with JayPS</string>
-    <string name="PREF_LIVE_TRACKING_JAYPS_SUMMARY">Create your account: http://pebblebike.com/live</string>
-    <string name="PREF_LIVE_TRACKING_JAYPS_LOGIN_TITLE">Login</string>
-    <string name="PREF_LIVE_TRACKING_JAYPS_LOGIN_SUMMARY"></string>
-    <string name="PREF_LIVE_TRACKING_JAYPS_PASSWORD_TITLE">Password</string>
-    <string name="PREF_LIVE_TRACKING_JAYPS_PASSWORD_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_NEXTCLOUD_CATEGORIE_TITLE">Nextcloud Live Tracking</string>
+    <string name="PREF_LIVE_TRACKING_NEXTCLOUD_CATEGORIE_SUMMARY" />
+    <string name="PREF_LIVE_TRACKING_NEXTCLOUD_TITLE">Live Tracking with Nextcloud</string>
+    <string name="PREF_LIVE_TRACKING_NEXTCLOUD_SUMMARY">PhoneTrack Nextcloud app</string>
+    <string name="PREF_LIVE_TRACKING_NEXTCLOUD_URL_TITLE">Nextcloud URL</string>
+    <string name="PREF_LIVE_TRACKING_NEXTCLOUD_URL_SUMMARY" />
+    <string name="PREF_LIVE_TRACKING_NEXTCLOUD_TOKEN_TITLE">Session Token</string>
+    <string name="PREF_LIVE_TRACKING_NEXTCLOUD_TOKEN_SUMMARY" />
+    <string name="PREF_LIVE_TRACKING_NEXTCLOUD_DEVICE_TITLE">Device Name</string>
+    <string name="PREF_LIVE_TRACKING_NEXTCLOUD_DEVICE_SUMMARY" />
+    <string name="PREF_LIVE_TRACKING_NEXTCLOUD_SHARE_TITLE">Share Nextcloud Tracking Link</string>
+    <string name="PREF_LIVE_TRACKING_NEXTCLOUD_SHARE_SUMMARY" />
 
     <string name="PREF_LIVE_TRACKING_MMT_CATEGORIE_TITLE">Map My Tracks Live Tracking</string>
-    <string name="PREF_LIVE_TRACKING_MMT_CATEGORIE_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_MMT_CATEGORIE_SUMMARY" />
     <string name="PREF_LIVE_TRACKING_MMT_TITLE">Live Tracking with Map My Tracks</string>
     <string name="PREF_LIVE_TRACKING_MMT_SUMMARY">http://www.mapmytracks.com</string>
     <string name="PREF_LIVE_TRACKING_MMT_LOGIN_TITLE">Login</string>
-    <string name="PREF_LIVE_TRACKING_MMT_LOGIN_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_MMT_LOGIN_SUMMARY" />
     <string name="PREF_LIVE_TRACKING_MMT_PASSWORD_TITLE">Password</string>
-    <string name="PREF_LIVE_TRACKING_MMT_PASSWORD_SUMMARY"></string>
+    <string name="PREF_LIVE_TRACKING_MMT_PASSWORD_SUMMARY" />
 
     <string name="PREF_CHANGE_LOG_TITLE">Change Log</string>
     <string name="PREF_CHANGE_LOG_SUMMARY">Displays changes history</string>

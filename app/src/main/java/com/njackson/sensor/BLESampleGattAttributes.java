@@ -6,7 +6,7 @@ import java.util.HashMap;
  * This class includes a small subset of standard GATT attributes
  */
 public class BLESampleGattAttributes {
-    private static HashMap<String, String> attributes = new HashMap();
+    private final static HashMap<String, String> attributes = new HashMap<>();
     public static String HEART_RATE_SERVICE = "0000180d-0000-1000-8000-00805f9b34fb";
     // 0X2A37 https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
     public static String HEART_RATE_MEASUREMENT = "00002a37-0000-1000-8000-00805f9b34fb";
@@ -57,7 +57,7 @@ public class BLESampleGattAttributes {
         attributes.put("00002a39-0000-1000-8000-00805f9b34fb", "Heart Rate Control Point");
         attributes.put("00002a50-0000-1000-8000-00805f9b34fb", "PnP ID");
         attributes.put("00002a53-0000-1000-8000-00805f9b34fb", "RSC Measurement");
-        attributes.put("00002a54-0000-1000-8000-00805f9b34fb", "RSC Featur");
+        attributes.put("00002a54-0000-1000-8000-00805f9b34fb", "RSC Feature");
         attributes.put("00002a55-0000-1000-8000-00805f9b34fb", "SC Control Point");
         attributes.put("00002a5b-0000-1000-8000-00805f9b34fb", "CSC Measurement");
         attributes.put("00002a5c-0000-1000-8000-00805f9b34fb", "CSC Feature");

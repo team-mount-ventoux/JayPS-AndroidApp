@@ -10,7 +10,6 @@ import com.njackson.application.IInjectionContainer;
 import com.njackson.application.modules.ForApplication;
 import com.njackson.events.GPSServiceCommand.NewLocation;
 import com.njackson.events.LiveServiceCommand.LiveChangeState;
-import com.njackson.events.LiveServiceCommand.LiveStatus;
 import com.njackson.events.base.BaseChangeState;
 import com.njackson.events.base.BaseStatus;
 import com.njackson.service.IServiceCommand;
@@ -30,7 +29,7 @@ public class LiveServiceCommand implements IServiceCommand {
     @Inject Bus _bus;
     @Inject SharedPreferences _sharedPreferences;
     @Inject IGPSDataStore _dataStore;
-    @Inject @Named("LiveTrackingJayPS") ILiveTracking _liveTrackingJayps;
+    @Inject @Named("LiveTrackingNextcloud") ILiveTracking _liveTrackingNextcloud;
     @Inject @Named("LiveTrackingMmt") ILiveTracking _liveTrackingMmt;
 
     Location firstLocation = null;
@@ -46,7 +45,7 @@ public class LiveServiceCommand implements IServiceCommand {
     @Subscribe
     public void onNewLocationEvent(NewLocation newLocation) {
         Location location = new NewLocationToAndroidLocation("JayPS", newLocation);
-
+        Log.d(TAG, "new loc");
         if (location.getTime() > 0) {
             if (firstLocation == null) {
                 if (_dataStore.getFirstLocationLattitude() != 0.0f && _dataStore.getFirstLocationLongitude() != 0.0f) {
@@ -58,10 +57,10 @@ public class LiveServiceCommand implements IServiceCommand {
                 }
             }
             if (_sharedPreferences.getBoolean("LIVE_TRACKING", false)) {
-                _liveTrackingJayps.addPoint(firstLocation, location, newLocation.getHeartRate(), newLocation.getCyclingCadence());
+                _liveTrackingNextcloud.addPoint(firstLocation, location, newLocation.getHeartRate(), newLocation.getCyclingCadence(), newLocation.getBatteryLevel());
             }
             if (_sharedPreferences.getBoolean("LIVE_TRACKING_MMT", false)) {
-                _liveTrackingMmt.addPoint(firstLocation, location, newLocation.getHeartRate(), newLocation.getCyclingCadence());
+                _liveTrackingMmt.addPoint(firstLocation, location, newLocation.getHeartRate(), newLocation.getCyclingCadence(), newLocation.getBatteryLevel());
             }
         }
     }
@@ -84,10 +83,14 @@ public class LiveServiceCommand implements IServiceCommand {
     }
 
     private void start() {
-        _liveTrackingJayps.setBus(_bus);
-        _liveTrackingJayps.setLogin(_sharedPreferences.getString("LIVE_TRACKING_LOGIN", ""));
-        _liveTrackingJayps.setPassword(_sharedPreferences.getString("LIVE_TRACKING_PASSWORD", ""));
-        _liveTrackingJayps.setUrl(_sharedPreferences.getString("LIVE_TRACKING_URL", ""));
+        _liveTrackingNextcloud.setBus(_bus);
+        StringBuilder ncURL = new StringBuilder();
+        ncURL.append(_sharedPreferences.getString("LIVE_TRACKING_URL", ""));
+        ncURL.append("/index.php/apps/phonetrack/logPost/");
+        ncURL.append(_sharedPreferences.getString("LIVE_TRACKING_TOKEN", ""));
+        ncURL.append("/");
+        ncURL.append(_sharedPreferences.getString("LIVE_TRACKING_DEVICE", ""));
+        _liveTrackingNextcloud.setUrl(ncURL.toString());
 
         _liveTrackingMmt.setLogin(_sharedPreferences.getString("LIVE_TRACKING_MMT_LOGIN", ""));
         _liveTrackingMmt.setPassword(_sharedPreferences.getString("LIVE_TRACKING_MMT_PASSWORD", ""));

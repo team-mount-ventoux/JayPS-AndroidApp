@@ -13,7 +13,6 @@ import java.util.Scanner;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import org.w3c.dom.Document;
@@ -22,7 +21,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import com.njackson.Constants;
-import com.njackson.events.LiveServiceCommand.LiveMessage;
 import com.squareup.otto.Bus;
 
 import fr.jayps.android.AdvancedLocation;
@@ -34,6 +32,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;
+import java.util.Map;
 
 public class LiveTracking implements ILiveTracking {
 
@@ -50,6 +49,7 @@ public class LiveTracking implements ILiveTracking {
     private String _bufferAccuracies = "";
     private String _bufferHeartRates = "";
     private String _bufferCadences = "";
+    private Map<String,String> _buffer_loc_nv_pairs = new HashMap<>();
     private String _login = "";
     private String _password = "";
     private String _url = "";
@@ -60,9 +60,9 @@ public class LiveTracking implements ILiveTracking {
     public final static int maxNumberOfFriend = 5;
     public final static int sizeOfAFriend = 9;
 
-    public static final int TYPE_JAYPS = 1;
+    public static final int TYPE_NEXTCLOUD = 1;
     public static final int TYPE_MMT = 2;
-    private int _type = TYPE_JAYPS;
+    private int _type = TYPE_NEXTCLOUD;
 
     boolean debug = true;
 
@@ -109,15 +109,47 @@ public class LiveTracking implements ILiveTracking {
     public void setBus(Bus bus) {
         _bus = bus;
     }
-    public boolean addPoint(Location firstLocation, Location location, int heart_rate, int cadence) {
+    public boolean addPoint(Location firstLocation, Location location, int heart_rate, int cadence, int batteryLevel) {
         _firstLocation = firstLocation;
         //Log.d(TAG, "addPoint(" + location.getLatitude() + "," + location.getLongitude() + "," + location.getTime() + "," + location.getAccuracy() + "," + heart_rate + "," + cadence + ")");
         if (location.getTime() - _prevTime < 5000) {
             // too early (dt<5s), do nothing
             return false;
         }
+        /**
+         * For Nextcloud
+         * lat (decimal latitude)
+         * lon (decimal longitude)
+         * alt (altitude in meters)
+         * timestamp (epoch timestamp in seconds)
+         * acc (accuracy in meters)
+         * bat (battery level in percent)
+         * sat (number of satellites)
+         * useragent (device user agent)
+         * speed (speed in meter per second)
+         * bearing (bearing in decimal degrees)
+        */
+        _buffer_loc_nv_pairs.put("lat",String.format(Locale.US,"%f",location.getLatitude()));
+        _buffer_loc_nv_pairs.put("lon",String.format(Locale.US,"%f",location.getLongitude()));
+        _buffer_loc_nv_pairs.put("timestamp",String.format(Locale.US, "%d", (int) (location.getTime() / 1000 )));
+        _buffer_loc_nv_pairs.put("battery",String.format(Locale.US, "%d", batteryLevel));
+        if (location.hasAccuracy()) {
+            _buffer_loc_nv_pairs.put("acc", String.format(Locale.US, "%.1f", location.getAccuracy()));
+        }
+        if (location.hasAltitude()) {
+            _buffer_loc_nv_pairs.put("alt", String.format(Locale.US, "%.1f", location.getAltitude()));
+        }
+        if (location.hasSpeed()) {
+            _buffer_loc_nv_pairs.put("speed", String.format(Locale.US, "%f", location.getSpeed()));
+        }
+        if (location.hasBearing()) {
+            _buffer_loc_nv_pairs.put("bearing", String.format(Locale.US, "%f", location.getBearing()));
+        }
+        _buffer_loc_nv_pairs.put("useragent","JayPS");
+
         _bufferPoints += (_bufferPoints != "" ? " " : "") + location.getLatitude() + " " + location.getLongitude() + " " + String.format(Locale.US, "%.1f", location.getAltitude()) + " " + String.format("%d", (int) (location.getTime() / 1000));
         _bufferAccuracies += (_bufferAccuracies != "" ? " " : "") + String.format(Locale.US, "%.1f", location.getAccuracy());
+
         if (heart_rate > 0 && heart_rate < 255) {
             _bufferHeartRates += (_bufferHeartRates != "" ? " " : "") + heart_rate + " " + String.format("%d", (int) (location.getTime() / 1000));
         }
@@ -134,17 +166,19 @@ public class LiveTracking implements ILiveTracking {
         // ok
         _prevTime = location.getTime();
         this._lastLocation = location;
-        new SendLiveTask().execute(new SendLiveTaskParams(_bufferPoints, _bufferAccuracies, _bufferHeartRates, _bufferCadences));
+        new SendLiveTask().execute(new SendLiveTaskParams(_buffer_loc_nv_pairs, _bufferPoints, _bufferAccuracies, _bufferHeartRates, _bufferCadences));
         return true;
     }
 
     class SendLiveTaskParams {
+        Map<String,String> nv_pairs;
         String points;
         String accuracies;
         String heartrates;
         String cadences;
 
-        public SendLiveTaskParams(String points, String accuracies, String heartrates, String cadences) {
+        public SendLiveTaskParams(Map<String,String> nv_pairs, String points, String accuracies, String heartrates, String cadences) {
+            this.nv_pairs = nv_pairs;
             this.points = points;
             this.accuracies = accuracies;
             this.heartrates = heartrates;
@@ -158,7 +192,7 @@ public class LiveTracking implements ILiveTracking {
             int count = params.length;
             boolean result = false;
             for (int i = 0; i < count; i++) {
-                result = result || _send(params[i].points, params[i].accuracies, params[i].heartrates, params[i].cadences);
+                result = result || _send(params[i].nv_pairs, params[i].points, params[i].accuracies, params[i].heartrates, params[i].cadences);
             }
             return result;
         }
@@ -168,44 +202,51 @@ public class LiveTracking implements ILiveTracking {
         }
     }
 
-    private boolean _send(String points, String accuracies, String heartrates, String cadences) {
+    private boolean _send(Map<String,String> nv_pairs, String points, String accuracies, String heartrates, String cadences) {
         if (debug) Log.d(TAG, "send(" + points + ", " + accuracies + ", " + heartrates + ", " + cadences + ")");
         try {
             String request = _activity_id == "" ? "start_activity" : "update_activity";
             String postParameters = "";
+            String tmp_url = "";
             String authString = ""; //"login:pass"
 
-            if (_login != "" && _password != "") {
-                authString = _login + ":" + _password;
-            } else {
-                Log.d(TAG, "Missing login or password");
-                return false;
-            }
-
-            postParameters = "request=" + request;
-            if (_activity_id == "") {
-                postParameters += "&title=Test&source=JayPS&version=" + _versionCode;
-            } else {
-                postParameters += "&activity_id=" + _activity_id;
-            }
-
-            if (points != "") {
-                postParameters += "&points=" + points;
-            }
-            if (accuracies != "" && _type == TYPE_JAYPS) {
-                postParameters += "&jayps_accuracies=" + accuracies;
-            }
-            if (heartrates != "") {
-                postParameters += "&hr=" + heartrates;
-            }
-            if (cadences != "") {
-                postParameters += "&cad=" + cadences;
-            }
-            String tmp_url = "";
-            if (_type == TYPE_JAYPS) {
-                tmp_url = _url != "" ? _url : "http://live.jayps.fr/api/mmt.php";
-            } else if (_type == TYPE_MMT) {
+            if (_type == TYPE_MMT) {
+                if (_login != "" && _password != "") {
+                    authString = _login + ":" + _password;
+                } else {
+                    Log.d(TAG, "Missing login or password");
+                    return false;
+                }
+                postParameters = "request=" + request;
+                if (_activity_id != "") {
+                    postParameters += "&activity_id=" + _activity_id;
+                }
+                if (points != "") {
+                    postParameters += "&points=" + points;
+                }
+                if (heartrates != "") {
+                    postParameters += "&hr=" + heartrates;
+                }
+                if (cadences != "") {
+                    postParameters += "&cad=" + cadences;
+                }
                 tmp_url = _url != "" ? _url : "http://www.mapmytracks.com/api/";
+
+            } else if (_type == TYPE_NEXTCLOUD) {
+                tmp_url = _url;
+                StringBuilder params = new StringBuilder();
+
+                for (Map.Entry<String, String> entry : nv_pairs.entrySet()) {
+                    if (!params.equals("")) {
+                        params.append("&");
+                    }
+                    params.append(entry.getKey());
+                    params.append("=");
+                    params.append(entry.getValue());
+                }
+
+                postParameters = params.toString();
+                request = "NextCloud";
             } else {
                 Log.d(TAG, "Missing type");
                 return false;
@@ -271,69 +312,6 @@ public class LiveTracking implements ILiveTracking {
             }
 
             int nbReceivedFriends = 0;
-
-            if(_type==TYPE_JAYPS)
-
-            {
-                expression = "//friend";
-                nodes = (NodeList) xpath.evaluate(expression, doc, XPathConstants.NODESET);
-
-
-                for (int i = 0; i < nodes.getLength(); i++) {
-                    // for each friends
-                    node = nodes.item(i);
-
-                    LiveTrackingFriend friend = new LiveTrackingFriend();
-                    friend.setFromNodeList(node.getChildNodes());
-
-                    if (friend.id != "" && friend.lat != null && friend.lon != null) {
-                        nbReceivedFriends++;
-
-                        LiveTrackingFriend f2;
-                        if (_friends.containsKey(friend.id)) {
-                            //Log.d(TAG, "update friend "+friend.id);
-                            f2 = _friends.get(friend.id);
-                        } else {
-                            //Log.d(TAG, "new friend "+friend.id);
-                            friend.number = numberOfFriends;
-                            numberOfFriends++;
-                            f2 = friend;
-                        }
-                        f2.updateFromFriend(friend, _lastLocation);
-                        _friends.put(friend.id, f2);
-                    }
-                }
-                //Iterator<Entry<String, LiveTrackingFriend>> iter = _friends.entrySet().iterator();
-                //while (iter.hasNext()) {
-                //LiveTrackingFriend f = iter.next().getValue();
-                //Log.d(TAG, "+++"+f.toString());
-                //}
-
-                byte[] msgLiveShort = getMsgLiveShort(_firstLocation);
-                String[] names = getNames();
-                if (msgLiveShort.length > 1) {
-                    String sending = "";
-
-                    LiveMessage msg = new LiveMessage();
-                    if (_numberOfFriendsSentToPebble != msgLiveShort[0] || (5 * Math.random() <= 1)) {
-                        _numberOfFriendsSentToPebble = msgLiveShort[0];
-
-                        msg.setName0(names[0]);
-                        msg.setName1(names[1]);
-                        msg.setName2(names[2]);
-                        msg.setName3(names[3]);
-                        msg.setName4(names[4]);
-                        sending += " MSG_LIVE_NAMEx" + msgLiveShort[0];
-                    }
-                    msg.setLive(msgLiveShort);
-                    for (int i = 0; i < msgLiveShort.length; i++) {
-                        sending += " msgLiveShort[" + i + "]: " + ((256 + msgLiveShort[i]) % 256);
-                    }
-                    if (debug) Log.d(TAG, sending);
-
-                    _bus.post(msg);
-                }
-            }
 
             _bufferPoints=_bufferAccuracies=_bufferHeartRates=_bufferCadences="";
 

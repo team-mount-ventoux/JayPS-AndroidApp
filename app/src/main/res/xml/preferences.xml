@@ -326,28 +326,37 @@
         </PreferenceScreen>
 
         <PreferenceScreen
-            android:key="live_jayps_screen"
-            android:title="@string/PREF_LIVE_TRACKING_JAYPS_CATEGORIE_TITLE"
+            android:key="live_nextcloud_screen"
+            android:title="@string/PREF_LIVE_TRACKING_NEXTCLOUD_CATEGORIE_TITLE"
             android:persistent="false">
             <PreferenceCategory
-                android:title="@string/PREF_LIVE_TRACKING_JAYPS_CATEGORIE_TITLE"
-                android:summary="@string/PREF_LIVE_TRACKING_JAYPS_CATEGORIE_SUMMARY"
+                android:title="@string/PREF_LIVE_TRACKING_NEXTCLOUD_CATEGORIE_TITLE"
+                android:summary="@string/PREF_LIVE_TRACKING_NEXTCLOUD_CATEGORIE_SUMMARY"
                 >
                 <CheckBoxPreference
                     android:key="LIVE_TRACKING"
-                    android:title="@string/PREF_LIVE_TRACKING_JAYPS_TITLE"
-                    android:summary="@string/PREF_LIVE_TRACKING_JAYPS_SUMMARY"
+                    android:title="@string/PREF_LIVE_TRACKING_NEXTCLOUD_TITLE"
+                    android:summary="@string/PREF_LIVE_TRACKING_NEXTCLOUD_SUMMARY"
                     android:defaultValue="false" />
                 <EditTextPreference
-                    android:key="LIVE_TRACKING_LOGIN"
-                    android:title="@string/PREF_LIVE_TRACKING_JAYPS_LOGIN_TITLE"
-                    android:summary="@string/PREF_LIVE_TRACKING_JAYPS_LOGIN_SUMMARY"
+                    android:key="LIVE_TRACKING_URL"
+                    android:title="@string/PREF_LIVE_TRACKING_NEXTCLOUD_URL_TITLE"
+                    android:summary="@string/PREF_LIVE_TRACKING_NEXTCLOUD_URL_SUMMARY"
                     />
                 <EditTextPreference
-                    android:key="LIVE_TRACKING_PASSWORD"
-                    android:title="@string/PREF_LIVE_TRACKING_JAYPS_PASSWORD_TITLE"
-                    android:summary="@string/PREF_LIVE_TRACKING_JAYPS_PASSWORD_SUMMARY"
-                    android:inputType="textPassword"
+                    android:key="LIVE_TRACKING_TOKEN"
+                    android:title="@string/PREF_LIVE_TRACKING_NEXTCLOUD_TOKEN_TITLE"
+                    android:summary="@string/PREF_LIVE_TRACKING_NEXTCLOUD_TOKEN_SUMMARY"
+                    />
+                <EditTextPreference
+                    android:key="LIVE_TRACKING_DEVICE"
+                    android:title="@string/PREF_LIVE_TRACKING_NEXTCLOUD_DEVICE_TITLE"
+                    android:summary="@string/PREF_LIVE_TRACKING_NEXTCLOUD_DEVICE_SUMMARY"
+                    />
+                <Preference
+                    android:key="LIVE_TRACKING_SHARE"
+                    android:title="@string/PREF_LIVE_TRACKING_NEXTCLOUD_SHARE_TITLE"
+                    android:summary="@string/PREF_LIVE_TRACKING_NEXTCLOUD_SHARE_SUMMARY"
                     />
             </PreferenceCategory>
         </PreferenceScreen>
