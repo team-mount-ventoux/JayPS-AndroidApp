@@ -96,7 +96,7 @@
     <PreferenceScreen
         android:key="sensors_screen"
         android:title="Sensors"
-        android:summary="GPS, HRM/CSC, Altitude"
+        android:summary="GPS, HRM/CSC, Altitude, Lights, GoPro"
         android:persistent="false">
 
         <ListPreference
@@ -123,6 +123,21 @@
             <Preference
                 android:key="PREF_BLE3"
                 android:title="@string/PREF_BLE_TITLE3"
+                android:summary=""
+                />
+            <Preference
+                android:key="PREF_BLE4"
+                android:title="@string/PREF_BLE_TITLE4"
+                android:summary=""
+                />
+            <Preference
+                android:key="PREF_BLE5"
+                android:title="@string/PREF_BLE_TITLE5"
+                android:summary=""
+                />
+            <Preference
+                android:key="PREF_BLE6"
+                android:title="@string/PREF_BLE_TITLE6"
                 android:summary=""
                 />
             <EditTextPreference
@@ -486,14 +501,6 @@
             >
             <intent android:action="android.intent.action.VIEW"
                 android:data="@string/PREF_USERVOICE_URL" />
-        </Preference>
-        <Preference
-            android:key="googleplus"
-            android:title="@string/PREF_GOOGLEPLUS"
-            android:summary="@string/PREF_GOOGLEPLUS_SUMMARY"
-            >
-            <intent android:action="android.intent.action.VIEW"
-                android:data="@string/PREF_GOOGLEPLUS_URL" />
         </Preference>
 
         <Preference
