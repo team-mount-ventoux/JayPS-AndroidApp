@@ -12,5 +12,5 @@ public interface ILiveTracking {
     public void setPassword(String password);
     public void setUrl(String url);
     public void setBus(Bus bus);
-    public boolean addPoint(Location firstLocation, Location location, int heart_rate, int cadence);
+    public boolean addPoint(Location firstLocation, Location location, int heart_rate, int cadence, int batteryLevel);
 }

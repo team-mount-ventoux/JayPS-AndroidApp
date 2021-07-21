@@ -199,9 +199,9 @@ public class AndroidModule {
     }
 
     @Provides
-    @Named("LiveTrackingJayPS")
+    @Named("LiveTrackingNextcloud")
     ILiveTracking provideLiveTrackingJayps() {
-        return new LiveTracking(application, LiveTracking.TYPE_JAYPS, providesBus());
+        return new LiveTracking(application, LiveTracking.TYPE_NEXTCLOUD, providesBus());
     }
 
     @Provides @Singleton
