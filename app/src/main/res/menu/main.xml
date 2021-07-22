@@ -8,22 +8,26 @@
         android:orderInCategory="100" />
 
     <item android:id="@+id/action_export_gpx"
-        android:title="Export GPX"
+        android:title="@string/action_export_gpx"
         android:orderInCategory="101" />
 
     <item android:id="@+id/action_upload_strava"
-        android:title="Upload to Strava"
+        android:title="@string/action_upload_strava"
         android:orderInCategory="102" />
 
     <item android:id="@+id/action_upload_runkeeper"
-        android:title="Upload to Runkeeper"
+        android:title="@string/action_upload_runkeeper"
         android:orderInCategory="103" />
 
     <item android:id="@+id/action_load_route"
-        android:title="Load route to follow"
+        android:title="@string/action_load_route"
         android:orderInCategory="104" />
 
     <item android:id="@+id/action_reset"
-        android:title="Reset data &amp; GPX"
+        android:title="@string/action_reset"
         android:orderInCategory="105" />
+
+    <item android:id="@+id/action_share_location"
+        android:title="@string/action_share_location"
+        android:orderInCategory="106" />
 </menu>
