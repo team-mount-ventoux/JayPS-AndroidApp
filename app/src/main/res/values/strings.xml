@@ -7,6 +7,12 @@
 
     <string name="app_name">JayPS</string>
     <string name="action_settings">Settings</string>
+    <string name="action_export_gpx">Export GPX</string>
+    <string name="action_upload_strava">Upload to Strava</string>
+    <string name="action_upload_runkeeper">Upload to Runkeeper</string>
+    <string name="action_load_route">Load route to follow</string>
+    <string name="action_reset">Reset data &amp; GPX</string>
+    <string name="action_share_location">Share Location</string>
     <string name="speedfragment_time_label">TIME</string>
     <string name="speedfragment_time_value">00:00</string>
     <string name="speedfragment_distance_label">DISTANCE</string>

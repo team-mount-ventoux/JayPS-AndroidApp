@@ -285,6 +285,14 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
                     .setNegativeButton(android.R.string.no, null).show();
             return true;
         }
+        if (id == R.id.action_share_location) {
+            float lat = _dataStore.getLastLocationLatitude();
+            float lon = _dataStore.getLastLocationLongitude();
+            if ((lat!=0.0)&&(lon!=0.0)) {
+                String uri = "geo:" + lat + ","+ lon + "?q=" + lat + "," + lon;
+                startActivity(new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(uri)));
+            }
+        }
         return super.onOptionsItemSelected(item);
     }
 
