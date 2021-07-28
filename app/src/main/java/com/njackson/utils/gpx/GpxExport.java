@@ -18,17 +18,22 @@ public class GpxExport {
 
     private static final String TAG = "PB-GpxExport";
 
-    public static void export(Context context, boolean extended_gpx) {
+    public static void export(Context context, boolean extended_gpx, final String fileFormat) {
         Toast.makeText(context, "Please wait while generating the file", Toast.LENGTH_LONG).show();
         final Context _context = context;
         final boolean _extended_gpx = extended_gpx;
         new Thread(new Runnable() {
             public void run() {
                 AdvancedLocation advancedLocation = new AdvancedLocation(_context);
-                String gpx = advancedLocation.getGPX(_extended_gpx);
+                String gpx;
+                if (fileFormat.equals("tcx")) {
+                    gpx = advancedLocation.getTCX("Biking");
+                } else {
+                    gpx = advancedLocation.getGPX(_extended_gpx);
+                }
 
                 try {
-                    File newFile = new File(_context.getCacheDir(), "track.gpx");
+                    File newFile = new File(_context.getCacheDir(), "track."+fileFormat);
                     FileWriter fileWriter = new FileWriter(newFile);
                     fileWriter.write(gpx);
                     fileWriter.close();

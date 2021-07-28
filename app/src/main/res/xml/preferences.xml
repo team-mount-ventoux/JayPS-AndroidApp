@@ -70,6 +70,11 @@
                 android:summary="@string/PREF_EXPORT_GPX_SUMMARY"
                 />
             <Preference
+                android:key="EXPORT_TCX"
+                android:title="@string/PREF_EXPORT_TCX_TITLE"
+                android:summary="@string/PREF_EXPORT_TCX_SUMMARY"
+                />
+            <Preference
                 android:key="RESET_TRACKS"
                 android:title="@string/PREF_RESET_TRACKS_TITLE"
                 android:summary="@string/PREF_RESET_TRACKS_SUMMARY"
@@ -264,6 +269,13 @@
                     android:entries="@array/STRAVA_AUTO_ENTRIES"
                     android:entryValues="@array/STRAVA_AUTO_ENTRY_VALUES"
                     android:defaultValue="@string/STRAVA_AUTO_DEFAULT" />
+                <ListPreference
+                    android:key="STRAVA_UPLOAD_TYPE"
+                    android:title="@string/STRAVA_UPLOAD_TYPE_TITLE"
+                    android:dialogTitle="@string/STRAVA_UPLOAD_TYPE_DIALOG_TITLE"
+                    android:entries="@array/STRAVA_UPLOAD_TYPE_ENTRIES"
+                    android:entryValues="@array/STRAVA_UPLOAD_TYPE_ENTRY_VALUES"
+                    android:defaultValue="@string/STRAVA_UPLOAD_TYPE_DEFAULT" />
                 <CheckBoxPreference
                     android:key="STRAVA_DELETE_IF_EXISTS_DURING_UPLOAD"
                     android:title="@string/PREF_STRAVA_DELETE_IF_EXISTS_DURING_UPLOAD_TITLE"

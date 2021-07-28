@@ -2,6 +2,7 @@
 <resources>
 
     <string name="MAIN_TITLE">JayPS v3.0.0</string>
+    <string name="MAIN_EXPORT_TCX">Export TCX</string>
     <string name="PREF_INSTALL_WATCHFACE_URL">http://dl.pebblebike.com/p/jayps-3.0.0.pbw</string>
     <string name="PREF_INSTALL_WATCHFACE_NL_URL">http://dl.pebblebike.com/p/ventoo-2.8.0-nl.pbw</string>
 
@@ -43,6 +44,8 @@
     <string name="PREF_ENABLE_TRACKS_SUMMARY">Auto save locations when gps is started</string>
     <string name="PREF_EXPORT_GPX_TITLE">Export as GPX</string>
     <string name="PREF_EXPORT_GPX_SUMMARY"></string>
+    <string name="PREF_EXPORT_TCX_TITLE">Export as TCX</string>
+    <string name="PREF_EXPORT_TCX_SUMMARY"></string>
     <string name="PREF_RESET_TRACKS_TITLE">Reset tracks</string>
     <string name="PREF_RESET_TRACKS_SUMMARY">Delete all saved tracks</string>
 
@@ -136,6 +139,9 @@
     <string name="STRAVA_AUTO_TITLE">Automatic upload</string>
     <string name="STRAVA_AUTO_DIALOG_TITLE">Strava automatic upload</string>
     <string name="STRAVA_AUTO_DEFAULT">disable</string>
+    <string name="STRAVA_UPLOAD_TYPE_TITLE">Upload file type</string>
+    <string name="STRAVA_UPLOAD_TYPE_DIALOG_TITLE">Select TCX or GPX file upload to Strava</string>
+    <string name="STRAVA_UPLOAD_TYPE_DEFAULT">tcx</string>
     <string name="PREF_STRAVA_VENTOO_CLUB_TITLE">Strava JayPS Club</string>
     <string name="PREF_STRAVA_VENTOO_CLUB_SUMMARY">Join other JayPS users</string>
     <string name="PREF_STRAVA_URL_VENTOO_CLUB">https://www.strava.com/clubs/ventoo</string>
