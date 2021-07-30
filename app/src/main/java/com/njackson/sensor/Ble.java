@@ -434,7 +434,7 @@ public class Ble implements IBle, ITimerHandler {
             if ((newMode==0)||current_mode.equals(0)) {
                 Log.i(TAG, String.format("Setting light mode %d",newMode));
                 gattChar.setValue(newMode, BluetoothGattCharacteristic.FORMAT_UINT8, 0);
-                gatt.writeCharacteristic(gattChar);
+                characteristicWriteQueue.add(gattChar);
             }
         }
     }
