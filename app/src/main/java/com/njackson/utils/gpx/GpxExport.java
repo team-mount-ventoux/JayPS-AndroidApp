@@ -18,7 +18,7 @@ public class GpxExport {
 
     private static final String TAG = "PB-GpxExport";
 
-    public static void export(Context context, boolean extended_gpx, final String fileFormat) {
+    public static void export(Context context, boolean extended_gpx, final String fileFormat, final String tcxType) {
         Toast.makeText(context, "Please wait while generating the file", Toast.LENGTH_LONG).show();
         final Context _context = context;
         final boolean _extended_gpx = extended_gpx;
@@ -27,7 +27,7 @@ public class GpxExport {
                 AdvancedLocation advancedLocation = new AdvancedLocation(_context);
                 String gpx;
                 if (fileFormat.equals("tcx")) {
-                    gpx = advancedLocation.getTCX("Biking");
+                    gpx = advancedLocation.getTCX(tcxType);
                 } else {
                     gpx = advancedLocation.getGPX(_extended_gpx);
                 }

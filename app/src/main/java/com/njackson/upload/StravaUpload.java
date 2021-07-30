@@ -70,7 +70,7 @@ public class StravaUpload {
                 AdvancedLocation advancedLocation = new AdvancedLocation(_context);
                 String gpx;
                 if (uploadType.equals("tcx")) {
-                    gpx = advancedLocation.getTCX("Biking");
+                    gpx = advancedLocation.getTCX(_sharedPreferences.getString("TCX_ACTIVITY_TPE","Biking"));
                 } else {
                     gpx = advancedLocation.getGPX(false);
                 }

@@ -74,6 +74,13 @@
                 android:title="@string/PREF_EXPORT_TCX_TITLE"
                 android:summary="@string/PREF_EXPORT_TCX_SUMMARY"
                 />
+            <ListPreference
+                android:key="TCX_ACTIVITY_TYPE"
+                android:title="@string/TCX_ACTIVITY_TYPE_TITLE"
+                android:dialogTitle="@string/TCX_ACTIVITY_TYPE_DIALOG_TITLE"
+                android:entries="@array/TCX_ACTIVITY_TYPE_ENTRIES"
+                android:entryValues="@array/TCX_ACTIVITY_TYPE_VALUES"
+                android:defaultValue="@string/TCX_ACTIVITY_TYPE_DEFAULT" />
             <Preference
                 android:key="RESET_TRACKS"
                 android:title="@string/PREF_RESET_TRACKS_TITLE"

@@ -224,14 +224,14 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
         }
         if (id == R.id.action_export_gpx) {
             if (_sharedPreferences.getBoolean("ENABLE_TRACKS", false)) {
-                GpxExport.export(getApplicationContext(), _sharedPreferences.getBoolean("ADVANCED_GPX", false), "gpx");
+                GpxExport.export(getApplicationContext(), _sharedPreferences.getBoolean("ADVANCED_GPX", false), "gpx","");
             } else {
                 Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the export", Toast.LENGTH_SHORT).show();
             }
         }
         if (id == R.id.action_export_tcx) {
             if (_sharedPreferences.getBoolean("ENABLE_TRACKS", false)) {
-                GpxExport.export(getApplicationContext(), _sharedPreferences.getBoolean("ADVANCED_GPX", false), "tcx");
+                GpxExport.export(getApplicationContext(), _sharedPreferences.getBoolean("ADVANCED_GPX", false), "tcx", _sharedPreferences.getString("TCX_ACTIVITY_TYPE","Biking"));
             } else {
                 Toast.makeText(getApplicationContext(), "Please enable tracks in the settings to save GPX before using the export", Toast.LENGTH_SHORT).show();
             }
