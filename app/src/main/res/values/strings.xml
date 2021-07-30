@@ -35,6 +35,8 @@
     <string name="PREF_INSTALL_WATCHFACE_NL_SUMMARY">Specific version with Dutch locale</string>
     <string name="PREF_RESET_DATA">Reset data &amp; GPX</string>
     <string name="PREF_RESET_DATA_SUMMARY">Distance, time, speed and ascent</string>
+    <string name="ALERT_PERMS_GRANTED">Permission Granted</string>
+    <string name="ALERT_PERMS_DENIED">Permission Denied</string>
     <string name="ALERT_RESET_DATA_TITLE">Reset data and GPX</string>
     <string name="ALERT_RESET_DATA_MESSAGE">Do you really want to reset distance, time, speed, ascent and GPX?</string>
 
