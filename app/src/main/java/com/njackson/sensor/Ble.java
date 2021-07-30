@@ -810,7 +810,7 @@ public class Ble implements IBle, ITimerHandler {
 	    if (gattChar != null) {
                 Log.i(TAG, "Setting GoPro "+gopro_on);
                 gattChar.setValue(newMode);
-                gatt.writeCharacteristic(gattChar); 
+                characteristicWriteQueue.add(gattChar);
             }
         }
     }
