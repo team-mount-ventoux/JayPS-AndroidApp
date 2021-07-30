@@ -11,19 +11,23 @@
         android:title="Export GPX"
         android:orderInCategory="101" />
 
+    <item android:id="@+id/action_export_tcx"
+        android:title="@string/MAIN_EXPORT_TCX"
+        android:orderInCategory="102" />
+
     <item android:id="@+id/action_upload_strava"
         android:title="Upload to Strava"
-        android:orderInCategory="102" />
+        android:orderInCategory="103" />
 
     <item android:id="@+id/action_upload_runkeeper"
         android:title="Upload to Runkeeper"
-        android:orderInCategory="103" />
+        android:orderInCategory="104" />
 
     <item android:id="@+id/action_load_route"
         android:title="Load route to follow"
-        android:orderInCategory="104" />
+        android:orderInCategory="105" />
 
     <item android:id="@+id/action_reset"
         android:title="Reset data &amp; GPX"
-        android:orderInCategory="105" />
+        android:orderInCategory="106" />
 </menu>

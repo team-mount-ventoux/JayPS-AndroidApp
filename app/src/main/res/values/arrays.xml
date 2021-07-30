@@ -114,4 +114,24 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="TCX_ACTIVITY_TYPE_ENTRIES">
+        <item>Biking</item>
+        <item>Running</item>
+        <item>Other</item>
+    </string-array>
+    <string-array name="TCX_ACTIVITY_TYPE_VALUES">
+        <item>Biking</item>
+        <item>Running</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="STRAVA_UPLOAD_TYPE_ENTRIES">
+        <item>GPX</item>
+        <item>TCX</item>
+    </string-array>
+    <string-array name="STRAVA_UPLOAD_TYPE_ENTRY_VALUES">
+        <item>gpx</item>
+        <item>tcx</item>
+    </string-array>
+
 </resources>

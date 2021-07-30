@@ -84,6 +84,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private int _runningCadence = 0;
     private double _temperature = 0;
     private int _batteryLevel = 0;
+    private int _power = 0;
     private BaseStatus.Status _currentStatus= BaseStatus.Status.NOT_INITIALIZED;
     private SavedLocation _savedLocation = null;
     private NewAltitude _savedNewAltitude = null;
@@ -236,7 +237,8 @@ public class GPSServiceCommand implements IServiceCommand {
                     // note: does not work with _currentStatus (new object after restart)
                     if (!_serviceStarter.isLocationServicesRunning()) {
                         StravaUpload strava_upload = new StravaUpload(_applicationContext);
-                        strava_upload.upload(_sharedPreferences.getString("strava_token", ""));
+                        String strava_type =  _sharedPreferences.getString("STRAVA_UPLOAD_TYPE","gpx");
+                        strava_upload.upload(_sharedPreferences.getString("strava_token", ""),strava_type);
                     }
                 }
             }, TIMEOUT_STRAVA);
@@ -375,7 +377,7 @@ public class GPSServiceCommand implements IServiceCommand {
     private LocationListener _locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            _advancedLocation.onLocationChanged(location, _heartRate, _cyclingCadence);
+            _advancedLocation.onLocationChanged(location, _heartRate, _cyclingCadence, _power);
             _navigator.onLocationChanged(location);
             String[] resultClimb = _navigator.messageClimb(location);
             if (resultClimb[0] != "") {
