@@ -9,6 +9,7 @@ import com.njackson.events.PebbleServiceCommand.NewMessage;
 import com.njackson.oruxmaps.IOruxMaps;
 import com.njackson.state.IGPSDataStore;
 import com.njackson.utils.services.IServiceStarter;
+import com.njackson.events.BleServiceCommand.BleSensorData;
 import com.squareup.otto.Bus;
 
 import android.content.Context;
@@ -51,6 +52,12 @@ public class PebbleDataReceiver extends com.getpebble.android.kit.PebbleKit.Pebb
         }
         if (data.contains(Constants.MSG_CONFIG)) {
             handleConfig(context, data);
+        }
+        if (data.contains(Constants.MSG_P2HR)) {
+            int heartRate = data.getInteger(Constants.MSG_P2HR).intValue();
+            BleSensorData sensorData = new BleSensorData("FF:FF:FF:FF:FF:FF");
+            sensorData.setHeartRate(heartRate);
+            _bus.post(sensorData);
         }
         /*if (data.contains(Constants.MSG_LIVE_ASK_NAMES)) {
             live_max_name = data.getInteger(Constants.MSG_LIVE_ASK_NAMES).intValue();

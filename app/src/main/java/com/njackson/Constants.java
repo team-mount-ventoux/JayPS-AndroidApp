@@ -32,6 +32,7 @@ public class Constants {
     public static final int MSG_CONFIG = 0x28;
     public static final int MSG_HR_MAX = 0x29;
     public static final int MSG_NAVIGATION = 0x31;
+    public static final int MSG_P2HR = 0x32;
 
     public static final int PLAY_PRESS = 0x0;
     public static final int STOP_PRESS = 0x1;
