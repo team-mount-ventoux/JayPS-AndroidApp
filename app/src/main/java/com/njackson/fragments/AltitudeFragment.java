@@ -181,7 +181,7 @@ public class AltitudeFragment extends BaseFragment {
         for(int c=0; c< layout.getChildCount(); c++) {
 
             View tempView = layout.getChildAt(c);
-            if(tempView.getClass().getName() == ImageView.class.getName()) {
+            if(tempView.getClass().getName().equals(ImageView.class.getName())) {
                 altitudeViews.add((ImageView)tempView);
             }
 

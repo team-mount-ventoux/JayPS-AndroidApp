@@ -61,7 +61,7 @@ public class GoogleFitSessionManager implements IGoogleFitSessionManager {
         DataSource activitySegmentDataSource = new DataSource.Builder()
                 .setAppPackageName(_context.getPackageName())
                 .setDataType(DataType.TYPE_ACTIVITY_SEGMENT)
-                .setName("PebbleBike-activity segments")
+                .setStreamName("PebbleBike-activity segments")
                 .setType(DataSource.TYPE_RAW)
                 .build();
         return DataSet.create(activitySegmentDataSource);

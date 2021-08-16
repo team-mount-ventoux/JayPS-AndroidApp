@@ -6,7 +6,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
 
-import com.google.common.base.Function;
+//import com.google.common.base.Function;
 
 import java.util.concurrent.Callable;
 

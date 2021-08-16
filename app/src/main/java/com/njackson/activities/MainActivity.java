@@ -1,5 +1,6 @@
 package com.njackson.activities;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,7 +10,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -145,8 +149,41 @@ public class MainActivity extends FragmentActivity  implements SharedPreferences
         if (getIntent().getExtras() != null) {
             onNewIntent(getIntent());
         }
+
+        String[] perms = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.ACTIVITY_RECOGNITION};
+	if (!hasPermissions(perms)){
+		ActivityCompat.requestPermissions(this, perms, 1);
+	}
     }
 
+    private boolean hasPermissions(String[] permissions) {
+	if (permissions != null) {
+	    for (String permission : permissions) {
+		if (ActivityCompat.checkSelfPermission(MainActivity.this, permission) != PackageManager.PERMISSION_GRANTED) {
+		    return false;
+		}
+	    }
+	}
+	return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults){
+        switch (requestCode){
+            case 1: {
+                if (grantResults.length>0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    if (ContextCompat.checkSelfPermission(MainActivity.this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
+                        Toast.makeText(this, R.string.ALERT_PERMS_GRANTED, Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(this, R.string.ALERT_PERMS_DENIED, Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
     private void showChangeLog() {
         IChangeLog changeLog = _changeLogBuilder.setActivity(this).build();
         if (changeLog.isFirstRun()) {

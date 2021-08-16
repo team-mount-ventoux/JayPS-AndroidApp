@@ -1,7 +1,7 @@
 package com.njackson.test;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import androidx.core.app.Fragment;
+import androidx.core.app.FragmentTransaction;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.njackson.R;

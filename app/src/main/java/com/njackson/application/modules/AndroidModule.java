@@ -152,8 +152,15 @@ public class AndroidModule {
 
     @Provides @Singleton @Named("GoogleFit")
     GoogleApiClient provideFitnessAPIClient() {
+        //TODO(nic) remove unused APIs
         return new GoogleApiClient.Builder(application)
-                .addApi(Fitness.API)
+                .addApi(Fitness.SENSORS_API)
+                .addApi(Fitness.SESSIONS_API)
+                .addApi(Fitness.RECORDING_API)
+                .addApi(Fitness.HISTORY_API)
+                .addApi(Fitness.BLE_API)
+                .addApi(Fitness.CONFIG_API)
+                .addApi(Fitness.GOALS_API)
                 .addScope(Fitness.SCOPE_ACTIVITY_READ)
                 .addScope(Fitness.SCOPE_BODY_READ_WRITE)
                 .build();
