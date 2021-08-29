@@ -800,7 +800,10 @@ public class Ble implements IBle, ITimerHandler {
     }
 
     public void setGoProRecording(BluetoothGatt gatt, Boolean gopro_on) {
-        String device = gatt.getDevice().getName().toString();
+        String device = "";
+        try {
+            gatt.getDevice().getName().toString();
+        } catch (Exception e) {}
         byte[] newMode = new byte[] { 0x03, 0x01, 0x01, 0x00 };
         if (gopro_on) {
             newMode = new byte[] { 0x03, 0x01, 0x01, 0x01 };
