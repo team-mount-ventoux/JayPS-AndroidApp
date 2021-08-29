@@ -23,6 +23,10 @@ public class BLESampleGattAttributes {
     //https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.temperature_measurement.xml
     public static String BATTERY_LEVEL = "00002A19-0000-1000-8000-00805f9b34fb";
 
+    //https://gopro.github.io/OpenGoPro/tutorials/bash/bluez
+    public static String GOPRO_COMMAND = "b5f90072-aa8d-11e3-9046-0002a5d5c51b";
+    public static String GOPRO_SERVICE = "0000fea6-0000-1000-8000-00805f9b34fb";
+
     static {
         // Sample Services.
         // https://developer.bluetooth.org/gatt/services/Pages/ServicesHome.aspx
