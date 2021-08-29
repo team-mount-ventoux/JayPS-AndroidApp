@@ -397,44 +397,52 @@ public class Ble implements IBle, ITimerHandler {
     public void setLightMode(BluetoothGatt gatt, Boolean light_status) {
         int newMode = 0;
         String newModeString = "Off";
-        String device = gatt.getDevice().getName().toString();
-
-        if (light_status) {
-            switch (device) {
-                case "Flare RT":
-                case "ION 200 RT":
-                case "ION PRO RT":
-                    newModeString = "Day Flash";
-                    break;
-                default:
-                    return;
-            }
-        }
-
+        String device = "";
+        Boolean found = true;
         try {
-            JSONObject LIGHT_MODES_JSON = new JSONObject(BLESampleGattAttributes.LIGHT_MODES_JSON);
-            JSONObject LIGHT_MODE_JSON = (JSONObject)LIGHT_MODES_JSON.get(device);
-            try {
-                newMode = Integer.parseInt(LIGHT_MODE_JSON.optString(newModeString).toString());
-            } catch (Exception e) {
-                Log.i(TAG, "Unable to load light mode for "+device+" : "+e);
-                return;
-            }
-        } catch (JSONException e) {
-            Log.w(TAG, "Unable to load light JSON: "+e);
+            device = gatt.getDevice().getName().toString();
+        } catch (Exception e) {
+            found = false;
         }
 
-        final BluetoothGattCharacteristic gattChar = getCharacter(gatt, UUID_LIGHT_MODE_SERVICE, UUID_LIGHT_MODE, "LIGHT MODE");
-        if (gattChar != null) {
-            Integer current_mode = light_mode.get(gatt);
-            if (current_mode==null) {
-                light_mode.put(gatt, 0);
-                current_mode = 0;
+        if (found) {
+            if (light_status) {
+                switch (device) {
+                    case "Flare RT":
+                    case "ION 200 RT":
+                    case "ION PRO RT":
+                        newModeString = "Day Flash";
+                        break;
+                    default:
+                        return;
+                }
             }
-            if ((newMode==0)||current_mode.equals(0)) {
-                Log.i(TAG, String.format("Setting light mode %d",newMode));
-                gattChar.setValue(newMode, BluetoothGattCharacteristic.FORMAT_UINT8, 0);
-                characteristicWriteQueue.add(gattChar);
+
+            try {
+                JSONObject LIGHT_MODES_JSON = new JSONObject(BLESampleGattAttributes.LIGHT_MODES_JSON);
+                JSONObject LIGHT_MODE_JSON = (JSONObject)LIGHT_MODES_JSON.get(device);
+                try {
+                    newMode = Integer.parseInt(LIGHT_MODE_JSON.optString(newModeString).toString());
+                } catch (Exception e) {
+                    Log.i(TAG, "Unable to load light mode for "+device+" : "+e);
+                    return;
+                }
+            } catch (JSONException e) {
+                Log.w(TAG, "Unable to load light JSON: "+e);
+            }
+
+            final BluetoothGattCharacteristic gattChar = getCharacter(gatt, UUID_LIGHT_MODE_SERVICE, UUID_LIGHT_MODE, "LIGHT MODE");
+            if (gattChar != null) {
+                Integer current_mode = light_mode.get(gatt);
+                if (current_mode==null) {
+                    light_mode.put(gatt, 0);
+                    current_mode = 0;
+                }
+                if ((newMode==0)||current_mode.equals(0)) {
+                    Log.i(TAG, String.format("Setting light mode %d",newMode));
+                    gattChar.setValue(newMode, BluetoothGattCharacteristic.FORMAT_UINT8, 0);
+                    characteristicWriteQueue.add(gattChar);
+                }
             }
         }
     }
